@@ -1,13 +1,20 @@
+import { SafeAreaViewCustom } from "@/components";
 import "@/globals.css";
+import { PATH_NAME } from "@/helpers/constants/pathname";
+import { router } from "expo-router";
 import React from "react";
-import { Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Button, Text } from "react-native";
 
 const index = () => {
+  const { AUTH } = PATH_NAME;
   return (
-    <SafeAreaView className="flex-1 items-center justify-center">
-      <Text className="text-center text-5xl text-red-600">SplashScreen</Text>
-    </SafeAreaView>
+    <SafeAreaViewCustom rootClassName="bg-red-500 items-center justify-center ">
+      <Text className="text-center text-5xl text-yellow-600">SplashScreen</Text>
+      <Button
+        title="Chuyển trang"
+        onPress={() => router.navigate(AUTH.LOGIN as any)}
+      />
+    </SafeAreaViewCustom>
   );
 };
 

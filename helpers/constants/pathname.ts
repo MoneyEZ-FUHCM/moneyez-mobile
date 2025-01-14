@@ -1,14 +1,22 @@
 const PATH_NAME = {
   COMMON: {
-    ERROR_PAGE: "/not-found",
+    ERROR_PAGE: "+not-found",
+  },
+  SPLASH: {
+    SPLASH_SCREEN: "index",
+  },
+  TABS: {
+    TABS_NAVIGATOR: "(tabs)",
   },
   AUTH: {
-    REGISTER: "/login",
+    AUTH_NAVIGATOR: "(auth)",
+    LOGIN: "login/Login",
+    REGISTER: "register/Register",
+    INPUT_OTP: "otp/InputOtp",
   },
-  DASHBOARD: {
-    USER: "/user",
-    ADMIN: "/admin",
-  },
+  BOT: {},
+  GROUP: {},
+  HOME: {},
 };
 
 export { PATH_NAME };
