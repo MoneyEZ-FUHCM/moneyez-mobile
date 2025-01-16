@@ -1,17 +1,13 @@
-const HOME_SCREEN_CONSTANTS = {
-  // Button
-  BUTTON: {
-    BUTTON_LOGIN: "Đăng nhập",
-    BUTTON_REGISTER: "Đăng ký",
-    BUTTON_LOGIN_WITH_GOOGLE: "Tiếp tục với Google",
-    BUTTON_CONFIRM_OTP: "Xác nhận",
+const AUTH_SCREEN_CONSTANTS = {
+  // login
+  FORM_NAME: {
+    EMAIL: "email",
+    PASSWORD: "password",
   },
 
-  // Title
-  TITLE: {
-    LOGIN: "Đăng nhập",
-    REGISTER: "Đăng ký",
+  ERROR_CODE: {
+    ACCOUNT_NOT_EXIST: "AccountNotExist",
   },
 };
 
-export default HOME_SCREEN_CONSTANTS;
+export default AUTH_SCREEN_CONSTANTS;

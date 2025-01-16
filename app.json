@@ -1,5 +1,6 @@
 {
   "expo": {
+    "jsEngine": "hermes",
     "name": "moneyez-mobile",
     "slug": "moneyez-mobile",
     "version": "1.0.0",

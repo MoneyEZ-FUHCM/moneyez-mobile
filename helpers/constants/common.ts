@@ -16,6 +16,14 @@ const COMMON_CONSTANT = {
     },
   },
 
+  HTTP_METHOD: {
+    GET: "GET",
+    POST: "POST",
+    PUT: "PUT",
+    DELETE: "DELETE",
+    PATH: "PATH",
+  },
+
   // Role
   ROLE_PERMISSION_ADMIN: "ADMIN",
   ROLE_PERMISSION_USERS: "USER",
@@ -57,6 +65,10 @@ const COMMON_CONSTANT = {
     BOT: "Trợ lý ảo",
     GROUP: "Nhóm",
     ACCOUNT: "Tài khoản",
+  },
+
+  SYSTEM_ERROR: {
+    SERVER_ERROR: "Lỗi hệ thống. Vui lòng thử lại sau",
   },
 };
 
