@@ -1,0 +1,10 @@
+{
+  "tailwindCSS.experimental.classRegex": [
+    ["rootClassName\\s*=\\s*{`([^`]*)`}", "[^`]"],
+    ["customProps\\s*=\\s*{`([^`]*)`}", "[^`]"],
+    ["containerClass\\s*=\\s*{`([^`]*)`}", "[^`]"],
+    ["labelClass\\s*=\\s*{`([^`]*)`}", "[^`]"],
+    ["inputClass\\s*=\\s*{`([^`]*)`}", "[^`]"],
+    ["errorTextClass\\s*=\\s*{`([^`]*)`}", "[^`]"]
+  ]
+}
