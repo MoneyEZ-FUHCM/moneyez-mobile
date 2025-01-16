@@ -8,7 +8,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { router } from "expo-router";
 import { PATH_NAME } from "@/helpers/constants/pathname";
-import { BASE_URL } from "@env";
 
 interface RefreshResultData {
   accessToken: string;
@@ -20,11 +19,10 @@ const axiosBaseQuery = async (
   extraOptions: {},
 ) => {
   const { HTTP_STATUS } = COMMON_CONSTANT;
-  const { AUTH } = PATH_NAME;
   let token = await AsyncStorage.getItem("accessToken");
 
   const baseQuery = fetchBaseQuery({
-    baseUrl: BASE_URL,
+    baseUrl: "http://178.128.118.171:8080/api/v1",
     prepareHeaders: (headers) => {
       headers.set("Content-Type", "application/json");
       if (token) {
@@ -76,7 +74,7 @@ const axiosBaseQuery = async (
         }
       } else {
         await AsyncStorage.clear();
-        router.replace(AUTH.LOGIN as any);
+        // router.replace(AUTH.LOGIN as any);
       }
     }
   }

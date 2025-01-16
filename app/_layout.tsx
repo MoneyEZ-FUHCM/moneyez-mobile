@@ -29,7 +29,8 @@ export default function RootLayout() {
   const { COMMON, TABS, SPLASH, AUTH } = PATH_NAME;
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    Inter: require("@/assets/fonts/Inter-VariableFont_opsz,wght.ttf"),
+    // SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
 
   useEffect(() => {
