@@ -3,7 +3,7 @@ import { View } from "react-native";
 
 interface SectionProps {
   children: React.ReactNode;
-  rootClassName: string;
+  rootClassName?: string;
 }
 
 const SectionComponent = (props: SectionProps) => {
