@@ -1,6 +1,7 @@
 import { useField } from "formik";
-import React from "react";
-import { Text, TextInput, View } from "react-native";
+import { Eye, EyeSlash } from "iconsax-react-native";
+import React, { useState } from "react";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 
 interface CommonInputProps {
   name: string;
@@ -8,6 +9,14 @@ interface CommonInputProps {
   placeholder?: string;
   isPrivate?: boolean;
   isRequired?: boolean;
+  inputMode?:
+    | "text"
+    | "numeric"
+    | "decimal"
+    | "email"
+    | "tel"
+    | "search"
+    | undefined;
   containerClass?: string;
   labelClass?: string;
   inputClass?: string;
@@ -20,12 +29,14 @@ const InputComponent: React.FC<CommonInputProps> = ({
   placeholder,
   isPrivate = false,
   isRequired = false,
+  inputMode = "text",
   containerClass = "",
   labelClass = "",
   inputClass = "",
   errorTextClass = "",
 }) => {
   const [field, meta, helpers] = useField(name);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(!isPrivate);
 
   return (
     <View className={`${containerClass} mb-5`}>
@@ -39,15 +50,28 @@ const InputComponent: React.FC<CommonInputProps> = ({
       </View>
       <View className="relative">
         <TextInput
-          className={`h-10 rounded-md border px-3 ${
+          className={`h-10 rounded-md border px-3 pr-10 ${
             meta.touched && meta.error ? "border-red" : "border-gray-300"
           } ${inputClass}`}
           placeholder={placeholder}
-          secureTextEntry={isPrivate}
+          secureTextEntry={!isPasswordVisible && isPrivate}
+          inputMode={inputMode}
           value={field.value}
           onChangeText={(text) => helpers.setValue(text)}
           onBlur={() => helpers.setTouched(true)}
         />
+        {isPrivate && (
+          <TouchableOpacity
+            className="absolute right-3 top-2.5"
+            onPress={() => setIsPasswordVisible((prev) => !prev)}
+          >
+            {isPasswordVisible ? (
+              <Eye size="18" color="#888" variant="Outline" />
+            ) : (
+              <EyeSlash size="18" color="#888" variant="Outline" />
+            )}
+          </TouchableOpacity>
+        )}
         {meta.touched && meta.error && (
           <Text
             className={`${errorTextClass} absolute -bottom-5 mt-2 text-[12px] text-red`}
