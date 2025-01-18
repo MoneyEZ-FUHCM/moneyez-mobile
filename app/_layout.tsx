@@ -1,3 +1,7 @@
+import { COMMON_CONSTANT } from "@/helpers/constants/common";
+import { PATH_NAME } from "@/helpers/constants/pathname";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { store } from "@/redux/store";
 import {
   DarkTheme,
   DefaultTheme,
@@ -9,23 +13,14 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import "react-native-reanimated";
-import "../globals.css";
-
-import { COMMON_CONSTANT } from "@/helpers/constants/common";
-import { PATH_NAME } from "@/helpers/constants/pathname";
-import { useColorScheme } from "@/hooks/useColorScheme";
-import { store } from "@/redux/store";
 import { Provider } from "react-redux";
+import "../globals.css";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const {
-    ANIMATION_NAVIGATE_STACK: ANIMATION_NAVIGATE,
-    THEME_COLOR,
-    CONDITION,
-  } = COMMON_CONSTANT;
+  const { ANIMATION_NAVIGATE_STACK, THEME_COLOR, CONDITION } = COMMON_CONSTANT;
   const { COMMON, TABS, SPLASH, AUTH } = PATH_NAME;
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
@@ -51,7 +46,7 @@ export default function RootLayout() {
         <Stack
           screenOptions={{
             headerShown: CONDITION.FALSE,
-            animation: ANIMATION_NAVIGATE.SLIDE_FROM_RIGHT,
+            animation: ANIMATION_NAVIGATE_STACK.SLIDE_FROM_RIGHT,
           }}
         >
           <Stack.Screen name={SPLASH.SPLASH_SCREEN} />
