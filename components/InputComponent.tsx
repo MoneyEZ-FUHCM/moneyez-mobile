@@ -23,7 +23,7 @@ interface CommonInputProps {
   errorTextClass?: string;
 }
 
-const InputComponent: React.FC<CommonInputProps> = ({
+const InputComponent = ({
   name,
   label,
   placeholder,
@@ -34,7 +34,7 @@ const InputComponent: React.FC<CommonInputProps> = ({
   labelClass = "",
   inputClass = "",
   errorTextClass = "",
-}) => {
+}: CommonInputProps) => {
   const [field, meta, helpers] = useField(name);
   const [isPasswordVisible, setIsPasswordVisible] = useState(!isPrivate);
 
@@ -84,4 +84,4 @@ const InputComponent: React.FC<CommonInputProps> = ({
   );
 };
 
-export default InputComponent;
+export { InputComponent };

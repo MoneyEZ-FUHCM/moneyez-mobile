@@ -1,5 +1,5 @@
 import React from "react";
-import { View, ActivityIndicator, StyleSheet } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 interface LoadingWrapperProps {
   isLoading: boolean;
@@ -39,4 +39,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoadingWrapper;
+export { LoadingWrapper };

@@ -4,7 +4,10 @@ const TEXT_TRANSLATE_AUTH = {
     LOGIN: "Đăng nhập",
     REGISTER: "Đăng ký",
     WELCOME_BACK: "Chào mừng quay trở lại",
-
+    DOB: "Ngày sinh",
+    PHONE_NUMBER: "Số điện thoại",
+    NAME: "Nhập tên",
+    FIRST_NAME: "Nhập họ",
     ENTER_EMAIL: "Nhập email",
     ENTER_PASSWORD: "Nhập mật khẩu",
     OR_LOGIN_WITH: "Hoặc đăng nhập với",
@@ -14,6 +17,10 @@ const TEXT_TRANSLATE_AUTH = {
   LABEL: {
     EMAIL: "Email",
     PASSWORD: "Mật khẩu",
+    NAME: "Tên đệm và tên",
+    FIRST_NAME: "Họ",
+    DOB: "Ngày sinh",
+    PHONE_NUMBER: "Số điện thoại",
   },
 
   // Button
