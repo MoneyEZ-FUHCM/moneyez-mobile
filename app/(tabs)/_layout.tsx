@@ -1,26 +1,17 @@
+import { IconSymbol } from "@/components/ui/IconSymbol";
+import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { Tabs } from "expo-router";
 import React from "react";
-import { IconSymbol } from "@/components/ui/IconSymbol";
-import { Colors } from "@/helpers/constants/color";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import "../../globals.css";
-import { COMMON_CONSTANT } from "@/helpers/constants/common";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-  const {
-    BOTTOM_TABLE_NAME,
-    BOTTOM_TABLE_TRANSLATE,
-    ANIMATION_NAVIGATE_TAB,
-    CONDITION,
-    THEME_COLOR,
-  } = COMMON_CONSTANT;
+  const { BOTTOM_TABLE_NAME, BOTTOM_TABLE_TRANSLATE, CONDITION } =
+    COMMON_CONSTANT;
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? THEME_COLOR.LIGHT].tint,
-        animation: ANIMATION_NAVIGATE_TAB.SHIFT,
+        // animation: ANIMATION_NAVIGATE_TAB.SHIFT,
         headerShown: CONDITION.FALSE,
       }}
     >

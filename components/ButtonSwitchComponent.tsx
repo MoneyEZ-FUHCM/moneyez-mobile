@@ -25,12 +25,12 @@ const ButtonSwitchComponent = (props: IButtonSwitch) => {
   });
 
   return (
-    <View className="relative mb-6 h-9 w-full flex-row items-center justify-between overflow-hidden rounded-md bg-[#ececec]">
+    <View className="relative mb-6 h-9 w-full flex-row items-center justify-between overflow-hidden rounded-md bg-background-gray">
       <Animated.View
         style={{
           transform: [{ translateX }],
         }}
-        className="absolute z-[-1] mx-1 h-7 w-1/2 rounded-md bg-superlight py-1"
+        className="absolute z-[-1] mx-1 h-7 w-1/2 rounded-md bg-white py-1"
       />
       <TouchableOpacity
         className={`flex-1 items-center justify-center`}

@@ -5,3 +5,4 @@ export { ButtonSwitchComponent } from "./ButtonSwitchComponent";
 export { LoadingWrapper } from "./LoadingWrapper";
 export { DatePickerComponent } from "./DatePickerComponent";
 export { InputComponent } from "./InputComponent";
+export { SplashScreen } from "./SplashScreenCustom/SplashScreen";

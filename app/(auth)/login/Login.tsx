@@ -27,7 +27,7 @@ const Login = () => {
   return (
     <LoadingWrapper isLoading={state.isLoading}>
       <SafeAreaViewCustom
-        rootClassName={`justify-center items-centers mx-10 mb-10`}
+        rootClassName={`justify-center items-centers px-10 bg-white`}
       >
         <Animated.View
           entering={FadeInDown.duration(500)}
