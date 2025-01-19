@@ -92,7 +92,7 @@ const Register = () => {
                 className="flex-row justify-center rounded-lg bg-primary p-3"
               >
                 <Text className="text-sm font-bold text-superlight">
-                  {BUTTON.BUTTON_REGISTER}
+                  {BUTTON.REGISTER}
                 </Text>
               </TouchableOpacity>
             </SectionComponent>

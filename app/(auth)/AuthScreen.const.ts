@@ -3,6 +3,7 @@ const AUTH_SCREEN_CONSTANTS = {
   FORM_NAME: {
     EMAIL: "email",
     PASSWORD: "password",
+    CONFIRM_PASSWORD: "confirmPassword",
   },
 
   ERROR_CODE: {

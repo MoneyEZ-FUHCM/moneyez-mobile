@@ -15,8 +15,10 @@ export default function AuthLayout() {
       }}
     >
       <Stack.Screen name={AUTH.LOGIN} />
-      <Stack.Screen name={AUTH.INPUT_OTP} />
       <Stack.Screen name={AUTH.REGISTER} />
+      <Stack.Screen name={AUTH.CONFIRM_EMAIL} />
+      <Stack.Screen name={AUTH.INPUT_OTP} />
+      <Stack.Screen name={AUTH.SET_NEW_PASSWORD} />
     </Stack>
   );
 }
