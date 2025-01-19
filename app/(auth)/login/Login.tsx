@@ -9,6 +9,7 @@ import {
   SpaceComponent,
 } from "@/components";
 
+import { PATH_NAME } from "@/helpers/constants/pathname";
 import { router } from "expo-router";
 import { Formik } from "formik";
 import React from "react";
@@ -27,7 +28,6 @@ import AUTH_SCREEN_CONSTANTS from "../AuthScreen.const";
 import TEXT_TRANSLATE_AUTH from "../AuthScreen.translate";
 import useLoginScreen from "../hooks/useLoginScreen";
 import Register from "../register/Register";
-import { PATH_NAME } from "@/helpers/constants/pathname";
 
 const Login = () => {
   const { handler, state } = useLoginScreen();
@@ -56,8 +56,8 @@ const Login = () => {
                 {TITLE.WELCOME_BACK}
               </Text>
               <ButtonSwitchComponent
-                buttonLoginName={BUTTON.BUTTON_LOGIN}
-                buttonRegisterName={BUTTON.BUTTON_REGISTER}
+                buttonLoginName={BUTTON.LOGIN}
+                buttonRegisterName={BUTTON.REGISTER}
                 isStatusChange={state.isLogin}
                 onChangeStatus={handler.setIsLogin}
               />
@@ -111,7 +111,11 @@ const Login = () => {
                               {BUTTON.REMEMBER_ME}
                             </Text>
                           </TouchableOpacity>
-                          <TouchableOpacity>
+                          <TouchableOpacity
+                            onPress={() =>
+                              router.push(AUTH.CONFIRM_EMAIL as any)
+                            }
+                          >
                             <Text className="text-[12px] font-bold text-primary">
                               {BUTTON.FORGOT_PASSWORD}
                             </Text>
@@ -123,7 +127,7 @@ const Login = () => {
                             className="flex-row justify-center rounded-lg bg-primary p-3"
                           >
                             <Text className="text-sm font-bold text-superlight">
-                              {BUTTON.BUTTON_LOGIN}
+                              {BUTTON.LOGIN}
                             </Text>
                           </TouchableOpacity>
                           <SectionComponent rootClassName="justify-center flex-row items-center my-2">
@@ -133,16 +137,13 @@ const Login = () => {
                             </Text>
                             <View className="h-[1px] w-full flex-1 bg-stroke" />
                           </SectionComponent>
-                          <TouchableOpacity
-                            onPress={() => router.push(AUTH.INPUT_OTP as any)}
-                            className="flex-row items-center justify-center rounded-lg border border-stroke p-3"
-                          >
+                          <TouchableOpacity className="flex-row items-center justify-center rounded-lg border border-stroke p-3">
                             <Image
                               source={LogoGoogle}
                               className="mr-1 h-5 w-5"
                             />
                             <Text className="text-sm text-black">
-                              {BUTTON.BUTTON_LOGIN_WITH_GOOGLE}
+                              {BUTTON.LOGIN_WITH_GOOGLE}
                             </Text>
                           </TouchableOpacity>
                         </SectionComponent>

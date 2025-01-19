@@ -11,6 +11,12 @@ const TEXT_TRANSLATE_AUTH = {
     ENTER_EMAIL: "Nhập email",
     ENTER_PASSWORD: "Nhập mật khẩu",
     OR_LOGIN_WITH: "Hoặc đăng nhập với",
+    CONFIRM_PASSWORD: "Xác nhận mật khẩu",
+    RESET_PASSWORD_TITLE: "Đặt lại mật khẩu mới",
+    RESET_PASSWORD_DESCRIPTION:
+      "Đặt mật khẩu mới để bảo vệ tài khoản. Nhập và xác nhận để hoàn tất",
+    CONFIRM_EMAIL_DESCRIPTION: "Vui lòng nhập email để khôi phục mật khẩu",
+    FORGOT_PASSWORD: "Quên mật khẩu",
 
     // otp screen
     CHECK_YOUR_EMAIL: "Kiểm tra email của bạn",
@@ -29,21 +35,28 @@ const TEXT_TRANSLATE_AUTH = {
     FIRST_NAME: "Họ",
     DOB: "Ngày sinh",
     PHONE_NUMBER: "Số điện thoại",
+    CONFIRM_PASSWORD: "Nhập lại mật khẩu",
   },
 
   // Button
   BUTTON: {
-    BUTTON_LOGIN: "Đăng nhập",
-    BUTTON_REGISTER: "Đăng ký",
-    BUTTON_LOGIN_WITH_GOOGLE: "Tiếp tục với Google",
-    BUTTON_CONFIRM_OTP: "Xác nhận",
-    FORGOT_PASSWORD: "Quên mật khẩu",
+    LOGIN: "Đăng nhập",
+    REGISTER: "Đăng ký",
     LOGIN_WITH_GOOGLE: "Tiếp tục với Google",
+    CONFIRM_OTP: "Xác nhận",
+    FORGOT_PASSWORD: "Quên mật khẩu",
     REMEMBER_ME: "Ghi nhớ",
+    RECOVERY_PASSWORD: "Khôi phục mật khẩu",
+    CHANGE_PASSWORD: "Thay đổi mật khẩu",
   },
 
   MESSAGE_ERROR: {
     ACCOUNT_NOT_EXISTS: "Tài khoản không tồn tài",
+  },
+
+  MESSAGE_SUCCESS: {
+    REGISTER_SUCCESS:
+      "Đăng ký tài khoản thành công. Vui lòng đăng nhập để trải nghiệm",
   },
 
   MESSAGE_VALIDATE: {
@@ -51,6 +64,10 @@ const TEXT_TRANSLATE_AUTH = {
     INPUT_EMAIL: "Email phải đúng định dạng",
     PASSWORD_REQUIRED: "Mật khẩu không được để trống",
     PASSWORD_8_CHARACTERS: "Mật khẩu phải có ít nhất 8 ký tự",
+    PASSWORD_MIN_LENGTH: "Mật khẩu phải có ít nhất 8 ký tự",
+    CONFIRM_PASSWORD_REQUIRED: "Xác nhận mật khẩu không được để trống",
+    PASSWORDS_MUST_MATCH: "Mật khẩu và xác nhận mật khẩu phải giống nhau",
+    OTP_5_DIGITS: "Vui lòng nhập đầy đủ 5 chữ số",
   },
 };
 

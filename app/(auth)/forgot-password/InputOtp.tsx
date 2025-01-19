@@ -5,24 +5,22 @@ import {
   SpaceComponent,
 } from "@/components";
 import { Colors } from "@/helpers/constants/color";
-import { PATH_NAME } from "@/helpers/constants/pathname";
 import { router } from "expo-router";
 import React from "react";
 import { Text, TouchableOpacity } from "react-native";
 import { OtpInput } from "react-native-otp-entry";
 import TEXT_TRANSLATE_AUTH from "../AuthScreen.translate";
-import useInputOtpScreen from "../hooks/useInputOtpScreen";
+import useForgotPassword from "../hooks/useForgotPassword";
 
 const InputOtp = () => {
   const NUMBER_OF_DIGITS_OTP = 5;
-  const { handler, state } = useInputOtpScreen();
+  const { handler } = useForgotPassword();
   const { TITLE } = TEXT_TRANSLATE_AUTH;
-  const { AUTH } = PATH_NAME;
 
   return (
     <SafeAreaViewCustom rootClassName="justify-center px-10 items-center bg-white relative">
       <SectionComponent rootClassName="w-full absolute left-0 top-2">
-        <BackScreenButton onPress={() => router.replace(AUTH.LOGIN as any)} />
+        <BackScreenButton onPress={() => router.back()} />
       </SectionComponent>
       <SectionComponent rootClassName="w-full">
         <Text className="text-2xl font-semibold">{TITLE.CHECK_YOUR_EMAIL}</Text>
@@ -62,7 +60,10 @@ const InputOtp = () => {
         />
       </SectionComponent>
       <SpaceComponent height={30} />
-      <TouchableOpacity className="w-full flex-row justify-center rounded-lg bg-primary p-3">
+      <TouchableOpacity
+        className="w-full flex-row justify-center rounded-lg bg-primary p-3"
+        onPress={() => handler.handleSubmitOtp()}
+      >
         <Text className="text-lg font-bold text-superlight">
           {TITLE.CONFIRM}
         </Text>
