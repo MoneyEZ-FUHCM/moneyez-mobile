@@ -4,14 +4,14 @@ import { Stack } from "expo-router";
 import React from "react";
 
 export default function AuthLayout() {
-  const { CONDITION } = COMMON_CONSTANT;
   const { AUTH } = PATH_NAME;
+  const { ANIMATION_NAVIGATE_STACK, CONDITION } = COMMON_CONSTANT;
 
   return (
     <Stack
       screenOptions={{
-        headerStyle: { backgroundColor: "var(--color-primary)" },
         headerShown: CONDITION.FALSE,
+        animation: ANIMATION_NAVIGATE_STACK.SLIDE_FROM_RIGHT,
       }}
     >
       <Stack.Screen name={AUTH.LOGIN} />

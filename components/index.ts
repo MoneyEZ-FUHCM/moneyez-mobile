@@ -6,3 +6,5 @@ export { LoadingWrapper } from "./LoadingWrapper";
 export { DatePickerComponent } from "./DatePickerComponent";
 export { InputComponent } from "./InputComponent";
 export { SplashScreen } from "./SplashScreenCustom/SplashScreen";
+export { BackScreenButton } from "./BackScreenButton";
+export { SplashScreenLoading } from "./SplashScreenLoading";

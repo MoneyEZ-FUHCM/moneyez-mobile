@@ -1,7 +1,15 @@
+import { useState } from "react";
+
 const useInputOtpScreen = () => {
+  const [otp, setOtp] = useState("");
+
   return {
-    state: {},
-    handler: {},
+    state: {
+      otp,
+    },
+    handler: {
+      setOtp,
+    },
   };
 };
 
