@@ -86,7 +86,7 @@ const SplashScreen = () => {
         <View className="absolute bottom-1/4 w-4/5">
           <Pressable
             className="w-full rounded-lg bg-superlight px-3 py-3 shadow-md"
-            onPress={() => router.navigate(PATH as any)}
+            onPress={() => router.push(PATH as any)}
           >
             <Text className="text-center font-bold text-primary">
               {TEXT_TRANSLATE.EXPERIENCE_NOW}

@@ -11,6 +11,14 @@ const TEXT_TRANSLATE_AUTH = {
     ENTER_EMAIL: "Nhập email",
     ENTER_PASSWORD: "Nhập mật khẩu",
     OR_LOGIN_WITH: "Hoặc đăng nhập với",
+
+    // otp screen
+    CHECK_YOUR_EMAIL: "Kiểm tra email của bạn",
+    EMAIL_CONFIRMATION_SENT: "Chúng tôi đã gửi email xác nhận",
+    ENTER_5_DIGITS_OTP: "Vui lòng nhập OTP gồm 5 chữ số trong email",
+    CONFIRM: "Xác nhận",
+    DID_NOT_RECEIVE_OTP: "Chưa nhận được OTP?",
+    RESEND: "Gửi lại",
   },
 
   // Label

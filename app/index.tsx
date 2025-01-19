@@ -1,11 +1,11 @@
-import { SafeAreaViewCustom, SplashScreen } from "@/components";
+import { SafeAreaViewCustom, SplashScreenLoading } from "@/components";
 import "@/globals.css";
 import React from "react";
 
 const index = () => {
   return (
     <SafeAreaViewCustom>
-      <SplashScreen />
+      <SplashScreenLoading />
     </SafeAreaViewCustom>
   );
 };
