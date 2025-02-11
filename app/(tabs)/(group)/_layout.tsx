@@ -12,7 +12,7 @@ export default function GroupLayout() {
         headerShown: CONDITION.FALSE,
       }}
     >
-      <Stack.Screen />
+      <Stack.Screen name={"Group"} />
     </Stack>
   );
 }

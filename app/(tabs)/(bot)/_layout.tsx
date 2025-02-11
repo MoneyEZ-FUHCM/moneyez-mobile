@@ -12,7 +12,7 @@ export default function BotLayout() {
         headerShown: CONDITION.FALSE,
       }}
     >
-      <Stack.Screen />
+      <Stack.Screen name={"ChatBot"} />
     </Stack>
   );
 }

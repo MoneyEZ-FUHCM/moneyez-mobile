@@ -8,3 +8,4 @@ export { InputComponent } from "./InputComponent";
 export { SplashScreen } from "./SplashScreenCustom/SplashScreen";
 export { BackScreenButton } from "./BackScreenButton";
 export { SplashScreenLoading } from "./SplashScreenLoading";
+export { TabBar } from "./TabBarCustom/TabBar";

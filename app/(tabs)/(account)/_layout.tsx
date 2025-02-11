@@ -12,7 +12,7 @@ export default function AccountLayout() {
         headerShown: CONDITION.FALSE,
       }}
     >
-      <Stack.Screen />
+      <Stack.Screen name={"Account"} />
     </Stack>
   );
 }
