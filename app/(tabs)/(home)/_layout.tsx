@@ -12,7 +12,7 @@ export default function HomeLayout() {
         headerShown: CONDITION.FALSE,
       }}
     >
-      <Stack.Screen />
+      <Stack.Screen name={"HomeScreen"} />
     </Stack>
   );
 }
