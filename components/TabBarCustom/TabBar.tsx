@@ -8,7 +8,7 @@ const TabBar = ({ state, descriptors, navigation }: BottomTabBarProps) => {
   const greyColor = "#737373";
 
   return (
-    <View className="absolute bottom-6 mx-5 flex-row items-center justify-between rounded-full bg-white px-6 py-4 shadow-lg">
+    <View className="absolute bottom-5 mx-5 flex-row items-center justify-between rounded-full bg-white px-4 py-1.5 shadow-lg">
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const label =

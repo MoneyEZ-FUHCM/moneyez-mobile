@@ -18,7 +18,9 @@ const PATH_NAME = {
   },
   BOT: {},
   GROUP: {},
-  HOME: {},
+  HOME: {
+    HOME_DEFAULT: "/HomeScreen",
+  },
 };
 
 export { PATH_NAME };

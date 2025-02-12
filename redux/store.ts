@@ -1,6 +1,14 @@
 import authApi from "@/services/auth";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
+import loadingReducer from "./slices/loadingSlice";
+import userReducer from "./slices/userSlice";
+
+const rootReducer = combineReducers({
+  [authApi.reducerPath]: authApi.reducer,
+  loading: loadingReducer,
+  user: userReducer,
+});
 
 const rootReducer = combineReducers({
   [authApi.reducerPath]: authApi.reducer,

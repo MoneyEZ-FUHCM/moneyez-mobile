@@ -2,10 +2,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface UserState {
   userInfo: null;
+  email: null;
 }
 
 const initialState: UserState = {
   userInfo: null,
+  email: null,
 };
 
 const userSlice = createSlice({
@@ -18,8 +20,11 @@ const userSlice = createSlice({
     clearUserInfo: (state) => {
       state.userInfo = null;
     },
+    setEmail: (state, action) => {
+      state.email = action.payload;
+    },
   },
 });
 
-export const { setUserInfo, clearUserInfo } = userSlice.actions;
+export const { setUserInfo, clearUserInfo, setEmail } = userSlice.actions;
 export default userSlice.reducer;

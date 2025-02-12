@@ -42,7 +42,7 @@ const SetNewPassword = () => {
             confirmPassword: "",
           }}
           validationSchema={() => handler.validationChangePasswordSchema}
-          onSubmit={() => handler.handleChangePassword()}
+          onSubmit={handler.handleChangePassword}
         >
           {({ handleSubmit }) => (
             <>
