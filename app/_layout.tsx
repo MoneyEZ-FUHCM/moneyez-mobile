@@ -15,6 +15,7 @@ import { useEffect } from "react";
 import "react-native-reanimated";
 import { Provider } from "react-redux";
 import "../globals.css";
+import { LoadingWrapper } from "@/components";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -40,22 +41,24 @@ export default function RootLayout() {
 
   return (
     <Provider store={store}>
-      <ThemeProvider
-        value={colorScheme === THEME_COLOR.DARK ? DarkTheme : DefaultTheme}
-      >
-        <Stack
-          screenOptions={{
-            headerShown: CONDITION.FALSE,
-            animation: ANIMATION_NAVIGATE_STACK.SLIDE_FROM_RIGHT,
-          }}
+      <LoadingWrapper>
+        <ThemeProvider
+          value={colorScheme === THEME_COLOR.DARK ? DarkTheme : DefaultTheme}
         >
-          <Stack.Screen name={SPLASH.SPLASH_SCREEN} />
-          <Stack.Screen name={TABS.TABS_NAVIGATOR} />
-          <Stack.Screen name={AUTH.AUTH_NAVIGATOR} />
-          <Stack.Screen name={COMMON.ERROR_PAGE} />
-        </Stack>
-        <StatusBar style="auto" />
-      </ThemeProvider>
+          <Stack
+            screenOptions={{
+              headerShown: CONDITION.FALSE,
+              animation: ANIMATION_NAVIGATE_STACK.SLIDE_FROM_RIGHT,
+            }}
+          >
+            <Stack.Screen name={SPLASH.SPLASH_SCREEN} />
+            <Stack.Screen name={TABS.TABS_NAVIGATOR} />
+            <Stack.Screen name={AUTH.AUTH_NAVIGATOR} />
+            <Stack.Screen name={COMMON.ERROR_PAGE} />
+          </Stack>
+          <StatusBar style="auto" />
+        </ThemeProvider>
+      </LoadingWrapper>
     </Provider>
   );
 }

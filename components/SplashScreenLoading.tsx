@@ -1,12 +1,39 @@
 import { appInfo } from "@/helpers/constants/appInfos";
-import React, { useEffect, useRef, useState } from "react";
+import { PATH_NAME } from "@/helpers/constants/pathname";
+import { setShowSplash } from "@/redux/slices/loadingSlice";
+import { RootState } from "@/redux/store";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router } from "expo-router";
+import React, { useEffect, useRef } from "react";
 import { Animated, Image, SafeAreaView, StyleSheet } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 import { SplashScreen } from "./SplashScreenCustom/SplashScreen";
 
 const SplashScreenLoading = () => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const translateYAnim = useRef(new Animated.Value(-50)).current;
-  const [isLoading, setIsLoading] = useState(true);
+  const dispatch = useDispatch();
+  const isShowSplash = useSelector(
+    (state: RootState) => state.loading.isShowSplash,
+  );
+
+  useEffect(() => {
+    const checkTokenAndNavigate = async () => {
+      try {
+        const token = await AsyncStorage.getItem("accessToken");
+
+        setTimeout(() => {
+          if (token) {
+            router.replace(PATH_NAME.HOME.HOME_DEFAULT as any);
+          } else {
+            dispatch(setShowSplash(true));
+          }
+        }, 2500);
+      } catch (error) {}
+    };
+
+    checkTokenAndNavigate();
+  }, []);
 
   useEffect(() => {
     Animated.parallel([
@@ -21,25 +48,16 @@ const SplashScreenLoading = () => {
         useNativeDriver: true,
       }),
     ]).start();
-
-    const timeout = setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
-
-    return () => clearTimeout(timeout);
   }, []);
 
-  return !isLoading ? (
-    <SplashScreen />
-  ) : (
+  if (isShowSplash) return <SplashScreen />;
+
+  return (
     <SafeAreaView style={styles.container}>
       <Animated.View
         style={[
           styles.animateContainer,
-          {
-            opacity: fadeAnim,
-            transform: [{ translateY: translateYAnim }],
-          },
+          { opacity: fadeAnim, transform: [{ translateY: translateYAnim }] },
         ]}
       >
         <Image

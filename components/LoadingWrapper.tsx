@@ -1,19 +1,21 @@
+import { RootState } from "@/redux/store";
 import React from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { useSelector } from "react-redux";
 
 interface LoadingWrapperProps {
-  isLoading: boolean;
   children: React.ReactNode;
   spinnerSize?: "small" | "large";
   spinnerColor?: string;
 }
 
 const LoadingWrapper = ({
-  isLoading,
   children,
   spinnerSize = "large",
   spinnerColor = "#609084",
 }: LoadingWrapperProps) => {
+  const isLoading = useSelector((state: RootState) => state.loading.isLoading);
+
   return (
     <View style={styles.wrapper}>
       {children}

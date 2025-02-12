@@ -17,7 +17,7 @@ import { SPLASH_SCREEN_CONSTANT } from "./SplashScreen.const";
 import { TEXT_TRANSLATE } from "./SplashScreen.translate";
 
 const SplashScreen = () => {
-  const { PATH, CAROUSELS } = SPLASH_SCREEN_CONSTANT;
+  const { PATH_LOGIN, CAROUSELS } = SPLASH_SCREEN_CONSTANT;
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const fadeAnim = new Animated.Value(0);
@@ -86,7 +86,7 @@ const SplashScreen = () => {
         <View className="absolute bottom-1/4 w-4/5">
           <Pressable
             className="w-full rounded-lg bg-superlight px-3 py-3 shadow-md"
-            onPress={() => router.push(PATH as any)}
+            onPress={() => router.navigate(PATH_LOGIN as any)}
           >
             <Text className="text-center font-bold text-primary">
               {TEXT_TRANSLATE.EXPERIENCE_NOW}

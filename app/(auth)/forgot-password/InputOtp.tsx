@@ -10,11 +10,11 @@ import React from "react";
 import { Text, TouchableOpacity } from "react-native";
 import { OtpInput } from "react-native-otp-entry";
 import TEXT_TRANSLATE_AUTH from "../AuthScreen.translate";
-import useForgotPassword from "../hooks/useForgotPassword";
+import useOtpScreen from "../hooks/useOtpScreen";
 
 const InputOtp = () => {
   const NUMBER_OF_DIGITS_OTP = 5;
-  const { handler } = useForgotPassword();
+  const { handler } = useOtpScreen();
   const { TITLE } = TEXT_TRANSLATE_AUTH;
 
   return (
@@ -38,7 +38,7 @@ const InputOtp = () => {
           numberOfDigits={NUMBER_OF_DIGITS_OTP}
           focusColor="green"
           focusStickBlinkingDuration={400}
-          onTextChange={(text) => handler.setOtp(text)}
+          onTextChange={(text) => handler.setOtpCode(text)}
           theme={{
             containerStyle: {
               width: "100%",
@@ -74,7 +74,7 @@ const InputOtp = () => {
           {TITLE.DID_NOT_RECEIVE_OTP}
         </Text>
         <SpaceComponent width={5} />
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handler.handleResendMail}>
           <Text className="text-primary">{TITLE.RESEND}</Text>
         </TouchableOpacity>
       </SectionComponent>

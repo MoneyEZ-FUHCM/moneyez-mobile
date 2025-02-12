@@ -1,5 +1,5 @@
 export const SPLASH_SCREEN_CONSTANT = {
-  PATH: "/(auth)/login/Login",
+  PATH_LOGIN: "/(auth)/login/Login",
   CAROUSELS: [
     {
       id: 1,

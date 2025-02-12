@@ -5,9 +5,9 @@ const TEXT_TRANSLATE_AUTH = {
     REGISTER: "Đăng ký",
     WELCOME_BACK: "Chào mừng quay trở lại",
     DOB: "Ngày sinh",
-    PHONE_NUMBER: "Số điện thoại",
+    ENTER_PHONE_NUMBER: "Nhập số điện thoại",
     NAME: "Nhập tên",
-    FIRST_NAME: "Nhập họ",
+    ENTER_FULLNAME: "Nhập họ và tên",
     ENTER_EMAIL: "Nhập email",
     ENTER_PASSWORD: "Nhập mật khẩu",
     OR_LOGIN_WITH: "Hoặc đăng nhập với",
@@ -31,11 +31,10 @@ const TEXT_TRANSLATE_AUTH = {
   LABEL: {
     EMAIL: "Email",
     PASSWORD: "Mật khẩu",
-    NAME: "Tên đệm và tên",
-    FIRST_NAME: "Họ",
+    FULLNAME: "Họ và tên",
     DOB: "Ngày sinh",
     PHONE_NUMBER: "Số điện thoại",
-    CONFIRM_PASSWORD: "Nhập lại mật khẩu",
+    CONFIRM_PASSWORD: "Xác nhận mật khẩu",
   },
 
   // Button
@@ -51,23 +50,42 @@ const TEXT_TRANSLATE_AUTH = {
   },
 
   MESSAGE_ERROR: {
-    ACCOUNT_NOT_EXISTS: "Tài khoản không tồn tài",
+    INVALID_INFO: "Tài khoản hoặc mật khẩu không chính xác",
+    ACCOUNT_ALREADY_EXISTED: "Tài khoản đã tồn tại",
+    PHONE_ALREADY_EXISTED: "Số điện thoại đã tồn tại",
+    DOEST_NOT_VERIFY_EMAIL:
+      "Vui lòng kiểm tra hòm thư (hoặc Thư rác) để lấy mã OTP",
+    OTP_INVALID: "Mã OTP đã hết hạn hoặc không hợp lệ",
+    ACCOUNT_DOES_NOT_EXIST: "Tài khoản không tồn tại",
+    NOT_PERMISSION: "Bạn không có quyền truy cập vào ứng dụng này",
+    ACCOUNT_BLOCKED:
+      "Tài khoản đã bị khóa. Vui lòng liên hệ quản lý để kích hoạt",
   },
 
   MESSAGE_SUCCESS: {
+    LOGIN_SUCCESSFUL: "Đăng nhập thành công",
+    REQUEST_PASSWORD_SUCCESSFUL:
+      "Vui lòng kiểm tra hòm thư (hoặc Thư rác) để lấy mã OTP",
+    CONFIRM_PASSWORD_SUCCESSFUL:
+      "Cập nhật mật khẩu thành công. Vui lòng đăng nhập để vào hệ thống",
     REGISTER_SUCCESS:
       "Đăng ký tài khoản thành công. Vui lòng đăng nhập để trải nghiệm",
+    LOGOUT_SUCCESS: "Đăng xuất thành công",
   },
 
   MESSAGE_VALIDATE: {
-    INPUT_REQUIRED: "Email không được để trống",
+    EMAIL_REQUIRED: "Email không được để trống",
+    FULLNAME_REQUIRED: "Họ và tên không được để trống",
+    PHONE_NUMBER_REQUIRED: "Vui lòng nhập số điện thoại",
     INPUT_EMAIL: "Email phải đúng định dạng",
+    INPUT_PHONE_NUMBER: "Vui lòng nhập đúng số điện thoại (10 chữ số)",
     PASSWORD_REQUIRED: "Mật khẩu không được để trống",
     PASSWORD_8_CHARACTERS: "Mật khẩu phải có ít nhất 8 ký tự",
     PASSWORD_MIN_LENGTH: "Mật khẩu phải có ít nhất 8 ký tự",
-    CONFIRM_PASSWORD_REQUIRED: "Xác nhận mật khẩu không được để trống",
+    CONFIRM_PASSWORD_REQUIRED: "Mật khẩu xác nhận không được để trống",
     PASSWORDS_MUST_MATCH: "Mật khẩu và xác nhận mật khẩu phải giống nhau",
     OTP_5_DIGITS: "Vui lòng nhập đầy đủ 5 chữ số",
+    RESET_PASSWORD: "Vui lòng nhập mật khẩu mới và xác nhận",
   },
 };
 

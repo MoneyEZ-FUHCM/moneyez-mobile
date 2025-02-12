@@ -14,7 +14,7 @@ import TEXT_TRANSLATE_AUTH from "../AuthScreen.translate";
 import useForgotPassword from "../hooks/useForgotPassword";
 
 const ConfirmEmail = () => {
-  const { handler, state } = useForgotPassword();
+  const { handler } = useForgotPassword();
   const { TITLE, BUTTON, LABEL } = TEXT_TRANSLATE_AUTH;
   const { FORM_NAME } = AUTH_SCREEN_CONSTANTS;
   const router = useRouter();
@@ -36,10 +36,9 @@ const ConfirmEmail = () => {
         <Formik
           initialValues={{
             email: "",
-            password: "",
           }}
           validationSchema={() => handler.validationConfirmEmailSchema}
-          onSubmit={() => handler.handleConfirmEmail()}
+          onSubmit={handler.handleRecoveryPassword}
         >
           {({ handleSubmit }) => (
             <>
