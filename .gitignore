@@ -35,6 +35,13 @@ yarn-error.*
 # local env files
 .env
 
+#google
+google-services.json
+
+#android
+android/
+
+
 # typescript
 *.tsbuildinfo
 

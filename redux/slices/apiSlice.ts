@@ -1,13 +1,11 @@
+import { COMMON_CONSTANT } from "@/helpers/constants/common";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   BaseQueryApi,
   createApi,
   FetchArgs,
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { COMMON_CONSTANT } from "@/helpers/constants/common";
-import { router } from "expo-router";
-import { PATH_NAME } from "@/helpers/constants/pathname";
 
 interface RefreshResultData {
   accessToken: string;
@@ -18,11 +16,11 @@ const axiosBaseQuery = async (
   api: BaseQueryApi,
   extraOptions: {},
 ) => {
-  const { HTTP_STATUS } = COMMON_CONSTANT;
+  const { HTTP_STATUS, HTTP_METHOD } = COMMON_CONSTANT;
   let token = await AsyncStorage.getItem("accessToken");
 
   const baseQuery = fetchBaseQuery({
-    baseUrl: "http://178.128.118.171:8080/api/v1",
+    baseUrl: process.env.EXPO_PUBLIC_BASE_URL,
     prepareHeaders: (headers) => {
       headers.set("Content-Type", "application/json");
       if (token) {
@@ -44,8 +42,8 @@ const axiosBaseQuery = async (
     if (rfToken) {
       const res = await baseQuery(
         {
-          url: "/authen/refresh-token",
-          method: "POST",
+          url: "/auth/refresh-token",
+          method: HTTP_METHOD.POST,
           body: rfToken,
         },
         api,
