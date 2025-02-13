@@ -5,11 +5,21 @@ import React from "react";
 import "../../globals.css";
 
 export default function TabLayout() {
-  const { BOTTOM_TABLE_NAME, BOTTOM_TABLE_TRANSLATE, CONDITION } =
-    COMMON_CONSTANT;
+  const {
+    BOTTOM_TABLE_NAME,
+    BOTTOM_TABLE_TRANSLATE,
+    CONDITION,
+    ANIMATION_NAVIGATE_TAB,
+  } = COMMON_CONSTANT;
 
   return (
-    <Tabs tabBar={(props) => <TabBar {...props} />}>
+    <Tabs
+      tabBar={(props) => <TabBar {...props} />}
+      screenOptions={{
+        headerShown: CONDITION.FALSE,
+        animation: ANIMATION_NAVIGATE_TAB.SHIFT,
+      }}
+    >
       <Tabs.Screen
         name={BOTTOM_TABLE_NAME.HOME}
         options={{
