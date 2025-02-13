@@ -47,7 +47,7 @@ const useRegisterScreen = () => {
       const res = await register(payload).unwrap();
       if (res && res.status === HTTP_STATUS.SUCCESS.OK) {
         dispatch(setEmail(payload.email));
-        router.push({
+        router.navigate({
           pathname: AUTH.INPUT_OTP as any,
           params: { mode: "verify" },
         });

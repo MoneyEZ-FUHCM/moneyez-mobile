@@ -53,7 +53,7 @@ const useForgotPassword = () => {
       dispatch(setEmail(payload.email));
       const res = await resetPassword(JSON.stringify(payload.email)).unwrap();
       if (res && res.status === HTTP_STATUS.SUCCESS.OK) {
-        router.push({
+        router.navigate({
           pathname: AUTH.INPUT_OTP as any,
           params: { mode: "reset" },
         });
