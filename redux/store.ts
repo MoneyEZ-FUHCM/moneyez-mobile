@@ -10,10 +10,6 @@ const rootReducer = combineReducers({
   user: userReducer,
 });
 
-const rootReducer = combineReducers({
-  [authApi.reducerPath]: authApi.reducer,
-});
-
 export const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
