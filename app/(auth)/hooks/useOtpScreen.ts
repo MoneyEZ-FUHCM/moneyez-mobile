@@ -31,7 +31,7 @@ const useOtpScreen = () => {
   const VERIFY_MODE = "verify";
 
   const handleConfirmEmail = () => {
-    router.push(AUTH.INPUT_OTP as any);
+    router.navigate(AUTH.INPUT_OTP as any);
   };
 
   const handleSubmitOtp = async () => {
@@ -66,7 +66,7 @@ const useOtpScreen = () => {
           );
         }
       } else {
-        router.push(AUTH.SET_NEW_PASSWORD as any);
+        router.navigate(AUTH.SET_NEW_PASSWORD as any);
       }
     } catch (err: any) {
       const error = err?.data;
@@ -86,7 +86,7 @@ const useOtpScreen = () => {
     try {
       const res = await resetPassword(JSON.stringify(email)).unwrap();
       if (res && res.status === HTTP_STATUS.SUCCESS.OK) {
-        router.push(AUTH.INPUT_OTP as any);
+        router.navigate(AUTH.INPUT_OTP as any);
         ToastAndroid.show(
           MESSAGE_SUCCESS.REQUEST_PASSWORD_SUCCESSFUL,
           ToastAndroid.SHORT,

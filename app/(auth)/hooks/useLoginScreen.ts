@@ -84,7 +84,7 @@ const useLoginScreen = () => {
       }
       if (error.errorCode === ERROR_CODE.ACCOUNT_NEED_CONFIRM_EMAIL) {
         dispatch(setEmail(payload.email));
-        router.push({
+        router.navigate({
           pathname: AUTH.INPUT_OTP as any,
           params: { mode: "verify" },
         });

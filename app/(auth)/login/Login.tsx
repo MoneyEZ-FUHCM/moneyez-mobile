@@ -108,7 +108,9 @@ const Login = () => {
                           </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                          onPress={() => router.push(AUTH.CONFIRM_EMAIL as any)}
+                          onPress={() =>
+                            router.navigate(AUTH.CONFIRM_EMAIL as any)
+                          }
                         >
                           <Text className="text-[12px] font-bold text-primary">
                             {BUTTON.FORGOT_PASSWORD}
