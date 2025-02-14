@@ -20,6 +20,7 @@ const PATH_NAME = {
   GROUP: {},
   HOME: {
     HOME_DEFAULT: "/HomeScreen",
+    INVIDUAL_HOME: "/invidual-home/InvidualHome",
   },
 };
 
