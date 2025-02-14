@@ -2,23 +2,13 @@ import { Eye, EyeSlash } from 'iconsax-react-native';
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import Svg, { Path, Rect } from 'react-native-svg';
+  import GROUP_LIST from './Grouplist.const';
+import TEXT_TRANSLATE_GROUP_LIST from './Grouplist.translate';
 
 const Group = () => {
-  const funds = [
-    { name: 'Nhóm gia đình', amount: '1.000.000 Đ' },
-    { name: 'Du lịch Nha Trang', amount: '1.000.000 Đ' },
-    { name: 'Year End Party 2025', amount: '1.000.000 Đ' },
-    { name: 'Quỹ lớp', amount: '1.000.000 Đ' },
-    { name: 'Nợ xấu Azure', amount: '1.000.000 Đ' },
-    { name: 'Quỹ áo ấm tình thương', amount: '1.000.000 Đ' },
-    { name: 'Quỹ nhà lá', amount: '1.000.000 Đ' },
-    { name: 'Quỹ từ thiện', amount: '500.000 Đ' },
-    { name: 'Quỹ học bổng', amount: '2.000.000 Đ' },
-    { name: 'Quỹ phát triển', amount: '3.000.000 Đ' },
-    { name: 'Quỹ khẩn cấp', amount: '1.500.000 Đ' },
-    { name: 'Quỹ bảo hiểm', amount: '2.500.000 Đ' },
-  ];
 
+  const funds = GROUP_LIST;
+  const {TITLE,BUTTON}  =  TEXT_TRANSLATE_GROUP_LIST;
   const VisibilityIcon = ({
       visible,
       onPress,
@@ -39,7 +29,7 @@ const Group = () => {
   return (
     <View className="flex-1 pt-10 pb-24 px-4 bg-white">
       <View className="w-full flex-row justify-between items-center mb-4">
-      <Text className="text-[#609084] text-lg font-semibold">Quỹ nhóm</Text>
+      <Text className="text-[#609084] text-lg font-semibold">{TITLE.GROUP_FUND}</Text>
       <TouchableOpacity className="p-2 rounded-lg border border-[#609084] flex-row justify-center items-center">
         <Svg width="16" height="17" viewBox="0 0 16 17" fill="none">
         <Path
@@ -47,7 +37,7 @@ const Group = () => {
           fill="#609084"
         />
         </Svg>
-        <Text className="text-[#609084] text-lg font-normal ml-2">Tạo quỹ</Text>
+        <Text className="text-[#609084] text-lg font-normal ml-2">{BUTTON.CREATE_GROUP}</Text>
       </TouchableOpacity>
       </View>
       <FlatList
