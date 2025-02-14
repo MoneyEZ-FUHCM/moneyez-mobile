@@ -11,8 +11,8 @@ import { Feather } from "@expo/vector-icons";
 import { Coin, Eye, EyeSlash } from "iconsax-react-native";
 import React from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
-import TEXT_TRANSLATE_HOME from "./HomeScreen.translate";
-import useHomeScreen from "./hooks/useHomeScreen";
+import TEXT_TRANSLATE_HOME from "../HomeScreen.translate";
+import useHomeScreen from "../hooks/useHomeScreen";
 
 const HomeScreen = () => {
   const { state, handler } = useHomeScreen();
