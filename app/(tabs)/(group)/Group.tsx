@@ -2,7 +2,7 @@ import { Eye, EyeSlash } from 'iconsax-react-native';
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import Svg, { Path, Rect } from 'react-native-svg';
-  import GROUP_LIST from './Grouplist.const';
+import GROUP_LIST from './Grouplist.const';
 import TEXT_TRANSLATE_GROUP_LIST from './Grouplist.translate';
 
 const Group = () => {
