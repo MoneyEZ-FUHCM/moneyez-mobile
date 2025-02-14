@@ -19,7 +19,7 @@ const PATH_NAME = {
   BOT: {},
   GROUP: {},
   HOME: {
-    HOME_DEFAULT: "/HomeScreen",
+    HOME_DEFAULT: "/home-screen/HomeScreen",
   },
 };
 
