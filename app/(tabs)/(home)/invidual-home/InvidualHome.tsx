@@ -1,8 +1,8 @@
-import React from "react";
-import { View, Text, Pressable, ScrollView } from "react-native";
+import { SafeAreaViewCustom, SpaceComponent } from "@/components";
 import { useRouter } from "expo-router";
+import React from "react";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import TEXT_TRANSLATE_INVIDUAL_HOME from "./InvidualHome.translate";
-import { SafeAreaViewCustom } from "@/components";
 
 export default function InvidualHome() {
   const router = useRouter();
@@ -27,18 +27,18 @@ export default function InvidualHome() {
     <SafeAreaViewCustom rootClassName="flex-1 bg-white">
       <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
         {/* HEADER */}
-        <View className="flex-row items-center p-4 bg-white">
+        <View className="flex-row items-center bg-white p-4">
           <Pressable onPress={handleGoBack} className="pr-2">
-            <Text className="text-black text-lg">←</Text>
+            <Text className="text-lg text-black">←</Text>
           </Pressable>
-          <Text className="text-lg font-semibold text-black ml-2">
+          <Text className="ml-2 text-lg font-semibold text-black">
             {TEXT_TRANSLATE_INVIDUAL_HOME.TITLE.PERSONAL_EXPENSES}
           </Text>
         </View>
 
         {/* BALANCE CARD */}
-        <View className="bg-white mx-4 mt-4 rounded-lg p-4 shadow-sm">
-          <View className="flex-row justify-between items-center">
+        <View className="mx-4 mt-4 rounded-lg bg-white p-4 shadow-sm">
+          <View className="flex-row items-center justify-between">
             <Text className="text-sm text-black">
               {TEXT_TRANSLATE_INVIDUAL_HOME.TITLE.TOTAL_BALANCE}
             </Text>
@@ -48,27 +48,28 @@ export default function InvidualHome() {
               </Text>
             </Pressable>
           </View>
-          <Text className="text-2xl font-medium text-black mt-2">
+          <Text className="mt-2 text-2xl font-medium text-black">
             {TEXT_TRANSLATE_INVIDUAL_HOME.LABEL.BALANCE_AMOUNT}
           </Text>
         </View>
 
         {/* ACTION BUTTONS */}
-        <View className="flex-row justify-between mx-4 mt-4">
+        <View className="mx-4 flex-row justify-between">
           <Pressable
-            className="w-1/2 bg-white border border-gray-300 rounded-lg p-3 flex-row justify-center items-center mr-2"
+            className="flex-1 flex-row items-center justify-center rounded-lg border border-gray-300 bg-white p-3"
             onPress={handleAddExpense}
           >
-            <Text className="text-red-600 text-lg mr-2">↓</Text>
+            <Text className="text-red-600 mr-2 text-lg">↓</Text>
             <Text className="text-sm text-black">
               {TEXT_TRANSLATE_INVIDUAL_HOME.LABEL.ADD_EXPENSE}
             </Text>
           </Pressable>
+          <SpaceComponent width={20} />
           <Pressable
-            className="w-1/2 bg-white border border-gray-300 rounded-lg p-3 flex-row justify-center items-center ml-2"
+            className="flex-1 flex-row items-center justify-center rounded-lg border border-gray-300 bg-white p-3"
             onPress={handleAddIncome}
           >
-            <Text className="text-green-600 text-lg mr-2">↑</Text>
+            <Text className="text-green-600 mr-2 text-lg">↑</Text>
             <Text className="text-sm text-black">
               {TEXT_TRANSLATE_INVIDUAL_HOME.LABEL.ADD_INCOME}
             </Text>
@@ -76,14 +77,14 @@ export default function InvidualHome() {
         </View>
 
         {/* PLACEHOLDER FOR CHART */}
-        <View className="bg-white mx-4 mt-4 rounded-lg p-4 shadow-sm items-center justify-center">
+        <View className="mx-4 mt-4 items-center justify-center rounded-lg bg-white p-4 shadow-sm">
           <Text className="text-gray-500">
             {TEXT_TRANSLATE_INVIDUAL_HOME.PLACEHOLDER.CHART}
           </Text>
         </View>
 
         {/* PLACEHOLDER FOR CHAT BOT */}
-        <View className="bg-white mx-4 mt-4 rounded-lg p-4 shadow-sm items-center justify-center">
+        <View className="mx-4 mt-4 items-center justify-center rounded-lg bg-white p-4 shadow-sm">
           <Text className="text-gray-500">
             {TEXT_TRANSLATE_INVIDUAL_HOME.PLACEHOLDER.CHAT_BOT}
           </Text>
