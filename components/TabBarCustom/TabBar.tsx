@@ -1,14 +1,21 @@
+import { RootState } from "@/redux/store";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import React from "react";
 import { View } from "react-native";
+import { useSelector } from "react-redux";
 import TabBarButton from "./TabBarButton";
 
 const TabBar = ({ state, descriptors, navigation }: BottomTabBarProps) => {
   const primaryColor = "#609084";
   const greyColor = "#737373";
+  const hiddenTabbar = useSelector(
+    (state: RootState) => state.tab.hiddenTabbar,
+  );
 
   return (
-    <View className="absolute bottom-5 mx-5 flex-row items-center justify-between rounded-full bg-white/95 px-4 py-1.5 shadow-lg">
+    <View
+      className={`absolute bottom-5 mx-5 ${hiddenTabbar ? "hidden" : ""} flex-row items-center justify-between rounded-full bg-white/95 px-4 py-1.5 shadow-lg`}
+    >
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const label =

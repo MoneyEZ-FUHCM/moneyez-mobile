@@ -10,3 +10,5 @@ export { BackScreenButton } from "./BackScreenButton";
 export { SplashScreenLoading } from "./SplashScreenLoading";
 export { TabBar } from "./TabBarCustom/TabBar";
 export { ScrollViewCustom } from "./ScrollViewCustom";
+export { FlatListCustom } from "./FlatListCustom";
+export { CustomModal } from "./ModalCustom";

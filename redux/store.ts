@@ -3,11 +3,13 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import loadingReducer from "./slices/loadingSlice";
 import userReducer from "./slices/userSlice";
+import tabReducer from "./slices/tabSlice";
 
 const rootReducer = combineReducers({
   [authApi.reducerPath]: authApi.reducer,
   loading: loadingReducer,
   user: userReducer,
+  tab: tabReducer,
 });
 
 export const store = configureStore({
