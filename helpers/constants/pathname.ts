@@ -19,8 +19,9 @@ const PATH_NAME = {
   BOT: {},
   GROUP: {},
   HOME: {
-    HOME_DEFAULT: "/HomeScreen",
-    INVIDUAL_HOME: "/invidual-home/InvidualHome",
+    HOME_DEFAULT: "HomeScreen",
+    INVIDUAL_HOME: "invidual-home/InvidualHome",
+    ADD_TRANSACTION: "add-transaction/AddTransaction",
   },
 };
 

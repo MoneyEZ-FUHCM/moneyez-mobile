@@ -16,6 +16,7 @@ export default function HomeLayout() {
     >
       <Stack.Screen name={"HomeScreen"} />
       <Stack.Screen name={HOME.INVIDUAL_HOME} />
+      <Stack.Screen name={HOME.ADD_TRANSACTION} />
     </Stack>
   );
 }

@@ -3,9 +3,12 @@ import { useRouter } from "expo-router";
 import React from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import TEXT_TRANSLATE_INVIDUAL_HOME from "./InvidualHome.translate";
+import { PATH_NAME } from "@/helpers/constants/pathname";
 
 export default function InvidualHome() {
   const router = useRouter();
+  const { HOME } = PATH_NAME;
+
 
   const handleGoBack = () => {
     router.back();
@@ -16,11 +19,11 @@ export default function InvidualHome() {
   };
 
   const handleAddExpense = () => {
-    // Navigate to Add Expense
+    router.navigate(HOME.ADD_TRANSACTION as any)
   };
 
   const handleAddIncome = () => {
-    // Navigate to Add Income
+    router.navigate(HOME.ADD_TRANSACTION as any)
   };
 
   return (
