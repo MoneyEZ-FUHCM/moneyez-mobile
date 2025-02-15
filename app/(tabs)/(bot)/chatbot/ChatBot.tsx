@@ -64,7 +64,7 @@ const ChatBot: React.FC = () => {
               <TouchableOpacity
                 key={index}
                 className="m-1 rounded-2xl bg-[#E6F2EF] px-3 py-2"
-                onPress={() => handler.sendMessage(item)}
+                // onPress={() => handler.sendMessage(item)}
               >
                 <Text className="text-[#609084]">{item}</Text>
               </TouchableOpacity>
@@ -76,7 +76,7 @@ const ChatBot: React.FC = () => {
               className="mr-2 max-h-[112px] flex-1 break-words rounded-2xl border border-[#609084] p-2 text-base"
               placeholder="Nhập câu hỏi"
               value={state.input}
-              onChangeText={handler.setInput}
+              onChangeText={handler.setInputMessage}
               multiline
               textBreakStrategy="highQuality"
               scrollEnabled
@@ -84,7 +84,7 @@ const ChatBot: React.FC = () => {
             <ArrowCircleUp2
               size="32"
               color="#609084"
-              onPress={() => handler.sendMessage()}
+              onPress={() => handler.sendMessages()}
               variant="Bold"
             />
           </View>
