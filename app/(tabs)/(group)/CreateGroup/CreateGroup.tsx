@@ -1,20 +1,38 @@
+import { SafeAreaViewCustom, SectionComponent } from '@/components';
+import { AntDesign, Entypo } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Svg, { Path, Rect } from 'react-native-svg';
+import TEXT_TRANSLATE_BOT from '../../(bot)/BotScreen.translate';
+import useChatBotScreen from '../../(bot)/hooks/useChatbotScreen';
 
 const CreateGroup = () => {
+    const { state, handler } = useChatBotScreen();
+
   return (
-    <View className="flex-1 bg-white relative">
-      <View className="w-full h-24 pt-12 bg-white justify-center items-center flex">
-        <View className="flex-1 self-stretch py-3 px-5 flex-row justify-start items-center gap-32">
-          <TouchableOpacity onPress={() => router.back()}>
-            <Text className="text-black text-lg font-bold" style={{ fontFamily: 'Font Awesome 6 Free' }}>-</Text>
-          </TouchableOpacity>
-          <Text className="text-black text-xl font-semibold" style={{ fontFamily: 'Inter', fontSize: 18, fontWeight: '800' }}>Tạo nhóm mới</Text>
+    <SafeAreaViewCustom>
+      <SectionComponent rootClassName="flex-row justify-between items-center h-14 px-4 ">
+        <TouchableOpacity onPress={handler.handleBack}>
+          <AntDesign
+            name="arrowleft"
+            size={24}
+            color="#000000"
+          />
+        </TouchableOpacity>
+        <View className="flex-row items-center gap-1">
+          <Text className="text-lg font-bold text-black">
+            Tao Nhom Moi
+          </Text>
+        
         </View>
-      </View>
-    </View>
+
+        <TouchableOpacity onPress={() => handler.setIsModalVisible(true)}>
+          <Entypo name="info-with-circle" size={24} color="#000000" />
+        </TouchableOpacity>
+      </SectionComponent>
+     
+    </SafeAreaViewCustom>
   );
 };
 
