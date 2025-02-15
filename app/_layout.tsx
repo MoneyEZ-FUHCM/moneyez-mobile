@@ -16,11 +16,13 @@ import "react-native-reanimated";
 import { Provider } from "react-redux";
 import "../globals.css";
 import { LoadingWrapper } from "@/components";
+import { useMomentLocale } from "@/hooks/useMomentLocale";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  useMomentLocale("vi");
   const { ANIMATION_NAVIGATE_STACK, THEME_COLOR, CONDITION } = COMMON_CONSTANT;
   const { COMMON, TABS, SPLASH, AUTH } = PATH_NAME;
   const colorScheme = useColorScheme();
