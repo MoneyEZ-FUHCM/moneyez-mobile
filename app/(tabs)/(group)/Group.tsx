@@ -38,10 +38,10 @@ const Group = () => {
         onPress={() => router.navigate((PATH_NAME.GROUP.CREATE_GROUP) as any)}
       >
         <Svg width="16" height="17" viewBox="0 0 16 17" fill="none">
-        <Path
-          d="M7.33337 9.16659H3.33337V7.83325H7.33337V3.83325H8.66671V7.83325H12.6667V9.16659H8.66671V13.1666H7.33337V9.16659Z"
-          fill="#609084"
-        />
+          <Path
+        d="M7.33337 9.16659H3.33337V7.83325H7.33337V3.83325H8.66671V7.83325H12.6667V9.16659H8.66671V13.1666H7.33337V9.16659Z"
+        fill="#609084"
+          />
         </Svg>
         <Text className="text-[#609084] text-lg font-normal ml-2">{BUTTON.CREATE_GROUP}</Text>
       </TouchableOpacity>

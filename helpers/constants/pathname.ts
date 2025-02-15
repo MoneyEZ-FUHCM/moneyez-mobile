@@ -22,7 +22,6 @@ const PATH_NAME = {
     CREATE_GROUP: "CreateGroup/CreateGroup",
   },
   BOT: {},
-  GROUP: {},
   HOME: {
     HOME_DEFAULT: "/home-screen/HomeScreen",
   },
