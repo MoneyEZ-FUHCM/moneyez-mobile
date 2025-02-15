@@ -16,6 +16,11 @@ const PATH_NAME = {
     CONFIRM_EMAIL: "forgot-password/ConfirmEmail",
     SET_NEW_PASSWORD: "forgot-password/SetNewPassword",
   },
+  GROUP: {
+    GROUP_NAVIGATOR: "(group)",
+    GROUP_LIST: "/Group",
+    CREATE_GROUP: "CreateGroup/CreateGroup",
+  },
   BOT: {},
   GROUP: {},
   HOME: {

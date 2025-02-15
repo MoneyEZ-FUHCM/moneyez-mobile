@@ -2,8 +2,10 @@ import { Eye, EyeSlash } from 'iconsax-react-native';
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import Svg, { Path, Rect } from 'react-native-svg';
-import GROUP_LIST from './Grouplist.const';
-import TEXT_TRANSLATE_GROUP_LIST from './Grouplist.translate';
+import GROUP_LIST from './GroupList.const';
+import TEXT_TRANSLATE_GROUP_LIST from './GroupList.translate';
+import { router } from 'expo-router';
+import { PATH_NAME } from '@/helpers/constants/pathname';
 
 const Group = () => {
 
@@ -28,9 +30,13 @@ const Group = () => {
 
   return (
     <View className="flex-1 pt-10 pb-24 px-4 bg-white">
+      
       <View className="w-full flex-row justify-between items-center mb-4">
       <Text className="text-[#609084] text-lg font-semibold">{TITLE.GROUP_FUND}</Text>
-      <TouchableOpacity className="p-2 rounded-lg border border-[#609084] flex-row justify-center items-center">
+      <TouchableOpacity 
+        className="p-2 rounded-lg border border-[#609084] flex-row justify-center items-center"
+        onPress={() => router.navigate((PATH_NAME.GROUP.CREATE_GROUP) as any)}
+      >
         <Svg width="16" height="17" viewBox="0 0 16 17" fill="none">
         <Path
           d="M7.33337 9.16659H3.33337V7.83325H7.33337V3.83325H8.66671V7.83325H12.6667V9.16659H8.66671V13.1666H7.33337V9.16659Z"
