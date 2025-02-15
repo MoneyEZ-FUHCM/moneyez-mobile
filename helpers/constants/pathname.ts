@@ -21,9 +21,11 @@ const PATH_NAME = {
     GROUP_LIST: "/Group",
     CREATE_GROUP: "CreateGroup/CreateGroup",
   },
-  BOT: {},
+  BOT: {
+    CHATBOT: "chatbot/ChatBot",
+  },
   HOME: {
-    HOME_DEFAULT: "/home-screen/HomeScreen",
+    HOME_DEFAULT: "home-screen/HomeScreen",
   },
 };
 
