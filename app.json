@@ -9,7 +9,7 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "foregroundImage": "./assets/images/logo/logo_app.png",
+      "image": "./assets/images/logo/logo_app.png",
       "backgroundColor": "#ffffff",
       "resizeMode": "contain"
     },
