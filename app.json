@@ -12,13 +12,15 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logo/logo_app.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#ffffff",
+        "resizeMode": "contain"
       },
       "package": "com.ezmoney",
       "googleServicesFile": "./google-services.json"
     },
     "plugins": [
       "expo-router",
+      "@react-native-google-signin/google-signin",
       [
         "expo-build-properties",
         {
@@ -36,6 +38,11 @@
         }
       ]
     ],
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
     "experiments": {
       "typedRoutes": true
     },

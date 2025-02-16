@@ -103,15 +103,20 @@ const useLoginScreen = () => {
 
   const handleLoginGoogle = async () => {
     GoogleSignin.configure({
-      webClientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID,
+      webClientId:
+        "285230826131-lq476vlgf285b11gaiu2kvegn7v335q7.apps.googleusercontent.com",
     });
 
     await GoogleSignin.hasPlayServices({
       showPlayServicesUpdateDialog: true,
     });
+
     try {
       await GoogleSignin.hasPlayServices();
+      console.log("check 123");
       const userInfo: any = await GoogleSignin.signIn();
+      console.log("check userInfo", userInfo);
+
       const googleSignInResponse: GoogleSignInResponse = {
         idToken: userInfo.idToken ?? undefined,
         user: {
@@ -125,7 +130,9 @@ const useLoginScreen = () => {
         scopes: userInfo.scopes,
         serverAuthCode: userInfo.serverAuthCode ?? undefined,
       };
-    } catch (err) {}
+    } catch (err) {
+      console.error("Google Sign-In Error:", err);
+    }
   };
 
   return {
