@@ -1,4 +1,5 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
+import { PATH_NAME } from "@/helpers/constants/pathname";
 import { Stack } from "expo-router";
 import React from "react";
 
@@ -12,7 +13,7 @@ export default function GroupLayout() {
         headerShown: CONDITION.FALSE,
       }}
     >
-      <Stack.Screen name={"Group"} />
+      <Stack.Screen name={PATH_NAME.GROUP.GROUP_LIST} />
     </Stack>
   );
 }
