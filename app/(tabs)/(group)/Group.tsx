@@ -36,6 +36,7 @@ const Group = () => {
   return (
     <SafeAreaViewCustom rootClassName="bg-gray-100">
       <SectionComponent rootClassName="h-14 flex-row items-center justify-center border-b border-gray-300 bg-white px-4 shadow-sm">
+        
         <Text className="text-lg font-semibold text-gray-900">
           Nhóm Của Bạn
         </Text>
