@@ -8,6 +8,11 @@
     "icon": "./assets/images/logo/logo_app.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
+    "splash": {
+      "foregroundImage": "./assets/images/logo/logo_app.png",
+      "backgroundColor": "#ffffff",
+      "resizeMode": "contain"
+    },
     "newArchEnabled": true,
     "android": {
       "adaptiveIcon": {
