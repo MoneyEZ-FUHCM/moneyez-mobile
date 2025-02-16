@@ -3,7 +3,6 @@ const TEXT_TRANSLATE_GROUP_LIST = {
   TITLE: {
     GROUP_FUND: "Quỹ nhóm",
   },
-
   // Button
   BUTTON: {
     CREATE_GROUP: "Tạo quỹ",
