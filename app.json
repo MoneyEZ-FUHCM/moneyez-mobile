@@ -7,18 +7,21 @@
     "orientation": "portrait",
     "icon": "./assets/images/logo/logo_app.png",
     "scheme": "myapp",
+    "resizeMode": "contain",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/logo/logo_app.png",
       "backgroundColor": "#ffffff",
-      "resizeMode": "contain"
+      "resizeMode": "contain",
+      "width": 500
     },
     "newArchEnabled": true,
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logo/logo_app.png",
         "backgroundColor": "#ffffff",
-        "resizeMode": "contain"
+        "resizeMode": "contain",
+        "width": 500
       },
       "package": "com.ezmoney",
       "googleServicesFile": "./google-services.json"
