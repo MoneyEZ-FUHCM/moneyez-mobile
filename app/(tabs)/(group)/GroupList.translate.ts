@@ -1,5 +1,5 @@
 const TEXT_TRANSLATE_GROUP_LIST = {
-    // Title
+  // Title
   TITLE: {
     GROUP_FUND: "Quỹ nhóm",
   },
@@ -8,7 +8,6 @@ const TEXT_TRANSLATE_GROUP_LIST = {
   BUTTON: {
     CREATE_GROUP: "Tạo quỹ",
   },
-
 };
 
 export default TEXT_TRANSLATE_GROUP_LIST;
