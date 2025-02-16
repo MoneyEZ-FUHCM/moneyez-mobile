@@ -38,7 +38,7 @@ const CreateGroup = () => {
           <Text className="text-xs font-semibold text-black mt-1">{STEPS.STEP_1}</Text>
           <Text className="text-sm font-semibold text-black">{STEPS.INFORMATION}</Text>
         </View>
-        <View className="flex-1 h-[10px] my-1 bg-[#E7E7E7] mb-9 mx-2" />
+        <View className="flex-1 h-[3px] my-1 bg-[#E7E7E7] mb-9 mx-2" />
         <View className="flex-col items-center">
           <Svg width="45" height="45" viewBox="0 0 45 45" fill="none">
         <Rect width="45" height="45" rx="22.5" fill="#E7E7E7" />
@@ -47,7 +47,7 @@ const CreateGroup = () => {
             <Text className="text-xs font-semibold text-[#757575] mt-1">{STEPS.STEP_2}</Text>
             <Text className="text-sm font-semibold text-[#757575]">{STEPS.MODEL}</Text>
         </View>
-        <View className="flex-1 h-[10px] bg-[#E7E7E7] mb-9 mx-2" />
+        <View className="flex-1 h-[3px] bg-[#E7E7E7] mb-9 mx-2" />
         <View className="flex-col items-center">
           <Svg width="45" height="45" viewBox="0 0 45 45" fill="none">
         <Rect width="45" height="45" rx="22.5" fill="#E7E7E7" />
@@ -56,7 +56,7 @@ const CreateGroup = () => {
           <Text className="text-xs font-semibold text-[#757575] mt-1">{STEPS.STEP_3}</Text>
           <Text className="text-sm font-semibold text-[#757575]">{STEPS.TIME}</Text>
         </View>
-        <View className="flex-1 h-[10px] bg-[#E7E7E7] mb-9 mx-2" />
+        <View className="flex-1 h-[3px] bg-[#E7E7E7] mb-9 mx-2" />
         <View className="flex-col items-center">
           <Svg width="45" height="45" viewBox="0 0 45 45" fill="none">
         <Rect width="45" height="45" rx="22.5" fill="#E7E7E7" />
