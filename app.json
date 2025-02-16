@@ -1,8 +1,8 @@
 {
   "expo": {
     "jsEngine": "hermes",
-    "name": "moneyez-mobile",
-    "slug": "moneyez-mobile",
+    "name": "moneyez",
+    "slug": "moneyez",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/logo/logo_app.png",
