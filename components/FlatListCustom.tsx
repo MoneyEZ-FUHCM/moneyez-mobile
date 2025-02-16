@@ -33,10 +33,11 @@ export function FlatListCustom<T>({
   return (
     <FlatList
       {...props}
+      removeClippedSubviews={false}
       onLayout={handleLayout}
       onContentSizeChange={handleContentSizeChange}
       contentContainerStyle={[
-        { paddingBottom: isScrollable ? 90 : 0, backgroundColor: "#F9F9F9" },
+        { paddingBottom: isScrollable ? 90 : 0 },
         contentContainerStyle,
       ]}
     />

@@ -19,7 +19,7 @@ const PATH_NAME = {
   GROUP: {
     GROUP_NAVIGATOR: "(group)",
     GROUP_LIST: "/Group",
-    CREATE_GROUP: "CreateGroup/CreateGroup",
+    CREATE_GROUP: "create-group/CreateGroup",
   },
   BOT: {
     CHATBOT: "chatbot/ChatBot",
