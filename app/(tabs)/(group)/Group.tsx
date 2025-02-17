@@ -48,7 +48,7 @@ const Group = () => {
           </Text>
           <TouchableOpacity
             className="flex-row items-center rounded-full border border-primary bg-white px-4 py-2 shadow-sm"
-            onPress={() => router.navigate(PATH_NAME.GROUP.CREATE_GROUP as any)}
+            onPress={() => router.navigate(PATH_NAME.GROUP.CREATE_GROUP_STEP_1 as any)}
           >
             <Svg width="18" height="18" viewBox="0 0 16 17" fill="none">
               <Path

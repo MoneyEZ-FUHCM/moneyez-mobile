@@ -25,11 +25,15 @@ const TEXT_TRANSLATE_CREATE_GROUP = {
     // Placeholder
     PLACEHOLDER: {
         ENTER_GROUP_NAME: "Nhập tên nhóm",
+        ENTER_DESCRIPTION: "Nhập mô tả",
+        ENTER_CURRENT_BALANCE: "Nhập số dư hiện tại",
     },
 
     // Text
     TEXT: {
         GROUP_NAME: "Tên nhóm",
+        DESCRIPTION: "Mô tả",
+        CURRENT_BALANCE: "Số dư hiện tại",
     },
 };
 
