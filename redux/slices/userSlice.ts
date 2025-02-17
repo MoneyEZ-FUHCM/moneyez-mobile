@@ -1,8 +1,11 @@
+import authApi from "@/services/auth";
+import { UserInfo } from "@/types/user.types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../store";
 
 interface UserState {
-  userInfo: null;
-  email: null;
+  userInfo: UserInfo | null;
+  email: string | null;
 }
 
 const initialState: UserState = {
@@ -14,17 +17,24 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUserInfo: (state, action: PayloadAction<null>) => {
-      state.userInfo = action.payload;
-    },
     clearUserInfo: (state) => {
       state.userInfo = null;
     },
-    setEmail: (state, action) => {
+    setEmail: (state, action: PayloadAction<string | null>) => {
       state.email = action.payload;
     },
   },
+  extraReducers: (builder) => {
+    builder.addMatcher(
+      authApi.endpoints.getInfoUser.matchFulfilled,
+      (state, action) => {
+        state.userInfo = action.payload.data;
+      },
+    );
+  },
 });
 
-export const { setUserInfo, clearUserInfo, setEmail } = userSlice.actions;
+export const selectUserInfo = (state: RootState) => state.user.userInfo;
+
+export const { clearUserInfo, setEmail } = userSlice.actions;
 export default userSlice.reducer;

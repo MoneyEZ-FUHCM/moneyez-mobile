@@ -2,6 +2,7 @@ import { appInfo } from "@/helpers/constants/appInfos";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { setShowSplash } from "@/redux/slices/loadingSlice";
 import { RootState } from "@/redux/store";
+import { useGetInfoUserQuery } from "@/services/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import React, { useEffect, useRef } from "react";
@@ -16,6 +17,7 @@ const SplashScreenLoading = () => {
   const isShowSplash = useSelector(
     (state: RootState) => state.loading.isShowSplash,
   );
+  const { refetch } = useGetInfoUserQuery();
 
   useEffect(() => {
     const checkTokenAndNavigate = async () => {
@@ -24,6 +26,7 @@ const SplashScreenLoading = () => {
 
         setTimeout(() => {
           if (token) {
+            refetch();
             router.replace(PATH_NAME.HOME.HOME_DEFAULT as any);
           } else {
             dispatch(setShowSplash(true));
