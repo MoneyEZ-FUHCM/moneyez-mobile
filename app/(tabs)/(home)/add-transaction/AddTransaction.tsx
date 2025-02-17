@@ -1,35 +1,43 @@
-import React, { useState } from 'react';
-import { View, Text, Pressable, ScrollView } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
-import { RadioButton } from 'react-native-ui-lib';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-import CategoryItem from '@/components/InvidualScreenCustom/CategoryItem';
-import { DatePickerComponent, InputComponent, SafeAreaViewCustom, SectionComponent, SpaceComponent } from '@/components';
-import ADD_TRANSACTION_CONSTANTS from './AddTransaction.const';
-import { MaterialIcons } from '@expo/vector-icons';
-import { TransactionType } from '@/types/invidual.types';
+import React, { useState } from "react";
+import { View, Text, Pressable, ScrollView } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
+import { RadioButton } from "react-native-ui-lib";
+import { Formik } from "formik";
+import * as Yup from "yup";
+import CategoryItem from "@/components/InvidualScreenCustom/CategoryItem";
+import {
+  DatePickerComponent,
+  InputComponent,
+  SafeAreaViewCustom,
+  SectionComponent,
+  SpaceComponent,
+} from "@/components";
+import ADD_TRANSACTION_CONSTANTS from "./AddTransaction.const";
+import { MaterialIcons } from "@expo/vector-icons";
+import { TransactionType } from "@/types/invidual.types";
 
 const validationSchema = Yup.object().shape({
-  amount: Yup.string().required('Số tiền không được để trống'),
-  description: Yup.string().required('Mô tả không được để trống'),
+  amount: Yup.string().required("Số tiền không được để trống"),
+  dob: Yup.string().required("Số tiền không được để trống"),
+  description: Yup.string().required("Mô tả không được để trống"),
 });
 
 export default function AddTransaction() {
   const { type } = useLocalSearchParams();
   const [transactionType, setTransactionType] = useState<TransactionType>(
-    type === 'income' ? 'income' : 'expense'
+    type === "income" ? "income" : "expense",
   );
   const [date, setDate] = useState<Date>(new Date());
-  const [selectedCategory, setSelectedCategory] = useState('Tiền ăn');
+  const [selectedCategory, setSelectedCategory] = useState("Tiền ăn");
 
   const handleBack = () => {
     router.back();
   };
 
   const initialValues = {
-    amount: '',
-    description: '',
+    amount: "",
+    description: "",
+    dob: "",
   };
 
   return (
@@ -41,9 +49,10 @@ export default function AddTransaction() {
           console.log({
             transactionType,
             amount: values.amount,
-            date: date.toLocaleDateString('vi-VN'),
+            date: date.toLocaleDateString("vi-VN"),
             description: values.description,
-            selectedCategory
+            selectedCategory,
+            dob: values.dob,
           });
         }}
       >
@@ -67,22 +76,26 @@ export default function AddTransaction() {
               <View className="flex flex-row items-center space-x-4">
                 {/* Chi tiêu */}
                 <Pressable
-                  onPress={() => setTransactionType('expense')}
-                  className={`flex-1 flex flex-row items-center border border-[#609084] rounded-lg p-4 h-16 ${
-                    transactionType === 'expense' ? 'bg-[#609084]' : 'bg-white'
+                  onPress={() => setTransactionType("expense")}
+                  className={`flex h-16 flex-1 flex-row items-center rounded-lg border border-[#609084] p-4 ${
+                    transactionType === "expense" ? "bg-[#609084]" : "bg-white"
                   }`}
                 >
                   <RadioButton
                     value="expense"
-                    selected={transactionType === 'expense'}
-                    onPress={() => setTransactionType('expense')}
+                    selected={transactionType === "expense"}
+                    onPress={() => setTransactionType("expense")}
                     size={24}
-                    color={transactionType === 'expense' ? '#ffffff' : '#609084'}
+                    color={
+                      transactionType === "expense" ? "#ffffff" : "#609084"
+                    }
                     className="mr-2"
                   />
                   <Text
                     className={`text-base font-semibold ${
-                      transactionType === 'expense' ? 'text-white' : 'text-[#609084]'
+                      transactionType === "expense"
+                        ? "text-white"
+                        : "text-[#609084]"
                     }`}
                   >
                     Chi tiêu
@@ -91,22 +104,24 @@ export default function AddTransaction() {
 
                 {/* Thu nhập */}
                 <Pressable
-                  onPress={() => setTransactionType('income')}
-                  className={`flex-1 flex flex-row items-center border border-[#609084] rounded-lg p-4 h-16 ${
-                    transactionType === 'income' ? 'bg-[#609084]' : 'bg-white'
+                  onPress={() => setTransactionType("income")}
+                  className={`flex h-16 flex-1 flex-row items-center rounded-lg border border-[#609084] p-4 ${
+                    transactionType === "income" ? "bg-[#609084]" : "bg-white"
                   }`}
                 >
                   <RadioButton
                     value="income"
-                    selected={transactionType === 'income'}
-                    onPress={() => setTransactionType('income')}
+                    selected={transactionType === "income"}
+                    onPress={() => setTransactionType("income")}
                     size={24}
-                    color={transactionType === 'income' ? '#ffffff' : '#609084'}
+                    color={transactionType === "income" ? "#ffffff" : "#609084"}
                     className="mr-2"
                   />
                   <Text
                     className={`text-base font-semibold ${
-                      transactionType === 'income' ? 'text-white' : 'text-[#609084]'
+                      transactionType === "income"
+                        ? "text-white"
+                        : "text-[#609084]"
                     }`}
                   >
                     Thu nhập
@@ -117,8 +132,10 @@ export default function AddTransaction() {
 
             {/* THÔNG TIN SECTION */}
             <SectionComponent rootClassName="bg-white m-4 p-4 rounded-lg">
-              <Text className="text-lg font-semibold text-[#609084] mb-2">Thông tin</Text>
-              
+              <Text className="mb-2 text-lg font-semibold text-[#609084]">
+                Thông tin
+              </Text>
+
               <InputComponent
                 name="amount"
                 label="Số tiền *"
@@ -129,12 +146,15 @@ export default function AddTransaction() {
               />
               <SpaceComponent height={10} />
 
-              <Text className="text-sm font-semibold text-black mb-1">Ngày *</Text>
               <DatePickerComponent
-                selectedDate={date}
-                onChange={(selectedDate: Date) => {
-                  setDate(selectedDate);
-                }}
+                isRequired
+                label="Ngày"
+                name="dob"
+                labelClass="text-black text-sm font-semibold"
+                // selectedDate={date}
+                // onChange={(selectedDate: Date) => {
+                //   setDate(selectedDate);
+                // }}
               />
               <SpaceComponent height={10} />
 
@@ -143,15 +163,17 @@ export default function AddTransaction() {
                 label="Mô tả *"
                 placeholder="Nhập mô tả"
                 isRequired
-                inputMode='text'
+                inputMode="text"
                 labelClass="text-black text-sm font-semibold"
               />
             </SectionComponent>
 
             {/* PHÂN LOẠI SECTION */}
             <SectionComponent rootClassName="bg-white m-4 p-4 rounded-lg">
-              <View className="flex-row justify-between items-center mb-4">
-                <Text className="text-lg font-semibold text-[#609084]">Phân loại</Text>
+              <View className="mb-4 flex-row items-center justify-between">
+                <Text className="text-lg font-semibold text-[#609084]">
+                  Phân loại
+                </Text>
                 <Text className="text-sm text-[#757575]">Xem thêm &gt;</Text>
               </View>
               <View className="flex-row flex-wrap justify-between">
@@ -163,7 +185,9 @@ export default function AddTransaction() {
                   >
                     <CategoryItem
                       label={category.label}
-                      iconName={category.icon as keyof typeof MaterialIcons.glyphMap}
+                      iconName={
+                        category.icon as keyof typeof MaterialIcons.glyphMap
+                      }
                       isSelected={selectedCategory === category.label}
                     />
                   </Pressable>
@@ -173,18 +197,24 @@ export default function AddTransaction() {
 
             {/* ẢNH HÓA ĐƠN SECTION */}
             <SectionComponent rootClassName="bg-white m-4 p-4 rounded-lg">
-              <Text className="text-lg font-semibold text-[#609084] mb-2">Ảnh hóa đơn</Text>
+              <Text className="mb-2 text-lg font-semibold text-[#609084]">
+                Ảnh hóa đơn
+              </Text>
               <View className="flex-row">
-                <View className="w-20 h-20 border border-[#ccc] rounded-lg overflow-hidden mr-4 relative">
-                  <View className="absolute w-full h-full bg-gray-100" />
+                <View className="relative mr-4 h-20 w-20 overflow-hidden rounded-lg border border-[#ccc]">
+                  <View className="absolute h-full w-full bg-gray-100" />
                 </View>
                 <Pressable
                   onPress={() => {
                     // Open image picker or add image functionality
                   }}
-                  className="w-20 h-20 border border-[#ccc] rounded-lg overflow-hidden relative items-center justify-center"
+                  className="relative h-20 w-20 items-center justify-center overflow-hidden rounded-lg border border-[#ccc]"
                 >
-                  <MaterialIcons name="add-circle-outline" size={40} color="#ccc" />
+                  <MaterialIcons
+                    name="add-circle-outline"
+                    size={40}
+                    color="#ccc"
+                  />
                 </Pressable>
               </View>
             </SectionComponent>
@@ -193,10 +223,12 @@ export default function AddTransaction() {
             <SectionComponent rootClassName="bg-white m-4 p-4 rounded-lg">
               <Pressable
                 onPress={() => handleSubmit()}
-                className="w-full h-12 rounded-lg bg-[#609084] items-center justify-center"
+                className="h-12 w-full items-center justify-center rounded-lg bg-[#609084]"
               >
-                <Text className="text-white text-base font-semibold">
-                  {transactionType === 'expense' ? 'Thêm chi tiêu' : 'Thêm thu nhập'}
+                <Text className="text-base font-semibold text-white">
+                  {transactionType === "expense"
+                    ? "Thêm chi tiêu"
+                    : "Thêm thu nhập"}
                 </Text>
               </Pressable>
             </SectionComponent>

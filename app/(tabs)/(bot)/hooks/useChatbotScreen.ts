@@ -1,9 +1,10 @@
-import { router, useFocusEffect, useNavigation } from "expo-router";
-import { useCallback, useEffect, useRef, useState } from "react";
+import useHideTabbar from "@/hooks/useHideTabbar";
+import { setHiddenTabbar } from "@/redux/slices/tabSlice";
+import { router } from "expo-router";
+import { useEffect, useRef, useState } from "react";
 import { Animated, FlatList } from "react-native";
 import { useDispatch } from "react-redux";
 import BOT_SCREEN_CONSTANTS from "../BotScreen.const";
-import { setHiddenTabbar } from "@/redux/slices/tabSlice";
 
 export interface Message {
   id: string;
@@ -29,23 +30,9 @@ const useChatBotScreen = () => {
   const lastOffsetY = useRef(0);
 
   const dispatch = useDispatch();
-  const navigation = useNavigation();
 
-  useFocusEffect(
-    useCallback(() => {
-      dispatch(setHiddenTabbar(true));
-      return () => {
-        dispatch(setHiddenTabbar(false));
-      };
-    }, [dispatch]),
-  );
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("blur", () => {
-      dispatch(setHiddenTabbar(false));
-    });
-    return unsubscribe;
-  }, [navigation, dispatch]);
+  // hide tabbar
+  useHideTabbar();
 
   const sendMessage = (message?: string) => {
     const text = message || input.trim();
