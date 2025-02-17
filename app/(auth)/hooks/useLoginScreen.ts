@@ -28,7 +28,8 @@ const useLoginScreen = () => {
   const [data, setData] = useState(0);
   const [isChecked, setIsChecked] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
-  const { MESSAGE_VALIDATE, MESSAGE_ERROR } = TEXT_TRANSLATE_AUTH;
+  const { MESSAGE_VALIDATE, MESSAGE_ERROR, MESSAGE_SUCCESS } =
+    TEXT_TRANSLATE_AUTH;
   const { HTTP_STATUS, SYSTEM_ERROR } = COMMON_CONSTANT;
   const { ERROR_CODE } = AUTH_SCREEN_CONSTANTS;
   const { HOME, AUTH } = PATH_NAME;
@@ -74,6 +75,10 @@ const useLoginScreen = () => {
             ]);
             refetch();
             router.replace(HOME.HOME_DEFAULT as any);
+            ToastAndroid.show(
+              MESSAGE_SUCCESS.LOGIN_SUCCESSFUL,
+              ToastAndroid.SHORT,
+            );
           }
         }
       }
@@ -135,10 +140,15 @@ const useLoginScreen = () => {
             ]);
             refetch();
             router.replace(HOME.HOME_DEFAULT as any);
+            ToastAndroid.show(
+              MESSAGE_SUCCESS.LOGIN_SUCCESSFUL,
+              ToastAndroid.SHORT,
+            );
           }
         }
       }
     } catch (error) {
+      await GoogleSignin.signOut();
       ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
     }
   };
