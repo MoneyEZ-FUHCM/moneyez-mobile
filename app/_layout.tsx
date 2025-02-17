@@ -1,6 +1,8 @@
+import { LoadingWrapper } from "@/components";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { useMomentLocale } from "@/hooks/useMomentLocale";
 import { store } from "@/redux/store";
 import {
   DarkTheme,
@@ -15,8 +17,6 @@ import { useEffect } from "react";
 import "react-native-reanimated";
 import { Provider } from "react-redux";
 import "../globals.css";
-import { LoadingWrapper } from "@/components";
-import { useMomentLocale } from "@/hooks/useMomentLocale";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -27,8 +27,8 @@ export default function RootLayout() {
   const { COMMON, TABS, SPLASH, AUTH } = PATH_NAME;
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
-    Inter: require("@/assets/fonts/Inter-VariableFont_opsz,wght.ttf"),
-    // SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    // Inter: require("@/assets/fonts/Inter-VariableFont_opsz,wght.ttf"),
+    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
 
   useEffect(() => {

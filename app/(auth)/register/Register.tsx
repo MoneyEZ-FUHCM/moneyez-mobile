@@ -44,7 +44,6 @@ const Register = () => {
                 label={LABEL.FULLNAME}
                 placeholder={TITLE.ENTER_FULLNAME}
                 labelClass="text-text-gray text-[12px]"
-                inputMode="decimal"
               />
               <SpaceComponent height={5}></SpaceComponent>
               <InputComponent

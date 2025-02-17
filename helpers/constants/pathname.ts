@@ -18,7 +18,7 @@ const PATH_NAME = {
   },
   GROUP: {
     GROUP_NAVIGATOR: "(group)",
-    GROUP_LIST: "/Group",
+    GROUP_LIST: "Group",
     CREATE_GROUP: "create-group/CreateGroup",
   },
   BOT: {
@@ -26,6 +26,9 @@ const PATH_NAME = {
   },
   HOME: {
     HOME_DEFAULT: "home-screen/HomeScreen",
+  },
+  ACCOUNT: {
+    ACCOUNT_SETTING: "setting/AccountSetting",
   },
 };
 
