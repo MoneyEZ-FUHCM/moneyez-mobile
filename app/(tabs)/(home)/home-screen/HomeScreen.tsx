@@ -47,13 +47,13 @@ const HomeScreen = () => {
             <View className="mt-5 flex-row items-center justify-between">
               <View className="flex-row items-center gap-2">
                 <Image
-                  source={Admin}
+                  source={state?.userInfo?.avatarUrl ?? Admin}
                   className="h-12 w-12 rounded-full"
                   resizeMode="contain"
                 />
                 <View>
                   <Text className="text-[12px]">{TITLE.HELLO}</Text>
-                  <Text className="text-base">Dương Bảo</Text>
+                  <Text className="text-base">{state?.userInfo?.fullName}</Text>
                 </View>
               </View>
               <TouchableOpacity className="rounded-full bg-black/20 p-2">

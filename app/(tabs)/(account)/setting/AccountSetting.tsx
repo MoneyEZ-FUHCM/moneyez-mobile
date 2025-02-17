@@ -44,12 +44,14 @@ const AccountSetting = () => {
       >
         <View className="flex-1 items-center justify-center gap-1">
           <Image
-            source={Admin}
+            source={state?.userInfo?.avatarUrl ?? Admin}
             className="mb-1 h-48 w-48 rounded-full"
             resizeMode="cover"
           />
-          <Text className="text-2xl font-semibold">Baonohope</Text>
-          <Text className="text-gray-500">baonohope@gmail.com</Text>
+          <Text className="text-2xl font-semibold">
+            {state?.userInfo?.fullName}
+          </Text>
+          <Text className="text-gray-500">{state?.userInfo?.email}</Text>
         </View>
       </SectionComponent>
       <SectionComponent

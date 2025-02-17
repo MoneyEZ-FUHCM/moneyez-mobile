@@ -1,24 +1,34 @@
 {
   "expo": {
     "jsEngine": "hermes",
-    "name": "moneyez-mobile",
-    "slug": "moneyez-mobile",
+    "name": "moneyez",
+    "slug": "moneyez",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/logo/logo_app.png",
     "scheme": "myapp",
+    "resizeMode": "contain",
     "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/images/logo/logo_app.png",
+      "backgroundColor": "#ffffff",
+      "resizeMode": "contain",
+      "width": 500
+    },
     "newArchEnabled": true,
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logo/logo_app.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#ffffff",
+        "resizeMode": "contain",
+        "width": 500
       },
       "package": "com.ezmoney",
       "googleServicesFile": "./google-services.json"
     },
     "plugins": [
       "expo-router",
+      "@react-native-google-signin/google-signin",
       [
         "expo-build-properties",
         {
@@ -36,6 +46,11 @@
         }
       ]
     ],
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
     "experiments": {
       "typedRoutes": true
     },

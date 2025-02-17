@@ -1,7 +1,9 @@
+import { selectUserInfo } from "@/redux/slices/userSlice";
 import dayjs from "dayjs";
-import HOME_SCREEN_CONSTANTS from "../HomeScreen.const";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FlatList } from "react-native";
+import { useSelector } from "react-redux";
+import HOME_SCREEN_CONSTANTS from "../HomeScreen.const";
 
 interface ItemType {
   id: string;
@@ -15,10 +17,10 @@ const useHomeScreen = () => {
   const today = dayjs();
   const startOfMonth = today.startOf("month").format("DD/MM");
   const endOfMonth = today.endOf("month").format("DD/MM/YYYY");
-
+  const currentIndexRef = useRef(0);
   const [isShow, setIsShow] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef<FlatList<ItemType>>(null);
+  const userInfo = useSelector(selectUserInfo);
 
   const toggleVisibility = useCallback(() => {
     setIsShow((prev) => !prev);
@@ -26,14 +28,11 @@ const useHomeScreen = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => {
-        const nextIndex =
-          prevIndex + 1 >= POST_DATAS.length ? 0 : prevIndex + 1;
-        flatListRef.current?.scrollToIndex({
-          index: nextIndex,
-          animated: true,
-        });
-        return nextIndex;
+      currentIndexRef.current =
+        (currentIndexRef.current + 1) % POST_DATAS.length;
+      flatListRef.current?.scrollToIndex({
+        index: currentIndexRef.current,
+        animated: true,
       });
     }, 3000);
 
@@ -43,7 +42,7 @@ const useHomeScreen = () => {
   return {
     state: {
       isShow,
-      currentIndex,
+      currentIndex: currentIndexRef,
       POST_DATAS,
       MENU_ITEMS,
       GROUP_DATAS,
@@ -51,6 +50,7 @@ const useHomeScreen = () => {
       startOfMonth,
       endOfMonth,
       flatListRef,
+      userInfo,
     },
     handler: {
       toggleVisibility,
