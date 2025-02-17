@@ -63,6 +63,7 @@ const AccountSetting = () => {
             <TouchableOpacity
               key={item.id}
               className="w-full flex-row items-center justify-between px-5 py-3"
+              onPress={() => handler.handleNavigateAccountOptions(item?.id)}
             >
               <View
                 className={`flex-row items-center gap-x-5 ${item.id === 2 ? "my-3" : ""}`}

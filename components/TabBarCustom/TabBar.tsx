@@ -1,7 +1,7 @@
 import { RootState } from "@/redux/store";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import React from "react";
-import { View } from "react-native";
+import React, { useEffect, useRef } from "react";
+import { Animated } from "react-native";
 import { useSelector } from "react-redux";
 import TabBarButton from "./TabBarButton";
 
@@ -12,9 +12,30 @@ const TabBar = ({ state, descriptors, navigation }: BottomTabBarProps) => {
     (state: RootState) => state.tab.hiddenTabbar,
   );
 
+  const translateY = useRef(new Animated.Value(0)).current;
+  const opacity = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    Animated.timing(translateY, {
+      toValue: hiddenTabbar ? 100 : 0,
+      duration: 650,
+      useNativeDriver: true,
+    }).start();
+
+    Animated.timing(opacity, {
+      toValue: hiddenTabbar ? 0 : 1,
+      duration: 650,
+      useNativeDriver: true,
+    }).start();
+  }, [hiddenTabbar]);
+
   return (
-    <View
-      className={`absolute bottom-5 mx-5 ${hiddenTabbar ? "hidden" : ""} flex-row items-center justify-between rounded-full bg-white/95 px-4 py-1.5 shadow-lg`}
+    <Animated.View
+      style={{
+        transform: [{ translateY }],
+        opacity,
+      }}
+      className="absolute bottom-5 mx-5 flex-row items-center justify-between rounded-full bg-white/95 px-4 py-1.5 shadow-lg transition-all duration-500"
     >
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
@@ -60,7 +81,7 @@ const TabBar = ({ state, descriptors, navigation }: BottomTabBarProps) => {
           />
         );
       })}
-    </View>
+    </Animated.View>
   );
 };
 

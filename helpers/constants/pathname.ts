@@ -35,6 +35,7 @@ const PATH_NAME = {
   },
   ACCOUNT: {
     ACCOUNT_SETTING: "setting/AccountSetting",
+    UPDATE_INFO: "update-info/UpdateUserInfo",
   },
 };
 
