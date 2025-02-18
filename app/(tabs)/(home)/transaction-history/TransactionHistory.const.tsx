@@ -57,6 +57,11 @@ export interface Transaction {
   expense: string;
 }
 
+export interface TransactionGroup {
+  year: string;
+  transactions: Transaction[];
+}
+
 export interface TransactionsByYear {
   [year: string]: Transaction[];
 }

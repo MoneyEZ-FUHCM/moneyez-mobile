@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Pressable, ScrollView } from 'react-native';
-import { useLocalSearchParams, useNavigation } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { RadioButton } from 'react-native-ui-lib';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -16,7 +16,6 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function AddTransaction() {
-  const navigation = useNavigation();
   const { type } = useLocalSearchParams();
   const [transactionType, setTransactionType] = useState<TransactionType>(
     type === 'income' ? 'income' : 'expense'
@@ -25,7 +24,7 @@ export default function AddTransaction() {
   const [selectedCategory, setSelectedCategory] = useState('Tiền ăn');
 
   const handleBack = () => {
-    navigation.goBack();
+    router.back();
   };
 
   const initialValues = {

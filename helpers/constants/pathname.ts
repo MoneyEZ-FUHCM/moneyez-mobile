@@ -29,6 +29,8 @@ const PATH_NAME = {
     INVIDUAL_HOME: "invidual-home/InvidualHome",
     ADD_TRANSACTION: "add-transaction/AddTransaction",
     TRANSACTION_HISTORY: "transaction-history/TransactionHistory",
+    PERIOD_HISTORY: "period-history/PeriodHistory",
+    PERIOD_HISTORY_DETAIL: "period-history/PeriodHistoryDetail",
   },
   ACCOUNT: {
     ACCOUNT_SETTING: "setting/AccountSetting",
