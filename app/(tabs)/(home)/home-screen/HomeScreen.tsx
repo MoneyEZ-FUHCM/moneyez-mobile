@@ -11,10 +11,10 @@ import { Feather } from "@expo/vector-icons";
 import { Coin, Eye, EyeSlash } from "iconsax-react-native";
 import React from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
-import TEXT_TRANSLATE_HOME from "./HomeScreen.translate";
-import useHomeScreen from "./hooks/useHomeScreen";
-import { useRouter } from "expo-router";
+import TEXT_TRANSLATE_HOME from "../HomeScreen.translate";
+import useHomeScreen from "../hooks/useHomeScreen";
 import { PATH_NAME } from "@/helpers/constants/pathname";
+import { useRouter } from "expo-router";
 
 const HomeScreen = () => {
   const { state, handler } = useHomeScreen();
@@ -51,13 +51,13 @@ const HomeScreen = () => {
             <View className="mt-5 flex-row items-center justify-between">
               <View className="flex-row items-center gap-2">
                 <Image
-                  source={Admin}
+                  source={state?.userInfo?.avatarUrl ?? Admin}
                   className="h-12 w-12 rounded-full"
                   resizeMode="contain"
                 />
                 <View>
                   <Text className="text-[12px]">{TITLE.HELLO}</Text>
-                  <Text className="text-base">Dương Bảo</Text>
+                  <Text className="text-base">{state?.userInfo?.fullName}</Text>
                 </View>
               </View>
               <TouchableOpacity className="rounded-full bg-black/20 p-2">

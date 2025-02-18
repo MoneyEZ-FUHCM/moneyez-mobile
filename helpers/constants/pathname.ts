@@ -16,13 +16,22 @@ const PATH_NAME = {
     CONFIRM_EMAIL: "forgot-password/ConfirmEmail",
     SET_NEW_PASSWORD: "forgot-password/SetNewPassword",
   },
-  BOT: {},
-  GROUP: {},
+  GROUP: {
+    GROUP_NAVIGATOR: "(group)",
+    GROUP_LIST: "Group",
+    CREATE_GROUP: "create-group/CreateGroup",
+  },
+  BOT: {
+    CHATBOT: "chatbot/ChatBot",
+  },
   HOME: {
-    HOME_DEFAULT: "HomeScreen",
+    HOME_DEFAULT: "home-screen/HomeScreen",
     INVIDUAL_HOME: "invidual-home/InvidualHome",
     ADD_TRANSACTION: "add-transaction/AddTransaction",
     TRANSACTION_HISTORY: "transaction-history/TransactionHistory",
+  },
+  ACCOUNT: {
+    ACCOUNT_SETTING: "setting/AccountSetting",
   },
 };
 

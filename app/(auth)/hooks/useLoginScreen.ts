@@ -3,8 +3,12 @@ import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { setLoading, setShowSplash } from "@/redux/slices/loadingSlice";
 import { setEmail } from "@/redux/slices/userSlice";
-import { useLoginMutation } from "@/services/auth";
-import { AuthRequest, GoogleSignInResponse } from "@/types/auth.types";
+import {
+  useGetInfoUserQuery,
+  useLoginGoogleMutation,
+  useLoginMutation,
+} from "@/services/auth";
+import { AuthRequest } from "@/types/auth.types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { router } from "expo-router";
@@ -16,17 +20,23 @@ import * as Yup from "yup";
 import AUTH_SCREEN_CONSTANTS from "../AuthScreen.const";
 import TEXT_TRANSLATE_AUTH from "../AuthScreen.translate";
 
+GoogleSignin.configure({
+  webClientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID,
+});
+
 const useLoginScreen = () => {
   const [data, setData] = useState(0);
   const [isChecked, setIsChecked] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
-  const { MESSAGE_VALIDATE, MESSAGE_ERROR } = TEXT_TRANSLATE_AUTH;
+  const { MESSAGE_VALIDATE, MESSAGE_ERROR, MESSAGE_SUCCESS } =
+    TEXT_TRANSLATE_AUTH;
   const { HTTP_STATUS, SYSTEM_ERROR } = COMMON_CONSTANT;
   const { ERROR_CODE } = AUTH_SCREEN_CONSTANTS;
   const { HOME, AUTH } = PATH_NAME;
-
+  const [loginGoogle] = useLoginGoogleMutation();
   const [login] = useLoginMutation();
   const dispatch = useDispatch();
+  const { refetch } = useGetInfoUserQuery();
 
   // validation
   const loginValidationSchema = Yup.object({
@@ -63,7 +73,12 @@ const useLoginScreen = () => {
               AsyncStorage.setItem("accessToken", res.data.accessToken),
               AsyncStorage.setItem("refreshToken", res.data.refreshToken),
             ]);
+            refetch();
             router.replace(HOME.HOME_DEFAULT as any);
+            ToastAndroid.show(
+              MESSAGE_SUCCESS.LOGIN_SUCCESSFUL,
+              ToastAndroid.SHORT,
+            );
           }
         }
       }
@@ -101,31 +116,56 @@ const useLoginScreen = () => {
     }
   };
 
-  const handleLoginGoogle = async () => {
-    GoogleSignin.configure({
-      webClientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID,
-    });
+  const sendUserInfoToServer = async (idToken: string) => {
+    try {
+      const res = await loginGoogle(JSON.stringify(idToken)).unwrap();
+      if (res && res.status === HTTP_STATUS.SUCCESS.OK) {
+        const jwtToken = res.data.accessToken;
+        if (jwtToken) {
+          const decoded: any = jwtDecode(jwtToken);
+          const role =
+            decoded[
+              "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+            ];
+          if (role !== VALID_ROLE.USER) {
+            ToastAndroid.show(
+              MESSAGE_ERROR.NOT_PERMISSION,
+              ToastAndroid.CENTER,
+            );
+            return;
+          } else {
+            await Promise.all([
+              AsyncStorage.setItem("accessToken", res.data.accessToken),
+              AsyncStorage.setItem("refreshToken", res.data.refreshToken),
+            ]);
+            refetch();
+            router.replace(HOME.HOME_DEFAULT as any);
+            ToastAndroid.show(
+              MESSAGE_SUCCESS.LOGIN_SUCCESSFUL,
+              ToastAndroid.SHORT,
+            );
+          }
+        }
+      }
+    } catch (error) {
+      await GoogleSignin.signOut();
+      ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
+    }
+  };
 
+  const handleLoginGoogle = async () => {
     await GoogleSignin.hasPlayServices({
       showPlayServicesUpdateDialog: true,
     });
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo: any = await GoogleSignin.signIn();
-      const googleSignInResponse: GoogleSignInResponse = {
-        idToken: userInfo.idToken ?? undefined,
-        user: {
-          id: userInfo.user.id,
-          name: userInfo.user.name ?? "",
-          email: userInfo.user.email,
-          photo: userInfo.user.photo ?? "",
-          familyName: userInfo.user.familyName ?? "",
-          givenName: userInfo.user.givenName ?? "",
-        },
-        scopes: userInfo.scopes,
-        serverAuthCode: userInfo.serverAuthCode ?? undefined,
-      };
-    } catch (err) {}
+      if (userInfo?.data?.idToken) {
+        await sendUserInfoToServer(userInfo.data.idToken);
+      }
+    } catch (err) {
+      ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
+    }
   };
 
   return {

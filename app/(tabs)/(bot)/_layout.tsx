@@ -1,6 +1,6 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
+import { PATH_NAME } from "@/helpers/constants/pathname";
 import { Stack } from "expo-router";
-import React from "react";
 
 export default function BotLayout() {
   const { CONDITION } = COMMON_CONSTANT;
@@ -12,7 +12,7 @@ export default function BotLayout() {
         headerShown: CONDITION.FALSE,
       }}
     >
-      <Stack.Screen name={"ChatBot"} />
+      <Stack.Screen name={PATH_NAME.BOT.CHATBOT} />
     </Stack>
   );
 }

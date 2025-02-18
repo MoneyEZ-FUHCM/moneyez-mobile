@@ -1,7 +1,6 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { Stack } from "expo-router";
-import React from "react";
 
 export default function AuthLayout() {
   const { AUTH } = PATH_NAME;

@@ -1,0 +1,5 @@
+const ACCOUNT_SCREEN_CONSTANT = {
+  FORM_NAME: {},
+};
+
+export default ACCOUNT_SCREEN_CONSTANT;
