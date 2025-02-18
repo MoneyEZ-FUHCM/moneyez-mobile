@@ -36,7 +36,6 @@ const Group = () => {
   return (
     <SafeAreaViewCustom rootClassName="bg-gray-100">
       <SectionComponent rootClassName="h-14 flex-row items-center justify-center border-b border-gray-300 bg-white px-4 shadow-sm">
-        
         <Text className="text-lg font-semibold text-gray-900">
           Nhóm Của Bạn
         </Text>
@@ -48,7 +47,9 @@ const Group = () => {
           </Text>
           <TouchableOpacity
             className="flex-row items-center rounded-full border border-primary bg-white px-4 py-2 shadow-sm"
-            onPress={() => router.navigate(PATH_NAME.GROUP.CREATE_GROUP_STEP_1 as any)}
+            onPress={() =>
+              router.navigate(PATH_NAME.GROUP.CREATE_GROUP_STEP_1 as any)
+            }
           >
             <Svg width="18" height="18" viewBox="0 0 16 17" fill="none">
               <Path
