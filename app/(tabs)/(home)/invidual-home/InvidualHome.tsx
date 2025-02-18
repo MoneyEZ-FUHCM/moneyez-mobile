@@ -15,7 +15,7 @@ export default function InvidualHome() {
   };
 
   const handleHistoryPress = () => {
-    // Navigate or show history
+    router.navigate(HOME.TRANSACTION_HISTORY as any)
   };
 
   const handleAddExpense = () => {

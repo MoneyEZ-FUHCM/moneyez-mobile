@@ -22,6 +22,7 @@ const PATH_NAME = {
     HOME_DEFAULT: "HomeScreen",
     INVIDUAL_HOME: "invidual-home/InvidualHome",
     ADD_TRANSACTION: "add-transaction/AddTransaction",
+    TRANSACTION_HISTORY: "transaction-history/TransactionHistory",
   },
 };
 

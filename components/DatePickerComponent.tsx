@@ -1,29 +1,42 @@
 import { Calendar } from "iconsax-react-native";
 import React, { useState } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 import { DateTimePicker } from "react-native-ui-lib";
 
-const DatePickerComponent = () => {
-  const [date, setDate] = useState(null);
+interface DatePickerComponentProps {
+  selectedDate: Date;
+  onChange: (date: Date) => void;
+}
+
+const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
+  selectedDate,
+  onChange,
+}) => {
   const [showPicker, setShowPicker] = useState(false);
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.inputContainer}
-        onPress={() => setShowPicker(true)}
-      >
-        <Calendar size="32" color="#FF8A65" />
+      {/* Button with Calendar Icon */}
+      <TouchableOpacity style={styles.datePickerButton} onPress={() => setShowPicker(true)}>
+        <Calendar size="24" color="#609084" />
+        <Text style={styles.dateText}>
+          {selectedDate ? selectedDate.toLocaleDateString("vi-VN") : "Chọn ngày"}
+        </Text>
       </TouchableOpacity>
 
+      {/* Date Picker Dialog (No Extra Display) */}
       {showPicker && (
         <DateTimePicker
+          visible={showPicker}
           mode="date"
-          onChange={(selectedDate) => {
-            setDate(selectedDate as any);
+          value={selectedDate}
+          onChange={(date) => {
+            if (date) {
+              onChange(date as Date);
+            }
             setShowPicker(false);
           }}
-          placeholder="Chọn ngày"
+          renderInput={null}
         />
       )}
     </View>
@@ -32,23 +45,21 @@ const DatePickerComponent = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    marginBottom: 12,
   },
-  inputContainer: {
+  datePickerButton: {
     flexDirection: "row",
     alignItems: "center",
+    padding: 12,
     borderWidth: 1,
     borderColor: "#ccc",
-    padding: 10,
-    borderRadius: 5,
-    width: "80%",
-    justifyContent: "space-between",
+    borderRadius: 8,
+    backgroundColor: "white",
   },
-  text: {
+  dateText: {
+    marginLeft: 10,
     fontSize: 16,
-    color: "#000",
+    color: "#333",
   },
 });
 
