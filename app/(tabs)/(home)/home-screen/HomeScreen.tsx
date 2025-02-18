@@ -13,10 +13,14 @@ import React from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import TEXT_TRANSLATE_HOME from "../HomeScreen.translate";
 import useHomeScreen from "../hooks/useHomeScreen";
+import { PATH_NAME } from "@/helpers/constants/pathname";
+import { useRouter } from "expo-router";
 
 const HomeScreen = () => {
   const { state, handler } = useHomeScreen();
   const { BUTTON, TITLE } = TEXT_TRANSLATE_HOME;
+  const { HOME } = PATH_NAME;
+  const router = useRouter();
 
   const VisibilityIcon = ({
     visible,
@@ -124,7 +128,7 @@ const HomeScreen = () => {
             </View>
             <Text
               className="absolute bottom-3 right-3 font-semibold text-primary"
-              onPress={() => {}}
+              onPress={() => router.navigate(HOME.INVIDUAL_HOME as any)}
             >
               {BUTTON.DETAIL}
             </Text>
