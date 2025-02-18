@@ -7,7 +7,6 @@ import {
 } from "@/components";
 import { AntDesign } from "@expo/vector-icons";
 import { Formik } from "formik";
-import { User } from "iconsax-react-native";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import TEXT_TRANSLATE_ACCOUNT from "../AccountScreen.translate";
 import useAccountScreen from "../hooks/useAccountScreen";
@@ -63,23 +62,17 @@ const UpdateUserInfo = () => {
           </View>
         </View>
       </SectionComponent>
-      <SectionComponent rootClassName="mx-5">
-        <View className="w-fit self-start">
-          <Text className="border-b-2 border-primary py-0.5 text-[15px] text-primary">
-            Tài khoản
-          </Text>
-        </View>
-      </SectionComponent>
+
       <Formik
         initialValues={{
-          email: "",
           fullName: "",
-          password: "",
           phoneNumber: "",
-          confirmPassword: "",
+          dob: "",
+          gender: "",
+          address: "",
         }}
-        validationSchema={() => {}}
-        onSubmit={() => {}}
+        validationSchema={handler.updateValidationSchema}
+        onSubmit={handler.handleUpdateInfo}
       >
         {({ handleSubmit }) => (
           <>
@@ -89,7 +82,7 @@ const UpdateUserInfo = () => {
                 label={TEXT_TRANSLATE_ACCOUNT.LABEL.FULLNAME}
                 // placeholder={TITLE.ENTER_EMAIL}
                 labelClass="text-text-gray text-[12px]"
-                icon={<User size="18" color={primary} variant="Outline" />}
+                // icon={<User size="18" color={primary} variant="Outline" />}
               />
               <SpaceComponent height={5}></SpaceComponent>
               <InputComponent
@@ -97,20 +90,30 @@ const UpdateUserInfo = () => {
                 label={TEXT_TRANSLATE_ACCOUNT.LABEL.PHONE_NUMBER}
                 // placeholder={TITLE.ENTER_FULLNAME}
                 labelClass="text-text-gray text-[12px]"
+                // icon={<User size="18" color={primary} variant="Outline" />}
               />
               <SpaceComponent height={5}></SpaceComponent>
               <InputComponent
-                name={state.FORM_NAME.PHONE_NUMBER}
+                name={state.FORM_NAME.DOB}
                 label={TEXT_TRANSLATE_ACCOUNT.LABEL.PHONE_NUMBER}
                 // placeholder={TITLE.ENTER_FULLNAME}
                 labelClass="text-text-gray text-[12px]"
+                // icon={<User size="18" color={primary} variant="Outline" />}
               />
               <SpaceComponent height={5}></SpaceComponent>
               <InputComponent
-                name={state.FORM_NAME.PHONE_NUMBER}
+                name={state.FORM_NAME.GENDER}
                 label={TEXT_TRANSLATE_ACCOUNT.LABEL.PHONE_NUMBER}
                 // placeholder={TITLE.ENTER_FULLNAME}
                 labelClass="text-text-gray text-[12px]"
+                // icon={<User size="18" color={primary} variant="Outline" />}
+              />
+              <InputComponent
+                name={state.FORM_NAME.ADDRESS}
+                label={TEXT_TRANSLATE_ACCOUNT.LABEL.PHONE_NUMBER}
+                // placeholder={TITLE.ENTER_FULLNAME}
+                labelClass="text-text-gray text-[12px]"
+                // icon={<User size="18" color={primary} variant="Outline" />}
               />
             </SectionComponent>
 
