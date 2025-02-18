@@ -9,6 +9,14 @@ import {
 
 interface RefreshResultData {
   accessToken: string;
+  refreshToken: string;
+}
+
+interface RefreshResponse {
+  data?: {
+    data?: RefreshResultData;
+  };
+  error?: unknown;
 }
 
 const axiosBaseQuery = async (
@@ -37,25 +45,25 @@ const axiosBaseQuery = async (
     result.error.status === HTTP_STATUS.CLIENT_ERROR.UNAUTHORIZED
   ) {
     const refreshToken = await AsyncStorage.getItem("refreshToken");
-    const rfToken = JSON.stringify(refreshToken);
 
-    if (rfToken) {
-      const res = await baseQuery(
+    if (refreshToken) {
+      const res = (await baseQuery(
         {
           url: "/auth/refresh-token",
           method: HTTP_METHOD.POST,
-          body: rfToken,
+          body: { refreshToken },
         },
         api,
         extraOptions,
-      );
+      )) as RefreshResponse;
 
-      const refreshData = res.data as RefreshResultData | undefined;
+      const refreshData = res?.data?.data;
 
       if (refreshData) {
-        const newAccessToken = refreshData.accessToken;
-        await AsyncStorage.setItem("accessToken", newAccessToken);
-        token = newAccessToken;
+        const { accessToken, refreshToken: newRefreshToken } = refreshData;
+        await AsyncStorage.setItem("accessToken", accessToken);
+        await AsyncStorage.setItem("refreshToken", newRefreshToken);
+        token = accessToken;
 
         if (typeof args === "object") {
           result = await baseQuery(
@@ -63,7 +71,7 @@ const axiosBaseQuery = async (
               ...args,
               headers: {
                 ...args.headers,
-                Authorization: `Bearer ${newAccessToken}`,
+                Authorization: `Bearer ${accessToken}`,
               },
             },
             api,
