@@ -1,4 +1,5 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
+import { PATH_NAME } from "@/helpers/constants/pathname";
 import { Stack } from "expo-router";
 import React from "react";
 
@@ -12,7 +13,7 @@ export default function AccountLayout() {
         headerShown: CONDITION.FALSE,
       }}
     >
-      <Stack.Screen name={"Account"} />
+      <Stack.Screen name={PATH_NAME.ACCOUNT.ACCOUNT_SETTING} />
     </Stack>
   );
 }

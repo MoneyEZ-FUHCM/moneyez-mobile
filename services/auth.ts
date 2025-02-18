@@ -1,5 +1,6 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import apiSlice from "@/redux/slices/apiSlice";
+import { UserInfo } from "@/types/user.types";
 
 const { HTTP_METHOD } = COMMON_CONSTANT;
 const authApi = apiSlice.injectEndpoints({
@@ -13,7 +14,7 @@ const authApi = apiSlice.injectEndpoints({
     }),
     loginGoogle: builder.mutation({
       query: (payload) => ({
-        url: "/auth/login/google",
+        url: "/auth/login/google/oauth",
         method: HTTP_METHOD.POST,
         body: payload,
       }),
@@ -53,6 +54,12 @@ const authApi = apiSlice.injectEndpoints({
         body: payload,
       }),
     }),
+    getInfoUser: builder.query<{ data: UserInfo }, void>({
+      query: () => ({
+        url: "/users/current",
+        method: HTTP_METHOD.GET,
+      }),
+    }),
   }),
 });
 
@@ -64,6 +71,7 @@ export const {
   useResetPasswordMutation,
   useConfirmOtpMutation,
   useConfirmNewPasswordMutation,
+  useGetInfoUserQuery,
 } = authApi;
 
 export default authApi;
