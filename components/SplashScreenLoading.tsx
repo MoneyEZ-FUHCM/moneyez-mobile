@@ -24,11 +24,12 @@ const SplashScreenLoading = () => {
       try {
         const token = await AsyncStorage.getItem("accessToken");
 
-        setTimeout(() => {
-          if (token) {
+        setTimeout(async () => {
+          if (token && typeof token === "string") {
             refetch();
             router.replace(PATH_NAME.HOME.HOME_DEFAULT as any);
           } else {
+            await AsyncStorage.removeItem("accessToken");
             dispatch(setShowSplash(true));
           }
         }, 2500);

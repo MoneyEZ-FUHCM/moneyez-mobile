@@ -51,7 +51,11 @@ const HomeScreen = () => {
             <View className="mt-5 flex-row items-center justify-between">
               <View className="flex-row items-center gap-2">
                 <Image
-                  source={state?.userInfo?.avatarUrl ?? Admin}
+                  source={
+                    state?.userInfo?.avatarUrl
+                      ? { uri: state.userInfo.avatarUrl }
+                      : Admin
+                  }
                   className="h-12 w-12 rounded-full"
                   resizeMode="contain"
                 />
