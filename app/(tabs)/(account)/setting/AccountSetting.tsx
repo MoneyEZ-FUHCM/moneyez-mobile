@@ -44,7 +44,11 @@ const AccountSetting = () => {
       >
         <View className="flex-1 items-center justify-center gap-1">
           <Image
-            source={state?.userInfo?.avatarUrl ?? Admin}
+            source={
+              state?.userInfo?.avatarUrl
+                ? { uri: state.userInfo.avatarUrl }
+                : Admin
+            }
             className="mb-1 h-48 w-48 rounded-full"
             resizeMode="cover"
           />

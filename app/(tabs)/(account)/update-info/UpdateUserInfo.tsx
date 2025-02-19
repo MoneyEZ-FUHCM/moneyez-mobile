@@ -10,7 +10,6 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 import { Formik } from "formik";
 import { Buildings, Call, User } from "iconsax-react-native";
-import { useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import TEXT_TRANSLATE_ACCOUNT from "../AccountScreen.translate";
 import useAccountScreen from "../hooks/useAccountScreen";
@@ -18,9 +17,6 @@ import useAccountScreen from "../hooks/useAccountScreen";
 const UpdateUserInfo = () => {
   const { state, handler } = useAccountScreen();
   const primary = "#609084";
-  const [date, setDate] = useState("");
-
-  console.log("check date", date);
 
   handler.handleHideTabbar();
 
@@ -58,7 +54,11 @@ const UpdateUserInfo = () => {
               />
             ) : (
               <Image
-                source={state?.userInfo?.avatarUrl ?? Admin}
+                source={
+                  state?.userInfo?.avatarUrl
+                    ? { uri: state.userInfo.avatarUrl }
+                    : Admin
+                }
                 className="mb-1 h-28 w-28 rounded-full"
                 resizeMode="cover"
               />
@@ -74,12 +74,13 @@ const UpdateUserInfo = () => {
       </SectionComponent>
 
       <Formik
+        enableReinitialize
         initialValues={{
-          fullName: "",
-          phoneNumber: "",
-          dob: "",
-          gender: "",
-          address: "",
+          fullName: state.userInfo?.fullName ?? "",
+          phoneNumber: state.userInfo?.phoneNumber ?? "",
+          dob: state.userInfo?.dob ?? "",
+          gender: state.userInfo?.gender ?? "",
+          address: state.userInfo?.address ?? "",
         }}
         validationSchema={handler.updateValidationSchema}
         onSubmit={handler.handleUpdateInfo}
@@ -94,7 +95,7 @@ const UpdateUserInfo = () => {
                 labelClass="text-text-gray text-[12px]"
                 icon={<User size="18" color={primary} variant="Outline" />}
               />
-              <SpaceComponent height={5}></SpaceComponent>
+              <SpaceComponent height={5} />
               <InputComponent
                 name={state.FORM_NAME.PHONE_NUMBER}
                 label={TEXT_TRANSLATE_ACCOUNT.LABEL.PHONE_NUMBER}
@@ -102,8 +103,7 @@ const UpdateUserInfo = () => {
                 labelClass="text-text-gray text-[12px]"
                 icon={<Call size="18" color={primary} />}
               />
-              <SpaceComponent height={5}></SpaceComponent>
-
+              <SpaceComponent height={5} />
               <InputComponent
                 name={state.FORM_NAME.ADDRESS}
                 label={TEXT_TRANSLATE_ACCOUNT.LABEL.ADDRESS}
@@ -111,26 +111,27 @@ const UpdateUserInfo = () => {
                 labelClass="text-text-gray text-[12px]"
                 icon={<Buildings size="18" color={primary} />}
               />
-              <SpaceComponent height={5}></SpaceComponent>
-              <DatePickerComponent
-                name="dob"
-                label="Ngày sinh"
-                selectedDate={date}
-                onChange={setDate}
-              />
-              <SpaceComponent height={5}></SpaceComponent>
-
-              <RadioGroupComponent
-                containerClass="w-1/2"
-                name="gender"
-                options={[
-                  { label: "Nam", value: 0 },
-                  { label: "Nữ", value: 1 },
-                ]}
-                label="Giới tính"
-              />
+              <SpaceComponent height={5} />
+              <View className="flex-row">
+                <DatePickerComponent
+                  name="dob"
+                  label="Ngày sinh"
+                  containerClass="flex-1 w-1/2"
+                />
+                <SpaceComponent width={25} />
+                <RadioGroupComponent
+                  orientation="horizontal"
+                  containerClass="flex-1 w-1/2"
+                  name="gender"
+                  options={[
+                    { label: "Nam", value: 0 },
+                    { label: "Nữ", value: 1 },
+                  ]}
+                  label="Giới tính"
+                  spacing={30}
+                />
+              </View>
             </SectionComponent>
-
             <SectionComponent rootClassName="absolute bottom-5 w-full">
               <TouchableOpacity
                 onPress={() => handleSubmit()}

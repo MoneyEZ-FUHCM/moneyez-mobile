@@ -8,16 +8,12 @@ import { Text, TouchableOpacity, View } from "react-native";
 
 interface DatePickerComponentProps {
   name: string;
-  selectedDate: any;
-  onChange: any;
   label: string;
   containerClass?: string;
 }
 
 const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
   name,
-  selectedDate,
-  onChange,
   label,
   containerClass,
 }) => {
@@ -27,7 +23,7 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
   const handleChange = (event: DateTimePickerEvent, date?: Date) => {
     setShowPicker(false);
     if (date) {
-      onChange(date);
+      helpers.setValue(date);
     }
   };
 
@@ -42,15 +38,15 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
       >
         <Calendar size="20" color="#609084" />
         <Text className="ml-2 text-[13px] text-black">
-          {selectedDate
-            ? selectedDate.toLocaleDateString("vi-VN")
+          {field.value
+            ? new Date(field.value).toLocaleDateString("vi-VN")
             : "Chọn ngày"}
         </Text>
       </TouchableOpacity>
       {showPicker && (
         <DateTimePicker
           testID="dateTimePicker"
-          value={selectedDate || new Date()}
+          value={field.value ? new Date(field.value) : new Date()}
           mode="date"
           is24Hour={true}
           display="default"
@@ -59,7 +55,7 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
         />
       )}
       {meta.touched && meta.error && (
-        <Text className={`absolute -bottom-5 mt-2 text-[12px] text-red`}>
+        <Text className="absolute -bottom-5 mt-2 text-[12px] text-red">
           {meta.error}
         </Text>
       )}

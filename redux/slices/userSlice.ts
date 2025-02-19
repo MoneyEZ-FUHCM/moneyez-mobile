@@ -23,6 +23,9 @@ const userSlice = createSlice({
     setEmail: (state, action: PayloadAction<string | null>) => {
       state.email = action.payload;
     },
+    setUserInfo: (state, action) => {
+      state.userInfo = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addMatcher(
@@ -36,5 +39,5 @@ const userSlice = createSlice({
 
 export const selectUserInfo = (state: RootState) => state.user.userInfo;
 
-export const { clearUserInfo, setEmail } = userSlice.actions;
+export const { clearUserInfo, setEmail, setUserInfo } = userSlice.actions;
 export default userSlice.reducer;

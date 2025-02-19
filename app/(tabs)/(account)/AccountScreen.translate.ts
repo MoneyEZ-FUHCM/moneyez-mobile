@@ -38,6 +38,15 @@ const TEXT_TRANSLATE_ACCOUNT = {
     OTP_5_DIGITS: "Vui lòng nhập đầy đủ 5 chữ số",
     RESET_PASSWORD: "Vui lòng nhập mật khẩu mới và xác nhận",
   },
+
+  MESSAGE_SUCCESS: {
+    UPDATE_USER_SUCCESSFUL: "Cập nhật thông tin cá nhân thành công",
+  },
+
+  MESSAGE_ERROR: {
+    PHONE_ALREADY_EXISTED: "Số điện thoại đã tồn tại",
+    MUST_BE_16: "Người dùng phải từ 16 tuổi trở lên mới dược vào hệ thống",
+  },
 };
 
 export default TEXT_TRANSLATE_ACCOUNT;

@@ -16,13 +16,14 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   ScrollView,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { Checkbox } from "react-native-paper";
 import Animated, { FadeInDown, FadeOut, Layout } from "react-native-reanimated";
-import { Checkbox } from "react-native-ui-lib";
 import AUTH_SCREEN_CONSTANTS from "../AuthScreen.const";
 import TEXT_TRANSLATE_AUTH from "../AuthScreen.translate";
 import useLoginScreen from "../hooks/useLoginScreen";
@@ -91,22 +92,22 @@ const Login = () => {
                           isPrivate
                         />
                       </SectionComponent>
-                      <SectionComponent rootClassName="flex-row justify-between mt-2 mb-3">
-                        <TouchableOpacity
+                      <SectionComponent rootClassName="flex-row justify-between items-center mb-2">
+                        <Pressable
                           className="flex-row items-center"
                           onPress={() => handler.setIsChecked(!state.isChecked)}
                         >
                           <Checkbox
-                            value={state.isChecked}
-                            onValueChange={handler.setIsChecked}
+                            status={state.isChecked ? "checked" : "unchecked"}
+                            onPress={() =>
+                              handler.setIsChecked(!state.isChecked)
+                            }
                             color="#609084"
-                            className="mx-2 rounded-[3px]"
-                            size={15}
                           />
-                          <Text className="text-[12px] text-text-gray">
+                          <Text className="mx-2 text-[12px] text-text-gray">
                             {BUTTON.REMEMBER_ME}
                           </Text>
-                        </TouchableOpacity>
+                        </Pressable>
                         <TouchableOpacity
                           onPress={() =>
                             router.navigate(AUTH.CONFIRM_EMAIL as any)

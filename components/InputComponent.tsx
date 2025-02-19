@@ -39,7 +39,7 @@ const InputComponent = ({
 }: CommonInputProps) => {
   const [field, meta, helpers] = useField(name);
   const [isPasswordVisible, setIsPasswordVisible] = useState(!isPrivate);
-  console.log("check icon", icon);
+
   return (
     <View className={`${containerClass} mb-5`}>
       <View className="mb-1 flex-row items-center">
