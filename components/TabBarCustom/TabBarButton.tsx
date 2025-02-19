@@ -9,7 +9,6 @@ import Animated, {
 
 import { icons } from "@/assets/icons/icons";
 import { AntDesign } from "@expo/vector-icons";
-import { View } from "react-native-ui-lib";
 
 type RouteName = keyof typeof icons;
 

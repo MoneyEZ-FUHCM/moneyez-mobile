@@ -1,4 +1,5 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
+import { PATH_NAME } from "@/helpers/constants/pathname";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   BaseQueryApi,
@@ -6,6 +7,7 @@ import {
   FetchArgs,
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
+import { router } from "expo-router";
 
 interface RefreshResultData {
   accessToken: string;
@@ -80,7 +82,7 @@ const axiosBaseQuery = async (
         }
       } else {
         await AsyncStorage.clear();
-        // router.replace(AUTH.LOGIN as any);
+        router.replace(PATH_NAME.AUTH.LOGIN as any);
       }
     }
   }

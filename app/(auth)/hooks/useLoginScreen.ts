@@ -147,7 +147,15 @@ const useLoginScreen = () => {
           }
         }
       }
-    } catch (error) {
+    } catch (err: any) {
+      const error = err.data;
+
+      if (error.errorCode === ERROR_CODE.ACCOUNT_BLOCKED) {
+        ToastAndroid.show(MESSAGE_ERROR.ACCOUNT_BLOCKED, ToastAndroid.SHORT);
+        await GoogleSignin.signOut();
+        return;
+      }
+
       await GoogleSignin.signOut();
       ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
     }

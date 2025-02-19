@@ -44,7 +44,11 @@ const AccountSetting = () => {
       >
         <View className="flex-1 items-center justify-center gap-1">
           <Image
-            source={state?.userInfo?.avatarUrl ?? Admin}
+            source={
+              state?.userInfo?.avatarUrl
+                ? { uri: state.userInfo.avatarUrl }
+                : Admin
+            }
             className="mb-1 h-48 w-48 rounded-full"
             resizeMode="cover"
           />
@@ -63,6 +67,7 @@ const AccountSetting = () => {
             <TouchableOpacity
               key={item.id}
               className="w-full flex-row items-center justify-between px-5 py-3"
+              onPress={() => handler.handleNavigateAccountOptions(item?.id)}
             >
               <View
                 className={`flex-row items-center gap-x-5 ${item.id === 2 ? "my-3" : ""}`}
