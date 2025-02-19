@@ -119,6 +119,7 @@ const UpdateUserInfo = () => {
                   name="dob"
                   label="Ngày sinh"
                   containerClass="flex-1 w-1/2"
+                  labelClass="text-text-gray text-[12px]"
                   isRequired
                 />
                 <SpaceComponent width={25} />
