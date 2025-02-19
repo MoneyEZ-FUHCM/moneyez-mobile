@@ -28,7 +28,6 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
     setShowPicker(false);
     if (date) {
       onChange(date);
-      helpers.setValue(date);
     }
   };
 
