@@ -93,6 +93,7 @@ const UpdateUserInfo = () => {
                 label={TEXT_TRANSLATE_ACCOUNT.LABEL.FULLNAME}
                 placeholder={TEXT_TRANSLATE_ACCOUNT.TITLE.ENTER_FULLNAME}
                 labelClass="text-text-gray text-[12px]"
+                isRequired
                 icon={<User size="18" color={primary} variant="Outline" />}
               />
               <SpaceComponent height={5} />
@@ -101,6 +102,7 @@ const UpdateUserInfo = () => {
                 label={TEXT_TRANSLATE_ACCOUNT.LABEL.PHONE_NUMBER}
                 placeholder={TEXT_TRANSLATE_ACCOUNT.TITLE.ENTER_FULLNAME}
                 labelClass="text-text-gray text-[12px]"
+                isRequired
                 icon={<Call size="18" color={primary} />}
               />
               <SpaceComponent height={5} />
@@ -117,6 +119,7 @@ const UpdateUserInfo = () => {
                   name="dob"
                   label="Ngày sinh"
                   containerClass="flex-1 w-1/2"
+                  isRequired
                 />
                 <SpaceComponent width={25} />
                 <RadioGroupComponent

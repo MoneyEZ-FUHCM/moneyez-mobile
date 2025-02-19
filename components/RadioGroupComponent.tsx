@@ -18,12 +18,11 @@ const RadioGroupComponent: React.FC<RadioGroupComponentProps> = ({
   label,
   containerClass,
   orientation = "vertical",
-  spacing = 8, // Mặc định là 8px
+  spacing = 8,
 }) => {
   const [field, meta, helpers] = useField(name);
 
   const handleChange = (value: number) => {
-    console.log("check value", value);
     helpers.setValue(value);
   };
 
