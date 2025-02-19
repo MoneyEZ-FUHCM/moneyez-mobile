@@ -1,66 +1,61 @@
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
 import { Calendar } from "iconsax-react-native";
 import React, { useState } from "react";
-import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
-import { DateTimePicker } from "react-native-ui-lib";
+import { Text, TouchableOpacity, View } from "react-native";
 
 interface DatePickerComponentProps {
-  selectedDate: Date;
-  onChange: (date: Date) => void;
+  selectedDate: any;
+  onChange: any;
+  label: string;
+  containerClass?: string;
 }
 
 const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
   selectedDate,
   onChange,
+  label,
+  containerClass,
 }) => {
   const [showPicker, setShowPicker] = useState(false);
 
+  const handleChange = (event: DateTimePickerEvent, date?: Date) => {
+    setShowPicker(false);
+    if (date) {
+      onChange(date);
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      {/* Button with Calendar Icon */}
-      <TouchableOpacity style={styles.datePickerButton} onPress={() => setShowPicker(true)}>
-        <Calendar size="24" color="#609084" />
-        <Text style={styles.dateText}>
-          {selectedDate ? selectedDate.toLocaleDateString("vi-VN") : "Chọn ngày"}
+    <View className={`${containerClass} mb-5`}>
+      <View className="mb-1 flex-row items-center">
+        <Text className="text-[12px] text-text-gray">{label}</Text>
+      </View>
+      <TouchableOpacity
+        className="h-10 flex-row items-center rounded-md border border-gray-300 px-3"
+        onPress={() => setShowPicker(true)}
+      >
+        <Calendar size="20" color="#609084" />
+        <Text className="ml-2 text-[13px] text-black">
+          {selectedDate
+            ? selectedDate.toLocaleDateString("vi-VN")
+            : "Chọn ngày"}
         </Text>
       </TouchableOpacity>
-
-      {/* Date Picker Dialog (No Extra Display) */}
       {showPicker && (
         <DateTimePicker
-          visible={showPicker}
+          testID="dateTimePicker"
+          value={selectedDate || new Date()}
           mode="date"
-          value={selectedDate}
-          onChange={(date) => {
-            if (date) {
-              onChange(date as Date);
-            }
-            setShowPicker(false);
-          }}
-          renderInput={null}
+          is24Hour={true}
+          display="default"
+          maximumDate={new Date()}
+          onChange={handleChange}
         />
       )}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: 12,
-  },
-  datePickerButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 12,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    backgroundColor: "white",
-  },
-  dateText: {
-    marginLeft: 10,
-    fontSize: 16,
-    color: "#333",
-  },
-});
 
 export { DatePickerComponent };

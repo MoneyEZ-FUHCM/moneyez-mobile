@@ -6,6 +6,7 @@ import { Text, TextInput, TouchableOpacity, View } from "react-native";
 interface CommonInputProps {
   name: string;
   label: string;
+  icon?: React.ReactNode;
   placeholder?: string;
   isPrivate?: boolean;
   isRequired?: boolean;
@@ -26,6 +27,7 @@ interface CommonInputProps {
 const InputComponent = ({
   name,
   label,
+  icon,
   placeholder,
   isPrivate = false,
   isRequired = false,
@@ -50,9 +52,9 @@ const InputComponent = ({
       </View>
       <View className="relative">
         <TextInput
-          className={`h-10 rounded-md border px-3 pr-10 ${
-            meta.touched && meta.error ? "border-red" : "border-gray-300"
-          } ${inputClass}`}
+          className={`h-10 rounded-md border px-3 ${isPrivate && "pr-10"} ${
+            icon ? "pl-10" : "pl-3"
+          } ${meta.touched && meta.error ? "border-red" : "border-gray-300"} ${inputClass}`}
           placeholder={placeholder}
           secureTextEntry={!isPasswordVisible && isPrivate}
           inputMode={inputMode}
@@ -60,6 +62,8 @@ const InputComponent = ({
           onChangeText={(text) => helpers.setValue(text)}
           onBlur={() => helpers.setTouched(true)}
         />
+
+        {icon && <View className="absolute left-3 top-2.5">{icon}</View>}
         {isPrivate && (
           <TouchableOpacity
             className="absolute right-3 top-2.5"
