@@ -1,6 +1,9 @@
 const TEXT_TRANSLATE_ACCOUNT = {
   TITLE: {
     ACCOUNT: "Cá nhân",
+    ENTER_ADDRESS: "Nhập địa chỉ",
+    ENTER_FULLNAME: "Nhập họ và tên",
+    ENTER_PHONE_NUMBER: "Nhập số điện thoại",
   },
 
   BUTTON: {
@@ -21,6 +24,9 @@ const TEXT_TRANSLATE_ACCOUNT = {
   MESSAGE_VALIDATE: {
     EMAIL_REQUIRED: "Email không được để trống",
     FULLNAME_REQUIRED: "Họ và tên không được để trống",
+    ADDRESS_REQUIRED: "Địa chỉ không được để trống",
+    DOB_REQUIRED: "Ngày tháng năm không được để trống",
+    GENDER_REQUIRED: "Giới tính không được để trống",
     PHONE_NUMBER_REQUIRED: "Vui lòng nhập số điện thoại",
     INPUT_EMAIL: "Email phải đúng định dạng",
     INPUT_PHONE_NUMBER: "Vui lòng nhập đúng số điện thoại (10 chữ số)",

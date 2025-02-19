@@ -1,12 +1,16 @@
 import Admin from "@/assets/images/logo/avatar_admin.jpg";
 import {
+  DatePickerComponent,
   InputComponent,
+  RadioGroupComponent,
   SafeAreaViewCustom,
   SectionComponent,
   SpaceComponent,
 } from "@/components";
 import { AntDesign } from "@expo/vector-icons";
 import { Formik } from "formik";
+import { Buildings, Call, User } from "iconsax-react-native";
+import { useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import TEXT_TRANSLATE_ACCOUNT from "../AccountScreen.translate";
 import useAccountScreen from "../hooks/useAccountScreen";
@@ -14,15 +18,21 @@ import useAccountScreen from "../hooks/useAccountScreen";
 const UpdateUserInfo = () => {
   const { state, handler } = useAccountScreen();
   const primary = "#609084";
+  const [date, setDate] = useState("");
+
+  console.log("check date", date);
 
   handler.handleHideTabbar();
 
   return (
     <SafeAreaViewCustom rootClassName="relative">
-      <SectionComponent rootClassName="flex-row justify-between items-center h-14 px-4 ">
-        <TouchableOpacity onPress={handler.handleBack}>
+      <SectionComponent rootClassName="flex-row relative justify-center items-center h-14 px-4">
+        <TouchableOpacity
+          onPress={handler.handleBack}
+          className="absolute left-4"
+        >
           <AntDesign
-            name="arrowleft"
+            name="left"
             size={24}
             color="#609084"
             style={{
@@ -80,40 +90,44 @@ const UpdateUserInfo = () => {
               <InputComponent
                 name={state.FORM_NAME.FULLNAME}
                 label={TEXT_TRANSLATE_ACCOUNT.LABEL.FULLNAME}
-                // placeholder={TITLE.ENTER_EMAIL}
+                placeholder={TEXT_TRANSLATE_ACCOUNT.TITLE.ENTER_FULLNAME}
                 labelClass="text-text-gray text-[12px]"
-                // icon={<User size="18" color={primary} variant="Outline" />}
+                icon={<User size="18" color={primary} variant="Outline" />}
               />
               <SpaceComponent height={5}></SpaceComponent>
               <InputComponent
                 name={state.FORM_NAME.PHONE_NUMBER}
                 label={TEXT_TRANSLATE_ACCOUNT.LABEL.PHONE_NUMBER}
-                // placeholder={TITLE.ENTER_FULLNAME}
+                placeholder={TEXT_TRANSLATE_ACCOUNT.TITLE.ENTER_FULLNAME}
                 labelClass="text-text-gray text-[12px]"
-                // icon={<User size="18" color={primary} variant="Outline" />}
+                icon={<Call size="18" color={primary} />}
               />
               <SpaceComponent height={5}></SpaceComponent>
-              <InputComponent
-                name={state.FORM_NAME.DOB}
-                label={TEXT_TRANSLATE_ACCOUNT.LABEL.PHONE_NUMBER}
-                // placeholder={TITLE.ENTER_FULLNAME}
-                labelClass="text-text-gray text-[12px]"
-                // icon={<User size="18" color={primary} variant="Outline" />}
-              />
-              <SpaceComponent height={5}></SpaceComponent>
-              <InputComponent
-                name={state.FORM_NAME.GENDER}
-                label={TEXT_TRANSLATE_ACCOUNT.LABEL.PHONE_NUMBER}
-                // placeholder={TITLE.ENTER_FULLNAME}
-                labelClass="text-text-gray text-[12px]"
-                // icon={<User size="18" color={primary} variant="Outline" />}
-              />
+
               <InputComponent
                 name={state.FORM_NAME.ADDRESS}
-                label={TEXT_TRANSLATE_ACCOUNT.LABEL.PHONE_NUMBER}
-                // placeholder={TITLE.ENTER_FULLNAME}
+                label={TEXT_TRANSLATE_ACCOUNT.LABEL.ADDRESS}
+                placeholder={TEXT_TRANSLATE_ACCOUNT.TITLE.ENTER_ADDRESS}
                 labelClass="text-text-gray text-[12px]"
-                // icon={<User size="18" color={primary} variant="Outline" />}
+                icon={<Buildings size="18" color={primary} />}
+              />
+              <SpaceComponent height={5}></SpaceComponent>
+              <DatePickerComponent
+                name="dob"
+                label="Ngày sinh"
+                selectedDate={date}
+                onChange={setDate}
+              />
+              <SpaceComponent height={5}></SpaceComponent>
+
+              <RadioGroupComponent
+                containerClass="w-1/2"
+                name="gender"
+                options={[
+                  { label: "Nam", value: 0 },
+                  { label: "Nữ", value: 1 },
+                ]}
+                label="Giới tính"
               />
             </SectionComponent>
 
