@@ -1,14 +1,21 @@
-import React, { useState } from 'react';
-import { View, Text, Pressable } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
-import { FlatListCustom, SafeAreaViewCustom, SectionComponent } from '@/components';
-import { router } from 'expo-router';
-import { TRANSACTION_HISTORY_CONSTANTS, Transaction, TransactionGroup } from './TransactionHistory.const';
-import { ScrollViewCustom } from '@/components/ScrollViewCustom';
-import { PATH_NAME } from '@/helpers/constants/pathname';
+import React, { useState } from "react";
+import { View, Text, Pressable } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
+import {
+  FlatListCustom,
+  SafeAreaViewCustom,
+  SectionComponent,
+} from "@/components";
+import { router } from "expo-router";
+import TRANSACTION_HISTORY_CONSTANTS, {
+  Transaction,
+  TransactionGroup,
+} from "./TransactionHistory.const";
+import { ScrollViewCustom } from "@/components/ScrollViewCustom";
+import { PATH_NAME } from "@/helpers/constants/pathname";
 
 export default function TransactionHistory() {
-  const [activeFilter, setActiveFilter] = useState('all');
+  const [activeFilter, setActiveFilter] = useState("all");
   const { HOME } = PATH_NAME;
 
   const handleBack = () => {
@@ -16,21 +23,26 @@ export default function TransactionHistory() {
   };
 
   const formatCurrency = (amount: string) => {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND'
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
     }).format(parseInt(amount));
   };
 
-  const transactionsByYear = Object.entries(TRANSACTION_HISTORY_CONSTANTS.SAMPLE_TRANSACTIONS)
-    .map(([year, transactions]) => ({
-      year,
-      transactions,
-    }));
+  const transactionsByYear = Object.entries(
+    TRANSACTION_HISTORY_CONSTANTS.SAMPLE_TRANSACTIONS,
+  ).map(([year, transactions]) => ({
+    year,
+    transactions,
+  }));
 
-  const renderTransactionItem = ({ transaction }: { transaction: Transaction }) => (
-    <View className="border border-[#dbdbdb] rounded p-4 mb-3">
-      <View className="flex-row justify-between items-center">
+  const renderTransactionItem = ({
+    transaction,
+  }: {
+    transaction: Transaction;
+  }) => (
+    <View className="mb-3 rounded border border-[#dbdbdb] p-4">
+      <View className="flex-row items-center justify-between">
         <Text className="text-base font-semibold text-[#609084]">
           {transaction.modelName}
         </Text>
@@ -39,7 +51,7 @@ export default function TransactionHistory() {
         </Text>
       </View>
 
-      <View className="flex-row justify-between items-center mt-2">
+      <View className="mt-2 flex-row items-center justify-between">
         <Text className="text-sm italic text-[#021433]">
           {transaction.period}
         </Text>
@@ -48,9 +60,9 @@ export default function TransactionHistory() {
         </Text>
       </View>
 
-      <Pressable 
-        className="flex items-end mt-2"
-        onPress={() =>  router.navigate(HOME.PERIOD_HISTORY as any)}
+      <Pressable
+        className="mt-2 flex items-end"
+        onPress={() => router.navigate(HOME.PERIOD_HISTORY as any)}
       >
         <Text className="text-sm italic text-[#609084] underline">
           <Text>Xem chi tiết</Text>
@@ -62,7 +74,9 @@ export default function TransactionHistory() {
 
   const renderYearSection = ({ item }: { item: TransactionGroup }) => (
     <SectionComponent rootClassName="bg-white mx-4 mb-4 px-4 rounded-lg">
-      <Text className="text-xl font-semibold text-[#021433] mb-4">{item.year}</Text>
+      <Text className="mb-4 text-xl font-semibold text-[#021433]">
+        {item.year}
+      </Text>
       {item.transactions.map((transaction, index) => (
         <React.Fragment key={index}>
           {renderTransactionItem({ transaction })}
@@ -92,14 +106,16 @@ export default function TransactionHistory() {
               <Pressable
                 key={tab.id}
                 onPress={() => setActiveFilter(tab.id)}
-                className={`px-4 py-2 border rounded-2xl ${activeFilter === tab.id
-                    ? 'bg-[#609084] border-[#609084]'
-                    : 'border-[#609084] bg-white'
-                  }`}
+                className={`rounded-2xl border px-4 py-2 ${
+                  activeFilter === tab.id
+                    ? "border-[#609084] bg-[#609084]"
+                    : "border-[#609084] bg-white"
+                }`}
               >
                 <Text
-                  className={`text-base ${activeFilter === tab.id ? 'text-white' : 'text-[#609084]'
-                    }`}
+                  className={`text-base ${
+                    activeFilter === tab.id ? "text-white" : "text-[#609084]"
+                  }`}
                 >
                   {tab.label}
                 </Text>
