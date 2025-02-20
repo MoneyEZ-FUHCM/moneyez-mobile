@@ -26,7 +26,7 @@ export default function InvidualHome() {
             <MaterialIcons name="arrow-back" size={24} color="#609084" />
           </Pressable>
           <Text className="text-lg font-bold text-primary">
-            Chi tiêu cá nhân
+            {TEXT_TRANSLATE_INVIDUAL_HOME.TITLE.PERSONAL_EXPENSES}
           </Text>
           <Text></Text>
         </View>
@@ -52,7 +52,7 @@ export default function InvidualHome() {
             <View className="flex-1 items-center justify-center rounded-[10px] border border-[#DFDFDF] px-3 py-2">
               <Pressable
                 className="flex-row items-center gap-x-2"
-                onPress={handler.handleAddIncome}
+                onPress={handler.handleAddExpense}
               >
                 <View className="rounded-[100%] bg-thirdly p-2">
                   <Image
@@ -70,7 +70,7 @@ export default function InvidualHome() {
             <View className="flex-1 items-center justify-center rounded-[10px] border border-[#DFDFDF] px-3 py-2">
               <Pressable
                 className="flex-row items-center gap-x-2"
-                onPress={handler.handleAddExpense}
+                onPress={handler.handleAddIncome}
               >
                 <View className="rounded-[100%] bg-thirdly p-2">
                   <Image

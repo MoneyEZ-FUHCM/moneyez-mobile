@@ -40,11 +40,11 @@ const useIndividualHome = () => {
   };
 
   const handleAddExpense = () => {
-    router.navigate(HOME.ADD_TRANSACTION as any);
+    router.navigate(`${HOME.ADD_TRANSACTION}?type=expense` as any);
   };
 
   const handleAddIncome = () => {
-    router.navigate(HOME.ADD_TRANSACTION as any);
+    router.navigate(`${HOME.ADD_TRANSACTION}?type=income` as any);
   };
 
   return {
