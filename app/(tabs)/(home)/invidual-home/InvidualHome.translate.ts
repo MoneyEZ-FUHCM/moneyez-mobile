@@ -7,7 +7,7 @@ const TEXT_TRANSLATE_INVIDUAL_HOME = {
 
   // Labels
   LABEL: {
-    TRANSACTION_HISTORY: "Lịch sử >",
+    TRANSACTION_HISTORY: "Lịch sử  >",
     ADD_EXPENSE: "Thêm khoản chi",
     ADD_INCOME: "Thêm khoản thu",
     BALANCE_AMOUNT: "1.000.000.000 đ",

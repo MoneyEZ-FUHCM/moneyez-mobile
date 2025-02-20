@@ -42,6 +42,18 @@ export default function AddTransaction() {
 
   return (
     <SafeAreaViewCustom rootClassName="flex-1 bg-[#fafafa]">
+      {/* HEADER */}
+      <SectionComponent rootClassName="h-14 bg-white justify-center">
+        <View className="flex-row items-center justify-between px-4">
+          <Pressable onPress={handleBack}>
+            <MaterialIcons name="arrow-back" size={24} color="black" />
+          </Pressable>
+          <Text className="text-lg font-bold text-primary">
+            Thêm chi tiêu / khoản thu
+          </Text>
+          <MaterialIcons name="camera-alt" size={24} color="#609084" />
+        </View>
+      </SectionComponent>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -58,19 +70,6 @@ export default function AddTransaction() {
       >
         {({ handleSubmit }) => (
           <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
-            {/* HEADER */}
-            <SectionComponent rootClassName="h-24 bg-white justify-center">
-              <View className="flex-row items-center justify-between px-4">
-                <Pressable onPress={handleBack}>
-                  <MaterialIcons name="arrow-back" size={24} color="black" />
-                </Pressable>
-                <Text className="text-xl font-semibold text-black">
-                  Thêm chi tiêu / khoản thu
-                </Text>
-                <MaterialIcons name="camera-alt" size={24} color="#609084" />
-              </View>
-            </SectionComponent>
-
             {/* Transaction Type Selection */}
             <SectionComponent rootClassName="mx-4 px-4">
               <View className="flex flex-row items-center space-x-4">
