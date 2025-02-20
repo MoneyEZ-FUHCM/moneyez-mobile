@@ -1,10 +1,3 @@
-import React, { useState } from "react";
-import { View, Text, Pressable, ScrollView } from "react-native";
-import { router, useLocalSearchParams } from "expo-router";
-import { RadioButton } from "react-native-ui-lib";
-import { Formik } from "formik";
-import * as Yup from "yup";
-import CategoryItem from "@/components/InvidualScreenCustom/CategoryItem";
 import {
   DatePickerComponent,
   InputComponent,
@@ -12,9 +5,16 @@ import {
   SectionComponent,
   SpaceComponent,
 } from "@/components";
-import ADD_TRANSACTION_CONSTANTS from "./AddTransaction.const";
-import { MaterialIcons } from "@expo/vector-icons";
+import CategoryItem from "@/components/InvidualScreenCustom/CategoryItem";
 import { TransactionType } from "@/types/invidual.types";
+import { MaterialIcons } from "@expo/vector-icons";
+import { router, useLocalSearchParams } from "expo-router";
+import { Formik } from "formik";
+import React, { useState } from "react";
+import { Pressable, ScrollView, Text, View } from "react-native";
+import { RadioButton } from "react-native-paper";
+import * as Yup from "yup";
+import ADD_TRANSACTION_CONSTANTS from "./AddTransaction.const";
 
 const validationSchema = Yup.object().shape({
   amount: Yup.string().required("Số tiền không được để trống"),
@@ -81,15 +81,14 @@ export default function AddTransaction() {
                     transactionType === "expense" ? "bg-[#609084]" : "bg-white"
                   }`}
                 >
-                  <RadioButton
+                  <RadioButton.Android
                     value="expense"
-                    selected={transactionType === "expense"}
-                    onPress={() => setTransactionType("expense")}
-                    size={24}
-                    color={
-                      transactionType === "expense" ? "#ffffff" : "#609084"
+                    status={
+                      transactionType === "expense" ? "checked" : "unchecked"
                     }
-                    className="mr-2"
+                    onPress={() => setTransactionType("expense")}
+                    color="#ffffff"
+                    uncheckedColor="#609084"
                   />
                   <Text
                     className={`text-base font-semibold ${
@@ -109,13 +108,14 @@ export default function AddTransaction() {
                     transactionType === "income" ? "bg-[#609084]" : "bg-white"
                   }`}
                 >
-                  <RadioButton
+                  <RadioButton.Android
                     value="income"
-                    selected={transactionType === "income"}
+                    status={
+                      transactionType === "income" ? "checked" : "unchecked"
+                    }
                     onPress={() => setTransactionType("income")}
-                    size={24}
-                    color={transactionType === "income" ? "#ffffff" : "#609084"}
-                    className="mr-2"
+                    color="#ffffff"
+                    uncheckedColor="#609084"
                   />
                   <Text
                     className={`text-base font-semibold ${
