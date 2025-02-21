@@ -93,14 +93,16 @@ export default function InvidualHome() {
         </SectionComponent>
 
         {/* PLACEHOLDER FOR CHAT BOT */}
-        <SectionComponent rootClassName="mx-5 mt-16 justify-center rounded-xl bg-thirdly border-primary border-[0.5px] p-4">
+        <SectionComponent rootClassName="mx-5 mt-16 mb-5 justify-center rounded-xl bg-thirdly border-primary border-[0.5px] p-4">
           <View className="flex-row items-center gap-x-2">
             <Image
               source={Admin}
               className="h-9 w-9 rounded-full"
               resizeMode="cover"
             />
-            <Text className="font-medium">MewMo</Text>
+            <Text className="font-medium">
+              {TEXT_TRANSLATE_INVIDUAL_HOME.TITLE.AI_NAME}
+            </Text>
           </View>
           <SpaceComponent height={17} />
           <View className="max-w-[90%] rounded-b-xl rounded-tr-xl bg-white p-2">
@@ -117,13 +119,13 @@ export default function InvidualHome() {
           <View className="flex-row">
             <Pressable className="w-1/2 flex-1 rounded-lg border-[0.5px] border-primary bg-white">
               <Text className="p-2">
-                Tự động hủy diệt khi chỉ tiêu ngoài hạn mức
+                Tự động xóa khi chỉ tiêu ngoài hạn mức
               </Text>
             </Pressable>
             <SpaceComponent width={17} />
             <Pressable className="w-1/2 flex-1 rounded-lg border-[0.5px] border-primary bg-white">
               <Text className="p-2">
-                Tự động hủy diệt khi chỉ tiêu ngoài hạn mức
+                Tự động xóa khi chỉ tiêu ngoài hạn mức
               </Text>
             </Pressable>
           </View>

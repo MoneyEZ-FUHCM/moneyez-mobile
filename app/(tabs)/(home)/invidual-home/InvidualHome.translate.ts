@@ -3,6 +3,7 @@ const TEXT_TRANSLATE_INVIDUAL_HOME = {
   TITLE: {
     PERSONAL_EXPENSES: "Chi tiêu cá nhân",
     TOTAL_BALANCE: "Số dư hiện tại",
+    AI_NAME: "MewMo",
   },
 
   // Labels

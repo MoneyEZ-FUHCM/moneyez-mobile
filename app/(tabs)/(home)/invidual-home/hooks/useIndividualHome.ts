@@ -1,8 +1,11 @@
 import { PATH_NAME } from "@/helpers/constants/pathname";
+import { setHiddenTabbar } from "@/redux/slices/tabSlice";
 import { router } from "expo-router";
+import { useDispatch } from "react-redux";
 
 const useIndividualHome = () => {
   const { HOME } = PATH_NAME;
+  const dispatch = useDispatch();
 
   const PIE_CHART_DATA = [
     {
@@ -33,18 +36,22 @@ const useIndividualHome = () => {
 
   const handleGoBack = () => {
     router.back();
+    dispatch(setHiddenTabbar(false));
   };
 
   const handleHistoryPress = () => {
     router.navigate(HOME.TRANSACTION_HISTORY as any);
+    dispatch(setHiddenTabbar(true));
   };
 
   const handleAddExpense = () => {
     router.navigate(`${HOME.ADD_TRANSACTION}?type=expense` as any);
+    dispatch(setHiddenTabbar(true));
   };
 
   const handleAddIncome = () => {
     router.navigate(`${HOME.ADD_TRANSACTION}?type=income` as any);
+    dispatch(setHiddenTabbar(true));
   };
 
   return {
