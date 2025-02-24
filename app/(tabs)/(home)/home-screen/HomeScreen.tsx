@@ -57,7 +57,7 @@ const HomeScreen = () => {
                       : Admin
                   }
                   className="h-12 w-12 rounded-full"
-                  resizeMode="contain"
+                  resizeMode="cover"
                 />
                 <View>
                   <Text className="text-[12px]">{TITLE.HELLO}</Text>

@@ -1,7 +1,7 @@
 const TEXT_TRANSLATE_BOT = {
   // Title
   TITLE: {
-    AI_NAME: "Meomo AI",
+    AI_NAME: "Mewmo AI",
     TITLE_AI: "Giới thiệu",
     DESCRIPTION_AI:
       "Mewmo AI là một trợ lý thông minh giúp bạn trò chuyện và hỗ trợ các công việc hằng ngày.",
