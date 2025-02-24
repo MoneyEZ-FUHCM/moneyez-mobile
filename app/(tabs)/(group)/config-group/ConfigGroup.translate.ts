@@ -1,5 +1,5 @@
 const TEXT_TRANSLATE_CONFIG_GROUP = {
-  TITLE: "Tạo nhóm mới",
+  TITLE: "Nhóm Của Bạn",
   BUTTON: {
     CREATE_GROUP: "Tạo quỹ",
   },
