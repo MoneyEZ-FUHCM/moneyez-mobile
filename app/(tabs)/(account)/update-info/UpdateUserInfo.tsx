@@ -25,10 +25,10 @@ const UpdateUserInfo = () => {
       <SectionComponent rootClassName="flex-row relative justify-center items-center h-14 px-4">
         <TouchableOpacity
           onPress={handler.handleBack}
-          className="absolute left-4"
+          className="absolute bottom-[17px] left-4"
         >
           <AntDesign
-            name="left"
+            name="close"
             size={24}
             color="#609084"
             style={{

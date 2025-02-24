@@ -25,7 +25,7 @@ const TEXT_TRANSLATE_ACCOUNT = {
     EMAIL_REQUIRED: "Email không được để trống",
     FULLNAME_REQUIRED: "Họ và tên không được để trống",
     ADDRESS_REQUIRED: "Địa chỉ không được để trống",
-    DOB_REQUIRED: "Ngày tháng năm không được để trống",
+    DOB_REQUIRED: "Ngày không được để trống",
     GENDER_REQUIRED: "Giới tính không được để trống",
     PHONE_NUMBER_REQUIRED: "Vui lòng nhập số điện thoại",
     INPUT_EMAIL: "Email phải đúng định dạng",

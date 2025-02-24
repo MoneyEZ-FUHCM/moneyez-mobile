@@ -1,5 +1,6 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
+import { selectOtpCode } from "@/redux/hooks/systemSelector";
 import { setLoading } from "@/redux/slices/loadingSlice";
 import { setEmail } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
@@ -8,7 +9,6 @@ import {
   useResetPasswordMutation,
 } from "@/services/auth";
 import { router } from "expo-router";
-import { useState } from "react";
 import { ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
@@ -16,7 +16,6 @@ import AUTH_SCREEN_CONSTANTS from "../AuthScreen.const";
 import TEXT_TRANSLATE_AUTH from "../AuthScreen.translate";
 
 const useForgotPassword = () => {
-  const [otpCode, setOtpCode] = useState("");
   const { AUTH } = PATH_NAME;
   const { MESSAGE_SUCCESS, MESSAGE_VALIDATE, MESSAGE_ERROR } =
     TEXT_TRANSLATE_AUTH;
@@ -25,6 +24,7 @@ const useForgotPassword = () => {
   const [confirmNewPassword] = useConfirmNewPasswordMutation();
   const { HTTP_STATUS, SYSTEM_ERROR } = COMMON_CONSTANT;
   const email = useSelector((state: RootState) => state.user.email);
+  const otpCode = useSelector(selectOtpCode);
 
   const dispatch = useDispatch();
 
@@ -78,6 +78,14 @@ const useForgotPassword = () => {
         );
         return;
       }
+      if (error.errorCode === ERROR_CODE.OTP_HAS_SENT) {
+        router.navigate({
+          pathname: AUTH.INPUT_OTP as any,
+          params: { mode: "reset" },
+        });
+        ToastAndroid.show(MESSAGE_ERROR.OTP_HAS_SENT, ToastAndroid.SHORT);
+        return;
+      }
       ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
     } finally {
       dispatch(setLoading(false));
@@ -86,8 +94,11 @@ const useForgotPassword = () => {
 
   const handleChangePassword = async (payload: any) => {
     dispatch(setLoading(true));
-    const updatePayload = { password: payload.password, email };
-
+    const updatePayload = {
+      password: payload.password,
+      email,
+      otpCode: otpCode,
+    };
     try {
       const res = await confirmNewPassword(updatePayload).unwrap();
       if (res && res.status === HTTP_STATUS.SUCCESS.OK) {
@@ -110,11 +121,8 @@ const useForgotPassword = () => {
   };
 
   return {
-    state: {
-      otpCode,
-    },
+    state: {},
     handler: {
-      setOtpCode,
       validationChangePasswordSchema,
       validationConfirmEmailSchema,
       handleRecoveryPassword,
