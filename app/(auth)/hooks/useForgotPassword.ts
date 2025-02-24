@@ -64,7 +64,6 @@ const useForgotPassword = () => {
       }
     } catch (err: any) {
       const error = err.data;
-      console.log("check err", err);
       if (error.errorCode === ERROR_CODE.RESET_PASSWORD_FAILED) {
         ToastAndroid.show(
           MESSAGE_ERROR.ACCOUNT_DOES_NOT_EXIST,
@@ -100,7 +99,6 @@ const useForgotPassword = () => {
       email,
       otpCode: otpCode,
     };
-    console.log("check updatePayload", updatePayload);
     try {
       const res = await confirmNewPassword(updatePayload).unwrap();
       if (res && res.status === HTTP_STATUS.SUCCESS.OK) {
@@ -112,7 +110,6 @@ const useForgotPassword = () => {
       }
     } catch (err: any) {
       const error = err.data;
-      console.log("check error123", err);
       if (error.errorCode === ERROR_CODE.OLD_PASSWORD_INVALID) {
         ToastAndroid.show(MESSAGE_ERROR.OTP_INVALID, ToastAndroid.SHORT);
         return;
