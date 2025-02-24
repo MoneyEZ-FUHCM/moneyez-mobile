@@ -3,9 +3,6 @@ import { AntDesign, Entypo } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
 import { View, Text, TouchableOpacity, Dimensions } from "react-native";
-import { LineChart, StackedBarChart, PieChart } from "react-native-chart-kit";
-import { Icon } from "react-native-paper";
-import { Circle, G } from "react-native-svg";
 import TEXT_TRANSLATE_GROUP_STATISTIC from "./GroupManangement.translate";
 import { LINE_CHART_DATA } from "./GroupManangement.constant";
 
@@ -57,7 +54,7 @@ const GroupStatistic = () => {
           <Entypo size={24} color="#000000" />
         </TouchableOpacity>
       </SectionComponent>
-      <View className="mx-2 rounded-lg bg-white p-4">
+      {/* <View className="mx-2 rounded-lg bg-white p-4">
         <Text className="text-center text-lg font-bold">
           {TEXT_TRANSLATE_GROUP_STATISTIC.OVERVIEW_TITLE}
         </Text>
@@ -116,59 +113,7 @@ const GroupStatistic = () => {
             </Text>
           </View>
         </View>
-      </View>
-      <View className="mx-2 rounded-lg bg-white p-4">
-        {/* Header with Navigation */}
-        <View className="mx-2 rounded-lg bg-white p-4">
-          {/* Stacked Bar Chart */}
-          <Text className="text-center text-lg font-bold">
-            Stacked Bar Chart
-          </Text>
-          <StackedBarChart
-            data={barData}
-            width={Dimensions.get("window").width - 32}
-            height={220}
-            chartConfig={{
-              backgroundColor: "#ffffff",
-              backgroundGradientFrom: "#ffffff",
-              backgroundGradientTo: "#ffffff",
-              decimalPlaces: 2,
-              color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-              labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-              style: {
-                borderRadius: 16,
-              },
-            }}
-            style={{
-              marginVertical: 8,
-              borderRadius: 16,
-            }}
-            hideLegend={false}
-          />
-          <View className="mt-2 flex-row justify-between">
-            {barData.labels.map((label, index) => (
-              <Text
-                key={index}
-                className={`text-xs ${label === "Aug" ? "font-bold text-black" : "text-gray-400"}`}
-              >
-                {label}
-              </Text>
-            ))}
-          </View>
-        </View>
-        {/* Achievement Message */}
-        <View className="mt-6 flex-row items-center rounded-lg bg-gray-100 p-4">
-          <Entypo name="emoji-happy" size={24} color="#6B8E79" />
-          <View className="ml-2">
-            <Text className="font-bold">
-              {TEXT_TRANSLATE_GROUP_STATISTIC.ACHIEVEMENT_MESSAGE_TITLE}
-            </Text>
-            <Text className="text-xs text-gray-500">
-              {TEXT_TRANSLATE_GROUP_STATISTIC.ACHIEVEMENT_MESSAGE_SUBTITLE}
-            </Text>
-          </View>
-        </View>
-      </View>
+      </View> */}
     </SafeAreaViewCustom>
   );
 };
