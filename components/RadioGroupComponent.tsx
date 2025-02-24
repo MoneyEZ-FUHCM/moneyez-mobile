@@ -1,25 +1,25 @@
 import { useField } from "formik";
 import React from "react";
-import { Text, View, TouchableWithoutFeedback } from "react-native";
+import { Text, TouchableWithoutFeedback, View } from "react-native";
 import { RadioButton } from "react-native-paper";
 
 interface RadioGroupComponentProps {
-  name: string;
-  options: { label: string; value: number }[];
-  label: string;
-  containerClass?: string;
-  orientation?: "horizontal" | "vertical";
-  spacing?: number;
+  readonly name: string;
+  readonly options: ReadonlyArray<{ label: string; value: number }>;
+  readonly label: string;
+  readonly containerClass?: string;
+  readonly orientation?: "horizontal" | "vertical";
+  readonly spacing?: number;
 }
 
-const RadioGroupComponent: React.FC<RadioGroupComponentProps> = ({
+export function RadioGroupComponent({
   name,
   options,
   label,
   containerClass,
   orientation = "vertical",
   spacing = 8,
-}) => {
+}: Readonly<RadioGroupComponentProps>) {
   const [field, meta, helpers] = useField(name);
 
   const handleChange = (value: number) => {
@@ -70,6 +70,4 @@ const RadioGroupComponent: React.FC<RadioGroupComponentProps> = ({
       )}
     </View>
   );
-};
-
-export { RadioGroupComponent };
+}

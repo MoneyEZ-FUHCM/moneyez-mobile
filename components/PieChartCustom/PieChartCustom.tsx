@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Text, View } from "react-native";
 import { PieChart } from "react-native-gifted-charts";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
@@ -15,7 +15,7 @@ interface PieChartCustomProps {
   title: string;
 }
 
-function PieChartCustom({ data, title }: PieChartCustomProps) {
+const PieChartCustom = React.memo(({ data, title }: PieChartCustomProps) => {
   const { state } = usePieChart(data);
   const { opacity, scale, pieData, highestData, formattedData } = state;
 
@@ -34,15 +34,18 @@ function PieChartCustom({ data, title }: PieChartCustomProps) {
     />
   );
 
-  const renderDetailComponent = () => (
-    <View className="mt-3 flex-row flex-wrap justify-between px-1">
-      {formattedData.map((item, index) => (
-        <View key={index} className="mb-2 flex-row items-center">
-          {renderDot(item.color)}
-          <Text className="text-black">{`${item.label}: ${item.percentage}%`}</Text>
-        </View>
-      ))}
-    </View>
+  const renderDetailComponent = useMemo(
+    () => (
+      <View className="mt-3 flex-row flex-wrap justify-between px-1">
+        {formattedData.map((item, index) => (
+          <View key={index} className="mb-2 flex-row items-center">
+            {renderDot(item.color)}
+            <Text className="text-black">{`${item.label}: ${item.percentage}%`}</Text>
+          </View>
+        ))}
+      </View>
+    ),
+    [formattedData],
   );
 
   return (
@@ -76,9 +79,9 @@ function PieChartCustom({ data, title }: PieChartCustomProps) {
           />
         </Animated.View>
       </View>
-      {renderDetailComponent()}
+      {renderDetailComponent}
     </Animated.View>
   );
-}
+});
 
 export { PieChartCustom };

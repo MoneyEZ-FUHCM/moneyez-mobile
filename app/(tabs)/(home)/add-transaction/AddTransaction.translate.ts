@@ -26,6 +26,7 @@ const TEXT_TRANSLATE_ADD_TRANSACTION = {
     MONEY_REQUIRED: "Số tiền không được để trống",
     DATE_REQUIRED: "Ngày tháng không được để trống",
     DESCRIPTION_REQUIRED: "Mô tả không được để trống",
+    SUBCATEGORY_REQUIRED: "Vui lòng chọn loại hình chi tiêu / khoản thu",
   },
 };
 
