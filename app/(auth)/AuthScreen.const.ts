@@ -19,6 +19,7 @@ const AUTH_SCREEN_CONSTANTS = {
     ACCOUNT_EXISTED: "AccountAlreadyExisted",
     ACCOUNT_BLOCKED: "AccountWasBlocked",
     DUPLICATE_PHONE_NUMBER: "DuplicatePhoneNumber",
+    OTP_HAS_SENT: "OtpHasSent",
   },
 };
 

@@ -60,6 +60,8 @@ const TEXT_TRANSLATE_AUTH = {
     NOT_PERMISSION: "Bạn không có quyền truy cập vào ứng dụng này",
     ACCOUNT_BLOCKED:
       "Tài khoản đã bị khóa. Vui lòng liên hệ quản lý để kích hoạt",
+    OTP_HAS_SENT:
+      "Mã OTP đã được gửi. Vui lòng kiểm tra hòm thư (hoặc Thư rác) để lấy mã OTP",
   },
 
   MESSAGE_SUCCESS: {
