@@ -12,14 +12,14 @@ import { SafeAreaViewCustom, SectionComponent } from "@/components";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { Icon } from "react-native-paper";
-import { CONTACT_LIST, RECENT_ACTIVITIES } from "./ConfigGroup.constant";
+import GROUP_CONFIG_CONSTANT from "./ConfigGroup.constant";
 import TEXT_TRANSLATE_CONFIG_GROUP from "./ConfigGroup.translate";
 
 const CreateGroup = () => {
   const [selectedTab, setSelectedTab] = useState("contribution");
-  const { TITLE, TEXT } = TEXT_TRANSLATE_CONFIG_GROUP;
-  const recentActivities = RECENT_ACTIVITIES;
-  const contactList = CONTACT_LIST;
+  const { TITLE, BUTTON, TEXT } = TEXT_TRANSLATE_CONFIG_GROUP;
+  const recentActivities = GROUP_CONFIG_CONSTANT.RECENT_ACTIVITIES;
+  const contactList = GROUP_CONFIG_CONSTANT.CONTACT_LIST;
 
   return (
     <SafeAreaViewCustom>
