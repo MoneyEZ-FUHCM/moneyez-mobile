@@ -1,6 +1,8 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
+import { selectOtpCode } from "@/redux/hooks/systemSelector";
 import { setLoading } from "@/redux/slices/loadingSlice";
+import { setOtpCode } from "@/redux/slices/systemSlice";
 import { RootState } from "@/redux/store";
 import {
   useConfirmOtpMutation,
@@ -9,14 +11,12 @@ import {
 } from "@/services/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
 import { ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import AUTH_SCREEN_CONSTANTS from "../AuthScreen.const";
 import TEXT_TRANSLATE_AUTH from "../AuthScreen.translate";
 
 const useOtpScreen = () => {
-  const [otpCode, setOtpCode] = useState("");
   const { AUTH, HOME } = PATH_NAME;
   const { MESSAGE_SUCCESS, MESSAGE_VALIDATE, MESSAGE_ERROR } =
     TEXT_TRANSLATE_AUTH;
@@ -28,6 +28,7 @@ const useOtpScreen = () => {
   const [resetPassword] = useResetPasswordMutation();
   const dispatch = useDispatch();
   const { mode } = useLocalSearchParams();
+  const otpCode = useSelector(selectOtpCode);
   const VERIFY_MODE = "verify";
 
   const handleConfirmEmail = () => {
@@ -108,6 +109,10 @@ const useOtpScreen = () => {
         );
         return;
       }
+      if (error.errorCode === ERROR_CODE.OTP_HAS_SENT) {
+        ToastAndroid.show(MESSAGE_ERROR.OTP_HAS_SENT, ToastAndroid.SHORT);
+        return;
+      }
       ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
     } finally {
       dispatch(setLoading(false));
@@ -119,7 +124,7 @@ const useOtpScreen = () => {
       otpCode,
     },
     handler: {
-      setOtpCode,
+      setOtpCode: (value: string) => dispatch(setOtpCode(value)),
       handleConfirmEmail,
       handleSubmitOtp,
       handleResendMail,
