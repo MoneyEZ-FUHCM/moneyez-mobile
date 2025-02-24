@@ -10,6 +10,38 @@ import TEXT_TRANSLATE_GROUP_STATISTIC from "./GroupManangement.translate";
 import { LINE_CHART_DATA } from "./GroupManangement.constant";
 
 const GroupStatistic = () => {
+  const barData = {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"],
+    legend: ["Legend1", "Legend2"],
+    data: [
+      [50, 20],
+      [30, 40],
+      [60, 70],
+      [50, 30],
+      [20, 10],
+      [40, 50],
+      [30, 20],
+      [60, 40],
+    ],
+    barColors: ["#609084", "#E1EACD"],
+  };
+
+  const donutData = [
+    {
+      name: "Spent",
+      population: 60,
+      color: "#6B8E79",
+      legendFontColor: "#7F7F7F",
+      legendFontSize: 15,
+    },
+    {
+      name: "Remaining",
+      population: 40,
+      color: "#DDE5D6",
+      legendFontColor: "#7F7F7F",
+      legendFontSize: 15,
+    },
+  ];
   return (
     <SafeAreaViewCustom>
       <SectionComponent rootClassName="flex-row justify-between items-center h-14 px-4">
@@ -87,7 +119,43 @@ const GroupStatistic = () => {
       </View>
       <View className="mx-2 rounded-lg bg-white p-4">
         {/* Header with Navigation */}
-
+        <View className="mx-2 rounded-lg bg-white p-4">
+          {/* Stacked Bar Chart */}
+          <Text className="text-center text-lg font-bold">
+            Stacked Bar Chart
+          </Text>
+          <StackedBarChart
+            data={barData}
+            width={Dimensions.get("window").width - 32}
+            height={220}
+            chartConfig={{
+              backgroundColor: "#ffffff",
+              backgroundGradientFrom: "#ffffff",
+              backgroundGradientTo: "#ffffff",
+              decimalPlaces: 2,
+              color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+              labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+              style: {
+                borderRadius: 16,
+              },
+            }}
+            style={{
+              marginVertical: 8,
+              borderRadius: 16,
+            }}
+            hideLegend={false}
+          />
+          <View className="mt-2 flex-row justify-between">
+            {barData.labels.map((label, index) => (
+              <Text
+                key={index}
+                className={`text-xs ${label === "Aug" ? "font-bold text-black" : "text-gray-400"}`}
+              >
+                {label}
+              </Text>
+            ))}
+          </View>
+        </View>
         {/* Achievement Message */}
         <View className="mt-6 flex-row items-center rounded-lg bg-gray-100 p-4">
           <Entypo name="emoji-happy" size={24} color="#6B8E79" />
