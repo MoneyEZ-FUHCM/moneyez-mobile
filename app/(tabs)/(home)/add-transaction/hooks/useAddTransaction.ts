@@ -1,3 +1,4 @@
+import { TRANSACTION_TYPE } from "@/enums/globals";
 import useHideTabbar from "@/hooks/useHideTabbar";
 import useUploadImage from "@/hooks/useUploadImage";
 import { setHiddenTabbar } from "@/redux/slices/tabSlice";
@@ -100,6 +101,10 @@ const useAddTransaction = (type: string) => {
         images,
         transactionDate: payload.dob,
         approvalRequired: true,
+        type:
+          transactionType === "expense"
+            ? TRANSACTION_TYPE.EXPENSE
+            : TRANSACTION_TYPE.INCOME,
       };
       console.log("check updatePayload", updatePayload);
     },

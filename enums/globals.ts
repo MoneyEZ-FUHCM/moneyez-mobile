@@ -23,6 +23,10 @@ export enum GENDER_INFO {
 export enum PAYMENT {
   VIETQR,
 }
+export enum TRANSACTION_TYPE {
+  EXPENSE,
+  INCOME,
+}
 
 export enum PAYMENT_STATUS {
   PAID = "PAID",

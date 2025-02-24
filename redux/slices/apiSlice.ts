@@ -62,8 +62,6 @@ const axiosBaseQuery = async (
 
       const refreshData = res?.data?.data;
 
-      console.log("check refreshData", refreshData);
-
       if (refreshData) {
         const { accessToken, refreshToken: newRefreshToken } = refreshData;
         await AsyncStorage.setItem("accessToken", accessToken);
