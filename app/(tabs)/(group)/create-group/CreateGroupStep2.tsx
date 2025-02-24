@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import TEXT_TRANSLATE_CREATE_GROUP from "./CreateGroup.translate";
 import RECENT_ACTIVITIES from "./CreateGroup.constant";
+import { PATH_NAME } from "@/helpers/constants/pathname";
 
 const CreateGroup = () => {
   const { TITLE, BUTTON, TEXT } = TEXT_TRANSLATE_CREATE_GROUP;
@@ -118,14 +119,16 @@ const CreateGroup = () => {
               </Text>
             </View>
             <View className="w-1/3 items-center">
-              <Ionicons
-                name="swap-horizontal-outline"
-                size={30}
-                color="#609084"
-              />
-              <Text className="mt-2 text-center text-xs">
-                {TEXT.PAYMENT_TRANSFER}
-              </Text>
+              <TouchableOpacity
+                onPress={() =>
+                  router.navigate(PATH_NAME.GROUP.STATISTICS as any)
+                }
+              >
+                <Ionicons name="bar-chart-outline" size={30} color="#609084" />
+                <Text className="mt-2 text-center text-xs">
+                  {TEXT.STATISTICS}
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>

@@ -42,7 +42,7 @@ const TEXT_TRANSLATE_CREATE_GROUP = {
     FLEXIBLE_PAYMENT: "Thanh toán linh hoạt",
     REMIND_CONTRIBUTE: "Nhắc góp quỹ",
     QR_CONTRIBUTE: "QR góp quỹ",
-    PAYMENT_TRANSFER: "Thanh toán, Chuyển tiền",
+    STATISTICS: "Thống kê",
     RECENT_ACTIVITIES: "Hoạt động gần đây",
     NEW: "Mới",
   },
