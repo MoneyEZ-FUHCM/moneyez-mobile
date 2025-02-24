@@ -4,7 +4,6 @@ import { router } from "expo-router";
 import React from "react";
 import { View, Text, TouchableOpacity, Dimensions } from "react-native";
 import TEXT_TRANSLATE_GROUP_STATISTIC from "./GroupManangement.translate";
-import { LINE_CHART_DATA } from "./GroupManangement.constant";
 
 const GroupStatistic = () => {
   const barData = {
