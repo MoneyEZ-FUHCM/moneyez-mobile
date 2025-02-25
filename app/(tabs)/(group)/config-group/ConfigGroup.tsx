@@ -9,7 +9,7 @@ import {
   ImageBackground,
 } from "react-native";
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
-import { AntDesign, Entypo } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { Icon } from "react-native-paper";
 import GROUP_CONFIG_CONSTANT from "./ConfigGroup.constant";
