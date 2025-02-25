@@ -3,7 +3,7 @@ import {
   SectionComponent,
   InputComponent,
 } from "@/components";
-import { AntDesign, Entypo } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
 import {
@@ -37,9 +37,7 @@ const CreateGroup = () => {
               {TITLE.CREATE_NEW_GROUP}
             </Text>
           </View>
-          <TouchableOpacity>
-            <Entypo name="info-with-circle" size={24} color="#000000" />
-          </TouchableOpacity>
+          <TouchableOpacity></TouchableOpacity>
         </SectionComponent>
         <Formik
           initialValues={{

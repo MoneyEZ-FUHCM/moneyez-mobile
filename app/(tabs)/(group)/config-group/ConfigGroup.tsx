@@ -9,7 +9,7 @@ import {
   ImageBackground,
 } from "react-native";
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
-import { AntDesign, Entypo } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { Icon } from "react-native-paper";
 import GROUP_CONFIG_CONSTANT from "./ConfigGroup.constant";
@@ -17,7 +17,7 @@ import TEXT_TRANSLATE_CONFIG_GROUP from "./ConfigGroup.translate";
 
 const CreateGroup = () => {
   const [selectedTab, setSelectedTab] = useState("contribution");
-  const { TITLE, BUTTON, TEXT } = TEXT_TRANSLATE_CONFIG_GROUP;
+  const { TITLE, TEXT } = TEXT_TRANSLATE_CONFIG_GROUP;
   const recentActivities = GROUP_CONFIG_CONSTANT.RECENT_ACTIVITIES;
   const contactList = GROUP_CONFIG_CONSTANT.CONTACT_LIST;
 
@@ -30,9 +30,7 @@ const CreateGroup = () => {
         <View className="flex-row items-center gap-1">
           <Text className="text-lg font-bold text-black">{TITLE}</Text>
         </View>
-        <TouchableOpacity>
-          <Entypo name="info-with-circle" size={24} color="#000000" />
-        </TouchableOpacity>
+        <TouchableOpacity></TouchableOpacity>
       </SectionComponent>
       <ScrollView className="flex-1 bg-gray-100">
         <ImageBackground
@@ -119,7 +117,12 @@ const CreateGroup = () => {
               <AntDesign name="right" size={16} color="gray" />
             </View>
           </TouchableOpacity>
-          <TouchableOpacity className="mt-2 flex-row items-center justify-between rounded-lg bg-white px-2 py-3">
+          <TouchableOpacity
+            onPress={() =>
+              router.navigate(GROUP_CONFIG_CONSTANT.GROUP_FUND_ROUTE as any)
+            }
+            className="mt-2 flex-row items-center justify-between rounded-lg bg-white px-2 py-3"
+          >
             <View className="flex-row items-center">
               <AntDesign name="clockcircleo" size={28} color="#609084" />
               <Text className="ml-2 font-medium">

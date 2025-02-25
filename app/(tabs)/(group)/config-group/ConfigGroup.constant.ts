@@ -23,6 +23,7 @@ const GROUP_CONFIG_CONSTANT = {
     },
   ],
   CONTACT_LIST: ["Add New", "Peter", "Rodney", "Victoria"],
+  GROUP_FUND_ROUTE: "group-fund/GroupFund",
 };
 
 export default GROUP_CONFIG_CONSTANT;
