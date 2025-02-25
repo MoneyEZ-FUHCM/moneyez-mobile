@@ -3,11 +3,12 @@ const TEXT_TRANSLATE_INVIDUAL_HOME = {
   TITLE: {
     PERSONAL_EXPENSES: "Chi tiêu cá nhân",
     TOTAL_BALANCE: "Số dư hiện tại",
+    AI_NAME: "MewMo",
   },
 
   // Labels
   LABEL: {
-    TRANSACTION_HISTORY: "Lịch sử >",
+    TRANSACTION_HISTORY: "Lịch sử  >",
     ADD_EXPENSE: "Thêm khoản chi",
     ADD_INCOME: "Thêm khoản thu",
     BALANCE_AMOUNT: "1.000.000.000 đ",

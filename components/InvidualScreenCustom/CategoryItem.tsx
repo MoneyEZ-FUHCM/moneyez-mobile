@@ -1,26 +1,35 @@
-// CategoryItem.tsx
-import React from 'react';
-import { View, Text } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from "@expo/vector-icons";
+import React from "react";
+import { Text, View } from "react-native";
 
 interface CategoryItemProps {
-  label: string;
-  iconName: keyof typeof MaterialIcons.glyphMap;
-  isSelected?: boolean;
+  readonly label: string;
+  readonly iconName?: keyof typeof MaterialIcons.glyphMap;
+  readonly isSelected?: boolean;
+  readonly color?: string;
+  readonly rootClassName?: string;
 }
 
-export default function CategoryItem({ label, iconName, isSelected = false }: CategoryItemProps) {
+export function CategoryItem({
+  label,
+  iconName,
+  isSelected = false,
+  color = "black",
+  rootClassName,
+}: Readonly<CategoryItemProps>) {
   return (
-    <View className="p-1">
+    <View className={`p-1 ${rootClassName}`}>
       <View
-        className={`flex-1 rounded-lg border p-3 items-center ${
-          isSelected ? 'border-[#609084] bg-[#e1eacd]' : 'border-[#ccc] bg-white'
+        className={`flex-1 items-center rounded-xl border-[0.5px] py-5 ${
+          isSelected ? "border-primary bg-[#e1eacd]" : "border-[#ccc] bg-white"
         }`}
       >
-        <View className="w-10 h-10 rounded-full bg-white shadow justify-center items-center">
-          <MaterialIcons name={iconName} size={24} color="black" />
+        <View className="h-10 w-10 items-center justify-center rounded-full bg-white shadow">
+          <MaterialIcons name={iconName} size={27} color={color} />
         </View>
-        <Text className="mt-2 text-xs font-semibold text-black">{label}</Text>
+        <Text className="px-1.5 text-center text-[10px] font-medium text-black">
+          {label}
+        </Text>
       </View>
     </View>
   );
