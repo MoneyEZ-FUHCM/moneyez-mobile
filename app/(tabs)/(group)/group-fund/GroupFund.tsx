@@ -61,7 +61,6 @@ const GroupFund = () => {
             style={{ borderRadius: 12, marginLeft: 10, marginRight: 10 }}
           />
         </View>
-
         {/* MewMo Reminder Section */}
         <View className="mt-2 rounded-xl border border-primary bg-superlight p-4">
           <View className="mb-3 flex-row items-center">
@@ -96,14 +95,12 @@ const GroupFund = () => {
         {/* Expense Section */}
         <View className="mb-28 mt-2 rounded-xl bg-superlight p-4">
           <Text className="mb-4 text-xl font-bold">{EXPENSES_TEXT}</Text>
-
           {EXPENSES.map((expense) => (
             <View
               key={expense.id}
               className="mb-4 flex-row items-center justify-between"
             >
               <View className="flex-row items-center space-x-3">
-                {/* Progress hình tròn */}
                 <View className="relative h-12 w-12 items-center justify-center rounded-full border-4 border-light">
                   <View
                     className={`absolute h-full w-full rounded-full border-4 border-primary`}

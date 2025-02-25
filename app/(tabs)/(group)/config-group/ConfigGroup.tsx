@@ -118,7 +118,9 @@ const CreateGroup = () => {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => router.navigate("group-fund/GroupFund" as any)}
+            onPress={() =>
+              router.navigate(GROUP_CONFIG_CONSTANT.GROUP_FUND_ROUTE as any)
+            }
             className="mt-2 flex-row items-center justify-between rounded-lg bg-white px-2 py-3"
           >
             <View className="flex-row items-center">

@@ -28,9 +28,7 @@ const CreateGroup = () => {
             {TITLE.GROUP_FUNDS}
           </Text>
         </View>
-        <TouchableOpacity>
-          <Entypo name="info-with-circle" size={24} color="#000000" />
-        </TouchableOpacity>
+        <TouchableOpacity></TouchableOpacity>
       </SectionComponent>
       <ScrollView className="flex-1 bg-gray-100">
         {/* Header */}

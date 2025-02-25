@@ -37,9 +37,7 @@ const CreateGroup = () => {
               {TITLE.CREATE_NEW_GROUP}
             </Text>
           </View>
-          <TouchableOpacity>
-            <Entypo name="info-with-circle" size={24} color="#000000" />
-          </TouchableOpacity>
+          <TouchableOpacity></TouchableOpacity>
         </SectionComponent>
         <Formik
           initialValues={{
