@@ -17,7 +17,7 @@ import TEXT_TRANSLATE_CONFIG_GROUP from "./ConfigGroup.translate";
 
 const CreateGroup = () => {
   const [selectedTab, setSelectedTab] = useState("contribution");
-  const { TITLE, BUTTON, TEXT } = TEXT_TRANSLATE_CONFIG_GROUP;
+  const { TITLE, TEXT } = TEXT_TRANSLATE_CONFIG_GROUP;
   const recentActivities = GROUP_CONFIG_CONSTANT.RECENT_ACTIVITIES;
   const contactList = GROUP_CONFIG_CONSTANT.CONTACT_LIST;
 
