@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity, ScrollView, Image } from "react-native";
 import { BarChart } from "react-native-chart-kit";
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
-import { AntDesign, Entypo } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
 import GROUP_FUND_CONSTANTS from "./GroupFund.constants";
 import TEXT_TRANSLATE_GROUP_FUND from "./GroupFund.translate";

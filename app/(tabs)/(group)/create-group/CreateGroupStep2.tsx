@@ -1,5 +1,5 @@
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
-import { AntDesign, Entypo, Ionicons } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
 import {

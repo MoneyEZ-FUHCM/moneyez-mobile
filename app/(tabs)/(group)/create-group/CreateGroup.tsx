@@ -3,7 +3,7 @@ import {
   SectionComponent,
   InputComponent,
 } from "@/components";
-import { AntDesign, Entypo } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
 import {
