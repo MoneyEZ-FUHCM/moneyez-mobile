@@ -22,6 +22,12 @@ const TEXT_TRANSLATE_ADD_TRANSACTION = {
     SEE_MORE: "Xem thêm",
   },
 
+  MESSAGE_ERROR: {},
+
+  MESSAGE_SUCCESS: {
+    CREATE_TRANSACTION_SUCCESSFUL: "Tạo thành công",
+  },
+
   MESSAGE_VALIDATE: {
     MONEY_REQUIRED: "Số tiền không được để trống",
     DATE_REQUIRED: "Ngày tháng không được để trống",

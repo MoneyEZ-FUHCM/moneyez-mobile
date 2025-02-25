@@ -32,7 +32,7 @@ export function FlatListCustom<T>({
   };
 
   const handleContentSizeChange = (contentHeight: number) => {
-    setIsScrollable(contentHeight > listHeight);
+    setIsScrollable(contentHeight < listHeight);
   };
 
   const handleEndReached = useCallback(() => {
