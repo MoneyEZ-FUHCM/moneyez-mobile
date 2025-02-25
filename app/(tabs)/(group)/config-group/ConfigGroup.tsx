@@ -30,9 +30,7 @@ const CreateGroup = () => {
         <View className="flex-row items-center gap-1">
           <Text className="text-lg font-bold text-black">{TITLE}</Text>
         </View>
-        <TouchableOpacity>
-          <Entypo name="info-with-circle" size={24} color="#000000" />
-        </TouchableOpacity>
+        <TouchableOpacity></TouchableOpacity>
       </SectionComponent>
       <ScrollView className="flex-1 bg-gray-100">
         <ImageBackground

@@ -30,9 +30,7 @@ const GroupFund = () => {
             01/01/2025 - 01/02/2025
           </Text>
         </View>
-        <TouchableOpacity>
-          <Entypo name="info-with-circle" size={24} color="#000000" />
-        </TouchableOpacity>
+        <TouchableOpacity></TouchableOpacity>
       </SectionComponent>
       <ScrollView className="flex-1 bg-gray-100 p-4">
         <Text className="text-center text-xs font-normal text-gray-600">
