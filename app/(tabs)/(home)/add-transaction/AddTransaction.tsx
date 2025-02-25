@@ -1,234 +1,226 @@
 import {
+  CategoryItem,
   DatePickerComponent,
   InputComponent,
   SafeAreaViewCustom,
   SectionComponent,
   SpaceComponent,
 } from "@/components";
-import CategoryItem from "@/components/InvidualScreenCustom/CategoryItem";
-import { TransactionType } from "@/types/invidual.types";
+import { TextAreaComponent } from "@/components/TextAreaComponent";
 import { MaterialIcons } from "@expo/vector-icons";
-import { router, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { Formik } from "formik";
-import React, { useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
-import { RadioButton } from "react-native-paper";
-import * as Yup from "yup";
-import ADD_TRANSACTION_CONSTANTS from "./AddTransaction.const";
+import React, { useCallback, useMemo } from "react";
+import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, RadioButton } from "react-native-paper";
+import TEXT_TRANSLATE_ADD_TRANSACTION from "./AddTransaction.translate";
+import useAddTransaction from "./hooks/useAddTransaction";
 
-const validationSchema = Yup.object().shape({
-  amount: Yup.string().required("Số tiền không được để trống"),
-  dob: Yup.string().required("Số tiền không được để trống"),
-  description: Yup.string().required("Mô tả không được để trống"),
-});
+const PRIMARY_COLOR = "#609084";
 
 export default function AddTransaction() {
   const { type } = useLocalSearchParams();
-  const [transactionType, setTransactionType] = useState<TransactionType>(
-    type === "income" ? "income" : "expense",
+  const { state, handler } = useAddTransaction(type as string);
+
+  handler.useHideTabbar();
+
+  const ICONS_CATE = useMemo(
+    () => [
+      { icon: "home", color: "#FF5733" },
+      { icon: "business", color: "#33FF57" },
+      { icon: "work", color: "#3357FF" },
+      { icon: "shopping-cart", color: "#FF33A1" },
+      { icon: "settings", color: "#FFC300" },
+      { icon: "school", color: "#DAF7A6" },
+      { icon: "favorite", color: "#C70039" },
+      { icon: "star", color: "#900C3F" },
+      { icon: "attach-money", color: "#581845" },
+    ],
+    [],
   );
-  const [date, setDate] = useState<Date>(new Date());
-  const [selectedCategory, setSelectedCategory] = useState("Tiền ăn");
 
-  const handleBack = () => {
-    router.back();
-  };
+  const renderTransactionTypeButton = useCallback(
+    (type: "expense" | "income", label: string) => (
+      <Pressable
+        onPress={() => handler.setTransactionType(type)}
+        className={`flex h-16 flex-1 flex-row items-center rounded-lg border-[0.5px] bg-white p-4 ${
+          state.transactionType === type ? "border-primary" : "border-gray-300"
+        }`}
+      >
+        <RadioButton.Android
+          value={type}
+          status={state.transactionType === type ? "checked" : "unchecked"}
+          onPress={() => handler.setTransactionType(type)}
+          color={PRIMARY_COLOR}
+          uncheckedColor="gray"
+        />
+        <SpaceComponent width={5} />
+        <Text
+          className={`text-base font-semibold ${
+            state.transactionType === type ? "text-primary" : "text-gray-500"
+          }`}
+        >
+          {label}
+        </Text>
+      </Pressable>
+    ),
+    [state.transactionType, handler],
+  );
 
-  const initialValues = {
-    amount: "",
-    description: "",
-    dob: "",
-  };
+  const renderImageList = useMemo(
+    () => (
+      <>
+        {state?.images.map((image, index) => (
+          <View
+            key={index}
+            className="relative mx-1 mb-2 h-[82px] w-[82px] overflow-hidden rounded-lg border border-[#ccc]"
+          >
+            <Image
+              source={{ uri: image }}
+              className="h-full w-full"
+              resizeMode="cover"
+            />
+          </View>
+        ))}
+        <Pressable
+          onPress={handler.pickAndUploadImage}
+          className="relative mx-1 mb-2 h-[82px] w-[82px] items-center justify-center overflow-hidden rounded-lg border border-[#ccc]"
+        >
+          <MaterialIcons name="add-circle-outline" size={40} color="#ccc" />
+        </Pressable>
+      </>
+    ),
+    [state.images, handler],
+  );
 
   return (
     <SafeAreaViewCustom rootClassName="flex-1 bg-[#fafafa]">
+      <SectionComponent rootClassName="h-14 bg-white justify-center">
+        <View className="flex-row items-center justify-between px-5">
+          <Pressable onPress={handler.handleBack}>
+            <MaterialIcons name="arrow-back" size={24} color={PRIMARY_COLOR} />
+          </Pressable>
+          <Text className="text-lg font-bold text-primary">
+            {TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.ADD_EXPENSE_INCOME}
+          </Text>
+          <MaterialIcons name="camera-alt" size={24} color={PRIMARY_COLOR} />
+        </View>
+      </SectionComponent>
       <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={(values) => {
-          console.log({
-            transactionType,
-            amount: values.amount,
-            date: date.toLocaleDateString("vi-VN"),
-            description: values.description,
-            selectedCategory,
-            dob: values.dob,
-          });
-        }}
+        initialValues={state.initialValues}
+        validationSchema={handler.validationSchema}
+        onSubmit={handler.handleCreateTransaction}
       >
         {({ handleSubmit }) => (
-          <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
-            {/* HEADER */}
-            <SectionComponent rootClassName="h-24 bg-white justify-center">
-              <View className="flex-row items-center justify-between px-4">
-                <Pressable onPress={handleBack}>
-                  <MaterialIcons name="arrow-back" size={24} color="black" />
-                </Pressable>
-                <Text className="text-xl font-semibold text-black">
-                  Thêm chi tiêu / khoản thu
-                </Text>
-                <MaterialIcons name="camera-alt" size={24} color="#609084" />
-              </View>
-            </SectionComponent>
-
-            {/* Transaction Type Selection */}
-            <SectionComponent rootClassName="mx-4 px-4">
+          <ScrollView>
+            <SectionComponent rootClassName="mx-5 mt-8">
               <View className="flex flex-row items-center space-x-4">
-                {/* Chi tiêu */}
-                <Pressable
-                  onPress={() => setTransactionType("expense")}
-                  className={`flex h-16 flex-1 flex-row items-center rounded-lg border border-[#609084] p-4 ${
-                    transactionType === "expense" ? "bg-[#609084]" : "bg-white"
-                  }`}
-                >
-                  <RadioButton.Android
-                    value="expense"
-                    status={
-                      transactionType === "expense" ? "checked" : "unchecked"
-                    }
-                    onPress={() => setTransactionType("expense")}
-                    color="#ffffff"
-                    uncheckedColor="#609084"
-                  />
-                  <Text
-                    className={`text-base font-semibold ${
-                      transactionType === "expense"
-                        ? "text-white"
-                        : "text-[#609084]"
-                    }`}
-                  >
-                    Chi tiêu
-                  </Text>
-                </Pressable>
-
-                {/* Thu nhập */}
-                <Pressable
-                  onPress={() => setTransactionType("income")}
-                  className={`flex h-16 flex-1 flex-row items-center rounded-lg border border-[#609084] p-4 ${
-                    transactionType === "income" ? "bg-[#609084]" : "bg-white"
-                  }`}
-                >
-                  <RadioButton.Android
-                    value="income"
-                    status={
-                      transactionType === "income" ? "checked" : "unchecked"
-                    }
-                    onPress={() => setTransactionType("income")}
-                    color="#ffffff"
-                    uncheckedColor="#609084"
-                  />
-                  <Text
-                    className={`text-base font-semibold ${
-                      transactionType === "income"
-                        ? "text-white"
-                        : "text-[#609084]"
-                    }`}
-                  >
-                    Thu nhập
-                  </Text>
-                </Pressable>
+                {renderTransactionTypeButton(
+                  "expense",
+                  TEXT_TRANSLATE_ADD_TRANSACTION.BUTTON.EXPENSE,
+                )}
+                {renderTransactionTypeButton(
+                  "income",
+                  TEXT_TRANSLATE_ADD_TRANSACTION.BUTTON.INCOME,
+                )}
               </View>
             </SectionComponent>
 
-            {/* THÔNG TIN SECTION */}
-            <SectionComponent rootClassName="bg-white m-4 p-4 rounded-lg">
-              <Text className="mb-2 text-lg font-semibold text-[#609084]">
-                Thông tin
+            <SectionComponent rootClassName="bg-white m-4 p-2 rounded-lg">
+              <Text className="mb-3 text-base font-semibold text-primary">
+                {TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.INFORMATION}
               </Text>
-
               <InputComponent
                 name="amount"
-                label="Số tiền *"
-                placeholder="0 ₫"
+                label={TEXT_TRANSLATE_ADD_TRANSACTION.LABEL.MONEY_NUMBER}
+                placeholder={TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.INPUT_PRICE}
                 inputMode="numeric"
                 isRequired
-                labelClass="text-black text-sm font-semibold"
+                labelClass="text-text-gray text-[12px] font-bold"
               />
               <SpaceComponent height={10} />
-
               <DatePickerComponent
                 isRequired
-                label="Ngày"
+                label={TEXT_TRANSLATE_ADD_TRANSACTION.LABEL.DATE}
                 name="dob"
-                labelClass="text-black text-sm font-semibold"
-                // selectedDate={date}
-                // onChange={(selectedDate: Date) => {
-                //   setDate(selectedDate);
-                // }}
+                labelClass="text-text-gray text-[12px] font-bold"
               />
               <SpaceComponent height={10} />
-
-              <InputComponent
+              <TextAreaComponent
                 name="description"
-                label="Mô tả *"
-                placeholder="Nhập mô tả"
+                label={TEXT_TRANSLATE_ADD_TRANSACTION.LABEL.DESCRIPTION}
+                placeholder={
+                  TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.INPUT_DESCRIPTION
+                }
+                numberOfLines={6}
                 isRequired
-                inputMode="text"
-                labelClass="text-black text-sm font-semibold"
+                labelClass="text-text-gray text-[12px] font-bold"
               />
             </SectionComponent>
-
-            {/* PHÂN LOẠI SECTION */}
-            <SectionComponent rootClassName="bg-white m-4 p-4 rounded-lg">
-              <View className="mb-4 flex-row items-center justify-between">
-                <Text className="text-lg font-semibold text-[#609084]">
-                  Phân loại
-                </Text>
-                <Text className="text-sm text-[#757575]">Xem thêm &gt;</Text>
-              </View>
-              <View className="flex-row flex-wrap justify-between">
-                {ADD_TRANSACTION_CONSTANTS.CATEGORIES.map((category) => (
-                  <Pressable
-                    key={category.id}
-                    onPress={() => setSelectedCategory(category.label)}
-                    className="w-1/3"
-                  >
-                    <CategoryItem
-                      label={category.label}
-                      iconName={
-                        category.icon as keyof typeof MaterialIcons.glyphMap
-                      }
-                      isSelected={selectedCategory === category.label}
-                    />
-                  </Pressable>
-                ))}
-              </View>
-            </SectionComponent>
-
-            {/* ẢNH HÓA ĐƠN SECTION */}
-            <SectionComponent rootClassName="bg-white m-4 p-4 rounded-lg">
-              <Text className="mb-2 text-lg font-semibold text-[#609084]">
-                Ảnh hóa đơn
+            <SectionComponent rootClassName="bg-white m-4 p-2 rounded-lg">
+              <Text className="mb-4 text-base font-semibold text-primary">
+                {TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.SEPERATE}
               </Text>
-              <View className="flex-row">
-                <View className="relative mr-4 h-20 w-20 overflow-hidden rounded-lg border border-[#ccc]">
-                  <View className="absolute h-full w-full bg-gray-100" />
-                </View>
-                <Pressable
-                  onPress={() => {
-                    // Open image picker or add image functionality
-                  }}
-                  className="relative h-20 w-20 items-center justify-center overflow-hidden rounded-lg border border-[#ccc]"
-                >
-                  <MaterialIcons
-                    name="add-circle-outline"
-                    size={40}
-                    color="#ccc"
-                  />
-                </Pressable>
+              <View className="flex-row flex-wrap">
+                {state.isLoading ? (
+                  <View className="h-44 w-full items-center justify-center">
+                    <ActivityIndicator size="small" color={PRIMARY_COLOR} />
+                  </View>
+                ) : (
+                  state?.categories?.map((category, index) => {
+                    const { icon, color } =
+                      ICONS_CATE[index % ICONS_CATE.length];
+                    return (
+                      <Pressable
+                        key={category.id}
+                        onPress={() => handler.setSelectedCategory(category.id)}
+                        className="mb-3 w-1/3 px-1.5"
+                      >
+                        <CategoryItem
+                          label={category.name}
+                          color={color}
+                          iconName={icon as keyof typeof MaterialIcons.glyphMap}
+                          isSelected={state.selectedCategory === category.id}
+                          rootClassName="flex-1 justify-center min-h-[110px]"
+                        />
+                      </Pressable>
+                    );
+                  })
+                )}
+              </View>
+              {state?.categories.length < state?.totalCount &&
+                !state.isLoadingMore && (
+                  <Pressable onPress={handler.handleLoadMore} className="my-2">
+                    <Text className="text-center text-sm text-[#757575]">
+                      {TEXT_TRANSLATE_ADD_TRANSACTION.BUTTON.SEE_MORE} &gt;
+                    </Text>
+                  </Pressable>
+                )}
+              {state.isLoadingMore && (
+                <ActivityIndicator
+                  size="small"
+                  color={PRIMARY_COLOR}
+                  className="my-2"
+                />
+              )}
+            </SectionComponent>
+            <SectionComponent rootClassName="bg-white m-4 p-4 rounded-lg">
+              <Text className="mb-4 text-base font-semibold text-primary">
+                {TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.IMAGE_BILL}
+              </Text>
+              <View className="flex-row flex-wrap gap-2">
+                {renderImageList}
               </View>
             </SectionComponent>
-
-            {/* SUBMIT BUTTON */}
-            <SectionComponent rootClassName="bg-white m-4 p-4 rounded-lg">
+            <SectionComponent rootClassName="mx-5 mb-7 rounded-lg">
               <Pressable
                 onPress={() => handleSubmit()}
-                className="h-12 w-full items-center justify-center rounded-lg bg-[#609084]"
+                className="h-12 w-full items-center justify-center rounded-lg bg-primary"
               >
                 <Text className="text-base font-semibold text-white">
-                  {transactionType === "expense"
-                    ? "Thêm chi tiêu"
-                    : "Thêm thu nhập"}
+                  {state.transactionType === "expense"
+                    ? TEXT_TRANSLATE_ADD_TRANSACTION.BUTTON.ADD_EXPENSE
+                    : TEXT_TRANSLATE_ADD_TRANSACTION.BUTTON.ADD_INCOME}
                 </Text>
               </Pressable>
             </SectionComponent>

@@ -13,3 +13,5 @@ export { ScrollViewCustom } from "./ScrollViewCustom";
 export { FlatListCustom } from "./FlatListCustom";
 export { CustomModal } from "./ModalCustom";
 export { RadioGroupComponent } from "./RadioGroupComponent";
+export { PieChartCustom } from "./PieChartCustom/PieChartCustom";
+export { CategoryItem } from "./InvidualScreenCustom/CategoryItem";
