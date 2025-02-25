@@ -14,7 +14,7 @@ export default function TabLayout() {
 
   return (
     <Tabs
-      tabBar={(props) => <TabBar {...props} />}
+      tabBar={(props) => <TabBar {...props} type="main" />}
       screenOptions={{
         headerShown: CONDITION.FALSE,
         animation: ANIMATION_NAVIGATE_TAB.SHIFT,

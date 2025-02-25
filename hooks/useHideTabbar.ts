@@ -1,4 +1,4 @@
-import { setHiddenTabbar } from "@/redux/slices/tabSlice";
+import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -9,16 +9,16 @@ const useHideTabbar = () => {
 
   useFocusEffect(
     useCallback(() => {
-      dispatch(setHiddenTabbar(true));
+      dispatch(setMainTabHidden(true));
       return () => {
-        dispatch(setHiddenTabbar(false));
+        dispatch(setMainTabHidden(false));
       };
     }, [dispatch]),
   );
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("blur", () => {
-      dispatch(setHiddenTabbar(false));
+      dispatch(setMainTabHidden(false));
     });
     return unsubscribe;
   }, [navigation, dispatch]);

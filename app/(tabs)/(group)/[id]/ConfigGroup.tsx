@@ -1,17 +1,19 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  Image,
-  ScrollView,
-  ImageBackground,
-} from "react-native";
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
+import { setGroupTabHidden, setMainTabHidden } from "@/redux/slices/tabSlice";
 import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
+import React, { useState } from "react";
+import {
+  Image,
+  ImageBackground,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Icon } from "react-native-paper";
+import { useDispatch } from "react-redux";
 import GROUP_CONFIG_CONSTANT from "./ConfigGroup.constant";
 import TEXT_TRANSLATE_CONFIG_GROUP from "./ConfigGroup.translate";
 
@@ -20,11 +22,18 @@ const CreateGroup = () => {
   const { TITLE, TEXT } = TEXT_TRANSLATE_CONFIG_GROUP;
   const recentActivities = GROUP_CONFIG_CONSTANT.RECENT_ACTIVITIES;
   const contactList = GROUP_CONFIG_CONSTANT.CONTACT_LIST;
+  const dispatch = useDispatch();
+
+  const handleBack = () => {
+    router.back();
+    dispatch(setMainTabHidden(false));
+    dispatch(setGroupTabHidden(true));
+  };
 
   return (
     <SafeAreaViewCustom>
       <SectionComponent rootClassName="flex-row justify-between items-center h-14 px-4">
-        <TouchableOpacity onPress={router.back}>
+        <TouchableOpacity onPress={handleBack}>
           <AntDesign name="arrowleft" size={24} color="#000000" />
         </TouchableOpacity>
         <View className="flex-row items-center gap-1">

@@ -6,19 +6,22 @@ import {
 
 export const icons = {
   "(home)": (props: { color: string }) => (
-    <AntDesign name="home" size={26} {...props} />
+    <AntDesign name="home" size={24} {...props} />
   ),
   "(bot)": (props: { color: string }) => (
-    <FontAwesome6 name="snapchat" size={26} {...props} />
+    <FontAwesome6 name="snapchat" size={24} {...props} />
   ),
   "(group)": (props: { color: string }) => (
-    <AntDesign name="team" size={26} {...props} />
+    <AntDesign name="team" size={24} {...props} />
   ),
   "(account)": (props: { color: string }) => (
     <MaterialCommunityIcons
       name="account-circle-outline"
-      size={26}
+      size={24}
       {...props}
     />
+  ),
+  ConfigGroup: (props: { color: string }) => (
+    <AntDesign name="home" size={24} {...props} />
   ),
 };

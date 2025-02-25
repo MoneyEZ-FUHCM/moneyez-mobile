@@ -4,16 +4,18 @@ import { Stack } from "expo-router";
 import React from "react";
 
 export default function GroupLayout() {
-  const { CONDITION } = COMMON_CONSTANT;
+  const { CONDITION, ANIMATION_NAVIGATE_STACK } = COMMON_CONSTANT;
 
   return (
     <Stack
       screenOptions={{
         headerStyle: { backgroundColor: "var(--color-primary)" },
         headerShown: CONDITION.FALSE,
+        animation: ANIMATION_NAVIGATE_STACK.SLIDE_FROM_RIGHT,
       }}
     >
       <Stack.Screen name={PATH_NAME.GROUP.GROUP_LIST} />
+      <Stack.Screen name="[id]" options={{ headerShown: false }} />
     </Stack>
   );
 }
