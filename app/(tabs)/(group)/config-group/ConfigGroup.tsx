@@ -119,16 +119,16 @@ const CreateGroup = () => {
               <AntDesign name="right" size={16} color="gray" />
             </View>
           </TouchableOpacity>
-          <TouchableOpacity className="mt-2 flex-row items-center justify-between rounded-lg bg-white px-2 py-3">
-            <TouchableOpacity
-              onPress={() => router.navigate("/group-fund/GroupFund")}
-              className="flex-row items-center"
-            >
+          <TouchableOpacity
+            onPress={() => router.navigate("group-fund/GroupFund" as any)}
+            className="mt-2 flex-row items-center justify-between rounded-lg bg-white px-2 py-3"
+          >
+            <View className="flex-row items-center">
               <AntDesign name="clockcircleo" size={28} color="#609084" />
               <Text className="ml-2 font-medium">
                 {TEXT.SET_RECURRING_REMINDER}
               </Text>
-            </TouchableOpacity>
+            </View>
             <AntDesign name="right" size={16} color="gray" />
           </TouchableOpacity>
         </View>
