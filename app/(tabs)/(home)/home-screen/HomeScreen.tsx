@@ -71,9 +71,23 @@ const HomeScreen = () => {
           </View>
           <View className="bottom-16 mx-5 rounded-2xl bg-white p-3 shadow-md shadow-gray-600">
             <View>
-              <Text className="mb-2 text-[19px] font-bold text-primary">
-                {TITLE.PERSONAL_EXPENSES}
-              </Text>
+              <View className="mb-2 flex-row items-center justify-between">
+                <Text className="text-[19px] font-bold text-primary">
+                  {TITLE.PERSONAL_EXPENSES}
+                </Text>
+                <TouchableOpacity
+                  onPress={() =>
+                    router.navigate(HOME.PERSONAL_EXPENSES_MODEL as any)
+                  }
+                >
+                  <View className="flex-row items-center rounded-full border border-primary px-3 py-1">
+                    <Feather name="plus" size={16} color="#609084" />
+                    <Text className="font-md ml-1 text-[14px] text-primary">
+                      {BUTTON.ADD}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
               <View className="mb-3 flex-row justify-between">
                 <Text className="font-medium">
                   {state.startOfMonth} - {state.endOfMonth}

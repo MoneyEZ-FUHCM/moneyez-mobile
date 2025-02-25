@@ -35,6 +35,7 @@ const PATH_NAME = {
     TRANSACTION_HISTORY: "transaction-history/TransactionHistory",
     PERIOD_HISTORY: "period-history/PeriodHistory",
     PERIOD_HISTORY_DETAIL: "period-history/PeriodHistoryDetail",
+    PERSONAL_EXPENSES_MODEL: "personal-expenses/PersonalExpensesModel",
   },
   ACCOUNT: {
     ACCOUNT_SETTING: "setting/AccountSetting",
