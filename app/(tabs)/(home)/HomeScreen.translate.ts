@@ -25,6 +25,7 @@ const TEXT_TRANSLATE_HOME = {
   BUTTON: {
     DETAIL: "Chi tiết",
     SEE_MORE: "Xem thêm",
+    ADD: "Thêm",
   },
 
   MESSAGE_ERROR: {},
