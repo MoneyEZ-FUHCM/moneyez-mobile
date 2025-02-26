@@ -119,7 +119,11 @@ const CreateGroup = () => {
           <Text className="mb-2 font-semibold">{TEXT.GROUP_REMINDER}</Text>
           <TouchableOpacity
             className="flex-row items-center justify-between rounded-lg bg-white px-2 py-3"
-            // onPress={() => router.navigate("(create)")}
+            onPress={() =>
+              router.navigate(
+                "/(tabs)/(group)/group-details/group-home/create-fund/CreateFund",
+              )
+            }
           >
             <View className="flex-row items-center">
               <View className="flex-1 flex-row items-center">

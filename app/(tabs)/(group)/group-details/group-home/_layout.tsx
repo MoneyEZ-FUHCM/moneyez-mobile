@@ -1,8 +1,8 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
-import { Stack } from "expo-router";
+import { Stack, useLocalSearchParams } from "expo-router";
 import React from "react";
 
-export default function TransactionLayout() {
+export default function ConfigGroupLayout() {
   const { CONDITION, ANIMATION_NAVIGATE_STACK } = COMMON_CONSTANT;
 
   return (
@@ -13,7 +13,14 @@ export default function TransactionLayout() {
         animation: ANIMATION_NAVIGATE_STACK.SLIDE_FROM_RIGHT,
       }}
     >
-      <Stack.Screen name="Transaction" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="config-group/ConfigGroup"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="create-fund/CreateFund"
+        options={{ headerShown: false }}
+      />
     </Stack>
   );
 }

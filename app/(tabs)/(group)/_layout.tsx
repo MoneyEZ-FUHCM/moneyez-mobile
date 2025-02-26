@@ -16,7 +16,7 @@ export default function GroupLayout() {
       }}
     >
       <Stack.Screen name={PATH_NAME.GROUP.GROUP_LIST} />
-      <Stack.Screen name="[id]" options={{ headerShown: false }} />
+      <Stack.Screen name="group-details" options={{ headerShown: false }} />
     </Stack>
   );
 }

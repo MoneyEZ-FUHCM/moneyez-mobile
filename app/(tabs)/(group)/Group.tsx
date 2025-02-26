@@ -81,8 +81,9 @@ const Group = () => {
             // }}
             onPress={() => {
               router.push(
-                `/${item.id}/group-home/config-group/ConfigGroup` as any,
+                "/(tabs)/(group)/group-details/group-home/config-group/ConfigGroup",
               );
+
               dispatch(setMainTabHidden(true));
               dispatch(setGroupTabHidden(false));
             }}
