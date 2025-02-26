@@ -65,7 +65,7 @@ const PersonalExpensesModel = () => {
               </Text>
               <Text
                 className={`text-xs ${
-                  step.isActive ? "text-green-600" : "text-gray-400"
+                  step.isActive ? "text-primary" : "text-gray-400"
                 }`}
               >
                 {step.label}
