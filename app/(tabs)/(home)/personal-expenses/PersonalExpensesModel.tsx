@@ -13,14 +13,7 @@ import PERSONAL_EXPENSES_MODEL_CONSTANTS from "./PersonalExpensesModel.constants
 import { PATH_NAME } from "@/helpers/constants/pathname";
 
 const PersonalExpensesModel = () => {
-  const {
-    selectedModel,
-    setSelectedModel,
-    customModel,
-    setCustomModel,
-    isModalVisible,
-    setIsModalVisible,
-  } = usePersonalExpensesModel();
+  const { state, handler } = usePersonalExpensesModel();
   const MODELS = PERSONAL_EXPENSES_MODEL_CONSTANTS.MODELS;
   const STEPS = PERSONAL_EXPENSES_MODEL_CONSTANTS.STEPS;
   const { HOME } = PATH_NAME;
@@ -90,19 +83,19 @@ const PersonalExpensesModel = () => {
           <TouchableOpacity
             key={model.name}
             className={`mb-2 rounded-lg border p-3 ${
-              selectedModel === model.name
+              state.selectedModel === model.name
                 ? "border-gray-400 bg-secondary"
                 : "border-gray-300 bg-white"
             }`}
-            onPress={() => setSelectedModel(model.name)}
+            onPress={() => handler.setSelectedModel(model.name)}
           >
             <View className="flex-row items-center justify-between">
               <Text>{model.name}</Text>
               {model.name !== "Tùy chọn" && (
                 <TouchableOpacity
                   onPress={() => {
-                    setIsModalVisible(true);
-                    setSelectedModel(model.name);
+                    handler.setIsModalVisible(true);
+                    handler.setSelectedModel(model.name);
                   }}
                 >
                   <Entypo name="info-with-circle" size={24} color="#000000" />
@@ -113,13 +106,13 @@ const PersonalExpensesModel = () => {
         ))}
 
         {/* Custom Input */}
-        {selectedModel === "Tùy chọn" && (
+        {state.selectedModel === "Tùy chọn" && (
           <TextInput
             placeholder={
               TEXT_TRANSLATE_PERSONAL_EXPENSES.CUSTOM_MODEL_PLACEHOLDER
             }
-            value={customModel}
-            onChangeText={setCustomModel}
+            value={state.customModel}
+            onChangeText={handler.setCustomModel}
             className="mt-2 rounded-lg border border-gray-300 bg-white p-3"
           />
         )}
@@ -143,13 +136,15 @@ const PersonalExpensesModel = () => {
         </Text>
       </TouchableOpacity>
       <CustomModal
-        visible={isModalVisible}
-        title={TEXT_TRANSLATE_PERSONAL_EXPENSES.MODAL_TITLE(selectedModel)}
+        visible={state.isModalVisible}
+        title={TEXT_TRANSLATE_PERSONAL_EXPENSES.MODAL_TITLE(
+          state.selectedModel,
+        )}
         content={
-          MODELS.find((model) => model.name === selectedModel)?.description ||
-          ""
+          MODELS.find((model) => model.name === state.selectedModel)
+            ?.description || ""
         }
-        onClose={() => setIsModalVisible(false)}
+        onClose={() => handler.setIsModalVisible(false)}
       />
     </SafeAreaViewCustom>
   );

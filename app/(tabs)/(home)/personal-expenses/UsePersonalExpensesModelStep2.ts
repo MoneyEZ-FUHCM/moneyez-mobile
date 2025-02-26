@@ -13,8 +13,12 @@ export const usePersonalExpensesModelStep2 = () => {
   });
 
   return {
-    selectedTime,
-    setSelectedTime,
-    validationSchema,
+    state: {
+      selectedTime,
+      validationSchema,
+    },
+    handler: {
+      setSelectedTime,
+    },
   };
 };

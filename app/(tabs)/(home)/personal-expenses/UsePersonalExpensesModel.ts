@@ -6,11 +6,15 @@ export const usePersonalExpensesModel = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   return {
-    selectedModel,
-    setSelectedModel,
-    customModel,
-    setCustomModel,
-    isModalVisible,
-    setIsModalVisible,
+    state: {
+      selectedModel,
+      customModel,
+      isModalVisible,
+    },
+    handler: {
+      setSelectedModel,
+      setCustomModel,
+      setIsModalVisible,
+    },
   };
 };
