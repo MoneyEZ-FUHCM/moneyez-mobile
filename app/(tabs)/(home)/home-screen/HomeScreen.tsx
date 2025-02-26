@@ -7,19 +7,18 @@ import {
   SectionComponent,
 } from "@/components";
 import { appInfo } from "@/helpers/constants/appInfos";
+import { PATH_NAME } from "@/helpers/constants/pathname";
 import { Feather } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import { Coin, Eye, EyeSlash } from "iconsax-react-native";
 import React from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import TEXT_TRANSLATE_HOME from "../HomeScreen.translate";
 import useHomeScreen from "../hooks/useHomeScreen";
-import { PATH_NAME } from "@/helpers/constants/pathname";
-import { useRouter } from "expo-router";
 
 const HomeScreen = () => {
   const { state, handler } = useHomeScreen();
   const { BUTTON, TITLE } = TEXT_TRANSLATE_HOME;
-  const { HOME } = PATH_NAME;
   const router = useRouter();
 
   const VisibilityIcon = ({
@@ -40,7 +39,7 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaViewCustom rootClassName="relative">
-      <ScrollViewCustom>
+      <ScrollViewCustom showsVerticalScrollIndicator={false}>
         <SectionComponent
           rootClassName="relative flex-1"
           style={{
@@ -76,9 +75,7 @@ const HomeScreen = () => {
                   {TITLE.PERSONAL_EXPENSES}
                 </Text>
                 <TouchableOpacity
-                  onPress={() =>
-                    router.navigate(HOME.PERSONAL_EXPENSES_MODEL as any)
-                  }
+                  onPress={handler.handleNavigateAddPersonalIncome}
                 >
                   <View className="flex-row items-center rounded-full border border-primary px-3 py-1">
                     <Feather name="plus" size={16} color="#609084" />
@@ -146,7 +143,9 @@ const HomeScreen = () => {
             </View>
             <Text
               className="absolute bottom-3 right-3 font-semibold text-primary"
-              onPress={() => router.navigate(HOME.INVIDUAL_HOME as any)}
+              onPress={() =>
+                router.navigate(PATH_NAME.HOME.INVIDUAL_HOME as any)
+              }
             >
               {BUTTON.DETAIL}
             </Text>
