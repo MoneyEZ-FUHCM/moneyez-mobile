@@ -8,9 +8,9 @@ import { router } from "expo-router";
 import React from "react";
 import { View, Text, TouchableOpacity, TextInput } from "react-native";
 import TEXT_TRANSLATE_PERSONAL_EXPENSES from "./PersonalExpensesModel.translate";
-import { usePersonalExpensesModel } from "./hooks/UsePersonalExpensesModel";
 import PERSONAL_EXPENSES_MODEL_CONSTANTS from "./PersonalExpensesModel.constants";
 import { PATH_NAME } from "@/helpers/constants/pathname";
+import usePersonalExpensesModel from "./hooks/UsePersonalExpensesModel";
 
 const PersonalExpensesModel = () => {
   const { state, handler } = usePersonalExpensesModel();
