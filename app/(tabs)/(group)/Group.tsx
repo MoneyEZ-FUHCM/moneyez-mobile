@@ -74,8 +74,15 @@ const Group = () => {
           <TouchableOpacity
             className="mb-3 flex-row items-center rounded-xl border border-gray-300 bg-white p-4 shadow-md"
             // onPress={() => router.navigate(PATH_NAME.GROUP.GROUP_DETAIL as any, { id: item.id })}
+            // onPress={() => {
+            //   router.push(`${item.id}` as any);
+            //   dispatch(setMainTabHidden(true));
+            //   dispatch(setGroupTabHidden(false));
+            // }}
             onPress={() => {
-              router.navigate(PATH_NAME.GROUP.GROUP_DETAIL as any);
+              router.push(
+                `/${item.id}/group-home/config-group/ConfigGroup` as any,
+              );
               dispatch(setMainTabHidden(true));
               dispatch(setGroupTabHidden(false));
             }}

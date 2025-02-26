@@ -20,7 +20,7 @@ const PATH_NAME = {
     GROUP_NAVIGATOR: "(group)",
     GROUP_LIST: "Group",
     GROUP_FUND: "group-fund/GroupFund",
-    GROUP_DETAIL: "[id]/ConfigGroup",
+    GROUP_DETAIL: ":id",
     STATISTICS: "dashboard-group/GroupManangement",
     CREATE_GROUP_STEP_1: "create-group/CreateGroup",
     CREATE_GROUP_STEP_2: "create-group/CreateGroupStep2",

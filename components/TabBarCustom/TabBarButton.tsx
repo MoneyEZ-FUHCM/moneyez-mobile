@@ -1,14 +1,12 @@
-import React, { memo, useEffect } from "react";
+import React, { memo } from "react";
 import { Pressable, PressableProps } from "react-native";
 import Animated, {
   interpolate,
   interpolateColor,
   useAnimatedStyle,
   useDerivedValue,
-  useSharedValue,
   withSpring,
 } from "react-native-reanimated";
-
 import { icons } from "@/assets/icons/icons";
 import { AntDesign } from "@expo/vector-icons";
 

@@ -1,5 +1,5 @@
 import { PATH_NAME } from "@/helpers/constants/pathname";
-import { setHiddenTabbar } from "@/redux/slices/tabSlice";
+import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { router } from "expo-router";
 import { useDispatch } from "react-redux";
 
@@ -36,22 +36,22 @@ const useIndividualHome = () => {
 
   const handleGoBack = () => {
     router.back();
-    dispatch(setHiddenTabbar(false));
+    dispatch(setMainTabHidden(false));
   };
 
   const handleHistoryPress = () => {
     router.navigate(HOME.TRANSACTION_HISTORY as any);
-    dispatch(setHiddenTabbar(true));
+    dispatch(setMainTabHidden(true));
   };
 
   const handleAddExpense = () => {
     router.navigate(`${HOME.ADD_TRANSACTION}?type=expense` as any);
-    dispatch(setHiddenTabbar(true));
+    dispatch(setMainTabHidden(true));
   };
 
   const handleAddIncome = () => {
     router.navigate(`${HOME.ADD_TRANSACTION}?type=income` as any);
-    dispatch(setHiddenTabbar(true));
+    dispatch(setMainTabHidden(true));
   };
 
   return {

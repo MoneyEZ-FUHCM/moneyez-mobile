@@ -21,7 +21,4 @@ export const icons = {
       {...props}
     />
   ),
-  ConfigGroup: (props: { color: string }) => (
-    <AntDesign name="home" size={24} {...props} />
-  ),
 };

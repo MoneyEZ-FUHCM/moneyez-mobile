@@ -1,7 +1,7 @@
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
 import { setGroupTabHidden, setMainTabHidden } from "@/redux/slices/tabSlice";
 import { AntDesign } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import {
   Image,
@@ -117,7 +117,10 @@ const CreateGroup = () => {
         </View>
         <View className="mx-4 mt-4 rounded-2xl bg-superlight p-4 shadow-md">
           <Text className="mb-2 font-semibold">{TEXT.GROUP_REMINDER}</Text>
-          <TouchableOpacity className="flex-row items-center justify-between rounded-lg bg-white px-2 py-3">
+          <TouchableOpacity
+            className="flex-row items-center justify-between rounded-lg bg-white px-2 py-3"
+            // onPress={() => router.navigate("(create)")}
+          >
             <View className="flex-row items-center">
               <View className="flex-1 flex-row items-center">
                 <Icon source="piggy-bank" size={28} color="#609084" />
