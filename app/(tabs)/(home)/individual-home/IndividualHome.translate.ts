@@ -1,4 +1,4 @@
-const TEXT_TRANSLATE_INVIDUAL_HOME = {
+const TEXT_TRANSLATE_INDIVIDUAL_HOME = {
   // Titles
   TITLE: {
     PERSONAL_EXPENSES: "Chi tiêu cá nhân",
@@ -46,4 +46,4 @@ const TEXT_TRANSLATE_INVIDUAL_HOME = {
   },
 };
 
-export default TEXT_TRANSLATE_INVIDUAL_HOME;
+export default TEXT_TRANSLATE_INDIVIDUAL_HOME;

@@ -144,7 +144,7 @@ const HomeScreen = () => {
             <Text
               className="absolute bottom-3 right-3 font-semibold text-primary"
               onPress={() =>
-                router.navigate(PATH_NAME.HOME.INVIDUAL_HOME as any)
+                router.navigate(PATH_NAME.HOME.INDIVIDUAL_HOME as any)
               }
             >
               {BUTTON.DETAIL}
