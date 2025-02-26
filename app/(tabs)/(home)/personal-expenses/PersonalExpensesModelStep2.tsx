@@ -10,7 +10,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import TEXT_TRANSLATE_PERSONAL_EXPENSES from "./PersonalExpensesModel.translate";
 import PERSONAL_EXPENSES_MODEL_CONSTANTS from "./PersonalExpensesModel.constants";
 import { Formik } from "formik";
-import usePersonalExpensesModelStep2 from "./Hooks/usePersonalExpensesModelStep2";
+import usePersonalExpensesModelStep2 from "./hooks/usePersonalExpensesModelStep2";
 
 const PersonalExpensesModelStep2 = () => {
   const STEPS = PERSONAL_EXPENSES_MODEL_CONSTANTS.STEPS;
@@ -39,11 +39,16 @@ const PersonalExpensesModelStep2 = () => {
             <View className="items-center">
               <View
                 className={`flex h-10 w-10 items-center justify-center rounded-full ${
-                  index <= 1 ? "bg-primary" : "bg-gray-300"
+                  index + 1 === step ? "bg-primary" : "bg-gray-300"
                 }`}
               >
-                {step.icon}
+                {React.createElement(AntDesign, {
+                  name: step.icon.props.name,
+                  size: 20,
+                  color: index + 1 === step ? "#fff" : "#000", // Đổi màu icon theo step
+                })}
               </View>
+
               <Text
                 className={`mt-1 text-sm ${
                   index <= 1 ? "text-green-600 font-medium" : "text-gray-400"

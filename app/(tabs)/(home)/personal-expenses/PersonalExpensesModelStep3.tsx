@@ -1,10 +1,10 @@
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
-import { AntDesign, Entypo } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
-import TEXT_TRANSLATE_PERSONAL_EXPENSES from "./PersonalExpensesModel.translate";
+import { Text, TouchableOpacity, View } from "react-native";
 import PERSONAL_EXPENSES_MODEL_CONSTANTS from "./PersonalExpensesModel.constants";
+import TEXT_TRANSLATE_PERSONAL_EXPENSES from "./PersonalExpensesModel.translate";
 
 const PersonalExpensesModelStep3 = () => {
   const STEPS = PERSONAL_EXPENSES_MODEL_CONSTANTS.STEPS;
