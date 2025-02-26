@@ -48,8 +48,7 @@ const useIndividualHome = () => {
   };
 
   const handleHistoryPress = () => {
-    router.navigate(HOME.TRANSACTION_HISTORY as any);
-    dispatch(setMainTabHidden(true));
+    router.navigate(HOME.SPENDING_MODEL_HISTORY as any);
   };
 
   const handleAddExpense = () => {

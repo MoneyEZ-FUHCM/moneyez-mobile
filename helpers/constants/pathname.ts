@@ -30,9 +30,9 @@ const PATH_NAME = {
   },
   HOME: {
     HOME_DEFAULT: "home-screen/HomeScreen",
-    INVIDUAL_HOME: "invidual-home/InvidualHome",
+    INDIVIDUAL_HOME: "individual-home/IndividualHome",
     ADD_TRANSACTION: "add-transaction/AddTransaction",
-    TRANSACTION_HISTORY: "transaction-history/TransactionHistory",
+    SPENDING_MODEL_HISTORY: "spending-model-history/SpendingModelHistory",
     PERIOD_HISTORY: "period-history/PeriodHistory",
     PERIOD_HISTORY_DETAIL: "period-history/PeriodHistoryDetail",
     PERSONAL_EXPENSES_MODEL: "personal-expenses/PersonalExpensesModel",

@@ -11,10 +11,10 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import { Image, Pressable, Text, View } from "react-native";
-import TEXT_TRANSLATE_INVIDUAL_HOME from "./InvidualHome.translate";
+import TEXT_TRANSLATE_INDIVIDUAL_HOME from "./IndividualHome.translate";
 import useIndividualHome from "./hooks/useIndividualHome";
 
-export default function InvidualHome() {
+export default function IndividualHome() {
   const { state, handler } = useIndividualHome();
 
   return (
@@ -26,7 +26,7 @@ export default function InvidualHome() {
             <MaterialIcons name="arrow-back" size={24} color="#609084" />
           </Pressable>
           <Text className="text-lg font-bold text-primary">
-            {TEXT_TRANSLATE_INVIDUAL_HOME.TITLE.PERSONAL_EXPENSES}
+            {TEXT_TRANSLATE_INDIVIDUAL_HOME.TITLE.PERSONAL_EXPENSES}
           </Text>
           <Text></Text>
         </View>
@@ -36,16 +36,16 @@ export default function InvidualHome() {
         <SectionComponent rootClassName="mx-5 mt-8 rounded-[10px] bg-white p-4 shadow-sm">
           <View className="flex-row items-center justify-between">
             <Text className="text-sm text-black">
-              {TEXT_TRANSLATE_INVIDUAL_HOME.TITLE.TOTAL_BALANCE}
+              {TEXT_TRANSLATE_INDIVIDUAL_HOME.TITLE.TOTAL_BALANCE}
             </Text>
             <Pressable onPress={handler.handleHistoryPress}>
               <Text className="text-xs text-gray-500">
-                {TEXT_TRANSLATE_INVIDUAL_HOME.LABEL.TRANSACTION_HISTORY}
+                {TEXT_TRANSLATE_INDIVIDUAL_HOME.LABEL.TRANSACTION_HISTORY}
               </Text>
             </Pressable>
           </View>
           <Text className="mt-2 text-[28px] font-medium text-black">
-            {TEXT_TRANSLATE_INVIDUAL_HOME.LABEL.BALANCE_AMOUNT}
+            {TEXT_TRANSLATE_INDIVIDUAL_HOME.LABEL.BALANCE_AMOUNT}
           </Text>
           {/* ACTION BUTTONS */}
           <View className="mt-3 flex-row justify-between">
@@ -62,7 +62,7 @@ export default function InvidualHome() {
                   />
                 </View>
                 <Text className="ml-[5px] text-[12px] font-normal">
-                  {TEXT_TRANSLATE_INVIDUAL_HOME.LABEL.ADD_EXPENSE}
+                  {TEXT_TRANSLATE_INDIVIDUAL_HOME.LABEL.ADD_EXPENSE}
                 </Text>
               </Pressable>
             </View>
@@ -80,7 +80,7 @@ export default function InvidualHome() {
                   />
                 </View>
                 <Text className="ml-[5px] text-[12px] font-normal">
-                  {TEXT_TRANSLATE_INVIDUAL_HOME.LABEL.ADD_INCOME}
+                  {TEXT_TRANSLATE_INDIVIDUAL_HOME.LABEL.ADD_INCOME}
                 </Text>
               </Pressable>
             </View>
@@ -101,7 +101,7 @@ export default function InvidualHome() {
               resizeMode="cover"
             />
             <Text className="font-medium">
-              {TEXT_TRANSLATE_INVIDUAL_HOME.TITLE.AI_NAME}
+              {TEXT_TRANSLATE_INDIVIDUAL_HOME.TITLE.AI_NAME}
             </Text>
           </View>
           <SpaceComponent height={17} />
@@ -122,7 +122,7 @@ export default function InvidualHome() {
                 Tự động xóa khi chỉ tiêu ngoài hạn mức
               </Text>
             </Pressable>
-            <SpaceComponent width={17} />
+            <SpaceComponent width={17} />r
             <Pressable className="w-1/2 flex-1 rounded-lg border-[0.5px] border-primary bg-white">
               <Text className="p-2">
                 Tự động xóa khi chỉ tiêu ngoài hạn mức
