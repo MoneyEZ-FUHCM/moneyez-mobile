@@ -1,6 +1,6 @@
 import { useState } from "react";
 import * as Yup from "yup";
-import TEXT_TRANSLATE_ADD_TRANSACTION from "../add-transaction/AddTransaction.translate";
+import TEXT_TRANSLATE_ADD_TRANSACTION from "../../add-transaction/AddTransaction.translate";
 
 export const usePersonalExpensesModelStep2 = () => {
   const [selectedTime, setSelectedTime] = useState("1 tháng");
