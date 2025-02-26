@@ -10,7 +10,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import TEXT_TRANSLATE_PERSONAL_EXPENSES from "./PersonalExpensesModel.translate";
 import PERSONAL_EXPENSES_MODEL_CONSTANTS from "./PersonalExpensesModel.constants";
 import { Formik } from "formik";
-import usePersonalExpensesModelStep2 from "./Hooks/UsePersonalExpensesModelStep2";
+import usePersonalExpensesModelStep2 from "./Hooks/usePersonalExpensesModelStep2";
 
 const PersonalExpensesModelStep2 = () => {
   const STEPS = PERSONAL_EXPENSES_MODEL_CONSTANTS.STEPS;
