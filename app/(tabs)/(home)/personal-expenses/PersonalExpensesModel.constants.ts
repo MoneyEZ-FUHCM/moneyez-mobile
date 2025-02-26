@@ -1,4 +1,4 @@
-import { CheckCircle, Clock, Package } from "lucide-react-native";
+import { AntDesign } from "@expo/vector-icons";
 import React from "react";
 
 export const MODELS = [
@@ -23,17 +23,29 @@ export const MODELS = [
 export const STEPS = [
   {
     label: "Mô hình",
-    icon: React.createElement(Package, { size: 20, color: "#fff" }),
+    icon: React.createElement(AntDesign, {
+      name: "appstore-o",
+      size: 20,
+      color: "#fff",
+    }),
     isActive: true,
   },
   {
     label: "Thời gian",
-    icon: React.createElement(Clock, { size: 20, color: "#fff" }),
+    icon: React.createElement(AntDesign, {
+      name: "clockcircleo",
+      size: 20,
+      color: "#fff",
+    }),
     isActive: false,
   },
   {
     label: "Xác nhận",
-    icon: React.createElement(CheckCircle, { size: 20, color: "#fff" }),
+    icon: React.createElement(AntDesign, {
+      name: "checkcircleo",
+      size: 20,
+      color: "#fff",
+    }),
     isActive: false,
   },
 ];

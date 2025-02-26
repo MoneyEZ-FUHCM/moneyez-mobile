@@ -8318,17 +8318,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lucide-react-native@npm:^0.476.0":
-  version: 0.476.0
-  resolution: "lucide-react-native@npm:0.476.0"
-  peerDependencies:
-    react: ^16.5.1 || ^17.0.0 || ^18.0.0
-    react-native: "*"
-    react-native-svg: ^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0
-  checksum: 3a5e9faf8516152fc4c8977b351a2ea16edbb6166981104a0075deb8ac56897352be46619b3956a0478dc46d6e15e65d51aa9562105ad66d804c0dfe372ae515
-  languageName: node
-  linkType: hard
-
 "make-dir@npm:^2.0.0, make-dir@npm:^2.1.0":
   version: 2.1.0
   resolution: "make-dir@npm:2.1.0"
@@ -8916,7 +8905,6 @@ __metadata:
     jest: ^29.2.1
     jest-expo: ~52.0.3
     jwt-decode: ^4.0.0
-    lucide-react-native: ^0.476.0
     moment: ^2.30.1
     nativewind: 2.0.11
     prettier: ^3.4.2
