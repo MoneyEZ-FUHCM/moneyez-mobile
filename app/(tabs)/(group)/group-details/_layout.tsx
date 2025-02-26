@@ -5,7 +5,12 @@ import { Tabs } from "expo-router";
 import React from "react";
 
 export default function GroupDetailTabLayout() {
-  const { CONDITION, ANIMATION_NAVIGATE_TAB } = COMMON_CONSTANT;
+  const {
+    CONDITION,
+    ANIMATION_NAVIGATE_TAB,
+    BOTTOM_TAB_TRANSLATE,
+    BOTTOM_TAB_NAME,
+  } = COMMON_CONSTANT;
   useHideTabbar();
 
   return (
@@ -16,9 +21,30 @@ export default function GroupDetailTabLayout() {
         animation: ANIMATION_NAVIGATE_TAB.SHIFT,
       }}
     >
-      <Tabs.Screen name="group-home" />
-      <Tabs.Screen name="transaction" />
-      <Tabs.Screen name="notification" />
+      <Tabs.Screen
+        name={BOTTOM_TAB_NAME.GROUP_HOME}
+        options={{
+          title: BOTTOM_TAB_TRANSLATE.GROUP_HOME,
+        }}
+      />
+      <Tabs.Screen
+        name={BOTTOM_TAB_NAME.TRANSACTION}
+        options={{
+          title: BOTTOM_TAB_TRANSLATE.TRANSACTION,
+        }}
+      />
+      <Tabs.Screen
+        name={BOTTOM_TAB_NAME.MEMBER}
+        options={{
+          title: BOTTOM_TAB_TRANSLATE.MEMBER,
+        }}
+      />
+      <Tabs.Screen
+        name={BOTTOM_TAB_NAME.SETTING}
+        options={{
+          title: BOTTOM_TAB_TRANSLATE.SETTING,
+        }}
+      />
     </Tabs>
   );
 }

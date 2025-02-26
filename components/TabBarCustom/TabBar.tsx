@@ -104,7 +104,7 @@ const TabBar = React.memo(
     return (
       <Animated.View
         style={animatedStyle}
-        className={`absolute bottom-5 ${type === "main" ? "mx-5" : "mx-16"} flex-row items-center justify-between rounded-full bg-white/95 px-4 py-1.5 shadow-lg transition-all duration-500`}
+        className={`"mx-5" absolute bottom-5 mx-5 flex-row items-center justify-between rounded-full bg-white/95 px-4 py-1.5 shadow-lg transition-all duration-500`}
       >
         {filteredRoutes.map((route, index) => {
           const { options } = descriptors[route.key];
@@ -124,6 +124,7 @@ const TabBar = React.memo(
               routeName={route.name as any}
               color={isFocused ? primaryColor : greyColor}
               label={label}
+              size={isFocused ? 20 : 24}
             />
           );
         })}

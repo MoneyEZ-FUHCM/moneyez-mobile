@@ -73,17 +73,8 @@ const Group = () => {
         renderItem={({ item }) => (
           <TouchableOpacity
             className="mb-3 flex-row items-center rounded-xl border border-gray-300 bg-white p-4 shadow-md"
-            // onPress={() => router.navigate(PATH_NAME.GROUP.GROUP_DETAIL as any, { id: item.id })}
-            // onPress={() => {
-            //   router.push(`${item.id}` as any);
-            //   dispatch(setMainTabHidden(true));
-            //   dispatch(setGroupTabHidden(false));
-            // }}
             onPress={() => {
-              router.push(
-                "/(tabs)/(group)/group-details/group-home/config-group/ConfigGroup",
-              );
-
+              router.navigate(PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT as any);
               dispatch(setMainTabHidden(true));
               dispatch(setGroupTabHidden(false));
             }}

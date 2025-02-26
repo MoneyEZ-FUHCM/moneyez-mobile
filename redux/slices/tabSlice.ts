@@ -9,13 +9,7 @@ interface TabState {
 const initialState: TabState = {
   mainTabHidden: false,
   groupTabHidden: false,
-  groupRoutes: [
-    "group-home",
-    "transaction",
-    "notification",
-    "create-fund/CreateFund",
-    "config-group",
-  ],
+  groupRoutes: ["group-home", "transaction", "member", "setting"],
 };
 
 const tabSlice = createSlice({

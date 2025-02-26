@@ -6,8 +6,8 @@ import "../../globals.css";
 
 export default function TabLayout() {
   const {
-    BOTTOM_TABLE_NAME,
-    BOTTOM_TABLE_TRANSLATE,
+    BOTTOM_TAB_NAME: BOTTOM_TABLE_NAME,
+    BOTTOM_TAB_TRANSLATE: BOTTOM_TABLE_TRANSLATE,
     CONDITION,
     ANIMATION_NAVIGATE_TAB,
   } = COMMON_CONSTANT;

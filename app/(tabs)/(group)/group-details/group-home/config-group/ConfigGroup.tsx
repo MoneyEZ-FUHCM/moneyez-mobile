@@ -1,8 +1,8 @@
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
-import { setGroupTabHidden, setMainTabHidden } from "@/redux/slices/tabSlice";
+import { PATH_NAME } from "@/helpers/constants/pathname";
 import { AntDesign } from "@expo/vector-icons";
-import { router, useLocalSearchParams } from "expo-router";
-import React, { useState } from "react";
+import { router } from "expo-router";
+import React from "react";
 import {
   Image,
   ImageBackground,
@@ -13,27 +13,18 @@ import {
   View,
 } from "react-native";
 import { Icon } from "react-native-paper";
-import { useDispatch } from "react-redux";
 import GROUP_CONFIG_CONSTANT from "./ConfigGroup.constant";
 import TEXT_TRANSLATE_CONFIG_GROUP from "./ConfigGroup.translate";
+import useConfigGroup from "./hooks/useConfigGroup";
 
 const CreateGroup = () => {
-  const [selectedTab, setSelectedTab] = useState("contribution");
   const { TITLE, TEXT } = TEXT_TRANSLATE_CONFIG_GROUP;
-  const recentActivities = GROUP_CONFIG_CONSTANT.RECENT_ACTIVITIES;
-  const contactList = GROUP_CONFIG_CONSTANT.CONTACT_LIST;
-  const dispatch = useDispatch();
-
-  const handleBack = () => {
-    router.back();
-    dispatch(setMainTabHidden(false));
-    dispatch(setGroupTabHidden(true));
-  };
+  const { state, handler } = useConfigGroup();
 
   return (
     <SafeAreaViewCustom>
       <SectionComponent rootClassName="flex-row justify-between items-center h-14 px-4">
-        <TouchableOpacity onPress={handleBack}>
+        <TouchableOpacity onPress={handler.handleBack}>
           <AntDesign name="arrowleft" size={24} color="#000000" />
         </TouchableOpacity>
         <View className="flex-row items-center gap-1">
@@ -71,7 +62,7 @@ const CreateGroup = () => {
             </TouchableOpacity>
           </View>
           <ScrollView horizontal className="mb-6">
-            {contactList.map((item, index) => (
+            {state.contactList?.map((item, index) => (
               <View key={index} className="mr-4 items-center">
                 <TouchableOpacity className="h-16 w-16 items-center justify-center rounded-full bg-gray-200">
                   {item === "Add New" ? (
@@ -97,7 +88,7 @@ const CreateGroup = () => {
               <Text className="text-blue-500">{TEXT.VIEW_MORE}</Text>
             </TouchableOpacity>
           </View>
-          {recentActivities.map((member, index) => (
+          {state.recentActivities?.map((member, index) => (
             <View key={index} className="mb-3 flex-row items-center">
               <Image
                 source={{
@@ -120,9 +111,7 @@ const CreateGroup = () => {
           <TouchableOpacity
             className="flex-row items-center justify-between rounded-lg bg-white px-2 py-3"
             onPress={() =>
-              router.navigate(
-                "/(tabs)/(group)/group-details/group-home/create-fund/CreateFund",
-              )
+              router.navigate(PATH_NAME.GROUP_HOME.CREATE_FUND as any)
             }
           >
             <View className="flex-row items-center">
@@ -153,13 +142,17 @@ const CreateGroup = () => {
           <View className="flex-row gap-0">
             <TouchableOpacity
               className={`flex-1 rounded-[15px_0_0_0] px-4 py-2 ${
-                selectedTab === "contribution" ? "bg-primary" : "bg-[#E8F5E9]"
+                state.selectedTab === "contribution"
+                  ? "bg-primary"
+                  : "bg-[#E8F5E9]"
               }`}
-              onPress={() => setSelectedTab("contribution")}
+              onPress={() => handler.setSelectedTab("contribution")}
             >
               <Text
                 className={`text-center font-bold ${
-                  selectedTab === "contribution" ? "text-white" : "text-primary"
+                  state.selectedTab === "contribution"
+                    ? "text-white"
+                    : "text-primary"
                 }`}
               >
                 {TEXT.CONTRIBUTION}
@@ -167,13 +160,13 @@ const CreateGroup = () => {
             </TouchableOpacity>
             <TouchableOpacity
               className={`flex-1 rounded-[0_15px_0_0] px-4 py-2 ${
-                selectedTab === "done" ? "bg-primary" : "bg-[#E8F5E9]"
+                state.selectedTab === "done" ? "bg-primary" : "bg-[#E8F5E9]"
               }`}
-              onPress={() => setSelectedTab("done")}
+              onPress={() => handler.setSelectedTab("done")}
             >
               <Text
                 className={`text-center font-bold ${
-                  selectedTab === "done" ? "text-white" : "text-primary"
+                  state.selectedTab === "done" ? "text-white" : "text-primary"
                 }`}
               >
                 {TEXT.DONE}

@@ -1,3 +1,5 @@
+import { icons } from "@/assets/icons/icons";
+import { AntDesign } from "@expo/vector-icons";
 import React, { memo } from "react";
 import { Pressable, PressableProps } from "react-native";
 import Animated, {
@@ -7,8 +9,6 @@ import Animated, {
   useDerivedValue,
   withSpring,
 } from "react-native-reanimated";
-import { icons } from "@/assets/icons/icons";
-import { AntDesign } from "@expo/vector-icons";
 
 type RouteName = keyof typeof icons;
 
@@ -17,6 +17,7 @@ interface TabBarButtonProps extends PressableProps {
   label: string;
   routeName: RouteName;
   color: string;
+  size: number;
 }
 
 const TabBarButton: React.FC<TabBarButtonProps> = ({
@@ -24,8 +25,11 @@ const TabBarButton: React.FC<TabBarButtonProps> = ({
   label,
   routeName,
   color,
+  size,
   ...props
 }) => {
+  const PRIMARY_COLOR = "#609084";
+  const TRANSPARENT_COLOR = "transparent";
   const animatedScale = useDerivedValue(() => {
     return withSpring(isFocused ? 1 : 0, {
       damping: 15,
@@ -39,9 +43,9 @@ const TabBarButton: React.FC<TabBarButtonProps> = ({
     backgroundColor: interpolateColor(
       animatedScale.value,
       [0, 1],
-      ["transparent", "#609084"],
+      [TRANSPARENT_COLOR, PRIMARY_COLOR],
     ),
-    borderRadius: interpolate(animatedScale.value, [0, 1], [0, 100]),
+    borderRadius: interpolate(animatedScale.value, [0, 0.1], [0, 100]),
   }));
 
   const animatedTextStyle = useAnimatedStyle(() => ({
@@ -62,9 +66,9 @@ const TabBarButton: React.FC<TabBarButtonProps> = ({
         ]}
       >
         {icons[routeName] ? (
-          icons[routeName]({ color })
+          icons[routeName]({ color, size })
         ) : (
-          <AntDesign name="questioncircleo" size={26} color={color} />
+          <AntDesign name="questioncircleo" size={24} color={color} />
         )}
       </Animated.View>
 

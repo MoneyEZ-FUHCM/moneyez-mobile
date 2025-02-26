@@ -2,7 +2,6 @@ import { TRANSACTION_TYPE } from "@/enums/globals";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import useHideTabbar from "@/hooks/useHideTabbar";
 import useUploadImage from "@/hooks/useUploadImage";
-import { setHiddenTabbar } from "@/redux/slices/tabSlice";
 import { useGetSubCateQuery } from "@/services/subCategory";
 import { useCreateTransactionMutation } from "@/services/transaction";
 import { TransactionType } from "@/types/invidual.types";
@@ -13,6 +12,7 @@ import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 import TEXT_TRANSLATE_ADD_TRANSACTION from "../AddTransaction.translate";
 import { setLoading } from "@/redux/slices/loadingSlice";
+import { setMainTabHidden } from "@/redux/slices/tabSlice";
 
 const useAddTransaction = (type: string) => {
   const INCOME = "income";
@@ -74,7 +74,7 @@ const useAddTransaction = (type: string) => {
 
   const handleBack = useCallback(() => {
     router.back();
-    dispatch(setHiddenTabbar(false));
+    dispatch(setMainTabHidden(false));
   }, [dispatch]);
 
   const validationSchema = useMemo(

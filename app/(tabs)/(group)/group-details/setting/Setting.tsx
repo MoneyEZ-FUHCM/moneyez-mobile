@@ -1,13 +1,13 @@
 import { SafeAreaViewCustom } from "@/components";
 import React from "react";
-import { Text, View } from "react-native";
+import { Text } from "react-native";
 
-const Notification = () => {
+const Setting = () => {
   return (
     <SafeAreaViewCustom>
-      <Text>Notification</Text>
+      <Text>Setting</Text>
     </SafeAreaViewCustom>
   );
 };
 
-export default Notification;
+export default Setting;

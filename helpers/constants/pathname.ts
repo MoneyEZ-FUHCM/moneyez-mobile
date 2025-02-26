@@ -40,6 +40,15 @@ const PATH_NAME = {
     ACCOUNT_SETTING: "setting/AccountSetting",
     UPDATE_INFO: "update-info/UpdateUserInfo",
   },
+
+  // Group-detail
+  GROUP_HOME: {
+    GROUP_HOME_DEFAULT: "group-details/group-home/config-group/ConfigGroup",
+    CREATE_FUND: "group-details/group-home/create-fund/CreateFund",
+  },
+  MEMBER: {
+    MEMBER: "Member",
+  },
 };
 
 export { PATH_NAME };
