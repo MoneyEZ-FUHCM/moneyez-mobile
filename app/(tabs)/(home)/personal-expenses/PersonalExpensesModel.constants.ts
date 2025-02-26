@@ -48,7 +48,8 @@ const STEPS = [
     isActive: false,
   },
 ];
+export const TIME_OPTIONS = ["1 tuần", "1 tháng", "3 tháng", "6 tháng"];
 
-const PERSONAL_EXPENSES_MODEL_CONSTANTS = { MODELS, STEPS };
+const PERSONAL_EXPENSES_MODEL_CONSTANTS = { MODELS, STEPS, TIME_OPTIONS };
 
 export default PERSONAL_EXPENSES_MODEL_CONSTANTS;
