@@ -43,33 +43,35 @@ const PersonalExpensesModel = () => {
           return (
             <React.Fragment key={index}>
               {/* Step Circle */}
-              <View className="items-center">
-                <View
-                  className={`flex h-10 w-10 items-center justify-center rounded-full ${
-                    isActive ? "bg-primary" : "bg-gray-300"
-                  }`}
-                >
-                  {stepItem.icon}
+              <TouchableOpacity onPress={() => handler.setStep(index + 1)}>
+                <View className="items-center">
+                  <View
+                    className={`flex h-10 w-10 items-center justify-center rounded-full ${
+                      isActive ? "bg-primary" : "bg-gray-300"
+                    }`}
+                  >
+                    {stepItem.icon}
+                  </View>
+                  <Text
+                    className={`mt-1 text-sm ${
+                      isActive ? "text-green-600 font-medium" : "text-gray-400"
+                    }`}
+                  >
+                    {index === 0
+                      ? TEXT_TRANSLATE_PERSONAL_EXPENSES.STEP_1
+                      : index === 1
+                        ? TEXT_TRANSLATE_PERSONAL_EXPENSES.STEP_2
+                        : TEXT_TRANSLATE_PERSONAL_EXPENSES.STEP_3}
+                  </Text>
+                  <Text
+                    className={`text-xs ${
+                      isActive ? "text-primary" : "text-gray-400"
+                    }`}
+                  >
+                    {stepItem.label}
+                  </Text>
                 </View>
-                <Text
-                  className={`mt-1 text-sm ${
-                    isActive ? "text-green-600 font-medium" : "text-gray-400"
-                  }`}
-                >
-                  {index === 0
-                    ? TEXT_TRANSLATE_PERSONAL_EXPENSES.STEP_1
-                    : index === 1
-                      ? TEXT_TRANSLATE_PERSONAL_EXPENSES.STEP_2
-                      : TEXT_TRANSLATE_PERSONAL_EXPENSES.STEP_3}
-                </Text>
-                <Text
-                  className={`text-xs ${
-                    isActive ? "text-primary" : "text-gray-400"
-                  }`}
-                >
-                  {stepItem.label}
-                </Text>
-              </View>
+              </TouchableOpacity>
 
               {/* Progress Line */}
               {index !== STEPS.length - 1 && (
@@ -151,6 +153,9 @@ const PersonalExpensesModel = () => {
                   name="startDate"
                   label=""
                   labelClass="text-text-gray text-[12px] font-bold"
+                  onChange={(date: Date) =>
+                    handler2.setStartDate(date.toISOString().split("T")[0])
+                  }
                 />
               </View>
               <View>
@@ -175,7 +180,35 @@ const PersonalExpensesModel = () => {
           )}
         </Formik>
       ) : state.step === 3 ? (
-        <Text className="mt-4 text-center text-lg font-bold">hihi</Text>
+        <View className="min-h-screen bg-gray-100 p-4">
+          {/* Mô hình */}
+          <View className="mb-4 rounded-lg bg-white p-4 shadow-sm">
+            <Text className="font-semibold text-primary">Mô hình</Text>
+            <Text className="text-md mt-1">{state.selectedModel}</Text>
+          </View>
+
+          {/* Ngày bắt đầu & Thời hạn */}
+          <View className="mb-4 rounded-lg bg-white p-4 shadow-sm">
+            <View className="flex-row justify-between">
+              <Text className="font-semibold text-primary">Ngày bắt đầu</Text>
+              <Text className="-translate-x-16 font-semibold text-primary">
+                Thời hạn
+              </Text>
+            </View>
+            <View className="mt-1 flex-row justify-between">
+              <Text className="text-md">{state2.startDate}</Text>
+              <Text className="text-md -translate-x-[68px]">
+                {state2.selectedTime}
+              </Text>
+            </View>
+          </View>
+
+          {/* Phạm vi */}
+          <View className="rounded-lg bg-white p-4 shadow-sm">
+            <Text className="font-semibold text-primary">Phạm vi</Text>
+            <Text className="text-md mt-1">Cá nhân</Text>
+          </View>
+        </View>
       ) : null}
 
       <CustomModal
@@ -191,28 +224,10 @@ const PersonalExpensesModel = () => {
       />
       {/* Next Button */}
       <SectionComponent rootClassName="flex-row flex-1 absolute bottom-5 mx-4">
-        <TouchableOpacity
-          onPress={() => handler.setStep((prev) => prev - 1)}
-          className={`mt-10 w-1/2 flex-1 items-center rounded-lg p-3 ${
-            state.step === 1
-              ? "border border-gray-400 bg-white text-gray-400 opacity-50"
-              : "border border-primary bg-primary"
-          }`}
-          disabled={state.step === 1}
-        >
-          <Text
-            className={`text-base font-semibold ${
-              state.step === 1 ? "text-gray-400" : "text-white"
-            }`}
-          >
-            Trở về
-          </Text>
-        </TouchableOpacity>
         <SpaceComponent width={15} />
         <TouchableOpacity
           onPress={() => {
             if (state.step === 3) {
-              // router.navigate(HOME.PERSONAL_EXPENSES_MODEL_STEP_2 as any)
               return;
             }
             handler.setStep((prev) => prev + 1);

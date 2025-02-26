@@ -4,6 +4,7 @@ import TEXT_TRANSLATE_ADD_TRANSACTION from "../../add-transaction/AddTransaction
 
 const usePersonalExpensesModelStep2 = () => {
   const [selectedTime, setSelectedTime] = useState("1 tháng");
+  const [startDate, setStartDate] = useState("");
 
   const { MESSAGE_VALIDATE } = TEXT_TRANSLATE_ADD_TRANSACTION;
   const validationSchema = Yup.object().shape({
@@ -15,11 +16,14 @@ const usePersonalExpensesModelStep2 = () => {
   return {
     state: {
       selectedTime,
+      startDate,
       validationSchema,
     },
     handler: {
       setSelectedTime,
+      setStartDate,
     },
   };
 };
+
 export default usePersonalExpensesModelStep2;

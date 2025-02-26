@@ -12,6 +12,7 @@ interface DatePickerComponentProps {
   containerClass?: string;
   labelClass?: string;
   isRequired?: boolean;
+  onChange?: (date: Date) => void;
 }
 
 const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
@@ -20,6 +21,7 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
   containerClass,
   labelClass,
   isRequired = false,
+  onChange,
 }) => {
   const [showPicker, setShowPicker] = useState(false);
   const [field, meta, helpers] = useField(name);
@@ -28,6 +30,9 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
     setShowPicker(false);
     if (date) {
       helpers.setValue(date);
+      if (onChange) {
+        onChange(date);
+      }
     }
   };
 
