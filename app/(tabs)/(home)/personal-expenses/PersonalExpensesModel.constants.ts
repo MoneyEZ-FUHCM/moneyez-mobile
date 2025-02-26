@@ -1,7 +1,6 @@
 import { AntDesign } from "@expo/vector-icons";
 import React from "react";
-
-export const MODELS = [
+const MODELS = [
   {
     name: "JARs",
     description:
@@ -20,7 +19,7 @@ export const MODELS = [
   { name: "Tùy chọn" },
 ];
 
-export const STEPS = [
+const STEPS = [
   {
     label: "Mô hình",
     icon: React.createElement(AntDesign, {
@@ -49,3 +48,7 @@ export const STEPS = [
     isActive: false,
   },
 ];
+
+const PERSONAL_EXPENSES_MODEL_CONSTANTS = { MODELS, STEPS };
+
+export default PERSONAL_EXPENSES_MODEL_CONSTANTS;

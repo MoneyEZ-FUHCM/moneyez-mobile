@@ -8,8 +8,9 @@ import { router } from "expo-router";
 import React from "react";
 import { View, Text, TouchableOpacity, TextInput } from "react-native";
 import TEXT_TRANSLATE_PERSONAL_EXPENSES from "./PersonalExpensesModel.translate";
-import { MODELS, STEPS } from "./PersonalExpensesModel.constants";
 import { usePersonalExpensesModel } from "./UsePersonalExpensesModel";
+import PERSONAL_EXPENSES_MODEL_CONSTANTS from "./PersonalExpensesModel.constants";
+import { PATH_NAME } from "@/helpers/constants/pathname";
 
 const PersonalExpensesModel = () => {
   const {
@@ -20,6 +21,9 @@ const PersonalExpensesModel = () => {
     isModalVisible,
     setIsModalVisible,
   } = usePersonalExpensesModel();
+  const MODELS = PERSONAL_EXPENSES_MODEL_CONSTANTS.MODELS;
+  const STEPS = PERSONAL_EXPENSES_MODEL_CONSTANTS.STEPS;
+  const { HOME } = PATH_NAME;
 
   return (
     <SafeAreaViewCustom>
@@ -128,7 +132,12 @@ const PersonalExpensesModel = () => {
       </View>
 
       {/* Next Button */}
-      <TouchableOpacity className="mx-4 mt-10 items-center rounded-lg bg-primary p-4">
+      <TouchableOpacity
+        onPress={() =>
+          router.navigate(HOME.PERSONAL_EXPENSES_MODEL_STEP_2 as any)
+        }
+        className="mx-4 mt-10 items-center rounded-lg bg-primary p-4"
+      >
         <Text className="font-semibold text-white">
           {TEXT_TRANSLATE_PERSONAL_EXPENSES.NEXT_BUTTON}
         </Text>

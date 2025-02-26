@@ -36,6 +36,8 @@ const PATH_NAME = {
     PERIOD_HISTORY: "period-history/PeriodHistory",
     PERIOD_HISTORY_DETAIL: "period-history/PeriodHistoryDetail",
     PERSONAL_EXPENSES_MODEL: "personal-expenses/PersonalExpensesModel",
+    PERSONAL_EXPENSES_MODEL_STEP_2:
+      "personal-expenses/PersonalExpensesModelStep2",
   },
   ACCOUNT: {
     ACCOUNT_SETTING: "setting/AccountSetting",
