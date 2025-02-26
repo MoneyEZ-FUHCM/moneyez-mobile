@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export const usePersonalExpensesModel = () => {
+const usePersonalExpensesModel = () => {
   const [selectedModel, setSelectedModel] = useState("80-20");
   const [customModel, setCustomModel] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -18,3 +18,4 @@ export const usePersonalExpensesModel = () => {
     },
   };
 };
+export default usePersonalExpensesModel;
