@@ -15,8 +15,7 @@ import { Formik } from "formik";
 const PersonalExpensesModelStep2 = () => {
   const STEPS = PERSONAL_EXPENSES_MODEL_CONSTANTS.STEPS;
   const TIME_OPTIONS = PERSONAL_EXPENSES_MODEL_CONSTANTS.TIME_OPTIONS;
-  const { selectedTime, setSelectedTime, validationSchema } =
-    usePersonalExpensesModelStep2();
+  const { handler, state } = usePersonalExpensesModelStep2();
 
   return (
     <SafeAreaViewCustom>
@@ -77,7 +76,7 @@ const PersonalExpensesModelStep2 = () => {
 
       <Formik
         initialValues={{ startDate: "" }}
-        validationSchema={validationSchema}
+        validationSchema={state.validationSchema}
         onSubmit={() => {}}
       >
         {() => (
@@ -101,9 +100,9 @@ const PersonalExpensesModelStep2 = () => {
               {TIME_OPTIONS.map((option) => (
                 <TouchableOpacity
                   key={option}
-                  onPress={() => setSelectedTime(option)}
+                  onPress={() => handler.setSelectedTime(option)}
                   className={`mt-2 rounded-lg border border-gray-300 p-3 ${
-                    selectedTime === option
+                    state.selectedTime === option
                       ? "bg-superlight text-sm font-semibold"
                       : "bg-white"
                   }`}
