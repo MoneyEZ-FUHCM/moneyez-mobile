@@ -2,12 +2,12 @@ import { SafeAreaViewCustom } from "@/components";
 import React from "react";
 import { Text } from "react-native";
 
-const Setting = () => {
+const GroupSetting = () => {
   return (
     <SafeAreaViewCustom>
-      <Text>Setting</Text>
+      <Text>GroupSetting</Text>
     </SafeAreaViewCustom>
   );
 };
 
-export default Setting;
+export default GroupSetting;

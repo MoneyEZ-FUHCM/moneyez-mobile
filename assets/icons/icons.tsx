@@ -27,7 +27,7 @@ export const icons = {
   member: (props: { color: string; size: number }) => (
     <Feather name="users" {...props} />
   ),
-  setting: (props: { color: string; size: number }) => (
+  "group-setting": (props: { color: string; size: number }) => (
     <AntDesign name="setting" {...props} />
   ),
 };

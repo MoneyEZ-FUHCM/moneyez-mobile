@@ -2,7 +2,7 @@ import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { Stack } from "expo-router";
 import React from "react";
 
-export default function SettingLayout() {
+export default function GroupSettingLayout() {
   const { CONDITION, ANIMATION_NAVIGATE_STACK } = COMMON_CONSTANT;
 
   return (

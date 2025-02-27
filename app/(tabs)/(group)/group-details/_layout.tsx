@@ -40,7 +40,7 @@ export default function GroupDetailTabLayout() {
         }}
       />
       <Tabs.Screen
-        name={BOTTOM_TAB_NAME.SETTING}
+        name={BOTTOM_TAB_NAME.GROUP_SETTING}
         options={{
           title: BOTTOM_TAB_TRANSLATE.SETTING,
         }}

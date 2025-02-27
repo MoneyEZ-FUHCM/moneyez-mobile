@@ -62,6 +62,7 @@ const COMMON_CONSTANT = {
     TRANSACTION: "transaction",
     MEMBER: "member",
     SETTING: "setting",
+    GROUP_SETTING: "group-setting",
   },
 
   BOTTOM_TAB_TRANSLATE: {

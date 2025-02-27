@@ -9,7 +9,7 @@ interface TabState {
 const initialState: TabState = {
   mainTabHidden: false,
   groupTabHidden: false,
-  groupRoutes: ["group-home", "transaction", "member", "setting"],
+  groupRoutes: ["group-home", "transaction", "member", "group-setting"],
 };
 
 const tabSlice = createSlice({
