@@ -37,8 +37,8 @@ const usePersonalExpensesModel = () => {
       // Prevent jumping directly from step 1 to step 3
       return;
     }
-    if (newStep < step && step === 3 && newStep !== 2) {
-      // Prevent going back more than one step from step 3
+    if (newStep < step && step === 3 && newStep !== 1 && newStep !== 2) {
+      // Allow going back to step 1 and step 2 from step 3
       return;
     }
     setStep(newStep);

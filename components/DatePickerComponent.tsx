@@ -3,7 +3,7 @@ import DateTimePicker, {
 } from "@react-native-community/datetimepicker";
 import { useField } from "formik";
 import { Calendar } from "iconsax-react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 interface DatePickerComponentProps {
@@ -13,6 +13,7 @@ interface DatePickerComponentProps {
   labelClass?: string;
   isRequired?: boolean;
   onChange?: (date: Date) => void;
+  selectedDate?: string;
 }
 
 const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
@@ -22,9 +23,16 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
   labelClass,
   isRequired = false,
   onChange,
+  selectedDate,
 }) => {
   const [showPicker, setShowPicker] = useState(false);
   const [field, meta, helpers] = useField(name);
+
+  useEffect(() => {
+    if (selectedDate) {
+      helpers.setValue(new Date(selectedDate));
+    }
+  }, [selectedDate]);
 
   const handleChange = (event: DateTimePickerEvent, date?: Date) => {
     setShowPicker(false);

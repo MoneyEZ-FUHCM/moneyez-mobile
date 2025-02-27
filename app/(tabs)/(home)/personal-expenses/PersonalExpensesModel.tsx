@@ -149,6 +149,7 @@ const PersonalExpensesModel = () => {
                   name="startDate"
                   label={TEXT_TRANSLATE_PERSONAL_EXPENSES.START_DATE}
                   labelClass="text-md font-semibold text-primary"
+                  selectedDate={state.startDate} // Add this line to set the selected date
                   onChange={(date: Date) =>
                     handler.setStartDate(date.toISOString().split("T")[0])
                   }
@@ -164,7 +165,7 @@ const PersonalExpensesModel = () => {
                     onPress={() => handler.setSelectedTime(option)}
                     className={`mt-2 rounded-lg border border-gray-300 p-3 ${
                       state.selectedTime === option
-                        ? "bg-superlight text-sm font-semibold"
+                        ? "bg-secondary text-sm font-semibold"
                         : "bg-white"
                     }`}
                   >
@@ -184,18 +185,14 @@ const PersonalExpensesModel = () => {
           </View>
 
           {/* Ngày bắt đầu & Thời hạn */}
-          <View className="mb-4 rounded-lg bg-white p-4 shadow-sm">
-            <View className="flex-row justify-between">
+          <View className="mb-4 flex-row justify-between rounded-lg bg-white p-4 shadow-sm">
+            <View className="flex-col justify-between">
               <Text className="font-semibold text-primary">Ngày bắt đầu</Text>
-              <Text className="-translate-x-16 font-semibold text-primary">
-                Thời hạn
-              </Text>
-            </View>
-            <View className="mt-1 flex-row justify-between">
               <Text className="text-md">{state.startDate}</Text>
-              <Text className="text-md -translate-x-[68px]">
-                {state.selectedTime}
-              </Text>
+            </View>
+            <View className="mt-1 flex-col justify-between pr-14">
+              <Text className="font-semibold text-primary">Thời hạn</Text>
+              <Text className="text-md">{state.selectedTime}</Text>
             </View>
           </View>
 
