@@ -1,4 +1,4 @@
-const GROUP_CONFIG_CONSTANT = {
+const GROUP_HOME_DEFAULT_CONSTANT = {
   RECENT_ACTIVITIES: [
     {
       name: "Phạm Nhật Linh",
@@ -26,4 +26,4 @@ const GROUP_CONFIG_CONSTANT = {
   GROUP_FUND_ROUTE: "group-fund/GroupFund",
 };
 
-export default GROUP_CONFIG_CONSTANT;
+export default GROUP_HOME_DEFAULT_CONSTANT;

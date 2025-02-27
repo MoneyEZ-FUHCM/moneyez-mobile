@@ -43,7 +43,8 @@ const PATH_NAME = {
 
   // Group-detail
   GROUP_HOME: {
-    GROUP_HOME_DEFAULT: "group-details/group-home/config-group/ConfigGroup",
+    GROUP_HOME_DEFAULT:
+      "group-details/group-home/group-home-default/GroupHomeDefault",
     CREATE_FUND: "group-details/group-home/create-fund/CreateFund",
   },
   MEMBER: {

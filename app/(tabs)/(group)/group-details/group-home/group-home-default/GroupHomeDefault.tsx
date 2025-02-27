@@ -13,13 +13,13 @@ import {
   View,
 } from "react-native";
 import { Icon } from "react-native-paper";
-import GROUP_CONFIG_CONSTANT from "./ConfigGroup.constant";
-import TEXT_TRANSLATE_CONFIG_GROUP from "./ConfigGroup.translate";
-import useConfigGroup from "./hooks/useConfigGroup";
+import GROUP_HOME_DEFAULT_CONSTANT from "./GroupHomeDefault.constant";
+import TEXT_TRANSLATE_GROUP_HOME_DEFAULT from "./GroupHomeDefault.translate";
+import useGroupHomeDefault from "./hooks/useGroupHomeDefault";
 
-const CreateGroup = () => {
-  const { TITLE, TEXT } = TEXT_TRANSLATE_CONFIG_GROUP;
-  const { state, handler } = useConfigGroup();
+const GroupHomeDefault = () => {
+  const { TITLE, TEXT } = TEXT_TRANSLATE_GROUP_HOME_DEFAULT;
+  const { state, handler } = useGroupHomeDefault();
 
   return (
     <SafeAreaViewCustom>
@@ -124,7 +124,9 @@ const CreateGroup = () => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() =>
-              router.navigate(GROUP_CONFIG_CONSTANT.GROUP_FUND_ROUTE as any)
+              router.navigate(
+                GROUP_HOME_DEFAULT_CONSTANT.GROUP_FUND_ROUTE as any,
+              )
             }
             className="mt-2 flex-row items-center justify-between rounded-lg bg-white px-2 py-3"
           >
@@ -208,4 +210,4 @@ const CreateGroup = () => {
   );
 };
 
-export default CreateGroup;
+export default GroupHomeDefault;

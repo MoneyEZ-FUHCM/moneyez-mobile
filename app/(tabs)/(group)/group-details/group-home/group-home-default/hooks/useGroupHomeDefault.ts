@@ -2,13 +2,13 @@ import { setGroupTabHidden, setMainTabHidden } from "@/redux/slices/tabSlice";
 import { router } from "expo-router";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import GROUP_CONFIG_CONSTANT from "../ConfigGroup.constant";
+import GROUP_HOME_DEFAULT_CONSTANT from "../GroupHomeDefault.constant";
 
-const useConfigGroup = () => {
+const useGroupHomeDefault = () => {
   const dispatch = useDispatch();
   const [selectedTab, setSelectedTab] = useState("contribution");
-  const recentActivities = GROUP_CONFIG_CONSTANT.RECENT_ACTIVITIES;
-  const contactList = GROUP_CONFIG_CONSTANT.CONTACT_LIST;
+  const recentActivities = GROUP_HOME_DEFAULT_CONSTANT.RECENT_ACTIVITIES;
+  const contactList = GROUP_HOME_DEFAULT_CONSTANT.CONTACT_LIST;
 
   const handleBack = () => {
     router.back();
@@ -28,4 +28,4 @@ const useConfigGroup = () => {
   };
 };
 
-export default useConfigGroup;
+export default useGroupHomeDefault;
