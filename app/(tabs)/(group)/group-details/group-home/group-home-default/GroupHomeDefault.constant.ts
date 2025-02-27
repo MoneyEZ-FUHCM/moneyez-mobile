@@ -1,29 +1,36 @@
-const GROUP_HOME_DEFAULT_CONSTANT = {
-  RECENT_ACTIVITIES: [
-    {
-      name: "Phạm Nhật Linh",
-      email: "phamnhatlinh20303@gmail.com",
-      isOwner: true,
-      avatar: "https://randomuser.me/api/portraits/men/1.jpg",
-    },
-    {
-      name: "Đặng Ngọc Minh Trí",
-      email: "tridnml1235452@fpt.edu.vn",
-      avatar: "https://randomuser.me/api/portraits/men/2.jpg",
-    },
-    {
-      name: "Nguyễn Văn A",
-      email: "nguyenvana@example.com",
-      avatar: "https://randomuser.me/api/portraits/men/3.jpg",
-    },
-    {
-      name: "Trần Thị B",
-      email: "tranthib@example.com",
-      avatar: "https://randomuser.me/api/portraits/women/1.jpg",
-    },
-  ],
-  CONTACT_LIST: ["Add New", "Peter", "Rodney", "Victoria"],
-  GROUP_FUND_ROUTE: "group-fund/GroupFund",
-};
+const RECENT_ACTIVITIES = [
+  {
+    type: "Góp quỹ",
+    name: "Phạm Nhật Linh",
+    comment: "Test tính năng góp quỹ",
+    date: "13/01/2025",
+    amount: "+10.000đ",
+    avatar: "https://cdn-icons-png.flaticon.com/512/6858/6858578.png",
+  },
+  {
+    type: "Rút quỹ",
+    name: "Phạm Nhật Linh",
+    comment: "thiếu nợ",
+    date: "25/12/2024",
+    amount: "-3.000đ",
+    avatar: "https://cdn-icons-png.flaticon.com/512/6858/6858578.png",
+  },
+  {
+    type: "Góp quỹ",
+    name: "Dương Tôn Bảo",
+    comment: "Góp vào quỹ chung",
+    date: "18/12/2024",
+    amount: "+1.000đ",
+    avatar: "https://cdn-icons-png.flaticon.com/512/6858/6858578.png",
+  },
+  {
+    type: "Góp quỹ",
+    name: "Đặng Phan Gia Đức",
+    comment: "Góp vào quỹ chung",
+    date: "18/12/2024",
+    amount: "+1.000đ",
+    avatar: "https://cdn-icons-png.flaticon.com/512/6858/6858578.png",
+  },
+];
 
-export default GROUP_HOME_DEFAULT_CONSTANT;
+export default RECENT_ACTIVITIES;
