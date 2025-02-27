@@ -69,6 +69,8 @@ export const usePieChart = (data: PieChartData[]) => {
   );
 
   const handlePress = (index: number) => {
+    if (index === selectedIndex) return;
+
     setSelectedIndex(index);
     labelOpacity.value = 0;
     labelOpacity.value = withTiming(1, { duration: 500 });
