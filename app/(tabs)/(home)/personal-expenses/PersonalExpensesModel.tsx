@@ -10,7 +10,6 @@ import { Formik } from "formik";
 import React from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import usePersonalExpensesModel from "./hooks/usePersonalExpensesModel";
-import usePersonalExpensesModelStep2 from "./hooks/usePersonalExpensesModelStep2";
 import PERSONAL_EXPENSES_MODEL_CONSTANTS, {
   TIME_OPTIONS,
 } from "./PersonalExpensesModel.constants";
@@ -18,7 +17,6 @@ import TEXT_TRANSLATE_PERSONAL_EXPENSES from "./PersonalExpensesModel.translate"
 
 const PersonalExpensesModel = () => {
   const { state, handler } = usePersonalExpensesModel();
-  const { state: state2, handler: handler2 } = usePersonalExpensesModelStep2();
   const MODELS = PERSONAL_EXPENSES_MODEL_CONSTANTS.MODELS;
   const STEPS = PERSONAL_EXPENSES_MODEL_CONSTANTS.STEPS;
 
@@ -113,7 +111,7 @@ const PersonalExpensesModel = () => {
                       handler.setSelectedModel(model.name);
                     }}
                   >
-                    <Entypo name="info-with-circle" size={24} color="#000000" />
+                    <Entypo name="info-with-circle" size={18} color="#609084" />
                   </TouchableOpacity>
                 )}
               </View>
@@ -140,21 +138,19 @@ const PersonalExpensesModel = () => {
       ) : state.step === 2 ? (
         <Formik
           initialValues={{ startDate: "" }}
-          validationSchema={state2.validationSchema}
+          validationSchema={handler.validationSchema}
           onSubmit={() => {}}
         >
           {() => (
             <View className="mx-4 mt-4 rounded-lg bg-white p-4 shadow-md">
               <View className="">
-                <Text className="text-md font-semibold text-primary">
-                  {TEXT_TRANSLATE_PERSONAL_EXPENSES.START_DATE}
-                </Text>
                 <DatePickerComponent
+                  isRequired
                   name="startDate"
-                  label=""
-                  labelClass="text-text-gray text-[12px] font-bold"
+                  label={TEXT_TRANSLATE_PERSONAL_EXPENSES.START_DATE}
+                  labelClass="text-md font-semibold text-primary"
                   onChange={(date: Date) =>
-                    handler2.setStartDate(date.toISOString().split("T")[0])
+                    handler.setStartDate(date.toISOString().split("T")[0])
                   }
                 />
               </View>
@@ -165,9 +161,9 @@ const PersonalExpensesModel = () => {
                 {TIME_OPTIONS.map((option) => (
                   <TouchableOpacity
                     key={option}
-                    onPress={() => handler2.setSelectedTime(option)}
+                    onPress={() => handler.setSelectedTime(option)}
                     className={`mt-2 rounded-lg border border-gray-300 p-3 ${
-                      state2.selectedTime === option
+                      state.selectedTime === option
                         ? "bg-superlight text-sm font-semibold"
                         : "bg-white"
                     }`}
@@ -196,9 +192,9 @@ const PersonalExpensesModel = () => {
               </Text>
             </View>
             <View className="mt-1 flex-row justify-between">
-              <Text className="text-md">{state2.startDate}</Text>
+              <Text className="text-md">{state.startDate}</Text>
               <Text className="text-md -translate-x-[68px]">
-                {state2.selectedTime}
+                {state.selectedTime}
               </Text>
             </View>
           </View>
@@ -230,7 +226,7 @@ const PersonalExpensesModel = () => {
             if (state.step === 3) {
               return;
             }
-            handler.setStep((prev) => prev + 1);
+            handler.setStep(state.step + 1);
           }}
           className="mt-10 w-1/2 flex-1 items-center rounded-lg bg-primary p-3"
         >

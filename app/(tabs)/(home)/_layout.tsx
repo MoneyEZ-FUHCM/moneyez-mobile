@@ -19,7 +19,6 @@ export default function HomeLayout() {
       <Stack.Screen name={HOME.ADD_TRANSACTION} />
       <Stack.Screen name={HOME.TRANSACTION_HISTORY} />
       <Stack.Screen name={HOME.PERSONAL_EXPENSES_MODEL} />
-      <Stack.Screen name={HOME.PERSONAL_EXPENSES_MODEL_STEP_2} />
       <Stack.Screen name={HOME.PERIOD_HISTORY} />
       <Stack.Screen name={HOME.PERIOD_HISTORY_DETAIL} />
     </Stack>

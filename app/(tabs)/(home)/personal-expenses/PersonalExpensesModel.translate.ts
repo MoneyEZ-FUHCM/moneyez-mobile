@@ -9,6 +9,7 @@ const TEXT_TRANSLATE_PERSONAL_EXPENSES = {
   NEXT_BUTTON: "Tiếp Theo",
   START_DATE: "Ngày Bắt Đầu",
   PERIOD: "Khoảng Thời Gian",
+  EMPTY_VALIDATION: "Ngày bắt đầu không được để trống",
   MODAL_TITLE: (modelName: string) => `Mô hình "${modelName}"`,
 };
 
