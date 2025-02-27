@@ -1,13 +1,15 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { Text, View } from "react-native";
 import { PieChart } from "react-native-gifted-charts";
-import Animated, { useAnimatedStyle } from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 import { usePieChart } from "./hooks/usePieChart";
 
-interface PieChartData {
+export interface PieChartData {
+  percentage: number;
   label: string;
   value: number;
   color: string;
+  id: number;
 }
 
 interface PieChartCustomProps {
@@ -15,72 +17,62 @@ interface PieChartCustomProps {
   title: string;
 }
 
-const PieChartCustom = React.memo(({ data, title }: PieChartCustomProps) => {
-  const { state } = usePieChart(data);
-  const { opacity, scale, pieData, highestData, formattedData } = state;
-
-  const animatedContainerStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-  }));
-
-  const animatedPieStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
-
-  const renderDot = (color: string) => (
-    <View
-      className="mr-2 h-2.5 w-2.5 rounded-full"
-      style={{ backgroundColor: color }}
-    />
-  );
-
-  const renderDetailComponent = useMemo(
-    () => (
-      <View className="mt-3 flex-row flex-wrap justify-between px-1">
-        {formattedData.map((item, index) => (
-          <View key={index} className="mb-2 flex-row items-center">
-            {renderDot(item.color)}
-            <Text className="text-black">{`${item.label}: ${item.percentage}%`}</Text>
-          </View>
-        ))}
+const RenderDetailComponent = ({ pieData }: { pieData: PieChartData[] }) => (
+  <View className="mt-3 flex-row flex-wrap justify-between px-1">
+    {pieData.map((item) => (
+      <View key={item.id} className="mb-2 flex-row items-center">
+        <View
+          className="mr-2 h-2.5 w-2.5 rounded-full"
+          style={{ backgroundColor: item.color }}
+        />
+        <Text className="text-black">{`${item.label}: ${item.percentage}%`}</Text>
       </View>
-    ),
-    [formattedData],
-  );
+    ))}
+  </View>
+);
+
+const PieChartCustom = React.memo(({ data, title }: PieChartCustomProps) => {
+  const { state, handler } = usePieChart(data);
 
   return (
-    <Animated.View style={animatedContainerStyle}>
+    <View>
       <Text className="text-base font-bold">{title}</Text>
       <View className="items-center">
-        <Animated.View style={animatedPieStyle}>
+        <Animated.View style={state.animatedStyles.pie}>
           <PieChart
-            data={pieData}
+            data={state.pieData.map((item: any, index: any) => ({
+              ...item,
+              focused: index === state.selectedIndex,
+            }))}
             donut
             showGradient
             sectionAutoFocus
             animationDuration={1000}
-            radius={120}
-            showTooltip
-            innerRadius={60}
+            radius={140}
+            showText
+            showValuesAsTooltipText
+            innerRadius={80}
             centerLabelComponent={() =>
-              highestData?.percentage !== undefined ? (
-                <View className="items-center justify-center">
-                  <Text className="text-2xl font-bold text-black">
-                    {highestData?.percentage
-                      ? `${highestData.percentage}%`
-                      : ""}
+              state.selectedIndex !== null && state.isRotated ? (
+                <Animated.View
+                  style={state.animatedStyles.fadeIn}
+                  className="items-center justify-center px-2"
+                >
+                  <Text className="text-3xl font-bold text-black">
+                    {`${data[state.selectedIndex].percentage}%`}
                   </Text>
-                  <Text className="text-base text-black">
-                    {highestData?.label || ""}
+                  <Text className="text-center text-sm text-text-gray">
+                    {data[state.selectedIndex].label}
                   </Text>
-                </View>
+                </Animated.View>
               ) : null
             }
+            onPress={(_item: any, index: number) => handler.handlePress(index)}
           />
         </Animated.View>
       </View>
-      {renderDetailComponent}
-    </Animated.View>
+      <RenderDetailComponent pieData={state.pieData} />
+    </View>
   );
 });
 
