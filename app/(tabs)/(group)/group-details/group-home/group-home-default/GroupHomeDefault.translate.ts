@@ -1,23 +1,58 @@
 const TEXT_TRANSLATE_GROUP_HOME_DEFAULT = {
-  TITLE: "Nhóm Của Bạn",
-  BUTTON: {
-    CREATE_GROUP: "Tạo quỹ",
+  // Title
+  TITLE: {
+    CREATE_NEW_GROUP: "Tạo nhóm mới",
+    GROUP_FUNDS: "Quỹ của nhóm",
   },
+
+  // Steps
+  STEPS: {
+    INFORMATION: "Thông tin",
+  },
+
+  // Button
+  BUTTON: {
+    NEXT: "Tiếp Theo",
+    CONTRIBUTE: "Góp quỹ",
+    WITHDRAW: "Rút quỹ",
+    ACTIVATE: "Kích hoạt",
+    VIEW_ALL: "Xem tất cả",
+  },
+
+  // Placeholder
+  PLACEHOLDER: {
+    ENTER_GROUP_NAME: "Nhập tên nhóm",
+    ENTER_DESCRIPTION: "Nhập mô tả",
+    ENTER_CURRENT_BALANCE: "Nhập số dư hiện tại",
+  },
+
+  // Text
   TEXT: {
-    CONTACT: "Liên Hệ",
-    ENTER_EMAIL: "Nhập Gmail Của bạn",
-    CONTACT_FROM_CONTACTS: "Liên hệ từ liên hệ",
-    VIEW_MORE: "Xem thêm",
-    CURRENT_GROUP: "Nhóm hiện tại",
-    GROUP_REMINDER: "Nhắc quỹ nhóm",
-    CREATE_FUND: "Tạo quỹ",
-    SET_RECURRING_REMINDER: "Đặt lịch nhắc góp định kỳ",
-    CONTRIBUTION: "Đang góp",
-    DONE: "Đã xong",
-    REMINDER: "Lời nhắc",
-    REMINDER_TEXT: "Cùng nhau góp quỹ nhé!",
-    CONTRIBUTION_AMOUNT: "10.000.000 / 1.000.000.000đ",
-    CONTRIBUTE: "Góp Quỹ",
+    GROUP_NAME: "Tên nhóm",
+    DESCRIPTION: "Mô tả",
+    CURRENT_BALANCE: "Số dư hiện tại",
+    FUND_OVERVIEW: "🌿 Tích lũy cho tương lai",
+    FUND_AMOUNT: "10.000đ",
+    FUND_GOAL: "Tạo mục tiêu và hiện thực ước mơ nhé",
+    AUTO_SAVE: "Sinh lời tự động mỗi ngày",
+    ONLY_FROM: "Chỉ từ 20.000đ",
+    IN_FUND: "trong quỹ",
+    EARN_UP_TO: "Sinh lời đến",
+    PER_YEAR: "4%/năm",
+    FLEXIBLE_PAYMENT: "Thanh toán linh hoạt",
+    REMIND_CONTRIBUTE: "Nhắc góp quỹ",
+    QR_CONTRIBUTE: "QR góp quỹ",
+    STATISTICS: "Thống kê",
+    RECENT_ACTIVITIES: "Hoạt động gần đây",
+    NEW: "Mới",
+  },
+  // Validation Messages
+  MESSAGE_VALIDATE: {
+    GROUP_NAME_REQUIRED: "Tên nhóm không được để trống",
+    DESCRIPTION_REQUIRED: "Mô tả không được để trống",
+    CURRENT_BALANCE_REQUIRED: "Số dư hiện tại không được để trống",
+    CURRENT_BALANCE_INVALID: "Số dư hiện tại phải là một số hợp lệ",
+    ALL_FIELDS_REQUIRED: "Vui lòng điền đầy đủ và chính xác tất cả các trường.",
   },
 };
 

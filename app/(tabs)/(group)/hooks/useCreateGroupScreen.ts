@@ -77,7 +77,7 @@ const useCreateGroupScreen = () => {
   const handleSubmit = () => {
     if (validateFields()) {
       // Proceed with form submission
-      router.navigate(PATH_NAME.GROUP.CREATE_GROUP_STEP_2 as any);
+      router.replace(PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT as any);
     } else {
       Alert.alert("Lỗi", MESSAGE_VALIDATE.ALL_FIELDS_REQUIRED);
     }
