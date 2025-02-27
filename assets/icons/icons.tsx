@@ -1,24 +1,33 @@
 import {
   AntDesign,
+  Feather,
   FontAwesome6,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
 
 export const icons = {
-  "(home)": (props: { color: string }) => (
-    <AntDesign name="home" size={26} {...props} />
+  "(home)": (props: { color: string; size: number }) => (
+    <AntDesign name="home" {...props} />
   ),
-  "(bot)": (props: { color: string }) => (
-    <FontAwesome6 name="snapchat" size={26} {...props} />
+  "(bot)": (props: { color: string; size: number }) => (
+    <FontAwesome6 name="snapchat" {...props} />
   ),
-  "(group)": (props: { color: string }) => (
-    <AntDesign name="team" size={26} {...props} />
+  "(group)": (props: { color: string; size: number }) => (
+    <AntDesign name="team" {...props} />
   ),
-  "(account)": (props: { color: string }) => (
-    <MaterialCommunityIcons
-      name="account-circle-outline"
-      size={26}
-      {...props}
-    />
+  "(account)": (props: { color: string; size: number }) => (
+    <MaterialCommunityIcons name="account-circle-outline" {...props} />
+  ),
+  "group-home": (props: { color: string; size: number }) => (
+    <AntDesign name="home" {...props} />
+  ),
+  transaction: (props: { color: string; size: number }) => (
+    <FontAwesome6 name="money-bill-transfer" {...props} />
+  ),
+  member: (props: { color: string; size: number }) => (
+    <Feather name="users" {...props} />
+  ),
+  "group-setting": (props: { color: string; size: number }) => (
+    <AntDesign name="setting" {...props} />
   ),
 };

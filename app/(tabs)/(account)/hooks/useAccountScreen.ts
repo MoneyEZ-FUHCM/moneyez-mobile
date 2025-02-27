@@ -4,7 +4,7 @@ import useHideTabbar from "@/hooks/useHideTabbar";
 import useLogout from "@/hooks/useLogout";
 import useUploadImage from "@/hooks/useUploadImage";
 import { setLoading } from "@/redux/slices/loadingSlice";
-import { setHiddenTabbar } from "@/redux/slices/tabSlice";
+import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { selectUserInfo, setUserInfo } from "@/redux/slices/userSlice";
 import { useUpdateInfoMutation } from "@/services/user";
 import { router } from "expo-router";
@@ -55,7 +55,7 @@ const useAccountScreen = () => {
   });
 
   const handleBack = () => {
-    dispatch(setHiddenTabbar(false));
+    dispatch(setMainTabHidden(false));
     router.back();
   };
 

@@ -53,18 +53,27 @@ const COMMON_CONSTANT = {
     LIGHT: "light" as ThemeColorTypes,
   },
 
-  BOTTOM_TABLE_NAME: {
+  BOTTOM_TAB_NAME: {
     HOME: "(home)",
     BOT: "(bot)",
     GROUP: "(group)",
     ACCOUNT: "(account)",
+    GROUP_HOME: "group-home",
+    TRANSACTION: "transaction",
+    MEMBER: "member",
+    SETTING: "setting",
+    GROUP_SETTING: "group-setting",
   },
 
-  BOTTOM_TABLE_TRANSLATE: {
+  BOTTOM_TAB_TRANSLATE: {
     HOME: "Trang chủ",
     BOT: "Trợ lý ảo",
     GROUP: "Nhóm",
     ACCOUNT: "Tài khoản",
+    GROUP_HOME: "Trang chủ",
+    TRANSACTION: "Giao dịch",
+    MEMBER: "Thành viên",
+    SETTING: "Cài đặt",
   },
 
   SYSTEM_ERROR: {

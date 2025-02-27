@@ -1,10 +1,8 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
-import { PATH_NAME } from "@/helpers/constants/pathname";
 import { Stack } from "expo-router";
 import React from "react";
-import "../../../globals.css";
 
-export default function GroupLayout() {
+export default function MemberLayout() {
   const { CONDITION, ANIMATION_NAVIGATE_STACK } = COMMON_CONSTANT;
 
   return (
@@ -15,8 +13,7 @@ export default function GroupLayout() {
         animation: ANIMATION_NAVIGATE_STACK.SLIDE_FROM_RIGHT,
       }}
     >
-      <Stack.Screen name={PATH_NAME.GROUP.GROUP_LIST} />
-      <Stack.Screen name="group-details" options={{ headerShown: false }} />
+      <Stack.Screen name="Member" options={{ headerShown: false }} />
     </Stack>
   );
 }

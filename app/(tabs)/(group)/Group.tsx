@@ -4,11 +4,13 @@ import {
   SectionComponent,
 } from "@/components";
 import { PATH_NAME } from "@/helpers/constants/pathname";
+import { setGroupTabHidden, setMainTabHidden } from "@/redux/slices/tabSlice";
 import { router } from "expo-router";
 import { Eye, EyeSlash } from "iconsax-react-native";
 import React, { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import Svg, { Path, Rect } from "react-native-svg";
+import { useDispatch } from "react-redux";
 import GROUP_LIST from "./GroupList.constant";
 import TEXT_TRANSLATE_GROUP_LIST from "./GroupList.translate";
 
@@ -16,6 +18,7 @@ const Group = () => {
   const funds = GROUP_LIST;
   const { TITLE, BUTTON } = TEXT_TRANSLATE_GROUP_LIST;
   const [visible, setVisible] = useState(false);
+  const dispatch = useDispatch();
 
   const VisibilityIcon = ({
     visible,
@@ -70,8 +73,11 @@ const Group = () => {
         renderItem={({ item }) => (
           <TouchableOpacity
             className="mb-3 flex-row items-center rounded-xl border border-gray-300 bg-white p-4 shadow-md"
-            // onPress={() => router.navigate(PATH_NAME.GROUP.GROUP_DETAIL as any, { id: item.id })}
-            onPress={() => router.navigate(PATH_NAME.GROUP.GROUP_DETAIL as any)}
+            onPress={() => {
+              router.navigate(PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT as any);
+              dispatch(setMainTabHidden(true));
+              dispatch(setGroupTabHidden(false));
+            }}
           >
             <Svg width="64" height="64" viewBox="0 0 64 64" fill="none">
               <Rect width="64" height="64" fill="#E5E7EB" />

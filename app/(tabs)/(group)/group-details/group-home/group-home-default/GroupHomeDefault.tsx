@@ -1,30 +1,30 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  Image,
-  ScrollView,
-  ImageBackground,
-} from "react-native";
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
+import { PATH_NAME } from "@/helpers/constants/pathname";
 import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
+import React from "react";
+import {
+  Image,
+  ImageBackground,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Icon } from "react-native-paper";
-import GROUP_CONFIG_CONSTANT from "./ConfigGroup.constant";
-import TEXT_TRANSLATE_CONFIG_GROUP from "./ConfigGroup.translate";
+import GROUP_HOME_DEFAULT_CONSTANT from "./GroupHomeDefault.constant";
+import TEXT_TRANSLATE_GROUP_HOME_DEFAULT from "./GroupHomeDefault.translate";
+import useGroupHomeDefault from "./hooks/useGroupHomeDefault";
 
-const CreateGroup = () => {
-  const [selectedTab, setSelectedTab] = useState("contribution");
-  const { TITLE, TEXT } = TEXT_TRANSLATE_CONFIG_GROUP;
-  const recentActivities = GROUP_CONFIG_CONSTANT.RECENT_ACTIVITIES;
-  const contactList = GROUP_CONFIG_CONSTANT.CONTACT_LIST;
+const GroupHomeDefault = () => {
+  const { TITLE, TEXT } = TEXT_TRANSLATE_GROUP_HOME_DEFAULT;
+  const { state, handler } = useGroupHomeDefault();
 
   return (
     <SafeAreaViewCustom>
       <SectionComponent rootClassName="flex-row justify-between items-center h-14 px-4">
-        <TouchableOpacity onPress={router.back}>
+        <TouchableOpacity onPress={handler.handleBack}>
           <AntDesign name="arrowleft" size={24} color="#000000" />
         </TouchableOpacity>
         <View className="flex-row items-center gap-1">
@@ -62,7 +62,7 @@ const CreateGroup = () => {
             </TouchableOpacity>
           </View>
           <ScrollView horizontal className="mb-6">
-            {contactList.map((item, index) => (
+            {state.contactList?.map((item, index) => (
               <View key={index} className="mr-4 items-center">
                 <TouchableOpacity className="h-16 w-16 items-center justify-center rounded-full bg-gray-200">
                   {item === "Add New" ? (
@@ -88,7 +88,7 @@ const CreateGroup = () => {
               <Text className="text-blue-500">{TEXT.VIEW_MORE}</Text>
             </TouchableOpacity>
           </View>
-          {recentActivities.map((member, index) => (
+          {state.recentActivities?.map((member, index) => (
             <View key={index} className="mb-3 flex-row items-center">
               <Image
                 source={{
@@ -108,7 +108,12 @@ const CreateGroup = () => {
         </View>
         <View className="mx-4 mt-4 rounded-2xl bg-superlight p-4 shadow-md">
           <Text className="mb-2 font-semibold">{TEXT.GROUP_REMINDER}</Text>
-          <TouchableOpacity className="flex-row items-center justify-between rounded-lg bg-white px-2 py-3">
+          <TouchableOpacity
+            className="flex-row items-center justify-between rounded-lg bg-white px-2 py-3"
+            onPress={() =>
+              router.navigate(PATH_NAME.GROUP_HOME.CREATE_FUND as any)
+            }
+          >
             <View className="flex-row items-center">
               <View className="flex-1 flex-row items-center">
                 <Icon source="piggy-bank" size={28} color="#609084" />
@@ -119,7 +124,9 @@ const CreateGroup = () => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() =>
-              router.navigate(GROUP_CONFIG_CONSTANT.GROUP_FUND_ROUTE as any)
+              router.navigate(
+                GROUP_HOME_DEFAULT_CONSTANT.GROUP_FUND_ROUTE as any,
+              )
             }
             className="mt-2 flex-row items-center justify-between rounded-lg bg-white px-2 py-3"
           >
@@ -137,13 +144,17 @@ const CreateGroup = () => {
           <View className="flex-row gap-0">
             <TouchableOpacity
               className={`flex-1 rounded-[15px_0_0_0] px-4 py-2 ${
-                selectedTab === "contribution" ? "bg-primary" : "bg-[#E8F5E9]"
+                state.selectedTab === "contribution"
+                  ? "bg-primary"
+                  : "bg-[#E8F5E9]"
               }`}
-              onPress={() => setSelectedTab("contribution")}
+              onPress={() => handler.setSelectedTab("contribution")}
             >
               <Text
                 className={`text-center font-bold ${
-                  selectedTab === "contribution" ? "text-white" : "text-primary"
+                  state.selectedTab === "contribution"
+                    ? "text-white"
+                    : "text-primary"
                 }`}
               >
                 {TEXT.CONTRIBUTION}
@@ -151,13 +162,13 @@ const CreateGroup = () => {
             </TouchableOpacity>
             <TouchableOpacity
               className={`flex-1 rounded-[0_15px_0_0] px-4 py-2 ${
-                selectedTab === "done" ? "bg-primary" : "bg-[#E8F5E9]"
+                state.selectedTab === "done" ? "bg-primary" : "bg-[#E8F5E9]"
               }`}
-              onPress={() => setSelectedTab("done")}
+              onPress={() => handler.setSelectedTab("done")}
             >
               <Text
                 className={`text-center font-bold ${
-                  selectedTab === "done" ? "text-white" : "text-primary"
+                  state.selectedTab === "done" ? "text-white" : "text-primary"
                 }`}
               >
                 {TEXT.DONE}
@@ -199,4 +210,4 @@ const CreateGroup = () => {
   );
 };
 
-export default CreateGroup;
+export default GroupHomeDefault;

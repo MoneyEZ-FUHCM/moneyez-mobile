@@ -1,14 +1,14 @@
-import React, { useEffect } from "react";
+import { icons } from "@/assets/icons/icons";
+import { AntDesign } from "@expo/vector-icons";
+import React, { memo } from "react";
 import { Pressable, PressableProps } from "react-native";
 import Animated, {
   interpolate,
+  interpolateColor,
   useAnimatedStyle,
-  useSharedValue,
+  useDerivedValue,
   withSpring,
 } from "react-native-reanimated";
-
-import { icons } from "@/assets/icons/icons";
-import { AntDesign } from "@expo/vector-icons";
 
 type RouteName = keyof typeof icons;
 
@@ -17,6 +17,7 @@ interface TabBarButtonProps extends PressableProps {
   label: string;
   routeName: RouteName;
   color: string;
+  size: number;
 }
 
 const TabBarButton: React.FC<TabBarButtonProps> = ({
@@ -24,30 +25,50 @@ const TabBarButton: React.FC<TabBarButtonProps> = ({
   label,
   routeName,
   color,
+  size,
   ...props
 }) => {
-  const scale = useSharedValue(0);
-
-  useEffect(() => {
-    scale.value = withSpring(isFocused ? 1 : 0, { duration: 350 });
+  const PRIMARY_COLOR = "#609084";
+  const TRANSPARENT_COLOR = "transparent";
+  const animatedScale = useDerivedValue(() => {
+    return withSpring(isFocused ? 1 : 0, {
+      damping: 15,
+      stiffness: 80,
+    });
   }, [isFocused]);
 
   const animatedIconStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: interpolate(scale.value, [0, 1], [1, 1.4]) }],
-    top: interpolate(scale.value, [0, 1], [0, 8]),
+    transform: [{ scale: interpolate(animatedScale.value, [0, 1], [1, 1.4]) }],
+    top: interpolate(animatedScale.value, [0, 1], [0, 8]),
+    backgroundColor: interpolateColor(
+      animatedScale.value,
+      [0, 1],
+      [TRANSPARENT_COLOR, PRIMARY_COLOR],
+    ),
+    borderRadius: interpolate(animatedScale.value, [0, 0.1], [0, 100]),
   }));
 
   const animatedTextStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(scale.value, [0, 1], [1, 0]),
+    opacity: interpolate(animatedScale.value, [0, 1], [1, 0]),
   }));
 
   return (
-    <Pressable {...props} className="flex-1 items-center justify-center gap-1">
-      <Animated.View style={animatedIconStyle}>
+    <Pressable {...props} className="flex-1 items-center justify-center">
+      <Animated.View
+        style={[
+          animatedIconStyle,
+          {
+            width: 35,
+            height: 35,
+            alignItems: "center",
+            justifyContent: "center",
+          },
+        ]}
+      >
         {icons[routeName] ? (
-          icons[routeName]({ color })
+          icons[routeName]({ color, size })
         ) : (
-          <AntDesign name="questioncircleo" size={26} color={color} />
+          <AntDesign name="questioncircleo" size={24} color={color} />
         )}
       </Animated.View>
 
@@ -61,4 +82,4 @@ const TabBarButton: React.FC<TabBarButtonProps> = ({
   );
 };
 
-export default TabBarButton;
+export default memo(TabBarButton);

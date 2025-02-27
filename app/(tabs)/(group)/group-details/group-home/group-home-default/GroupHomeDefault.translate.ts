@@ -1,4 +1,4 @@
-const TEXT_TRANSLATE_CONFIG_GROUP = {
+const TEXT_TRANSLATE_GROUP_HOME_DEFAULT = {
   TITLE: "Nhóm Của Bạn",
   BUTTON: {
     CREATE_GROUP: "Tạo quỹ",
@@ -21,4 +21,4 @@ const TEXT_TRANSLATE_CONFIG_GROUP = {
   },
 };
 
-export default TEXT_TRANSLATE_CONFIG_GROUP;
+export default TEXT_TRANSLATE_GROUP_HOME_DEFAULT;

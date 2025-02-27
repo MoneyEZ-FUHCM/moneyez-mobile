@@ -1,5 +1,5 @@
 import useHideTabbar from "@/hooks/useHideTabbar";
-import { setHiddenTabbar } from "@/redux/slices/tabSlice";
+import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { Animated, FlatList } from "react-native";
@@ -65,7 +65,7 @@ const useChatBotScreen = () => {
 
   const handleBack = () => {
     router.back();
-    dispatch(setHiddenTabbar(false));
+    dispatch(setMainTabHidden(false));
   };
 
   const toggleTimestamp = (id: string) => {

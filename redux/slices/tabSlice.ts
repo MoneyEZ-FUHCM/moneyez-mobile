@@ -1,22 +1,29 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface UserState {
-  hiddenTabbar: boolean;
+interface TabState {
+  mainTabHidden: boolean;
+  groupTabHidden: boolean;
+  groupRoutes: any;
 }
 
-const initialState: UserState = {
-  hiddenTabbar: false,
+const initialState: TabState = {
+  mainTabHidden: false,
+  groupTabHidden: false,
+  groupRoutes: ["group-home", "transaction", "member", "group-setting"],
 };
 
 const tabSlice = createSlice({
   name: "tab",
   initialState,
   reducers: {
-    setHiddenTabbar: (state, action) => {
-      state.hiddenTabbar = action.payload;
+    setMainTabHidden: (state, action: PayloadAction<boolean>) => {
+      state.mainTabHidden = action.payload;
+    },
+    setGroupTabHidden: (state, action: PayloadAction<boolean>) => {
+      state.groupTabHidden = action.payload;
     },
   },
 });
 
-export const { setHiddenTabbar } = tabSlice.actions;
+export const { setMainTabHidden, setGroupTabHidden } = tabSlice.actions;
 export default tabSlice.reducer;

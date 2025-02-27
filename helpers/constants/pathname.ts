@@ -20,7 +20,7 @@ const PATH_NAME = {
     GROUP_NAVIGATOR: "(group)",
     GROUP_LIST: "Group",
     GROUP_FUND: "group-fund/GroupFund",
-    GROUP_DETAIL: "config-group/ConfigGroup",
+    GROUP_DETAIL: ":id",
     STATISTICS: "dashboard-group/GroupManangement",
     CREATE_GROUP_STEP_1: "create-group/CreateGroup",
     CREATE_GROUP_STEP_2: "create-group/CreateGroupStep2",
@@ -39,6 +39,16 @@ const PATH_NAME = {
   ACCOUNT: {
     ACCOUNT_SETTING: "setting/AccountSetting",
     UPDATE_INFO: "update-info/UpdateUserInfo",
+  },
+
+  // Group-detail
+  GROUP_HOME: {
+    GROUP_HOME_DEFAULT:
+      "group-details/group-home/group-home-default/GroupHomeDefault",
+    CREATE_FUND: "group-details/group-home/create-fund/CreateFund",
+  },
+  MEMBER: {
+    MEMBER: "Member",
   },
 };
 

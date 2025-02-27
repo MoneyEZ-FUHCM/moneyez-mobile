@@ -1,71 +1,100 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
+  runOnJS,
+  useAnimatedStyle,
   useSharedValue,
   withTiming,
-  withSpring,
 } from "react-native-reanimated";
-
-interface PieChartData {
-  label: string;
-  value: number;
-  color: string;
-}
+import { PieChartData } from "../PieChartCustom";
 
 export const usePieChart = (data: PieChartData[]) => {
   const opacity = useSharedValue(0);
-  const scale = useSharedValue(0.5);
+  const rotation = useSharedValue(0);
+  const labelOpacity = useSharedValue(0);
+  const [isRotated, setIsRotated] = useState(false);
+  const originalConsoleLog = console.log;
+
+  // ẩn log
+  console.log = (...args) => {
+    if (
+      typeof args[0] === "string" &&
+      ["showTooltip", "tooltipSelectedIndex"].some((prefix) =>
+        args[0].startsWith(prefix),
+      )
+    ) {
+      return;
+    }
+    originalConsoleLog(...args);
+  };
+
+  const highestIndex = useMemo(() => {
+    if (data.length === 0) return null;
+    return data.reduce(
+      (maxIndex, item, index) =>
+        item.percentage > data[maxIndex].percentage ? index : maxIndex,
+      0,
+    );
+  }, [data]);
+
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(
+    highestIndex,
+  );
 
   useEffect(() => {
     opacity.value = withTiming(1, { duration: 500 });
-    scale.value = withSpring(1, { damping: 8, stiffness: 100 });
-  }, []);
 
-  const totalValue = useMemo(
-    () => data.reduce((sum, item) => sum + item.value, 0),
-    [data],
-  );
+    rotation.value = 0;
+    labelOpacity.value = 0;
+    setIsRotated(false);
 
-  const formattedData = useMemo(
-    () =>
-      data.map((item) => ({
-        ...item,
-        percentage: ((item.value / totalValue) * 100).toFixed(2),
-      })),
-    [data, totalValue],
-  );
+    rotation.value = withTiming(360, { duration: 1000 }, () => {
+      runOnJS(setIsRotated)(true);
+      labelOpacity.value = withTiming(1, { duration: 500 });
+    });
 
-  const highestData = useMemo(
-    () =>
-      formattedData.length
-        ? formattedData.reduce(
-            (max, item) =>
-              parseFloat(item.percentage) > parseFloat(max.percentage)
-                ? item
-                : max,
-            formattedData[0],
-          )
-        : null,
-    [formattedData],
-  );
+    if (highestIndex !== null) {
+      runOnJS(setSelectedIndex)(highestIndex);
+    }
+  }, [highestIndex]);
 
   const pieData = useMemo(
     () =>
-      formattedData.map((item) => ({
+      data.map((item, index) => ({
         ...item,
-        value: parseFloat(item.percentage),
-        focused: item.label === highestData?.label,
-        showTooltip: item.label === highestData?.label,
+        value: item.percentage,
+        focused: index === selectedIndex,
+        showTooltip: index === selectedIndex,
       })),
-    [formattedData, highestData],
+    [data, selectedIndex],
   );
+
+  const handlePress = (index: number) => {
+    if (index === selectedIndex) return;
+
+    setSelectedIndex(index);
+    labelOpacity.value = 0;
+    labelOpacity.value = withTiming(1, { duration: 500 });
+  };
+
+  const animatedStyles = {
+    pie: useAnimatedStyle(() => ({
+      transform: [{ rotate: `${rotation.value}deg` }],
+    })),
+    fadeIn: useAnimatedStyle(() => ({
+      opacity: labelOpacity.value,
+    })),
+  };
 
   return {
     state: {
       opacity,
-      scale,
+      rotation,
+      labelOpacity,
       pieData,
-      highestData,
-      formattedData,
+      animatedStyles,
+      selectedIndex,
+      isRotated,
     },
+    handler: { handlePress },
   };
 };
