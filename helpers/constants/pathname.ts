@@ -48,7 +48,7 @@ const PATH_NAME = {
     CREATE_FUND: "group-details/group-home/create-fund/CreateFund",
   },
   MEMBER: {
-    MEMBER: "Member",
+    GROUP_MEMBER: "group-details/member/group-member/GroupMember",
   },
 };
 
