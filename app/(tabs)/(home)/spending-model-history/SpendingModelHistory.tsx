@@ -1,12 +1,12 @@
 import React from "react";
-import { View, Text, Pressable, ScrollView, ActivityIndicator } from "react-native";
+import { View, Text, Pressable, ScrollView } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import {
   FlatListCustom,
   SafeAreaViewCustom,
   SectionComponent,
 } from "@/components";
-import useSpendingModelHistory, { SpendingModel } from "./hooks/useSpendingModelHistory";
+import useSpendingModelHistory, { UserSpendingModel } from "./hooks/useSpendingModelHistory";
 
 export default function SpendingModelHistory() {
   const { state, handler } = useSpendingModelHistory();
@@ -14,7 +14,7 @@ export default function SpendingModelHistory() {
   const renderSpendingModelItem = ({
     spendingModel,
   }: {
-    spendingModel: SpendingModel;
+    spendingModel: UserSpendingModel;
   }) => (
     <View className="mb-3 rounded border border-[#dbdbdb] p-4">
       <View className="flex-row items-center justify-between">
@@ -52,7 +52,7 @@ export default function SpendingModelHistory() {
       <Text className="mb-4 text-xl font-semibold text-[#021433]">
         {item.year}
       </Text>
-      {item.spendingModels.map((spendingModel: SpendingModel, index: number) => (
+      {item.userSpendingModels && item.userSpendingModels.map((spendingModel: UserSpendingModel, index: number) => (
         <React.Fragment key={index}>
           {renderSpendingModelItem({ spendingModel })}
         </React.Fragment>
@@ -91,18 +91,6 @@ export default function SpendingModelHistory() {
     </>
   );
 
-  const renderEmptyList = () => (
-    <View className="flex-1 items-center justify-center py-8">
-      <Text className="text-base text-gray-500">
-        {state.isLoading 
-          ? "Đang tải dữ liệu..." 
-          : state.error 
-            ? "Có lỗi xảy ra khi tải dữ liệu." 
-            : "Không có dữ liệu mô hình chi tiêu."}
-      </Text>
-    </View>
-  );
-
   return (
     <SafeAreaViewCustom rootClassName="flex-1 bg-[#fafafa]">
       {/* HEADER */}
@@ -118,30 +106,18 @@ export default function SpendingModelHistory() {
         </View>
       </SectionComponent>
 
-      {/* LOADING INDICATOR */}
-      {state.isLoading ? (
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#609084" />
-          <Text className="mt-2 text-[#609084]">Đang tải dữ liệu...</Text>
-        </View>
-      ) : (
-        /* SPENDING MODEL LIST WITH HEADER */
-        <FlatListCustom
-          data={state.spendingModelsByYear}
-          renderItem={renderYearSection}
-          keyExtractor={(item) => item.year}
-          ListHeaderComponent={renderListHeader}
-          ListEmptyComponent={renderEmptyList}
-          contentContainerStyle={{
-            paddingTop: 4,
-            paddingBottom: 24,
-            flexGrow: state.spendingModelsByYear.length === 0 ? 1 : undefined,
-          }}
-          showsVerticalScrollIndicator={false}
-          refreshing={state.isLoading}
-          onRefresh={handler.refetch}
-        />
-      )}
+      {/* SPENDING MODEL LIST WITH HEADER */}
+      <FlatListCustom
+        data={state.spendingModelsByYear || []}
+        renderItem={renderYearSection}
+        keyExtractor={(item) => item.year}
+        ListHeaderComponent={renderListHeader}
+        contentContainerStyle={{
+          paddingTop: 4,
+          paddingBottom: 24,
+        }}
+        showsVerticalScrollIndicator={false}
+      />
     </SafeAreaViewCustom>
   );
 }

@@ -3,8 +3,9 @@ import { router } from "expo-router";
 import { useGetUserSpendingModelQuery } from "@/services/userSpendingModel";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 
-export interface SpendingModel {
+export interface UserSpendingModel {
   id: string;
+  modelId: string;
   modelName: string;
   period: string;
   income: string | number;
@@ -14,7 +15,7 @@ export interface SpendingModel {
 interface SpendingModelHistoryState {
   spendingModelsByYear: Array<{
     year: string;
-    spendingModels: SpendingModel[];
+    userSpendingModels: UserSpendingModel[];
   }>;
   filters: { id: string; label: string }[];
   activeFilter: string;
@@ -27,7 +28,7 @@ const useSpendingModelHistory = () => {
     SpendingModelHistoryState["spendingModelsByYear"]
   >([]);
   const [activeFilter, setActiveFilter] = useState("ALL");
-  const [allSpendingModels, setAllSpendingModels] = useState<SpendingModel[]>([]);
+  const [allSpendingModels, setAllSpendingModels] = useState<UserSpendingModel[]>([]);
 
   const { HOME } = PATH_NAME;
 
@@ -38,7 +39,6 @@ const useSpendingModelHistory = () => {
     refetch,
   } = useGetUserSpendingModelQuery({ PageIndex: 1, PageSize: 20 });
 
-  // Generate filter options based on unique model names in transactions
   const filters = useMemo(() => {
     const modelNames = new Set<string>();
     modelNames.add("ALL");
@@ -57,15 +57,15 @@ const useSpendingModelHistory = () => {
 
   // Process API data into grouped spending models
   useEffect(() => {
-    if (spendingData?.data?.data) {
-      const models = spendingData.data.data.map((model: any) => ({
+    if (spendingData?.items) {
+      const models = spendingData.items.map((model: any) => ({
         ...model,
         income: model.income ?? 0,
         expense: model.expense ?? 0,
       }));
 
-      const allModels: SpendingModel[] = [];
-      const groups: { [key: string]: SpendingModel[] } = {};
+      const allModels: UserSpendingModel[] = [];
+      const groups: { [key: string]: UserSpendingModel[] } = {};
 
       models.forEach((model: any) => {
         // Ensure we have valid dates to extract year
@@ -76,8 +76,9 @@ const useSpendingModelHistory = () => {
           year = startDate.getFullYear().toString();
         }
 
-        const spendingModel: SpendingModel = {
-          id: model.spendingModelId,
+        const userSpendingModel: UserSpendingModel = {
+          id: model.id,
+          modelId: model.spendingModelId,
           modelName: model.name,
           income: model.income,
           expense: model.expense,
@@ -86,23 +87,29 @@ const useSpendingModelHistory = () => {
           ).toLocaleDateString("vi-VN")}`,
         };
 
-        allModels.push(spendingModel);
+        allModels.push(userSpendingModel);
 
         if (!groups[year]) {
           groups[year] = [];
         }
-        groups[year].push(spendingModel);
+        groups[year].push(userSpendingModel);
       });
 
       setAllSpendingModels(allModels);
-      applyFilter(activeFilter, groups);
+
+      const groupedArray = Object.keys(groups).map((year) => ({
+        year,
+        userSpendingModels: groups[year], // Make sure this property name matches what's used in the render function
+      }));
+
+      setSpendingModelsByYear(groupedArray);
     }
   }, [spendingData]);
 
   // Apply filtering when filter or spending models change
   useEffect(() => {
     if (allSpendingModels.length > 0) {
-      const groups: { [key: string]: SpendingModel[] } = {};
+      const groups: { [key: string]: UserSpendingModel[] } = {};
 
       allSpendingModels.forEach((model) => {
         if (activeFilter !== "ALL" && model.modelName.toUpperCase() !== activeFilter) {
@@ -128,10 +135,10 @@ const useSpendingModelHistory = () => {
     }
   }, [activeFilter, allSpendingModels]);
 
-  const applyFilter = (_filter: string, groups: { [key: string]: SpendingModel[] }) => {
+  const applyFilter = (_filter: string, groups: { [key: string]: UserSpendingModel[] }) => {
     const groupedArray = Object.keys(groups).map((year) => ({
       year,
-      spendingModels: groups[year],
+      userSpendingModels: groups[year], // Make sure this property name matches what's used in the render function
     }));
 
     setSpendingModelsByYear(groupedArray);
@@ -143,10 +150,14 @@ const useSpendingModelHistory = () => {
       currency: "VND",
     }).format(value);
 
-  const handleViewPeriodHistory = (modelId: string) => {
+  const handleViewPeriodHistory = (userSpendingId: string) => {
     router.push({
       pathname: HOME.PERIOD_HISTORY as any,
-      params: { id: modelId }
+      params: { 
+        userSpendingId: userSpendingId,
+        startDate: allSpendingModels.find(model => model.id === userSpendingId)?.period.split(" - ")[0],
+        endDate: allSpendingModels.find(model => model.id === userSpendingId)?.period.split(" - ")[1]
+      }
     });
   };
 
