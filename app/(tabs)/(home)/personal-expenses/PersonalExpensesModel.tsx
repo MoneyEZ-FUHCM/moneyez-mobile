@@ -1,6 +1,5 @@
 import {
   CustomModal,
-  DatePickerComponent,
   SafeAreaViewCustom,
   SectionComponent,
   SpaceComponent,
@@ -14,6 +13,7 @@ import PERSONAL_EXPENSES_MODEL_CONSTANTS, {
   TIME_OPTIONS,
 } from "./PersonalExpensesModel.constants";
 import TEXT_TRANSLATE_PERSONAL_EXPENSES from "./PersonalExpensesModel.translate";
+import { DatePickerComponent } from "@/components/personal-expenses/DatePickerComponent";
 
 const PersonalExpensesModel = () => {
   const { state, handler } = usePersonalExpensesModel();
