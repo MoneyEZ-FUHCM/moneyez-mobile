@@ -1,8 +1,11 @@
+import { PATH_NAME } from "@/helpers/constants/pathname";
+import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { selectUserInfo } from "@/redux/slices/userSlice";
 import dayjs from "dayjs";
+import { router } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FlatList } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import HOME_SCREEN_CONSTANTS from "../HomeScreen.const";
 
 interface ItemType {
@@ -21,6 +24,8 @@ const useHomeScreen = () => {
   const [isShow, setIsShow] = useState(false);
   const flatListRef = useRef<FlatList<ItemType>>(null);
   const userInfo = useSelector(selectUserInfo);
+  const dispatch = useDispatch();
+  const { HOME } = PATH_NAME;
 
   const toggleVisibility = useCallback(() => {
     setIsShow((prev) => !prev);
@@ -39,6 +44,11 @@ const useHomeScreen = () => {
     return () => clearInterval(interval);
   }, [POST_DATAS.length]);
 
+  const handleNavigateAddPersonalIncome = useCallback(() => {
+    dispatch(setMainTabHidden(true));
+    router.navigate(HOME.PERSONAL_EXPENSES_MODEL as any);
+  }, []);
+
   return {
     state: {
       isShow,
@@ -54,6 +64,7 @@ const useHomeScreen = () => {
     },
     handler: {
       toggleVisibility,
+      handleNavigateAddPersonalIncome,
     },
   };
 };
