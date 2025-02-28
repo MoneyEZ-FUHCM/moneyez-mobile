@@ -11,6 +11,10 @@ const TEXT_TRANSLATE_PERSONAL_EXPENSES = {
   PERIOD: "Khoảng Thời Gian",
   EMPTY_VALIDATION: "Ngày bắt đầu không được để trống",
   MODAL_TITLE: (modelName: string) => `Mô hình "${modelName}"`,
+
+  MESSAGE_VALIDATE: {
+    CUSTOM_MODEL_REQUIRED: "Vui lòng nhập mô hình mà bạn muốn",
+  },
 };
 
 export default TEXT_TRANSLATE_PERSONAL_EXPENSES;

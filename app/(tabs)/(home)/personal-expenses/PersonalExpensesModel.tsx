@@ -163,9 +163,13 @@ const PersonalExpensesModel = () => {
           {/* Mô hình */}
           <View className="mb-4 rounded-lg bg-white p-4 shadow-sm">
             <Text className="font-semibold text-primary">Mô hình</Text>
-            <Text className="text-md mt-1">
-              {state.customModel} ({state.selectedModel})
-            </Text>
+            {state.customModel ? (
+              <Text className="text-md mt-1">
+                {state.customModel} ({state.selectedModel})
+              </Text>
+            ) : (
+              <Text className="text-md mt-1">{state.selectedModel}</Text>
+            )}
           </View>
 
           {/* Ngày bắt đầu & Thời hạn */}

@@ -1,12 +1,12 @@
+import { PATH_NAME } from "@/helpers/constants/pathname";
+import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { selectUserInfo } from "@/redux/slices/userSlice";
 import dayjs from "dayjs";
+import { router } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FlatList } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import HOME_SCREEN_CONSTANTS from "../HomeScreen.const";
-import { setHiddenTabbar } from "@/redux/slices/tabSlice";
-import { router } from "expo-router";
-import { PATH_NAME } from "@/helpers/constants/pathname";
 
 interface ItemType {
   id: string;
@@ -45,7 +45,7 @@ const useHomeScreen = () => {
   }, [POST_DATAS.length]);
 
   const handleNavigateAddPersonalIncome = useCallback(() => {
-    dispatch(setHiddenTabbar(true));
+    dispatch(setMainTabHidden(true));
     router.navigate(HOME.PERSONAL_EXPENSES_MODEL as any);
   }, []);
 
