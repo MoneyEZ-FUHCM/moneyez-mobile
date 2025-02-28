@@ -8,8 +8,8 @@ export interface UserSpendingModel {
   modelId: string;
   modelName: string;
   period: string;
-  income: string | number;
-  expense: string | number;
+  income: number;
+  expense: number;
 }
 
 interface SpendingModelHistoryState {
@@ -60,8 +60,8 @@ const useSpendingModelHistory = () => {
     if (spendingData?.items) {
       const models = spendingData.items.map((model: any) => ({
         ...model,
-        income: model.income ?? 0,
-        expense: model.expense ?? 0,
+        income: model.totalIncome ?? 0,
+        expense: model.totalExpense ?? 0,
       }));
 
       const allModels: UserSpendingModel[] = [];

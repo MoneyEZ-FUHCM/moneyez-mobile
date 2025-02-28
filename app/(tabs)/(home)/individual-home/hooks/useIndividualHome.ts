@@ -1,11 +1,13 @@
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
+import { useGetCurrentUserSpendingModelQuery } from "@/services/userSpendingModel";
 import { router } from "expo-router";
 import { useDispatch } from "react-redux";
 
 const useIndividualHome = () => {
   const { HOME } = PATH_NAME;
   const dispatch = useDispatch();
+  const { data: currentUserSpendingModel } = useGetCurrentUserSpendingModelQuery();
 
   const PIE_CHART_DATA = [
     {
@@ -48,7 +50,22 @@ const useIndividualHome = () => {
   };
 
   const handleHistoryPress = () => {
-    router.navigate(HOME.SPENDING_MODEL_HISTORY as any);
+    if (currentUserSpendingModel) {
+      const startDate = new Date(currentUserSpendingModel.data.startDate).toLocaleDateString("vi-VN");
+      const endDate = new Date(currentUserSpendingModel.data.endDate).toLocaleDateString("vi-VN");
+      
+      router.push({
+        pathname: HOME.PERIOD_HISTORY as any,
+        params: { 
+          userSpendingId: currentUserSpendingModel.data.id,
+          startDate: startDate,
+          endDate: endDate
+        }
+      });
+    } else {
+      // Fallback if no current spending model is available
+      router.navigate(HOME.SPENDING_MODEL_HISTORY as any);
+    }
   };
 
   const handleAddExpense = () => {

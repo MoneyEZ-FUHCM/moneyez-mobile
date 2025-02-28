@@ -16,6 +16,21 @@ export interface SpendingModel {
   expense?: number;
 }
 
+export interface UserSpendingModel {
+  id: string;
+  spendingModelId: string;
+  name: string;
+  description: string;
+  isTemplate: boolean;
+  periodUnit: PeriodUnit;
+  periodValue: number;
+  startDate: string;
+  endDate: string;
+  isDeleted: boolean;
+  totalIncome?: number;
+  totalExpense?: number;
+}
+
 export interface SpendingModelMetaData {
   totalCount: number;
   pageSize: number;
