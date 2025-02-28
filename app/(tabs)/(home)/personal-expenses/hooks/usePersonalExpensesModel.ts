@@ -13,9 +13,14 @@ const usePersonalExpensesModel = () => {
   const [step, setStep] = useState(1);
   const dispatch = useDispatch();
 
+  console.log("check selectedModel", selectedModel);
+
   useHideTabbar();
   const [selectedTime, setSelectedTime] = useState("1 tháng");
-  const [startDate, setStartDate] = useState("");
+  const [startDate, setStartDate] = useState(() => {
+    const today = new Date().toISOString().split("T")[0];
+    return today;
+  });
 
   const validationSchema = Yup.object({
     startDate: Yup.string()

@@ -15,3 +15,4 @@ export { CustomModal } from "./ModalCustom";
 export { RadioGroupComponent } from "./RadioGroupComponent";
 export { PieChartCustom } from "./PieChartCustom/PieChartCustom";
 export { CategoryItem } from "./InvidualScreenCustom/CategoryItem";
+export { DatePickerPersonalExpense } from "./personal-expenses/DatePickerPersonalExpense";

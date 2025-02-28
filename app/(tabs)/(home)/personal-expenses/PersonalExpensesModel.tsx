@@ -1,11 +1,11 @@
 import {
   CustomModal,
+  DatePickerPersonalExpense,
   SafeAreaViewCustom,
   SectionComponent,
   SpaceComponent,
 } from "@/components";
 import { AntDesign, Entypo } from "@expo/vector-icons";
-import { Formik } from "formik";
 import React from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import usePersonalExpensesModel from "./hooks/usePersonalExpensesModel";
@@ -13,7 +13,6 @@ import PERSONAL_EXPENSES_MODEL_CONSTANTS, {
   TIME_OPTIONS,
 } from "./PersonalExpensesModel.constants";
 import TEXT_TRANSLATE_PERSONAL_EXPENSES from "./PersonalExpensesModel.translate";
-import { DatePickerComponent } from "@/components/personal-expenses/DatePickerComponent";
 
 const PersonalExpensesModel = () => {
   const { state, handler } = usePersonalExpensesModel();
@@ -95,10 +94,8 @@ const PersonalExpensesModel = () => {
           {MODELS.map((model) => (
             <TouchableOpacity
               key={model.name}
-              className={`mb-2 rounded-lg border p-3 ${
-                state.selectedModel === model.name
-                  ? "border-gray-400 bg-secondary"
-                  : "border-gray-300 bg-white"
+              className={`mt-2 rounded-lg border border-gray-300 p-3 ${
+                state.selectedModel === model.name ? "bg-secondary" : "bg-white"
               }`}
               onPress={() => handler.setSelectedModel(model.name)}
             >
@@ -136,52 +133,39 @@ const PersonalExpensesModel = () => {
           </TouchableOpacity>
         </View>
       ) : state.step === 2 ? (
-        <Formik
-          initialValues={{ startDate: "" }}
-          validationSchema={handler.validationSchema}
-          onSubmit={() => {}}
-        >
-          {() => (
-            <View className="mx-4 mt-4 rounded-lg bg-white p-4 shadow-md">
-              <View className="">
-                <DatePickerComponent
-                  isRequired
-                  name="startDate"
-                  label={TEXT_TRANSLATE_PERSONAL_EXPENSES.START_DATE}
-                  labelClass="text-md font-semibold text-primary"
-                  selectedDate={state.startDate} // Add this line to set the selected date
-                  onChange={(date: Date) =>
-                    handler.setStartDate(date.toISOString().split("T")[0])
-                  }
-                />
-              </View>
-              <View>
-                <Text className="text-md mb-1 font-semibold text-primary">
-                  {TEXT_TRANSLATE_PERSONAL_EXPENSES.PERIOD}
-                </Text>
-                {TIME_OPTIONS.map((option) => (
-                  <TouchableOpacity
-                    key={option}
-                    onPress={() => handler.setSelectedTime(option)}
-                    className={`mt-2 rounded-lg border border-gray-300 p-3 ${
-                      state.selectedTime === option
-                        ? "bg-secondary text-sm font-semibold"
-                        : "bg-white"
-                    }`}
-                  >
-                    <Text className="text-md">{option}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </View>
-          )}
-        </Formik>
+        <View className="mx-4 mt-4 rounded-lg bg-white p-4 shadow-md">
+          <DatePickerPersonalExpense
+            label={TEXT_TRANSLATE_PERSONAL_EXPENSES.START_DATE}
+            labelClass="text-md font-semibold text-primary"
+            selectedDate={state.startDate}
+          />
+          <View>
+            <Text className="text-md mb-1 font-semibold text-primary">
+              {TEXT_TRANSLATE_PERSONAL_EXPENSES.PERIOD}
+            </Text>
+            {TIME_OPTIONS.map((option) => (
+              <TouchableOpacity
+                key={option}
+                onPress={() => handler.setSelectedTime(option)}
+                className={`mt-2 rounded-lg border border-gray-300 p-3 ${
+                  state.selectedTime === option
+                    ? "bg-secondary text-sm font-semibold"
+                    : "bg-white"
+                }`}
+              >
+                <Text className="text-md">{option}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
       ) : state.step === 3 ? (
         <View className="min-h-screen bg-gray-100 p-4">
           {/* Mô hình */}
           <View className="mb-4 rounded-lg bg-white p-4 shadow-sm">
             <Text className="font-semibold text-primary">Mô hình</Text>
-            <Text className="text-md mt-1">{state.selectedModel}</Text>
+            <Text className="text-md mt-1">
+              {state.customModel} ({state.selectedModel})
+            </Text>
           </View>
 
           {/* Ngày bắt đầu & Thời hạn */}
