@@ -223,12 +223,12 @@ export default function PeriodHistoryDetail() {
   return (
     <SafeAreaViewCustom rootClassName="flex-1 bg-[#fafafa]">
       {/* HEADER */}
-      <SectionComponent rootClassName="h-24 bg-white justify-center">
-        <View className="flex-row items-center justify-between px-4">
+      <SectionComponent rootClassName="h-14 bg-white justify-center">
+        <View className="flex-row items-center justify-between px-5">
           <Pressable onPress={handler.handleBack}>
-            <MaterialIcons name="arrow-back" size={24} color="black" />
+            <MaterialIcons name="arrow-back" size={24} color="#609084" />
           </Pressable>
-          <Text className="text-xl font-semibold text-black">
+          <Text className="text-lg font-bold text-primary">
             {state.modelDetails.period}
           </Text>
           <View style={{ width: 24 }} />

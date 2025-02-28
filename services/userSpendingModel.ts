@@ -1,5 +1,6 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import apiSlice from "@/redux/slices/apiSlice";
+import { UserSpendingModel } from "@/types/spendingModel.types";
 import { transformCommonResponse } from "@/types/system.types";
 
 const { HTTP_METHOD } = COMMON_CONSTANT;
@@ -12,7 +13,7 @@ const transactionApi = apiSlice.injectEndpoints({
       }),
       transformResponse: (response) => transformCommonResponse(response),
     }),
-    getCurrentUserSpendingModel: builder.query({
+    getCurrentUserSpendingModel: builder.query<{ data: UserSpendingModel }, void>({
       query: () => ({
         url: `user-spending-models/current`,
         method: HTTP_METHOD.GET,

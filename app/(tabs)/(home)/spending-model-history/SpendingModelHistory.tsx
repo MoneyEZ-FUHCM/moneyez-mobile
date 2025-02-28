@@ -22,7 +22,7 @@ export default function SpendingModelHistory() {
           {spendingModel.modelName}
         </Text>
         <Text className="text-base font-medium text-[#00a010]">
-          {handler.formatCurrency(0)}
+          {handler.formatCurrency(spendingModel.income)}
         </Text>
       </View>
 
@@ -31,7 +31,7 @@ export default function SpendingModelHistory() {
           {spendingModel.period}
         </Text>
         <Text className="text-base font-medium text-[#cc0000]">
-          {handler.formatCurrency(0)}
+          {handler.formatCurrency(spendingModel.expense)}
         </Text>
       </View>
 

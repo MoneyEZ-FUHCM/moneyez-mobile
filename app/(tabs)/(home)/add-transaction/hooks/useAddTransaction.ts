@@ -13,6 +13,8 @@ import * as Yup from "yup";
 import TEXT_TRANSLATE_ADD_TRANSACTION from "../AddTransaction.translate";
 import { setLoading } from "@/redux/slices/loadingSlice";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
+import { PATH_NAME } from "@/helpers/constants/pathname";
+import { useGetCurrentUserSpendingModelQuery } from "@/services/userSpendingModel";
 
 const useAddTransaction = (type: string) => {
   const INCOME = "income";
@@ -21,6 +23,8 @@ const useAddTransaction = (type: string) => {
   const dispatch = useDispatch();
   const { MESSAGE_VALIDATE, MESSAGE_SUCCESS } = TEXT_TRANSLATE_ADD_TRANSACTION;
   const { HTTP_STATUS, SYSTEM_ERROR } = COMMON_CONSTANT;
+  const { HOME } = PATH_NAME;
+  const { data: currentUserSpendingModel } = useGetCurrentUserSpendingModelQuery();
 
   // state
   const [pageIndex, setPageIndex] = useState(1);
@@ -122,6 +126,7 @@ const useAddTransaction = (type: string) => {
             MESSAGE_SUCCESS.CREATE_TRANSACTION_SUCCESSFUL,
             ToastAndroid.CENTER,
           );
+          handleNext();
         }
       } catch (err: any) {
         ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
@@ -131,6 +136,22 @@ const useAddTransaction = (type: string) => {
     },
     [selectedCategory, images, transactionType],
   );
+
+  const handleNext = () => {
+    if (currentUserSpendingModel) {
+      const startDate = new Date(currentUserSpendingModel.data.startDate).toLocaleDateString("vi-VN");
+      const endDate = new Date(currentUserSpendingModel.data.endDate).toLocaleDateString("vi-VN");
+
+      router.push({
+        pathname: HOME.PERIOD_HISTORY as any,
+        params: {
+          userSpendingId: currentUserSpendingModel.data.id,
+          startDate: startDate,
+          endDate: endDate
+        }
+      });
+    }
+  }
 
   return {
     state: {
