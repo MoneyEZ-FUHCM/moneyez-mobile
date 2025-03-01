@@ -50,6 +50,9 @@ const PATH_NAME = {
   },
   MEMBER: {
     GROUP_MEMBER: "group-details/member/group-member/GroupMember",
+    INVITE_MEMBER: "group-details/member/inivite-member/InviteMember",
+    INVITE_MEMBER_BY_EMAIL:
+      "group-details/member/inivite-member/InviteMemberbyEmail",
   },
 };
 

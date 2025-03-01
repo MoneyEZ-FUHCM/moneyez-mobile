@@ -60,19 +60,26 @@ const GroupMember = () => {
             </TouchableOpacity>
           </View>
           <ScrollView horizontal className="mb-6">
+            <View className="mr-4 items-center">
+              <TouchableOpacity
+                className="h-16 w-16 items-center justify-center rounded-full bg-gray-200"
+                onPress={() =>
+                  router.navigate(PATH_NAME.MEMBER.INVITE_MEMBER as any)
+                }
+              >
+                <AntDesign name="plus" size={30} color="#007bff" />
+              </TouchableOpacity>
+              <Text className="mt-2 text-xs">Thêm thành viên</Text>
+            </View>
             {state.contactList?.map((item, index) => (
               <View key={index} className="mr-4 items-center">
                 <TouchableOpacity className="h-16 w-16 items-center justify-center rounded-full bg-gray-200">
-                  {item === "Add New" ? (
-                    <AntDesign name="plus" size={30} color="#007bff" />
-                  ) : (
-                    <Image
-                      source={{
-                        uri: `https://i.pravatar.cc/150?img=${index + 1}`,
-                      }}
-                      className="h-full w-full rounded-full"
-                    />
-                  )}
+                  <Image
+                    source={{
+                      uri: `https://i.pravatar.cc/150?img=${index + 2}`,
+                    }}
+                    className="h-full w-full rounded-full"
+                  />
                 </TouchableOpacity>
                 <Text className="mt-2 text-xs">{item}</Text>
               </View>
