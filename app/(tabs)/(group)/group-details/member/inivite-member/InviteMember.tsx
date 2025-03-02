@@ -4,11 +4,11 @@ import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
 import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
-import { MEMBERS } from "./InviteMember.constants";
 import TEXT_TRANSLATE_INVITE_MEMBER from "./InviteMember.translate";
+import INVITE_MEMBER_CONSTANTS from "./InviteMember.constants";
 
 const InviteMember = () => {
-  const members = MEMBERS;
+  const members = INVITE_MEMBER_CONSTANTS.MEMBERS;
 
   return (
     <SafeAreaViewCustom>
@@ -18,7 +18,7 @@ const InviteMember = () => {
         </TouchableOpacity>
         <View className="flex-row items-center gap-1">
           <Text className="text-lg font-bold text-black">
-            {TEXT_TRANSLATE_INVITE_MEMBER.HEADER}
+            {TEXT_TRANSLATE_INVITE_MEMBER.INVITE_MEMBER.HEADER}
           </Text>
         </View>
         <TouchableOpacity></TouchableOpacity>
@@ -31,7 +31,7 @@ const InviteMember = () => {
           }
         >
           <Text className="text-sm font-semibold">
-            {TEXT_TRANSLATE_INVITE_MEMBER.INVITE_BY_EMAIL}
+            {TEXT_TRANSLATE_INVITE_MEMBER.INVITE_MEMBER.INVITE_BY_EMAIL}
           </Text>
           <View className="flex-row pt-2">
             <View className="h-5 w-5 items-center justify-center rounded-full bg-primary">
@@ -41,7 +41,7 @@ const InviteMember = () => {
         </TouchableOpacity>
         <View className="ml-2 flex flex-1 items-center rounded-lg bg-white p-3">
           <Text className="text-sm font-semibold">
-            {TEXT_TRANSLATE_INVITE_MEMBER.JOIN_LINK}
+            {TEXT_TRANSLATE_INVITE_MEMBER.INVITE_MEMBER.JOIN_LINK}
           </Text>
           <View className="flex-row pt-2">
             <View className="h-5 w-5 items-center justify-center rounded-full bg-primary">
@@ -53,7 +53,9 @@ const InviteMember = () => {
 
       {/* Danh sách thành viên */}
       <Text className="text-md mb-2 ml-4 font-bold">
-        {TEXT_TRANSLATE_INVITE_MEMBER.MEMBER_LIST(MEMBERS.length)}
+        {TEXT_TRANSLATE_INVITE_MEMBER.INVITE_MEMBER.MEMBER_LIST(
+          INVITE_MEMBER_CONSTANTS.MEMBERS.length,
+        )}
       </Text>
 
       <FlatList
@@ -69,7 +71,7 @@ const InviteMember = () => {
               <View className="ml-3">
                 {item.isOwner && (
                   <Text className="text-xs text-gray-500">
-                    {TEXT_TRANSLATE_INVITE_MEMBER.OWNER}
+                    {TEXT_TRANSLATE_INVITE_MEMBER.INVITE_MEMBER.OWNER}
                   </Text>
                 )}
                 <Text className="text-base font-semibold">{item.name}</Text>

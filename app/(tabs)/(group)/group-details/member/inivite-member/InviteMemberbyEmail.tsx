@@ -1,47 +1,20 @@
 import {
-  InputComponent,
+  FlatListCustom,
   SafeAreaViewCustom,
   SectionComponent,
 } from "@/components";
 import AntDesign from "@expo/vector-icons/build/AntDesign";
 import { router } from "expo-router";
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  Image,
-  TouchableOpacity,
-  FlatList,
-} from "react-native";
+import React from "react";
+import { View, Text, TextInput, Image, TouchableOpacity } from "react-native";
+import INVITE_MEMBER_CONSTANTS from "./InviteMember.constants";
+import INVITE_MEMBER_TEXT_TRANSLATE from "./InviteMember.translate";
+import useInviteMember from "./hooks/UseInviteMember";
 
 const InviteMemberByEmail = () => {
-  const inviteMessages = ["Vui vẻ", "Trang trọng", "Lãng mạn", "Mặc định"];
-
-  const [search, setSearch] = useState("");
-  const [filteredUsers, setFilteredUsers] = useState<
-    { id: number; name: string; avatar: string }[]
-  >([]);
-  const [searchInitiated, setSearchInitiated] = useState(false);
-
-  const users: { id: number; name: string; avatar: string }[] = [
-    { id: 1, name: "John Doe", avatar: "https://example.com/avatar1.png" },
-    { id: 2, name: "Jane Smith", avatar: "https://example.com/avatar2.png" },
-    // Add more users as needed
-  ];
-
-  const handleSearch = (text: string) => {
-    setSearch(text);
-    setSearchInitiated(true);
-    if (text) {
-      const filtered = users.filter((user) =>
-        user.name.toLowerCase().includes(text.toLowerCase()),
-      );
-      setFilteredUsers(filtered);
-    } else {
-      setFilteredUsers([]);
-    }
-  };
+  const { state, handler } = useInviteMember();
+  const { search, filteredUsers, searchInitiated } = state;
+  const { handleSearch } = handler;
 
   return (
     <SafeAreaViewCustom>
@@ -50,7 +23,9 @@ const InviteMemberByEmail = () => {
           <AntDesign name="arrowleft" size={24} color="#000000" />
         </TouchableOpacity>
         <View className="flex-row items-center gap-1">
-          <Text className="text-lg font-bold text-black">Chọn người</Text>
+          <Text className="text-lg font-bold text-black">
+            {INVITE_MEMBER_TEXT_TRANSLATE.INVITE_MEMBER_BY_EMAIL.HEADER}
+          </Text>
         </View>
         <TouchableOpacity></TouchableOpacity>
       </SectionComponent>
@@ -60,7 +35,10 @@ const InviteMemberByEmail = () => {
         <AntDesign name="search1" size={20} color="gray" />
         <TextInput
           className="ml-2 flex-1 text-base"
-          placeholder="Tìm kiếm..."
+          placeholder={
+            INVITE_MEMBER_TEXT_TRANSLATE.INVITE_MEMBER_BY_EMAIL
+              .SEARCH_PLACEHOLDER
+          }
           value={search}
           onChangeText={handleSearch}
         />
@@ -73,9 +51,14 @@ const InviteMemberByEmail = () => {
 
       {/* Invite Messages */}
       <View className="mx-4 mt-3 rounded-lg bg-white p-3">
-        <Text className="mb-2 text-sm font-semibold">Chọn lời mời vào quỹ</Text>
+        <Text className="mb-2 text-sm font-semibold">
+          {
+            INVITE_MEMBER_TEXT_TRANSLATE.INVITE_MEMBER_BY_EMAIL
+              .INVITE_MESSAGE_TITLE
+          }
+        </Text>
         <View className="flex-row flex-wrap">
-          {inviteMessages.map((msg, index) => (
+          {INVITE_MEMBER_CONSTANTS.INVITE_MESSAGES.map((msg, index) => (
             <TouchableOpacity
               key={index}
               className="mb-2 mr-2 rounded-full bg-pink-100 px-3 py-1"
@@ -85,21 +68,22 @@ const InviteMemberByEmail = () => {
           ))}
         </View>
         <Text className="mt-2 text-sm text-gray-600">
-          Đặng Phan Gia Đức sẽ giận nếu bạn không đồng ý tham gia quỹ cùng. Tham
-          gia ngay!
+          {
+            INVITE_MEMBER_TEXT_TRANSLATE.INVITE_MEMBER_BY_EMAIL
+              .INVITE_MESSAGE_NOTE
+          }
         </Text>
       </View>
 
-      {/* Search Results */}
       {filteredUsers.length > 0 ? (
-        <FlatList
+        <FlatListCustom
           data={filteredUsers}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <View className="flex-row items-center p-3">
               <Image
                 source={{ uri: item.avatar }}
-                className="h-10 w-10 rounded-full"
+                className="h-12 w-12 rounded-full"
               />
               <Text className="ml-3 text-base">{item.name}</Text>
             </View>
@@ -108,12 +92,9 @@ const InviteMemberByEmail = () => {
       ) : (
         searchInitiated && (
           <View className="mt-5 flex-1 items-center justify-center">
-            <Image
-              source={{ uri: "https://example.com/no-result.png" }}
-              className="h-40 w-40"
-            />
-            <Text className="mt-2 text-lg text-gray-500">
-              Không tìm thấy kết quả
+            <AntDesign name="frowno" size={40} color="gray" />
+            <Text className="mt-2 text-lg font-bold text-black">
+              {INVITE_MEMBER_TEXT_TRANSLATE.INVITE_MEMBER_BY_EMAIL.NO_RESULTS}
             </Text>
           </View>
         )
