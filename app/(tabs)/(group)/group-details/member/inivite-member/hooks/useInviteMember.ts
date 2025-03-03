@@ -16,6 +16,7 @@ const useInviteMember = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    // xử lý tạm v, có api thì nhét vào query sau
     if (searchQuery) {
       setIsLoading(true);
       setTimeout(() => {
