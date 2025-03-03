@@ -6,47 +6,29 @@ import {
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { setGroupTabHidden, setMainTabHidden } from "@/redux/slices/tabSlice";
 import { router } from "expo-router";
-import { Eye, EyeSlash } from "iconsax-react-native";
-import React, { useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import React from "react";
+import { Text, TouchableOpacity, View, ActivityIndicator } from "react-native";
 import Svg, { Path, Rect } from "react-native-svg";
-import { useDispatch } from "react-redux";
-import GROUP_LIST from "./GroupList.constant";
 import TEXT_TRANSLATE_GROUP_LIST from "./GroupList.translate";
+import useGroupList from "./hooks/useGroupList";
+import VisibilityIcon from "@/components/GroupListCustom/VisibilityIcon";
 
 const Group = () => {
-  const funds = GROUP_LIST;
-  const { TITLE, BUTTON } = TEXT_TRANSLATE_GROUP_LIST;
-  const [visible, setVisible] = useState(false);
-  const dispatch = useDispatch();
-
-  const VisibilityIcon = ({
-    visible,
-    onPress,
-  }: {
-    visible: boolean;
-    onPress: () => void;
-  }) => (
-    <TouchableOpacity onPress={onPress} className="p-2">
-      {visible ? (
-        <Eye size="20" color="#555" variant="Outline" />
-      ) : (
-        <EyeSlash size="20" color="#555" variant="Outline" />
-      )}
-    </TouchableOpacity>
-  );
+  const { state, handler } = useGroupList();
+  const { groups, isLoading, isLoadingMore, visible } = state;
+  const { handleLoadMore, dispatch, setVisible } = handler;
 
   return (
     <SafeAreaViewCustom rootClassName="bg-gray-100">
       <SectionComponent rootClassName="h-14 flex-row items-center justify-center border-b border-gray-300 bg-white px-4 shadow-sm">
         <Text className="text-lg font-semibold text-gray-900">
-          Nhóm Của Bạn
+          {TEXT_TRANSLATE_GROUP_LIST.TITLE.GROUP_FUND}
         </Text>
       </SectionComponent>
       <View className="mt-5 px-4">
         <View className="mb-4 flex-row items-center justify-between">
           <Text className="text-lg font-semibold text-primary">
-            {TITLE.GROUP_FUND}
+            {TEXT_TRANSLATE_GROUP_LIST.TITLE.GROUP_FUND}
           </Text>
           <TouchableOpacity
             className="flex-row items-center rounded-full border border-primary bg-white px-4 py-2 shadow-sm"
@@ -61,45 +43,52 @@ const Group = () => {
               />
             </Svg>
             <Text className="ml-2 text-base font-medium text-primary">
-              {BUTTON.CREATE_GROUP}
+              {TEXT_TRANSLATE_GROUP_LIST.BUTTON.CREATE_GROUP}
             </Text>
           </TouchableOpacity>
         </View>
       </View>
-      <FlatListCustom
-        className="px-4"
-        data={funds}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            className="mb-3 flex-row items-center rounded-xl border border-gray-300 bg-white p-4 shadow-md"
-            onPress={() => {
-              router.navigate(PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT as any);
-              dispatch(setMainTabHidden(true));
-              dispatch(setGroupTabHidden(false));
-            }}
-          >
-            <Svg width="64" height="64" viewBox="0 0 64 64" fill="none">
-              <Rect width="64" height="64" fill="#E5E7EB" />
-            </Svg>
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <FlatListCustom
+          className="px-4"
+          data={groups}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              className="mb-3 flex-row items-center rounded-xl border border-gray-300 bg-white p-4 shadow-md"
+              onPress={handler.handleNavigateAndHideTabbar}
+            >
+              <Svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                <Rect width="64" height="64" fill="#E5E7EB" />
+              </Svg>
 
-            <View className="ml-4 flex-1">
-              <Text className="text-lg font-semibold text-gray-900">
-                {item.name}
-              </Text>
-              <View className="mt-1 flex-row items-center justify-between">
-                <Text className="text-base text-gray-700">
-                  {visible ? item.amount : "*******"}
+              <View className="ml-4 flex-1">
+                <Text className="text-lg font-semibold text-gray-900">
+                  {item.name}
                 </Text>
-                <VisibilityIcon
-                  visible={visible}
-                  onPress={() => setVisible(!visible)}
-                />
+                <View className="mt-1 flex-row items-center justify-between">
+                  <Text className="text-base text-gray-700">
+                    {visible ? item.amount : "*******"}
+                  </Text>
+                  <VisibilityIcon
+                    visible={visible}
+                    onPress={() => setVisible(!visible)}
+                  />
+                </View>
               </View>
-            </View>
-          </TouchableOpacity>
-        )}
-      />
+            </TouchableOpacity>
+          )}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={
+            isLoadingMore ? (
+              <ActivityIndicator size="small" color="#0000ff" />
+            ) : null
+          }
+        />
+      )}
     </SafeAreaViewCustom>
   );
 };

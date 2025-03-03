@@ -31,34 +31,32 @@ const TabBar = React.memo(
         useNativeDriver: true,
       };
 
-      if (type === "main") {
+      if (hiddenTabbar) {
         Animated.timing(translateY, {
-          toValue: hiddenTabbar ? 100 : 0,
+          toValue: 100,
           duration: 650,
           ...animationConfig,
         }).start();
 
         Animated.timing(opacity, {
-          toValue: hiddenTabbar ? 0 : 1,
+          toValue: 0,
           duration: 650,
           ...animationConfig,
         }).start();
       } else {
-        translateY.setValue(100);
-
         Animated.timing(translateY, {
           toValue: 0,
-          duration: 950,
+          duration: 650,
           ...animationConfig,
         }).start();
 
         Animated.timing(opacity, {
           toValue: 1,
-          duration: 900,
+          duration: 650,
           ...animationConfig,
         }).start();
       }
-    }, [hiddenTabbar, translateY, opacity, type]);
+    }, [hiddenTabbar]);
 
     const filteredRoutes = useMemo(
       () =>

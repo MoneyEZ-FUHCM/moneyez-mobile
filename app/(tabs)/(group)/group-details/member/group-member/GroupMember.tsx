@@ -18,7 +18,7 @@ import TEXT_TRANSLATE_GROUP_MEMBER_DEFAULT from "./GroupMember.translate";
 import useGroupMember from "./hooks/useGroupMember";
 
 const GroupMember = () => {
-  const { TITLE, TEXT } = TEXT_TRANSLATE_GROUP_MEMBER_DEFAULT;
+  const { TITLE, TEXT, BUTTON } = TEXT_TRANSLATE_GROUP_MEMBER_DEFAULT;
   const { state, handler } = useGroupMember();
 
   return (
@@ -30,7 +30,10 @@ const GroupMember = () => {
         </View>
         <TouchableOpacity></TouchableOpacity>
       </SectionComponent>
-      <ScrollView className="flex-1 bg-gray-100">
+      <ScrollView
+        className="flex-1 bg-gray-100"
+        showsVerticalScrollIndicator={false}
+      >
         <ImageBackground
           source={{
             uri: "https://img.freepik.com/free-vector/family-couple-saving-money_74855-5240.jpg?t=st=1740372328~exp=1740375928~hmac=155741d254352afefdffac627bb458ff24c19578a137b14276b11ab53c20393f&w=2000",
@@ -60,19 +63,26 @@ const GroupMember = () => {
             </TouchableOpacity>
           </View>
           <ScrollView horizontal className="mb-6">
+            <View className="mr-4 items-center">
+              <TouchableOpacity
+                className="h-16 w-16 items-center justify-center rounded-full bg-gray-200"
+                onPress={() =>
+                  router.navigate(PATH_NAME.MEMBER.INVITE_MEMBER as any)
+                }
+              >
+                <AntDesign name="plus" size={30} color="#007bff" />
+              </TouchableOpacity>
+              <Text className="mt-2 text-xs">{BUTTON.ADD_NEW_MEMBER}</Text>
+            </View>
             {state.contactList?.map((item, index) => (
               <View key={index} className="mr-4 items-center">
                 <TouchableOpacity className="h-16 w-16 items-center justify-center rounded-full bg-gray-200">
-                  {item === "Add New" ? (
-                    <AntDesign name="plus" size={30} color="#007bff" />
-                  ) : (
-                    <Image
-                      source={{
-                        uri: `https://i.pravatar.cc/150?img=${index + 1}`,
-                      }}
-                      className="h-full w-full rounded-full"
-                    />
-                  )}
+                  <Image
+                    source={{
+                      uri: `https://i.pravatar.cc/150?img=${index + 2}`,
+                    }}
+                    className="h-full w-full rounded-full"
+                  />
                 </TouchableOpacity>
                 <Text className="mt-2 text-xs">{item}</Text>
               </View>

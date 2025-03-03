@@ -22,7 +22,8 @@ const GROUP_MEMBER_CONSTANT = {
       avatar: "https://randomuser.me/api/portraits/women/1.jpg",
     },
   ],
-  CONTACT_LIST: ["Add New", "Peter", "Rodney", "Victoria"],
+  CONTACT_LIST: ["Peter", "Rodney", "Victoria"],
+  ADD_MEMBER_BUTTON: "Thêm thành viên",
   GROUP_FUND_ROUTE: "group-fund/GroupFund",
 };
 
