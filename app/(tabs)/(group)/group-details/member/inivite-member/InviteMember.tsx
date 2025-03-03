@@ -1,11 +1,15 @@
-import { SafeAreaViewCustom, SectionComponent } from "@/components";
+import {
+  FlatListCustom,
+  SafeAreaViewCustom,
+  SectionComponent,
+} from "@/components";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
 import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
 import TEXT_TRANSLATE_INVITE_MEMBER from "./InviteMember.translate";
-import INVITE_MEMBER_CONSTANTS from "./InviteMember.constants";
+import INVITE_MEMBER_CONSTANTS from "./InviteMember.constant";
 
 const InviteMember = () => {
   const members = INVITE_MEMBER_CONSTANTS.MEMBERS;
@@ -58,7 +62,7 @@ const InviteMember = () => {
         )}
       </Text>
 
-      <FlatList
+      <FlatListCustom
         data={members}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (

@@ -7,9 +7,9 @@ import AntDesign from "@expo/vector-icons/build/AntDesign";
 import { router } from "expo-router";
 import React from "react";
 import { View, Text, TextInput, Image, TouchableOpacity } from "react-native";
-import INVITE_MEMBER_CONSTANTS from "./InviteMember.constants";
-import INVITE_MEMBER_TEXT_TRANSLATE from "./InviteMember.translate";
-import useInviteMember from "./hooks/UseInviteMember";
+import INVITE_MEMBER_CONSTANTS from "../InviteMember.constant";
+import INVITE_MEMBER_TEXT_TRANSLATE from "../InviteMember.translate";
+import useInviteMember from "../hooks/UseInviteMember";
 
 const InviteMemberByEmail = () => {
   const { state, handler } = useInviteMember();
@@ -93,6 +93,7 @@ const InviteMemberByEmail = () => {
         searchInitiated && (
           <View className="mt-5 flex-1 items-center justify-center">
             <AntDesign name="frowno" size={40} color="gray" />
+
             <Text className="mt-2 text-lg font-bold text-black">
               {INVITE_MEMBER_TEXT_TRANSLATE.INVITE_MEMBER_BY_EMAIL.NO_RESULTS}
             </Text>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import INVITE_MEMBER_CONSTANTS from "../InviteMember.constants";
+import INVITE_MEMBER_CONSTANTS from "../InviteMember.constant";
 
 const useInviteMember = () => {
   const [search, setSearch] = useState("");
