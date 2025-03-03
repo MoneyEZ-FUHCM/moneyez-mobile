@@ -21,7 +21,7 @@ import useGroupList from "./hooks/useGroupList";
 
 const Group = () => {
   const { state, handler } = useGroupList();
-  const { groups, isLoading, isLoadingMore, visible } = state;
+  const { groups, isLoading, isLoadingMore, visible, isFetchingData } = state;
   const { handleLoadMore, setVisible } = handler;
   const PRIMARY_COLOR = "#609084";
 
@@ -60,11 +60,11 @@ const Group = () => {
         <View></View>
       )}
 
-      {isLoading ? (
+      {isFetchingData ? (
         <View className="mb-28 flex-1 items-center justify-center">
           <ActivityIndicator size="large" color={PRIMARY_COLOR} />
         </View>
-      ) : groups.length > 0 ? (
+      ) : groups && groups.length > 0 ? (
         <FlatListCustom
           className="px-4"
           data={groups}
