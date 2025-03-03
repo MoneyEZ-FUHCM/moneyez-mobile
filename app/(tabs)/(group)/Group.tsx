@@ -8,14 +8,16 @@ import { setGroupTabHidden, setMainTabHidden } from "@/redux/slices/tabSlice";
 import { router } from "expo-router";
 import { Eye, EyeSlash } from "iconsax-react-native";
 import React, { useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View, ActivityIndicator } from "react-native";
 import Svg, { Path, Rect } from "react-native-svg";
 import { useDispatch } from "react-redux";
-import GROUP_LIST from "./GroupList.constant";
 import TEXT_TRANSLATE_GROUP_LIST from "./GroupList.translate";
+import useGroupList from "./hooks/UseGroupList";
 
 const Group = () => {
-  const funds = GROUP_LIST;
+  const { state, handler } = useGroupList();
+  const { groups, isLoading, isLoadingMore } = state;
+  const { handleLoadMore } = handler;
   const { TITLE, BUTTON } = TEXT_TRANSLATE_GROUP_LIST;
   const [visible, setVisible] = useState(false);
   const dispatch = useDispatch();
@@ -66,40 +68,51 @@ const Group = () => {
           </TouchableOpacity>
         </View>
       </View>
-      <FlatListCustom
-        className="px-4"
-        data={funds}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            className="mb-3 flex-row items-center rounded-xl border border-gray-300 bg-white p-4 shadow-md"
-            onPress={() => {
-              router.navigate(PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT as any);
-              dispatch(setMainTabHidden(true));
-              dispatch(setGroupTabHidden(false));
-            }}
-          >
-            <Svg width="64" height="64" viewBox="0 0 64 64" fill="none">
-              <Rect width="64" height="64" fill="#E5E7EB" />
-            </Svg>
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <FlatListCustom
+          className="px-4"
+          data={groups}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              className="mb-3 flex-row items-center rounded-xl border border-gray-300 bg-white p-4 shadow-md"
+              onPress={() => {
+                router.navigate(PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT as any);
+                dispatch(setMainTabHidden(true));
+                dispatch(setGroupTabHidden(false));
+              }}
+            >
+              <Svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                <Rect width="64" height="64" fill="#E5E7EB" />
+              </Svg>
 
-            <View className="ml-4 flex-1">
-              <Text className="text-lg font-semibold text-gray-900">
-                {item.name}
-              </Text>
-              <View className="mt-1 flex-row items-center justify-between">
-                <Text className="text-base text-gray-700">
-                  {visible ? item.amount : "*******"}
+              <View className="ml-4 flex-1">
+                <Text className="text-lg font-semibold text-gray-900">
+                  {item.name}
                 </Text>
-                <VisibilityIcon
-                  visible={visible}
-                  onPress={() => setVisible(!visible)}
-                />
+                <View className="mt-1 flex-row items-center justify-between">
+                  <Text className="text-base text-gray-700">
+                    {visible ? item.amount : "*******"}
+                  </Text>
+                  <VisibilityIcon
+                    visible={visible}
+                    onPress={() => setVisible(!visible)}
+                  />
+                </View>
               </View>
-            </View>
-          </TouchableOpacity>
-        )}
-      />
+            </TouchableOpacity>
+          )}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={
+            isLoadingMore ? (
+              <ActivityIndicator size="small" color="#0000ff" />
+            ) : null
+          }
+        />
+      )}
     </SafeAreaViewCustom>
   );
 };
