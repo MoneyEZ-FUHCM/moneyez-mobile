@@ -41,4 +41,4 @@ const DatePickerPersonalExpense: React.FC<DatePickerComponentProps> = ({
   );
 };
 
-export { DatePickerPersonalExpense };
+export default DatePickerPersonalExpense;

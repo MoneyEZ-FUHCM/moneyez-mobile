@@ -6,49 +6,29 @@ import {
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { setGroupTabHidden, setMainTabHidden } from "@/redux/slices/tabSlice";
 import { router } from "expo-router";
-import { Eye, EyeSlash } from "iconsax-react-native";
-import React, { useState } from "react";
+import React from "react";
 import { Text, TouchableOpacity, View, ActivityIndicator } from "react-native";
 import Svg, { Path, Rect } from "react-native-svg";
-import { useDispatch } from "react-redux";
 import TEXT_TRANSLATE_GROUP_LIST from "./GroupList.translate";
-import useGroupList from "./hooks/UseGroupList";
+import useGroupList from "./hooks/useGroupList";
+import VisibilityIcon from "@/components/GroupListCustom/VisibilityIcon";
 
 const Group = () => {
   const { state, handler } = useGroupList();
-  const { groups, isLoading, isLoadingMore } = state;
-  const { handleLoadMore } = handler;
-  const { TITLE, BUTTON } = TEXT_TRANSLATE_GROUP_LIST;
-  const [visible, setVisible] = useState(false);
-  const dispatch = useDispatch();
-
-  const VisibilityIcon = ({
-    visible,
-    onPress,
-  }: {
-    visible: boolean;
-    onPress: () => void;
-  }) => (
-    <TouchableOpacity onPress={onPress} className="p-2">
-      {visible ? (
-        <Eye size="20" color="#555" variant="Outline" />
-      ) : (
-        <EyeSlash size="20" color="#555" variant="Outline" />
-      )}
-    </TouchableOpacity>
-  );
+  const { groups, isLoading, isLoadingMore, visible } = state;
+  const { handleLoadMore, dispatch, setVisible } = handler;
 
   return (
     <SafeAreaViewCustom rootClassName="bg-gray-100">
       <SectionComponent rootClassName="h-14 flex-row items-center justify-center border-b border-gray-300 bg-white px-4 shadow-sm">
         <Text className="text-lg font-semibold text-gray-900">
-          Nhóm Của Bạn
+          {TEXT_TRANSLATE_GROUP_LIST.TITLE.GROUP_FUND}
         </Text>
       </SectionComponent>
       <View className="mt-5 px-4">
         <View className="mb-4 flex-row items-center justify-between">
           <Text className="text-lg font-semibold text-primary">
-            {TITLE.GROUP_FUND}
+            {TEXT_TRANSLATE_GROUP_LIST.TITLE.GROUP_FUND}
           </Text>
           <TouchableOpacity
             className="flex-row items-center rounded-full border border-primary bg-white px-4 py-2 shadow-sm"
@@ -63,7 +43,7 @@ const Group = () => {
               />
             </Svg>
             <Text className="ml-2 text-base font-medium text-primary">
-              {BUTTON.CREATE_GROUP}
+              {TEXT_TRANSLATE_GROUP_LIST.BUTTON.CREATE_GROUP}
             </Text>
           </TouchableOpacity>
         </View>
