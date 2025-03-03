@@ -1,22 +1,29 @@
+import NoData from "@/assets/images/InviteMemberAssets/not-found-result.png";
 import {
   FlatListCustom,
   SafeAreaViewCustom,
   SectionComponent,
 } from "@/components";
+import VisibilityIcon from "@/components/GroupListCustom/VisibilityIcon";
 import { PATH_NAME } from "@/helpers/constants/pathname";
-import { setGroupTabHidden, setMainTabHidden } from "@/redux/slices/tabSlice";
 import { router } from "expo-router";
 import React from "react";
-import { Text, TouchableOpacity, View, ActivityIndicator } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Svg, { Path, Rect } from "react-native-svg";
 import TEXT_TRANSLATE_GROUP_LIST from "./GroupList.translate";
 import useGroupList from "./hooks/useGroupList";
-import VisibilityIcon from "@/components/GroupListCustom/VisibilityIcon";
 
 const Group = () => {
   const { state, handler } = useGroupList();
   const { groups, isLoading, isLoadingMore, visible } = state;
-  const { handleLoadMore, dispatch, setVisible } = handler;
+  const { handleLoadMore, setVisible } = handler;
+  const PRIMARY_COLOR = "#609084";
 
   return (
     <SafeAreaViewCustom rootClassName="bg-gray-100">
@@ -25,35 +32,43 @@ const Group = () => {
           {TEXT_TRANSLATE_GROUP_LIST.TITLE.GROUP_FUND}
         </Text>
       </SectionComponent>
-      <View className="mt-5 px-4">
-        <View className="mb-4 flex-row items-center justify-between">
-          <Text className="text-lg font-semibold text-primary">
-            {TEXT_TRANSLATE_GROUP_LIST.TITLE.GROUP_FUND}
-          </Text>
-          <TouchableOpacity
-            className="flex-row items-center rounded-full border border-primary bg-white px-4 py-2 shadow-sm"
-            onPress={() =>
-              router.navigate(PATH_NAME.GROUP.CREATE_GROUP_STEP_1 as any)
-            }
-          >
-            <Svg width="18" height="18" viewBox="0 0 16 17" fill="none">
-              <Path
-                d="M7.33337 9.16659H3.33337V7.83325H7.33337V3.83325H8.66671V7.83325H12.6667V9.16659H8.66671V13.1666H7.33337V9.16659Z"
-                fill="#609084"
-              />
-            </Svg>
-            <Text className="ml-2 text-base font-medium text-primary">
-              {TEXT_TRANSLATE_GROUP_LIST.BUTTON.CREATE_GROUP}
+      {groups && groups.length > 0 ? (
+        <View className="mt-5 px-4">
+          <View className="mb-4 flex-row items-center justify-between">
+            <Text className="text-lg font-semibold text-primary">
+              {TEXT_TRANSLATE_GROUP_LIST.TITLE.GROUP_FUND}
             </Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              className="flex-row items-center rounded-full border border-primary bg-white px-4 py-2 shadow-sm"
+              onPress={() =>
+                router.navigate(PATH_NAME.GROUP.CREATE_GROUP_STEP_1 as any)
+              }
+            >
+              <Svg width="18" height="18" viewBox="0 0 16 17" fill="none">
+                <Path
+                  d="M7.33337 9.16659H3.33337V7.83325H7.33337V3.83325H8.66671V7.83325H12.6667V9.16659H8.66671V13.1666H7.33337V9.16659Z"
+                  fill="#609084"
+                />
+              </Svg>
+              <Text className="ml-2 text-base font-medium text-primary">
+                {TEXT_TRANSLATE_GROUP_LIST.BUTTON.CREATE_GROUP}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-      {isLoading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
       ) : (
+        <View></View>
+      )}
+
+      {isLoading ? (
+        <View className="mb-28 flex-1 items-center justify-center">
+          <ActivityIndicator size="large" color={PRIMARY_COLOR} />
+        </View>
+      ) : groups.length > 0 ? (
         <FlatListCustom
           className="px-4"
           data={groups}
+          isLoading={isLoading}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity
@@ -80,14 +95,37 @@ const Group = () => {
               </View>
             </TouchableOpacity>
           )}
-          onEndReached={handleLoadMore}
-          onEndReachedThreshold={0.5}
+          onLoadMore={handleLoadMore}
           ListFooterComponent={
             isLoadingMore ? (
-              <ActivityIndicator size="small" color="#0000ff" />
+              <ActivityIndicator size="large" color={PRIMARY_COLOR} />
             ) : null
           }
         />
+      ) : (
+        <View className="mb-28 flex-1 items-center justify-center">
+          <Image
+            source={NoData}
+            className="h-[50%] w-full rounded-full"
+            resizeMode="contain"
+          />
+          <TouchableOpacity
+            className="mt-5 flex-row items-center rounded-full border border-primary bg-white px-4 py-2 shadow-sm"
+            onPress={() =>
+              router.navigate(PATH_NAME.GROUP.CREATE_GROUP_STEP_1 as any)
+            }
+          >
+            <Svg width="18" height="18" viewBox="0 0 16 17" fill="none">
+              <Path
+                d="M7.33337 9.16659H3.33337V7.83325H7.33337V3.83325H8.66671V7.83325H12.6667V9.16659H8.66671V13.1666H7.33337V9.16659Z"
+                fill="#609084"
+              />
+            </Svg>
+            <Text className="ml-2 text-base font-medium text-primary">
+              {TEXT_TRANSLATE_GROUP_LIST.BUTTON.CREATE_GROUP}
+            </Text>
+          </TouchableOpacity>
+        </View>
       )}
     </SafeAreaViewCustom>
   );

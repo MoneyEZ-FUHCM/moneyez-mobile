@@ -50,6 +50,7 @@ const InviteMemberByEmail = () => {
             INVITE_MEMBER_TEXT_TRANSLATE.INVITE_MEMBER_BY_EMAIL
               .SEARCH_PLACEHOLDER
           }
+          value={search}
           onChangeText={handleSearch}
         />
         {search.length > 0 && (
