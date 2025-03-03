@@ -1,4 +1,8 @@
-import { useState } from "react";
+import { useDebounce } from "@/hooks/useDebounce";
+import { setGroupTabHidden } from "@/redux/slices/tabSlice";
+import { router } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import INVITE_MEMBER_CONSTANTS from "../InviteMember.constant";
 
 const useInviteMember = () => {
@@ -6,32 +10,53 @@ const useInviteMember = () => {
   const [filteredUsers, setFilteredUsers] = useState<
     { id: number; name: string; avatar: string }[]
   >([]);
-  const [searchInitiated, setSearchInitiated] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [members, setMembers] = useState(INVITE_MEMBER_CONSTANTS.MEMBERS);
+  const searchQuery = useDebounce(search, 500);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (searchQuery) {
+      setIsLoading(true);
+      setTimeout(() => {
+        const filtered = INVITE_MEMBER_CONSTANTS.USERS.filter((user) =>
+          user.name.toLowerCase().includes(searchQuery.toLowerCase()),
+        );
+        setFilteredUsers(filtered);
+        setIsLoading(false);
+      }, 300);
+    } else {
+      setFilteredUsers([]);
+      setIsLoading(false);
+    }
+  }, [searchQuery]);
 
   const handleSearch = (text: string) => {
     setSearch(text);
-    setSearchInitiated(true);
-    if (text) {
-      const filtered = INVITE_MEMBER_CONSTANTS.USERS.filter((user) =>
-        user.name.toLowerCase().includes(text.toLowerCase()),
-      );
-      setFilteredUsers(filtered);
-    } else {
-      setFilteredUsers([]);
-    }
   };
+
+  const handleBack = useCallback(() => {
+    router.back();
+    dispatch(setGroupTabHidden(false));
+  }, []);
+
+  const handleBackInviteByEmail = useCallback(() => {
+    router.back();
+    dispatch(setGroupTabHidden(false));
+  }, []);
 
   return {
     state: {
       search,
       filteredUsers,
-      searchInitiated,
+      isLoading,
       members,
     },
     handler: {
       handleSearch,
       setMembers,
+      handleBack,
+      handleBackInviteByEmail,
     },
   };
 };

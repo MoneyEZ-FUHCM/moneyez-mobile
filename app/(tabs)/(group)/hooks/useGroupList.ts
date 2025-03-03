@@ -2,6 +2,9 @@ import { useCallback, useEffect, useState } from "react";
 import { useGetGroupsQuery } from "@/services/group";
 import TEXT_TRANSLATE_GROUP_LIST from "../GroupList.translate";
 import { useDispatch } from "react-redux";
+import { router } from "expo-router";
+import { PATH_NAME } from "@/helpers/constants/pathname";
+import { setGroupTabHidden, setMainTabHidden } from "@/redux/slices/tabSlice";
 
 const useGroupList = () => {
   const pageSize = 10;
@@ -45,6 +48,12 @@ const useGroupList = () => {
     }
   }, [data?.items]);
 
+  const handleNavigateAndHideTabbar = useCallback(() => {
+    router.navigate(PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT as any);
+    dispatch(setMainTabHidden(true));
+    dispatch(setGroupTabHidden(false));
+  }, []);
+
   return {
     state: {
       groups,
@@ -58,6 +67,7 @@ const useGroupList = () => {
       dispatch,
       setGroups,
       setVisible,
+      handleNavigateAndHideTabbar,
     },
   };
 };

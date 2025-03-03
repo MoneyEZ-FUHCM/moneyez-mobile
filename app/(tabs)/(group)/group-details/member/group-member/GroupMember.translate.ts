@@ -2,6 +2,7 @@ const TEXT_TRANSLATE_GROUP_MEMBER_DEFAULT = {
   TITLE: "Nhóm Của Bạn",
   BUTTON: {
     CREATE_GROUP: "Tạo quỹ",
+    ADD_NEW_MEMBER: "Thêm thành viên",
   },
   TEXT: {
     CONTACT: "Liên Hệ",

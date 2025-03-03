@@ -7,17 +7,19 @@ import { PATH_NAME } from "@/helpers/constants/pathname";
 import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
-import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
-import TEXT_TRANSLATE_INVITE_MEMBER from "./InviteMember.translate";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import INVITE_MEMBER_CONSTANTS from "./InviteMember.constant";
+import TEXT_TRANSLATE_INVITE_MEMBER from "./InviteMember.translate";
+import useInviteMember from "./hooks/useInviteMember";
 
 const InviteMember = () => {
   const members = INVITE_MEMBER_CONSTANTS.MEMBERS;
+  const { state, handler } = useInviteMember();
 
   return (
     <SafeAreaViewCustom>
       <SectionComponent rootClassName="flex-row justify-between items-center h-14 px-4">
-        <TouchableOpacity onPress={router.back}>
+        <TouchableOpacity onPress={handler.handleBack}>
           <AntDesign name="arrowleft" size={24} color="#000000" />
         </TouchableOpacity>
         <View className="flex-row items-center gap-1">
@@ -30,9 +32,9 @@ const InviteMember = () => {
       <View className="mx-4 mb-4 flex-row justify-between">
         <TouchableOpacity
           className="flex flex-1 items-center rounded-lg bg-white p-3"
-          onPress={() =>
-            router.navigate(PATH_NAME.MEMBER.INVITE_MEMBER_BY_EMAIL as any)
-          }
+          onPress={() => {
+            router.navigate(PATH_NAME.MEMBER.INVITE_MEMBER_BY_EMAIL as any);
+          }}
         >
           <Text className="text-sm font-semibold">
             {TEXT_TRANSLATE_INVITE_MEMBER.INVITE_MEMBER.INVITE_BY_EMAIL}
