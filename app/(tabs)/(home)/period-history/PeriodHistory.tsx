@@ -4,6 +4,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { FlatListCustom, SafeAreaViewCustom, SectionComponent } from '@/components';
 import usePeriodHistory from './hooks/usePeriodHistory';
 import ChartSection from './components/ChartSection';
+import TEXT_TRANSLATE_PERIOD_HISTORY from './PeriodHistory.translate';
 
 export interface Transaction {
 	id: string;
@@ -53,7 +54,7 @@ export default function PeriodHistory() {
 			{/* BALANCE SECTION */}
 			<View className="items-center mb-4">
 				<Text className="text-base text-[#929292]">
-					Tổng số dư kỳ này của bạn
+					{TEXT_TRANSLATE_PERIOD_HISTORY.TITLE.BALANCE}
 				</Text>
 				<Text className="text-3xl font-semibold text-[#609084] mt-2">
 					{handler.formatCurrency(modelDetails.balance)}
@@ -64,7 +65,7 @@ export default function PeriodHistory() {
 			<SectionComponent rootClassName="bg-white mx-4 mb-4 p-4 rounded-lg">
 				<View className="flex-row justify-between items-center mb-4">
 					<Text className="text-lg font-semibold text-[#609084]">
-						Thống kê
+						{TEXT_TRANSLATE_PERIOD_HISTORY.TITLE.STATISTICS}
 					</Text>
 				</View>
 
@@ -94,11 +95,11 @@ export default function PeriodHistory() {
 			{/* TRANSACTIONS HEADER */}
 			<View className="flex-row justify-between items-center px-4 mb-4">
 				<Text className="text-lg font-semibold text-[#609084]">
-					Các khoản thu chi
+					{TEXT_TRANSLATE_PERIOD_HISTORY.TITLE.TRANSACTIONS}
 				</Text>
 				<Pressable onPress={handler.navigateToPeriodHistoryDetail}>
 					<Text className="text-base text-[#609084]">
-						Xem thêm &gt;
+						{TEXT_TRANSLATE_PERIOD_HISTORY.BUTTON.SEE_MORE}
 					</Text>
 				</Pressable>
 			</View>
@@ -109,10 +110,10 @@ export default function PeriodHistory() {
 		<View className="flex-1 items-center justify-center py-8">
 			<Text className="text-base text-gray-500">
 				{isLoading
-					? "Đang tải dữ liệu..."
+					? TEXT_TRANSLATE_PERIOD_HISTORY.MESSAGE_STATUS.LOADING_DATA
 					: state.error
-						? "Có lỗi xảy ra khi tải dữ liệu."
-						: "Không có giao dịch nào trong kỳ này."}
+						? TEXT_TRANSLATE_PERIOD_HISTORY.MESSAGE_STATUS.ERROR_LOADING_DATA
+						: TEXT_TRANSLATE_PERIOD_HISTORY.MESSAGE_STATUS.NO_TRANSACTIONS}
 			</Text>
 		</View>
 	);
@@ -126,7 +127,7 @@ export default function PeriodHistory() {
 							<MaterialIcons name="arrow-back" size={24} color="black" />
 						</Pressable>
 						<Text className="text-xl font-semibold text-black">
-							Đang tải...
+							{TEXT_TRANSLATE_PERIOD_HISTORY.LABELS.LOADING}
 						</Text>
 						<View style={{ width: 24 }} />
 					</View>
@@ -134,7 +135,7 @@ export default function PeriodHistory() {
 
 				<View className="flex-1 items-center justify-center">
 					<ActivityIndicator size="large" color="#609084" />
-					<Text className="mt-2 text-[#609084]">Đang tải dữ liệu...</Text>
+					<Text className="mt-2 text-[#609084]">{TEXT_TRANSLATE_PERIOD_HISTORY.MESSAGE_STATUS.LOADING_DATA}</Text>
 				</View>
 			</SafeAreaViewCustom>
 		);
