@@ -6,20 +6,24 @@ import {
   Bookmark,
   Card,
   Category,
-  Coin,
+  Coin1,
   Eye,
   EyeSlash,
   Profile2User,
   WalletAdd1,
 } from "iconsax-react-native";
 
-const {HOME} = PATH_NAME
+const { HOME } = PATH_NAME;
 
 const HOME_SCREEN_CONSTANTS = {
   ERROR_CODE: {},
   MENU_ITEMS: [
     { label: "Thêm chi tiêu", icon: WalletAdd1, url: HOME.ADD_TRANSACTION },
-    { label: "Mô hình chi tiêu", icon: Coin , url: HOME.SPENDING_MODEL_HISTORY },
+    {
+      label: "Mô hình chi tiêu",
+      icon: Coin1,
+      url: HOME.SPENDING_MODEL_HISTORY,
+    },
     { label: "Tính năng 3", icon: Airplane },
     { label: "Tính năng 4", icon: Alarm },
     { label: "Tính năng 5", icon: Bookmark },

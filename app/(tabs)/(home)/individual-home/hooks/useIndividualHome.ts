@@ -1,5 +1,4 @@
 import { PATH_NAME } from "@/helpers/constants/pathname";
-import { formatDate } from "@/helpers/libs";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { useGetCurrentUserSpendingModelQuery } from "@/services/userSpendingModel";
 import { router } from "expo-router";
@@ -8,7 +7,8 @@ import { useDispatch } from "react-redux";
 const useIndividualHome = () => {
   const { HOME } = PATH_NAME;
   const dispatch = useDispatch();
-  const { data: currentUserSpendingModel } = useGetCurrentUserSpendingModelQuery();
+  const { data: currentUserSpendingModel } =
+    useGetCurrentUserSpendingModelQuery();
 
   const PIE_CHART_DATA = [
     {
@@ -56,16 +56,16 @@ const useIndividualHome = () => {
       const endDate = currentUserSpendingModel.data.startDate;
       const totalIncome = currentUserSpendingModel.data.totalIncome;
       const totalExpense = currentUserSpendingModel.data.totalExpense;
-      
+
       router.push({
         pathname: HOME.PERIOD_HISTORY as any,
-        params: { 
+        params: {
           userSpendingId: currentUserSpendingModel.data.id,
           startDate: startDate,
           endDate: endDate,
           totalIncome: totalIncome,
           totalExpense: totalExpense,
-        }
+        },
       });
     } else {
       // Fallback if no current spending model is available

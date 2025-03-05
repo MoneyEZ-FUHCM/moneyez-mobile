@@ -1,9 +1,13 @@
 import { TRANSACTION_TYPE } from "@/enums/globals";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
+import { PATH_NAME } from "@/helpers/constants/pathname";
 import useHideTabbar from "@/hooks/useHideTabbar";
 import useUploadImage from "@/hooks/useUploadImage";
+import { setLoading } from "@/redux/slices/loadingSlice";
+import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { useGetSubCateQuery } from "@/services/subCategory";
 import { useCreateTransactionMutation } from "@/services/transaction";
+import { useGetCurrentUserSpendingModelQuery } from "@/services/userSpendingModel";
 import { TransactionType } from "@/types/invidual.types";
 import { router } from "expo-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -11,10 +15,6 @@ import { ToastAndroid } from "react-native";
 import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 import TEXT_TRANSLATE_ADD_TRANSACTION from "../AddTransaction.translate";
-import { setLoading } from "@/redux/slices/loadingSlice";
-import { setMainTabHidden } from "@/redux/slices/tabSlice";
-import { PATH_NAME } from "@/helpers/constants/pathname";
-import { useGetCurrentUserSpendingModelQuery } from "@/services/userSpendingModel";
 
 const useAddTransaction = (type: string) => {
   const INCOME = "income";
@@ -24,7 +24,8 @@ const useAddTransaction = (type: string) => {
   const { MESSAGE_VALIDATE, MESSAGE_SUCCESS } = TEXT_TRANSLATE_ADD_TRANSACTION;
   const { HTTP_STATUS, SYSTEM_ERROR } = COMMON_CONSTANT;
   const { HOME } = PATH_NAME;
-  const { data: currentUserSpendingModel } = useGetCurrentUserSpendingModelQuery();
+  const { data: currentUserSpendingModel } =
+    useGetCurrentUserSpendingModelQuery();
 
   // state
   const [pageIndex, setPageIndex] = useState(1);
@@ -40,7 +41,7 @@ const useAddTransaction = (type: string) => {
   const [images, setImages] = useState<string[]>([]);
 
   // hooks
-  const { pickAndUploadImage, imageUrl } = useUploadImage();
+  const { imageUrl, pickAndUploadImage } = useUploadImage();
   const { data, isLoading } = useGetSubCateQuery({
     PageIndex: pageIndex,
     PageSize: pageSize,
@@ -109,16 +110,16 @@ const useAddTransaction = (type: string) => {
 
       dispatch(setLoading(true));
       const updatePayload = {
-        ...payload,
+        amount: payload.amount,
+        description: payload.description,
+        images: images,
         subcategoryId: selectedCategory,
         transactionDate: payload.dob,
-        approvalRequired: true,
         type:
           transactionType === EXPENSE
             ? TRANSACTION_TYPE.EXPENSE
             : TRANSACTION_TYPE.INCOME,
       };
-
       try {
         const res = await createTransaction(updatePayload).unwrap();
         if (res && res.status === HTTP_STATUS.SUCCESS.CREATED) {
@@ -139,19 +140,23 @@ const useAddTransaction = (type: string) => {
 
   const handleNext = () => {
     if (currentUserSpendingModel) {
-      const startDate = new Date(currentUserSpendingModel.data.startDate).toLocaleDateString("vi-VN");
-      const endDate = new Date(currentUserSpendingModel.data.endDate).toLocaleDateString("vi-VN");
+      const startDate = new Date(
+        currentUserSpendingModel.data.startDate,
+      ).toLocaleDateString("vi-VN");
+      const endDate = new Date(
+        currentUserSpendingModel.data.endDate,
+      ).toLocaleDateString("vi-VN");
 
       router.push({
         pathname: HOME.PERIOD_HISTORY as any,
         params: {
           userSpendingId: currentUserSpendingModel.data.id,
           startDate: startDate,
-          endDate: endDate
-        }
+          endDate: endDate,
+        },
       });
     }
-  }
+  };
 
   return {
     state: {

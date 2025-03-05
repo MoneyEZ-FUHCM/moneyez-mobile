@@ -211,16 +211,18 @@ const HomeScreen = () => {
             {state.MENU_ITEMS.map((item, index) => {
               const Icon = item.icon;
               return (
-              <TouchableOpacity
-                key={index}
-                className="w-1/4 items-center gap-y-1"
-                onPress={() => item.url && handler.handleNavigateMenuItem(item.url)}
-              >
-                <View className="rounded-lg bg-thirdly/70 p-2">
-                  <Icon size="32" color="#609084" variant="Bold" />
-                </View>
-                <Text className="text-[12px]">{item.label}</Text>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  key={index}
+                  className="w-1/4 items-center gap-y-1"
+                  onPress={() =>
+                    item.url && handler.handleNavigateMenuItem(item.url)
+                  }
+                >
+                  <View className="rounded-lg bg-thirdly/70 p-2">
+                    <Icon size="32" color="#609084" variant="Bold" />
+                  </View>
+                  <Text className="text-[12px]">{item.label}</Text>
+                </TouchableOpacity>
               );
             })}
           </View>

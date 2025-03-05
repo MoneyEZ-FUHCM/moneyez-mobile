@@ -3,6 +3,7 @@ import { Text, View } from "react-native";
 import { PieChart } from "react-native-gifted-charts";
 import Animated from "react-native-reanimated";
 import { usePieChart } from "./hooks/usePieChart";
+import { formatCurrency } from "@/helpers/libs";
 
 export interface PieChartData {
   percentage: number;
@@ -51,15 +52,15 @@ const PieChartCustom = React.memo(({ data, title }: PieChartCustomProps) => {
             radius={140}
             showText
             showValuesAsTooltipText
-            innerRadius={80}
+            innerRadius={100}
             centerLabelComponent={() =>
               state.selectedIndex !== null && state.isRotated ? (
                 <Animated.View
                   style={state.animatedStyles.fadeIn}
                   className="items-center justify-center px-2"
                 >
-                  <Text className="text-3xl font-bold text-black">
-                    {`${data[state.selectedIndex].percentage}%`}
+                  <Text className="text-2xl font-bold text-black">
+                    {`${formatCurrency(data[state.selectedIndex].value)}`}
                   </Text>
                   <Text className="text-center text-sm text-text-gray">
                     {data[state.selectedIndex].label}

@@ -24,8 +24,8 @@ export enum PAYMENT {
   VIETQR,
 }
 export enum TRANSACTION_TYPE {
-  EXPENSE,
   INCOME,
+  EXPENSE,
 }
 
 export enum PAYMENT_STATUS {
@@ -45,11 +45,11 @@ export enum PERIOD_UNIT {
   DAY = "DAY",
   WEEK = "WEEK",
   MONTH = "MONTH",
-  YEAR = "YEAR"
+  YEAR = "YEAR",
 }
 
 export enum TRANSACTION_STATUS {
   APPROVED = "APPROVED",
   PENDING = "PENDING",
-  REJECTED = "REJECTED"
+  REJECTED = "REJECTED",
 }

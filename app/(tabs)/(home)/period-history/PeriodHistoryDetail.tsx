@@ -1,29 +1,46 @@
-import React, { useState } from 'react';
-import { View, Text, Pressable, ActivityIndicator, TextInput } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
-import { FlatListCustom, SafeAreaViewCustom, SectionComponent } from '@/components';
-import usePeriodHistoryDetail, { Transaction } from './hooks/usePeriodHistoryDetail';
+import {
+  FlatListCustom,
+  SafeAreaViewCustom,
+  SectionComponent,
+} from "@/components";
+import { MaterialIcons } from "@expo/vector-icons";
+import React, { useState } from "react";
+import {
+  ActivityIndicator,
+  Pressable,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import usePeriodHistoryDetail, {
+  Transaction,
+} from "./hooks/usePeriodHistoryDetail";
 
 export default function PeriodHistoryDetail() {
   const { state, handler } = usePeriodHistoryDetail();
   const [showFilters, setShowFilters] = useState(false);
 
   const renderTransactionItem = ({ item }: { item: Transaction }) => (
-    <View className="flex-row justify-between items-center py-4 border-b border-[#f0f0f0]">
-      <View className="flex-row gap-3 items-center">
-        <View className="w-12 h-12 rounded-full bg-[#f5f5f5] items-center justify-center">
+    <View className="flex-row items-center justify-between border-b border-[#f0f0f0] py-4">
+      <View className="flex-row items-center gap-3">
+        <View className="h-12 w-12 items-center justify-center rounded-full bg-[#f5f5f5]">
           <MaterialIcons name={item.icon as any} size={24} color="#609084" />
         </View>
         <View className="gap-1">
-          <Text className="text-base font-medium text-black">{item.subcategory}</Text>
+          <Text className="text-base font-medium text-black">
+            {item.subcategory}
+          </Text>
           <View className="flex-row gap-3">
             <Text className="text-xs text-[#929292]">{item.date}</Text>
             <Text className="text-xs text-[#929292]">{item.time}</Text>
           </View>
         </View>
       </View>
-      <Text className={`text-base font-semibold ${item.type === 'income' ? 'text-[#00a010]' : 'text-[#cc0000]'}`}>
-        {item.type === 'income' ? '+' : '-'}{handler.formatCurrency(item.amount)}
+      <Text
+        className={`text-base font-semibold ${item.type === "income" ? "text-[#00a010]" : "text-[#cc0000]"}`}
+      >
+        {item.type === "income" ? "+" : "-"}
+        {handler.formatCurrency(item.amount)}
       </Text>
     </View>
   );
@@ -31,23 +48,23 @@ export default function PeriodHistoryDetail() {
   const renderFooter = () => {
     if (!state.isLoadingMore) return null;
     return (
-      <View className="py-4 flex items-center justify-center">
+      <View className="flex items-center justify-center py-4">
         <ActivityIndicator size="small" color="#609084" />
       </View>
     );
   };
 
   const renderSearch = () => (
-    <View className="bg-[#f5f5f5] rounded-full flex-row items-center px-4 py-2 mb-3">
+    <View className="mb-3 flex-row items-center rounded-full bg-[#f5f5f5] px-4 py-2">
       <MaterialIcons name="search" size={20} color="#929292" />
       <TextInput
-        className="flex-1 ml-2 text-base"
+        className="ml-2 flex-1 text-base"
         placeholder="Tìm kiếm giao dịch..."
         value={state.searchQuery}
         onChangeText={handler.handleSearch}
       />
       {state.searchQuery ? (
-        <Pressable onPress={() => handler.handleSearch('')}>
+        <Pressable onPress={() => handler.handleSearch("")}>
           <MaterialIcons name="close" size={20} color="#929292" />
         </Pressable>
       ) : null}
@@ -56,56 +73,92 @@ export default function PeriodHistoryDetail() {
 
   const renderFilters = () => (
     <View className="mb-4">
-      <View className="flex-row justify-between items-center mb-2">
+      <View className="mb-2 flex-row items-center justify-between">
         <Text className="font-medium text-black">Lọc theo</Text>
         <Pressable onPress={() => setShowFilters(!showFilters)}>
-          <MaterialIcons name={showFilters ? "expand-less" : "expand-more"} size={24} color="#609084" />
+          <MaterialIcons
+            name={showFilters ? "expand-less" : "expand-more"}
+            size={24}
+            color="#609084"
+          />
         </Pressable>
       </View>
       {showFilters && (
         <View>
           {/* Type Filter */}
           <View className="mb-3">
-            <Text className="text-[#929292] mb-2">Loại giao dịch</Text>
+            <Text className="mb-2 text-[#929292]">Loại giao dịch</Text>
             <View className="flex-row gap-2">
               <Pressable
-                onPress={() => handler.handleFilterByType('all')}
-                className={`py-1 px-3 rounded-full ${state.filterType === 'all' ? 'bg-[#609084]' : 'bg-[#f0f0f0]'}`}
+                onPress={() => handler.handleFilterByType("all")}
+                className={`rounded-full px-3 py-1 ${state.filterType === "all" ? "bg-[#609084]" : "bg-[#f0f0f0]"}`}
               >
-                <Text className={state.filterType === 'all' ? 'text-white' : 'text-black'}>Tất cả</Text>
+                <Text
+                  className={
+                    state.filterType === "all" ? "text-white" : "text-black"
+                  }
+                >
+                  Tất cả
+                </Text>
               </Pressable>
               <Pressable
-                onPress={() => handler.handleFilterByType('income')}
-                className={`py-1 px-3 rounded-full ${state.filterType === 'income' ? 'bg-[#00a010]' : 'bg-[#f0f0f0]'}`}
+                onPress={() => handler.handleFilterByType("income")}
+                className={`rounded-full px-3 py-1 ${state.filterType === "income" ? "bg-[#00a010]" : "bg-[#f0f0f0]"}`}
               >
-                <Text className={state.filterType === 'income' ? 'text-white' : 'text-black'}>Thu nhập</Text>
+                <Text
+                  className={
+                    state.filterType === "income" ? "text-white" : "text-black"
+                  }
+                >
+                  Thu nhập
+                </Text>
               </Pressable>
               <Pressable
-                onPress={() => handler.handleFilterByType('expense')}
-                className={`py-1 px-3 rounded-full ${state.filterType === 'expense' ? 'bg-[#cc0000]' : 'bg-[#f0f0f0]'}`}
+                onPress={() => handler.handleFilterByType("expense")}
+                className={`rounded-full px-3 py-1 ${state.filterType === "expense" ? "bg-[#cc0000]" : "bg-[#f0f0f0]"}`}
               >
-                <Text className={state.filterType === 'expense' ? 'text-white' : 'text-black'}>Chi tiêu</Text>
+                <Text
+                  className={
+                    state.filterType === "expense" ? "text-white" : "text-black"
+                  }
+                >
+                  Chi tiêu
+                </Text>
               </Pressable>
             </View>
           </View>
           {/* Subcategory Filter */}
           {state.subcategories.length > 0 && (
             <View className="mb-3">
-              <Text className="text-[#929292] mb-2">Danh mục</Text>
+              <Text className="mb-2 text-[#929292]">Danh mục</Text>
               <View className="flex-row flex-wrap gap-2">
                 <Pressable
                   onPress={() => handler.handleFilterBySubcategory(null)}
-                  className={`py-1 px-3 rounded-full mb-2 ${!state.selectedSubcategory ? 'bg-[#609084]' : 'bg-[#f0f0f0]'}`}
+                  className={`mb-2 rounded-full px-3 py-1 ${!state.selectedSubcategory ? "bg-[#609084]" : "bg-[#f0f0f0]"}`}
                 >
-                  <Text className={!state.selectedSubcategory ? 'text-white' : 'text-black'}>Tất cả</Text>
+                  <Text
+                    className={
+                      !state.selectedSubcategory ? "text-white" : "text-black"
+                    }
+                  >
+                    Tất cả
+                  </Text>
                 </Pressable>
-                {state.subcategories.map(subcategory => (
+                {state.subcategories.map((subcategory) => (
                   <Pressable
                     key={subcategory.id}
-                    onPress={() => handler.handleFilterBySubcategory(subcategory.id)}
-                    className={`py-1 px-3 rounded-full mb-2 ${state.selectedSubcategory === subcategory.id ? 'bg-[#609084]' : 'bg-[#f0f0f0]'}`}
+                    onPress={() =>
+                      handler.handleFilterBySubcategory(subcategory.id)
+                    }
+                    className={`mb-2 rounded-full px-3 py-1 ${state.selectedSubcategory === subcategory.id ? "bg-[#609084]" : "bg-[#f0f0f0]"}`}
                   >
-                    <Text className={state.selectedSubcategory === subcategory.id ? 'text-white' : 'text-black'}>
+                    <Text
+                      className={
+                        state.selectedSubcategory === subcategory.id
+                          ? "text-white"
+                          : "text-black"
+                      }
+                    >
                       {subcategory.name}
                     </Text>
                   </Pressable>
@@ -113,7 +166,10 @@ export default function PeriodHistoryDetail() {
               </View>
             </View>
           )}
-          <Pressable onPress={handler.resetFilters} className="self-end py-1 px-3 bg-[#f0f0f0] rounded-full">
+          <Pressable
+            onPress={handler.resetFilters}
+            className="self-end rounded-full bg-[#f0f0f0] px-3 py-1"
+          >
             <Text className="text-[#609084]">Xóa bộ lọc</Text>
           </Pressable>
         </View>
@@ -122,8 +178,8 @@ export default function PeriodHistoryDetail() {
   );
 
   const renderSummary = () => (
-    <View className="bg-white p-4 rounded-lg mb-4">
-      <View className="flex-row justify-between items-center">
+    <View className="mb-4 rounded-lg bg-white p-4">
+      <View className="flex-row items-center justify-between">
         <View>
           <Text className="text-sm text-[#929292]">Tổng thu</Text>
           <Text className="text-base font-semibold text-[#00a010]">
@@ -150,8 +206,10 @@ export default function PeriodHistoryDetail() {
     <View>
       {renderSummary()}
       {renderFilters()}
-      <Text className="text-lg font-semibold text-[#609084] mb-2">
-        {state.totalCount > 0 ? `${state.totalCount} giao dịch` : "Danh sách giao dịch"}
+      <Text className="mb-2 text-lg font-semibold text-[#609084]">
+        {state.totalCount > 0
+          ? `${state.totalCount} giao dịch`
+          : "Danh sách giao dịch"}
       </Text>
     </View>
   );
@@ -172,7 +230,9 @@ export default function PeriodHistoryDetail() {
         </SectionComponent>
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#609084" />
-          <Text className="mt-2 text-[#609084]">Đang tải dữ liệu giao dịch...</Text>
+          <Text className="mt-2 text-[#609084]">
+            Đang tải dữ liệu giao dịch...
+          </Text>
         </View>
       </SafeAreaViewCustom>
     );
@@ -199,7 +259,7 @@ export default function PeriodHistoryDetail() {
         <FlatListCustom
           data={state.transactions}
           renderItem={renderTransactionItem}
-          keyExtractor={item => item.id}
+          keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
           ListHeaderComponent={renderListHeader}
           ListFooterComponent={renderFooter}

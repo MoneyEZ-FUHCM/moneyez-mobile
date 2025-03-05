@@ -1,4 +1,3 @@
-// @types/spendingModel.types.ts
 import { PERIOD_UNIT } from "@/enums/globals";
 import { BaseResponse } from "./system.types";
 
@@ -14,19 +13,40 @@ export interface SpendingModel {
   isDeleted: boolean;
 }
 
+// export interface UserSpendingModel {
+//   id: string;
+//   spendingModelId: string;
+//   name: string;
+//   description: string;
+//   isTemplate: boolean;
+//   periodUnit: PERIOD_UNIT;
+//   periodValue: number;
+//   startDate: string;
+//   endDate: string;
+//   isDeleted: boolean;
+//   totalIncome?: number;
+//   totalExpense?: number;
+// }
+
 export interface UserSpendingModel {
   id: string;
-  spendingModelId: string;
-  name: string;
-  description: string;
-  isTemplate: boolean;
-  periodUnit: PERIOD_UNIT;
-  periodValue: number;
+  modelId: string;
+  modelName: string;
   startDate: string;
   endDate: string;
-  isDeleted: boolean;
-  totalIncome?: number;
-  totalExpense?: number;
+  totalIncome: number;
+  totalExpense: number;
+}
+
+export interface SpendingModelHistoryState {
+  spendingModelsByYear: Array<{
+    year: string;
+    userSpendingModels: UserSpendingModel[];
+  }>;
+  filters: { id: string; label: string }[];
+  activeFilter: string;
+  isLoading: boolean;
+  error: any;
 }
 
 export type UserSpendingModelApiResponse = BaseResponse<UserSpendingModel>;

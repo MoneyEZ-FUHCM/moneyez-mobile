@@ -9,12 +9,14 @@ export const formatCurrency = (value: number): string =>
   new Intl.NumberFormat("vi-VN", {
     style: "currency",
     currency: "VND",
-  }).format(value);
+  })
+    .format(value)
+    .replace(/\s₫/, "đ");
 
 export const formatDate = (
   date: moment.MomentInput,
-  pattern: string = 'DD/MM/YYYY'
+  pattern: string = "DD/MM/YYYY",
 ): string => {
-  if (!date) return 'N/A';
+  if (!date) return "N/A";
   return moment(date).format(pattern);
 };

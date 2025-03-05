@@ -31,7 +31,7 @@ export default function IndividualHome() {
           <Text></Text>
         </View>
       </SectionComponent>
-      <ScrollViewCustom>
+      <ScrollViewCustom showsVerticalScrollIndicator={false}>
         {/* BALANCE CARD */}
         <SectionComponent rootClassName="mx-5 mt-8 rounded-[10px] bg-white p-4 shadow-sm">
           <View className="flex-row items-center justify-between">

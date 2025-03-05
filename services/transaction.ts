@@ -8,7 +8,7 @@ const transactionApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     createTransaction: builder.mutation({
       query: (payload) => ({
-        url: "transactions",
+        url: "transactions/user",
         method: HTTP_METHOD.POST,
         body: payload,
       }),
@@ -36,6 +36,10 @@ const transactionApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useCreateTransactionMutation, useGetTransactionQuery, useGetTransactionByModelQuery } = transactionApi;
+export const {
+  useCreateTransactionMutation,
+  useGetTransactionQuery,
+  useGetTransactionByModelQuery,
+} = transactionApi;
 
 export default transactionApi;

@@ -1,12 +1,12 @@
-import { useEffect, useState, useCallback } from "react";
-import { useLocalSearchParams, router } from "expo-router";
-import { useGetTransactionByModelQuery } from "@/services/transaction";
-import { useLazyGetSubCateByIdQuery } from "@/services/subCategory";
 import { PATH_NAME } from "@/helpers/constants/pathname";
-import { TransactionType } from "@/types/invidual.types";
-import { setMainTabHidden } from "@/redux/slices/tabSlice";
-import { useDispatch } from "react-redux";
 import { formatCurrency } from "@/helpers/libs";
+import { setMainTabHidden } from "@/redux/slices/tabSlice";
+import { useLazyGetSubCateByIdQuery } from "@/services/subCategory";
+import { useGetTransactionByModelQuery } from "@/services/transaction";
+import { TransactionType } from "@/types/invidual.types";
+import { router, useLocalSearchParams } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
 export interface TransactionViewModel {
   id: string;
@@ -21,7 +21,7 @@ export interface TransactionViewModel {
 
 const formatTransaction = (
   item: any,
-  subCateIcons: Record<string, string>
+  subCateIcons: Record<string, string>,
 ): TransactionViewModel => {
   const dateObj = new Date(item.transactionDate);
   return {
@@ -30,7 +30,10 @@ const formatTransaction = (
     amount: item.amount,
     type: item.type.toLowerCase() === "income" ? "income" : "expense",
     date: dateObj.toLocaleDateString("vi-VN"),
-    time: dateObj.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" }),
+    time: dateObj.toLocaleTimeString("vi-VN", {
+      hour: "2-digit",
+      minute: "2-digit",
+    }),
     icon: subCateIcons[item.subcategoryId] || "pending",
     description: item.description,
   };
@@ -38,7 +41,13 @@ const formatTransaction = (
 
 const usePeriodHistory = () => {
   const params = useLocalSearchParams();
-  const { userSpendingId, startDate, endDate, totalIncome: incomeParam, totalExpense: expenseParam } = params;
+  const {
+    userSpendingId,
+    startDate,
+    endDate,
+    totalIncome: incomeParam,
+    totalExpense: expenseParam,
+  } = params;
   const [transactions, setTransactions] = useState<TransactionViewModel[]>([]);
   const [fetchSubCate] = useLazyGetSubCateByIdQuery();
   const [subCateIcons, setSubCateIcons] = useState<Record<string, string>>({});
@@ -50,15 +59,19 @@ const usePeriodHistory = () => {
 
   const { HOME } = PATH_NAME;
 
-  const { data: transactionsData, error, isLoading, refetch } =
-    useGetTransactionByModelQuery(
-      { modelId: userSpendingId, PageIndex: 1, PageSize: 5 },
-      { skip: !userSpendingId }
-    );
+  const {
+    data: transactionsData,
+    error,
+    isLoading,
+    refetch,
+  } = useGetTransactionByModelQuery(
+    { modelId: userSpendingId, PageIndex: 1, PageSize: 5 },
+    { skip: !userSpendingId },
+  );
 
   const fetchSubcategoryIcons = useCallback(
     async (subcategoryIds: string[]) => {
-      const newIds = subcategoryIds.filter(id => !subCateIcons[id]);
+      const newIds = subcategoryIds.filter((id) => !subCateIcons[id]);
       if (newIds.length === 0) return;
       setFetchingIcons(true);
       try {
@@ -72,23 +85,26 @@ const usePeriodHistory = () => {
           }
         });
         const icons = await Promise.all(iconPromises);
-        const iconMap = icons.reduce((acc, { id, icon }) => {
-          acc[id] = icon;
-          return acc;
-        }, {} as Record<string, string>);
-        setSubCateIcons(prev => ({ ...prev, ...iconMap }));
+        const iconMap = icons.reduce(
+          (acc, { id, icon }) => {
+            acc[id] = icon;
+            return acc;
+          },
+          {} as Record<string, string>,
+        );
+        setSubCateIcons((prev) => ({ ...prev, ...iconMap }));
       } finally {
         setFetchingIcons(false);
       }
     },
-    [fetchSubCate, subCateIcons]
+    [fetchSubCate, subCateIcons],
   );
 
   // Fetch icons when new transactions come in.
   useEffect(() => {
     if (transactionsData?.items?.length) {
       const uniqueSubCateIds = Array.from(
-        new Set(transactionsData.items.map((item: any) => item.subcategoryId))
+        new Set(transactionsData.items.map((item: any) => item.subcategoryId)),
       );
       if (uniqueSubCateIds.length) {
         fetchSubcategoryIcons(uniqueSubCateIds);

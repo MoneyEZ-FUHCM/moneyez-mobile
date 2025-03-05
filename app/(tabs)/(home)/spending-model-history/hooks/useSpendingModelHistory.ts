@@ -1,39 +1,31 @@
-import { useEffect, useState, useMemo } from "react";
-import { router } from "expo-router";
-import { useGetUserSpendingModelQuery } from "@/services/userSpendingModel";
+import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { formatCurrency, formatDate } from "@/helpers/libs";
-import { COMMON_CONSTANT } from "@/helpers/constants/common";
-
-export interface UserSpendingModel {
-  id: string;
-  modelId: string;
-  modelName: string;
-  startDate: Date;
-  endDate: Date;
-  totalIncome: number;
-  totalExpense: number;
-}
-
-interface SpendingModelHistoryState {
-  spendingModelsByYear: Array<{
-    year: string;
-    userSpendingModels: UserSpendingModel[];
-  }>;
-  filters: { id: string; label: string }[];
-  activeFilter: string;
-  isLoading: boolean;
-  error: any;
-}
+import useHideTabbar from "@/hooks/useHideTabbar";
+import { setMainTabHidden } from "@/redux/slices/tabSlice";
+import { useGetUserSpendingModelQuery } from "@/services/userSpendingModel";
+import {
+  SpendingModelHistoryState,
+  UserSpendingModel,
+} from "@/types/spendingModel.types";
+import { router } from "expo-router";
+import { useEffect, useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
 
 const useSpendingModelHistory = () => {
   const [spendingModelsByYear, setSpendingModelsByYear] = useState<
     SpendingModelHistoryState["spendingModelsByYear"]
   >([]);
-  const [activeFilter, setActiveFilter] = useState(COMMON_CONSTANT.FILTER.FILTER_ALL);
-  const [allSpendingModels, setAllSpendingModels] = useState<UserSpendingModel[]>([]);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
+  const [activeFilter, setActiveFilter] = useState(
+    COMMON_CONSTANT.FILTER.FILTER_ALL,
+  );
+  const [allSpendingModels, setAllSpendingModels] = useState<
+    UserSpendingModel[]
+  >([]);
 
   const { HOME } = PATH_NAME;
+  const dispatch = useDispatch();
 
   const {
     data: spendingData,
@@ -46,20 +38,24 @@ const useSpendingModelHistory = () => {
     const modelNames = new Set<string>();
     modelNames.add(COMMON_CONSTANT.FILTER.FILTER_ALL);
 
-    allSpendingModels.forEach(model => {
+    allSpendingModels.forEach((model) => {
       if (model.modelName) {
         modelNames.add(model.modelName.toUpperCase());
       }
     });
 
-    return Array.from(modelNames).map(name => ({
+    return Array.from(modelNames).map((name) => ({
       id: name,
-      label: name === COMMON_CONSTANT.FILTER.FILTER_ALL ? COMMON_CONSTANT.FILTER.FILTER_ALL_LABEL : name,
+      label:
+        name === COMMON_CONSTANT.FILTER.FILTER_ALL
+          ? COMMON_CONSTANT.FILTER.FILTER_ALL_LABEL
+          : name,
     }));
   }, [allSpendingModels]);
 
   // Process API data into grouped spending models
   useEffect(() => {
+    setIsLoadingHistory(true);
     if (spendingData?.items) {
       const models = spendingData.items.map((model: any) => ({
         ...model,
@@ -100,10 +96,11 @@ const useSpendingModelHistory = () => {
 
       const groupedArray = Object.keys(groups).map((year) => ({
         year,
-        userSpendingModels: groups[year], 
+        userSpendingModels: groups[year],
       }));
 
       setSpendingModelsByYear(groupedArray);
+      setIsLoadingHistory(false);
     }
   }, [spendingData]);
 
@@ -112,7 +109,10 @@ const useSpendingModelHistory = () => {
       const groups: { [key: string]: UserSpendingModel[] } = {};
 
       allSpendingModels.forEach((model) => {
-        if (activeFilter !== COMMON_CONSTANT.FILTER.FILTER_ALL && model.modelName.toUpperCase() !== activeFilter) {
+        if (
+          activeFilter !== COMMON_CONSTANT.FILTER.FILTER_ALL &&
+          model.modelName.toUpperCase() !== activeFilter
+        ) {
           return;
         }
 
@@ -133,7 +133,10 @@ const useSpendingModelHistory = () => {
     }
   }, [activeFilter, allSpendingModels]);
 
-  const applyFilter = (_filter: string, groups: { [key: string]: UserSpendingModel[] }) => {
+  const applyFilter = (
+    _filter: string,
+    groups: { [key: string]: UserSpendingModel[] },
+  ) => {
     const groupedArray = Object.keys(groups).map((year) => ({
       year,
       userSpendingModels: groups[year],
@@ -143,8 +146,10 @@ const useSpendingModelHistory = () => {
   };
 
   const handleViewPeriodHistory = (userSpendingId: string) => {
-    const model = allSpendingModels.find(model => model.id === userSpendingId);
-    
+    const model = allSpendingModels.find(
+      (model) => model.id === userSpendingId,
+    );
+
     router.push({
       pathname: HOME.PERIOD_HISTORY as any,
       params: {
@@ -153,11 +158,12 @@ const useSpendingModelHistory = () => {
         endDate: formatDate(model?.endDate),
         totalIncome: model?.totalIncome,
         totalExpense: model?.totalExpense,
-      }
+      },
     });
   };
 
   const handleBack = () => {
+    dispatch(setMainTabHidden(false));
     router.back();
   };
 
@@ -168,6 +174,7 @@ const useSpendingModelHistory = () => {
       activeFilter,
       isLoading,
       error,
+      isLoadingHistory,
     },
     handler: {
       formatCurrency,
@@ -175,7 +182,8 @@ const useSpendingModelHistory = () => {
       setActiveFilter,
       handleBack,
       refetch,
-      handleViewPeriodHistory
+      handleViewPeriodHistory,
+      useHideTabbar,
     },
   };
 };

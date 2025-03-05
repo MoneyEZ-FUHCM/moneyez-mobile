@@ -1,32 +1,54 @@
-import React from 'react';
-import { View, Text, Pressable, ActivityIndicator } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
-import { FlatListCustom, SafeAreaViewCustom, SectionComponent } from '@/components';
-import usePeriodHistory, { TransactionViewModel } from './hooks/usePeriodHistory';
-import ChartSection from './components/ChartSection';
-import TEXT_TRANSLATE_PERIOD_HISTORY from './PeriodHistory.translate';
-import { COMMON_CONSTANT } from '@/helpers/constants/common';
+import {
+  FlatListCustom,
+  SafeAreaViewCustom,
+  SectionComponent,
+  SpaceComponent,
+} from "@/components";
+import { BarChartCustom } from "@/components/BarChartCustom/BarChartCustom";
+import { COMMON_CONSTANT } from "@/helpers/constants/common";
+import { MaterialIcons } from "@expo/vector-icons";
+import React from "react";
+import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import usePeriodHistory, {
+  TransactionViewModel,
+} from "./hooks/usePeriodHistory";
+import TEXT_TRANSLATE_PERIOD_HISTORY from "./PeriodHistory.translate";
 
 export default function PeriodHistory() {
+  const barData = [
+    { value: 250, label: "T2" },
+    { value: 500, label: "T3" },
+    { value: 745, label: "T4" },
+    { value: 320, label: "T5" },
+    { value: 600, label: "T6" },
+    { value: 256, label: "T7" },
+    { value: 300, label: "CN" },
+  ];
+
   const { state, handler } = usePeriodHistory();
   const { transactions, modelDetails, isLoading, isModelLoading } = state;
 
   const renderTransactionItem = ({ item }: { item: TransactionViewModel }) => (
-    <View className="flex-row justify-between items-center py-4 border-b border-[#f0f0f0]">
-      <View className="flex-row gap-3 items-center">
-        <View className="w-12 h-12 rounded-full bg-[#f5f5f5] items-center justify-center">
+    <View className="flex-row items-center justify-between border-b border-[#f0f0f0] py-4">
+      <View className="flex-row items-center gap-3">
+        <View className="h-12 w-12 items-center justify-center rounded-full bg-[#f5f5f5]">
           <MaterialIcons name={item.icon as any} size={24} color="#609084" />
         </View>
         <View className="gap-1">
-          <Text className="text-base font-medium text-black">{item.subcategory}</Text>
+          <Text className="text-base font-medium text-black">
+            {item.subcategory}
+          </Text>
           <View className="flex-row gap-3">
             <Text className="text-xs text-[#929292]">{item.date}</Text>
             <Text className="text-xs text-[#929292]">{item.time}</Text>
           </View>
         </View>
       </View>
-      <Text className={`text-base font-semibold ${item.type === "income" ? 'text-[#00a010]' : 'text-[#cc0000]'}`}>
-        {item.type === "income" ? '+' : '-'}{handler.formatCurrency(item.amount)}
+      <Text
+        className={`text-base font-semibold ${item.type === "income" ? "text-[#00a010]" : "text-[#cc0000]"}`}
+      >
+        {item.type === "income" ? "+" : "-"}
+        {handler.formatCurrency(item.amount)}
       </Text>
     </View>
   );
@@ -34,23 +56,23 @@ export default function PeriodHistory() {
   const renderListHeader = () => (
     <>
       {/* Balance Section */}
-      <View className="items-center mb-4">
+      <View className="mb-4 items-center">
         <Text className="text-base text-[#929292]">
           {TEXT_TRANSLATE_PERIOD_HISTORY.TITLE.BALANCE}
         </Text>
-        <Text className="text-3xl font-semibold text-[#609084] mt-2">
+        <Text className="mt-2 text-3xl font-semibold text-[#609084]">
           {handler.formatCurrency(modelDetails.balance)}
         </Text>
       </View>
 
       {/* Statistics & Chart */}
-      <SectionComponent rootClassName="bg-white mx-4 mb-4 p-4 rounded-lg">
-        <View className="flex-row justify-between items-center mb-4">
-          <Text className="text-lg font-semibold text-[#609084]">
+      <SectionComponent rootClassName="bg-white relative mb-4 rounded-lg">
+        <View className="pl-2 pt-3">
+          <Text className="text-left text-base font-semibold text-[#609084]">
             {TEXT_TRANSLATE_PERIOD_HISTORY.TITLE.STATISTICS}
           </Text>
         </View>
-        <View className="flex-row justify-between mb-4">
+        {/* <View className="mb-4 flex-row justify-between">
           <View className="items-center">
             <Text className="text-[#929292]">Thu nhập</Text>
             <Text className="text-lg font-semibold text-[#00a010]">
@@ -63,15 +85,18 @@ export default function PeriodHistory() {
               {handler.formatCurrency(modelDetails.expense)}
             </Text>
           </View>
-        </View>
-        <ChartSection
+        </View> */}
+        {/* <ChartSection
           modelDetails={state.modelDetails}
           formatCurrency={handler.formatCurrency}
-        />
+        /> */}
+        <View className="p-4">
+          <BarChartCustom data={barData} />
+        </View>
       </SectionComponent>
 
       {/* Transactions Header */}
-      <View className="flex-row justify-between items-center px-4 mb-4">
+      <View className="mb-4 flex-row items-center justify-between px-4">
         <Text className="text-lg font-semibold text-[#609084]">
           {TEXT_TRANSLATE_PERIOD_HISTORY.TITLE.TRANSACTIONS}
         </Text>
@@ -107,15 +132,15 @@ export default function PeriodHistory() {
             <Text className="text-xl font-semibold text-black">
               {COMMON_CONSTANT.LOADING_TRANSLATE.LOADING}
             </Text>
-            <View style={{ width: 24 }} />
+            <SpaceComponent width={24} />
           </View>
         </SectionComponent>
-        <View className="flex-1 items-center justify-center">
+        <SectionComponent rootClassName="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#609084" />
           <Text className="mt-2 text-[#609084]">
             {COMMON_CONSTANT.LOADING_TRANSLATE.LOADING}
           </Text>
-        </View>
+        </SectionComponent>
       </SafeAreaViewCustom>
     );
   }
@@ -130,23 +155,23 @@ export default function PeriodHistory() {
           <Text className="text-lg font-bold text-primary">
             {modelDetails.startDate} - {modelDetails.endDate}
           </Text>
-          <View style={{ width: 24 }} />
+          <SpaceComponent width={24} />
         </View>
       </SectionComponent>
       <FlatListCustom
         data={transactions}
         renderItem={renderTransactionItem}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={renderListHeader}
         ListEmptyComponent={renderEmptyList}
         contentContainerStyle={{
           flexGrow: 1,
           paddingBottom: 24,
-          backgroundColor: '#fafafa',
+          backgroundColor: "#fafafa",
           paddingTop: 8,
         }}
-        className="flex-1 bg-white mx-4 rounded-lg"
+        className="mx-4 flex-1 rounded-lg bg-white"
         ItemSeparatorComponent={() => <View className="mx-4" />}
         refreshing={isLoading}
         onRefresh={handler.refetchData}
