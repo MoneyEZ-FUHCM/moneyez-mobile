@@ -1,16 +1,23 @@
-import { useState, useEffect } from "react";
-import { Keyboard, Alert } from "react-native";
+import { useState, useEffect, useCallback } from "react";
+import { Keyboard, ToastAndroid } from "react-native";
 import { router } from "expo-router";
 import * as Yup from "yup";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import TEXT_TRANSLATE_CREATE_GROUP from "../create-group/CreateGroup.translate";
+import { useDispatch } from "react-redux";
+import { useCreateGroupMutation } from "@/services/group";
+import { setLoading } from "@/redux/slices/loadingSlice";
+import { COMMON_CONSTANT } from "@/helpers/constants/common";
 
 const useCreateGroupScreen = () => {
-  const { MESSAGE_VALIDATE } = TEXT_TRANSLATE_CREATE_GROUP;
+  const { MESSAGE_VALIDATE, SUCCESS_MESSAGES } = TEXT_TRANSLATE_CREATE_GROUP;
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [groupName, setGroupName] = useState("");
   const [description, setDescription] = useState("");
   const [currentBalance, setCurrentBalance] = useState("");
+  const dispatch = useDispatch();
+  const [createGroup] = useCreateGroupMutation();
+  const { HTTP_STATUS, SYSTEM_ERROR } = COMMON_CONSTANT;
   const [errors, setErrors] = useState({
     groupName: "",
     description: "",
@@ -55,33 +62,44 @@ const useCreateGroupScreen = () => {
     let valid = true;
     let errors = { groupName: "", description: "", currentBalance: "" };
 
-    // if (!groupName) {
-    //   errors.groupName = MESSAGE_VALIDATE.GROUP_NAME_REQUIRED;
-    //   valid = false;
-    // }
-
-    // if (!description) {
-    //   errors.description = MESSAGE_VALIDATE.DESCRIPTION_REQUIRED;
-    //   valid = false;
-    // }
-
-    // if (!currentBalance || isNaN(Number(currentBalance))) {
-    //   errors.currentBalance = MESSAGE_VALIDATE.CURRENT_BALANCE_INVALID;
-    //   valid = false;
-    // }
-
     setErrors(errors);
     return valid;
   };
 
-  const handleSubmit = () => {
-    if (validateFields()) {
-      // Proceed with form submission
-      router.replace(PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT as any);
-    } else {
-      Alert.alert("Lỗi", MESSAGE_VALIDATE.ALL_FIELDS_REQUIRED);
-    }
-  };
+  const handleCreateGroup = useCallback(
+    async (payload: CreateGroupPayload) => {
+      dispatch(setLoading(true));
+      console.log("payload", payload);
+      const updatePayload = {
+        ...payload,
+        name: payload.groupName,
+        accountBankId: "fa077922-5f22-4428-e6a5-08dd5a25399b",
+        image:
+          "https://scontent.fsgn2-3.fna.fbcdn.net/v/t39.30808-1/470179908_1868434833564631_8029761738812755776_n.jpg?stp=dst-jpg_s320x320_tt6&_nc_cat=107&ccb=1-7&_nc_sid=e99d92&_nc_eui2=AeGvozjYw7Nx8cjmh5fvA_YJktlzzRd3ByOS2XPNF3cHI7jQ6qhUGfwIzdyrvKSpFsyOyNK29qATn6Gj4Q78OH_B&_nc_ohc=7PRN6c8nBCgQ7kNvgFkJjcJ&_nc_oc=Adg62PEUV5H8jtzS_mwmm6_P5NIFV2PWuOoEcceHgjTSGtMF-xQ-_nevw8i4M-PYO1IF4bnBK2tcD-N9jDWaLSHG&_nc_zt=24&_nc_ht=scontent.fsgn2-3.fna&_nc_gid=ABMvHGgMibx25_yjmnjrC_T&oh=00_AYC-dUeNyjKeZ2PJfj7r-eN5fXEppOwdJ05AEMn-4bXZ8w&oe=67CD1775",
+      };
+
+      try {
+        const res = await createGroup(updatePayload).unwrap();
+        if (res && res.status === HTTP_STATUS.SUCCESS.CREATED) {
+          ToastAndroid.show(
+            SUCCESS_MESSAGES.GROUP_CREATED_SUCCESSFULLY,
+            ToastAndroid.SHORT,
+          );
+          router.navigate(PATH_NAME.GROUP.CREATE_GROUP_STEP_2 as any);
+        }
+      } catch (err: any) {
+        ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
+      } finally {
+        dispatch(setLoading(false));
+      }
+    },
+    [
+      createGroup,
+      dispatch,
+      HTTP_STATUS.SUCCESS.CREATED,
+      SYSTEM_ERROR.SERVER_ERROR,
+    ],
+  );
 
   return {
     state: {
@@ -96,8 +114,8 @@ const useCreateGroupScreen = () => {
       setDescription,
       setCurrentBalance,
       validateFields,
-      handleSubmit,
       validationSchema,
+      handleCreateGroup,
     },
   };
 };

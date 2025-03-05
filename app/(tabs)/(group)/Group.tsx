@@ -6,8 +6,8 @@ import {
 } from "@/components";
 import VisibilityIcon from "@/components/GroupListCustom/VisibilityIcon";
 import { PATH_NAME } from "@/helpers/constants/pathname";
-import { router } from "expo-router";
-import React from "react";
+import { router, useFocusEffect } from "expo-router";
+import React, { useCallback } from "react";
 import {
   ActivityIndicator,
   Image,
@@ -22,8 +22,13 @@ import useGroupList from "./hooks/useGroupList";
 const Group = () => {
   const { state, handler } = useGroupList();
   const { groups, isLoading, isLoadingMore, visible, isFetchingData } = state;
-  const { handleLoadMore, setVisible } = handler;
+  const { handleLoadMore, setVisible, refreshGroups } = handler;
   const PRIMARY_COLOR = "#609084";
+  useFocusEffect(
+    useCallback(() => {
+      refreshGroups();
+    }, [refreshGroups]),
+  );
 
   return (
     <SafeAreaViewCustom rootClassName="bg-gray-100">

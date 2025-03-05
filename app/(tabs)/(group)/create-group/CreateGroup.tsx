@@ -41,12 +41,16 @@ const CreateGroup = () => {
         </SectionComponent>
         <Formik
           initialValues={{
+            name: state.groupName,
             groupName: state.groupName,
             description: state.description,
-            currentBalance: state.currentBalance,
+            currentBalance: Number(state.currentBalance),
+            accountBankId: "fa077922-5f22-4428-e6a5-08dd5a25399b",
+            image:
+              "https://scontent.fsgn2-3.fna.fbcdn.net/v/t39.30808-1/470179908_1868434833564631_8029761738812755776_n.jpg?stp=dst-jpg_s320x320_tt6&_nc_cat=107&ccb=1-7&_nc_sid=e99d92&_nc_eui2=AeGvozjYw7Nx8cjmh5fvA_YJktlzzRd3ByOS2XPNF3cHI7jQ6qhUGfwIzdyrvKSpFsyOyNK29qATn6Gj4Q78OH_B&_nc_ohc=7PRN6c8nBCgQ7kNvgFkJjcJ&_nc_oc=Adg62PEUV5H8jtzS_mwmm6_P5NIFV2PWuOoEcceHgjTSGtMF-xQ-_nevw8i4M-PYO1IF4bnBK2tcD-N9jDWaLSHG&_nc_zt=24&_nc_ht=scontent.fsgn2-3.fna&_nc_gid=ABMvHGgMibx25_yjmnjrC_T&oh=00_AYC-dUeNyjKeZ2PJfj7r-eN5fXEppOwdJ05AEMn-4bXZ8w&oe=67CD1775",
           }}
           validationSchema={handler.validationSchema}
-          onSubmit={handler.handleSubmit}
+          onSubmit={(values) => handler.handleCreateGroup(values)}
         >
           {({ handleSubmit }) => (
             <View className="flex-1 bg-white px-4 py-6">

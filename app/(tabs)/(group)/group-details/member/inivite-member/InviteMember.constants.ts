@@ -1,11 +1,11 @@
-export const MEMBERS = [
+const MEMBERS = [
   {
     id: "1",
     name: "Đặng Phan Gia Đức",
     phone: "0384718905",
     contribution: "0đ",
     isOwner: true,
-    avatar: "https://randomuser.me/api/portraits/men/1.jpg", // Thay thế bằng URL thật
+    avatar: "https://randomuser.me/api/portraits/men/1.jpg",
   },
   {
     id: "2",
@@ -16,3 +16,5 @@ export const MEMBERS = [
     avatar: "https://randomuser.me/api/portraits/men/2.jpg",
   },
 ];
+
+export default MEMBERS;
