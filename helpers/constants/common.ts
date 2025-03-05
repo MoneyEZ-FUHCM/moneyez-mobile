@@ -79,6 +79,16 @@ const COMMON_CONSTANT = {
   SYSTEM_ERROR: {
     SERVER_ERROR: "Lỗi hệ thống. Vui lòng thử lại sau",
   },
+
+  LOADING_TRANSLATE: {
+    LOADING: "Đang tải...",
+    ERROR_LOADING_DATA: "Có lỗi xảy ra khi tải dữ liệu.",
+  },
+  
+  FILTER: {
+    FILTER_ALL: "ALL",
+    FILTER_ALL_LABEL: "Tất cả"
+  },
 };
 
 export { COMMON_CONSTANT };

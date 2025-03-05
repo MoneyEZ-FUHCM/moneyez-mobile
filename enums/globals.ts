@@ -41,9 +41,15 @@ export enum TOAST_STATUS {
   INFO = "info",
 }
 
-export enum PeriodUnit {
-  DAY = 1,
-  WEEK = 2,
-  MONTH = 3,
-  YEAR = 4,
+export enum PERIOD_UNIT {
+  DAY = "DAY",
+  WEEK = "WEEK",
+  MONTH = "MONTH",
+  YEAR = "YEAR"
+}
+
+export enum TRANSACTION_STATUS {
+  APPROVED = "APPROVED",
+  PENDING = "PENDING",
+  REJECTED = "REJECTED"
 }
