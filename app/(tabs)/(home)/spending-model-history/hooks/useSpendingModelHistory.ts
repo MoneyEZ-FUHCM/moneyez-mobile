@@ -2,14 +2,17 @@ import { useEffect, useState, useMemo } from "react";
 import { router } from "expo-router";
 import { useGetUserSpendingModelQuery } from "@/services/userSpendingModel";
 import { PATH_NAME } from "@/helpers/constants/pathname";
+import { formatCurrency, formatDate } from "@/helpers/libs";
+import { COMMON_CONSTANT } from "@/helpers/constants/common";
 
 export interface UserSpendingModel {
   id: string;
   modelId: string;
   modelName: string;
-  period: string;
-  income: number;
-  expense: number;
+  startDate: Date;
+  endDate: Date;
+  totalIncome: number;
+  totalExpense: number;
 }
 
 interface SpendingModelHistoryState {
@@ -27,7 +30,7 @@ const useSpendingModelHistory = () => {
   const [spendingModelsByYear, setSpendingModelsByYear] = useState<
     SpendingModelHistoryState["spendingModelsByYear"]
   >([]);
-  const [activeFilter, setActiveFilter] = useState("ALL");
+  const [activeFilter, setActiveFilter] = useState(COMMON_CONSTANT.FILTER.FILTER_ALL);
   const [allSpendingModels, setAllSpendingModels] = useState<UserSpendingModel[]>([]);
 
   const { HOME } = PATH_NAME;
@@ -41,7 +44,7 @@ const useSpendingModelHistory = () => {
 
   const filters = useMemo(() => {
     const modelNames = new Set<string>();
-    modelNames.add("ALL");
+    modelNames.add(COMMON_CONSTANT.FILTER.FILTER_ALL);
 
     allSpendingModels.forEach(model => {
       if (model.modelName) {
@@ -51,7 +54,7 @@ const useSpendingModelHistory = () => {
 
     return Array.from(modelNames).map(name => ({
       id: name,
-      label: name === "ALL" ? "Tất cả" : name
+      label: name === COMMON_CONSTANT.FILTER.FILTER_ALL ? COMMON_CONSTANT.FILTER.FILTER_ALL_LABEL : name,
     }));
   }, [allSpendingModels]);
 
@@ -60,15 +63,14 @@ const useSpendingModelHistory = () => {
     if (spendingData?.items) {
       const models = spendingData.items.map((model: any) => ({
         ...model,
-        income: model.totalIncome ?? 0,
-        expense: model.totalExpense ?? 0,
+        totalIncome: model.totalIncome ?? 0,
+        totalExpense: model.totalExpense ?? 0,
       }));
 
       const allModels: UserSpendingModel[] = [];
       const groups: { [key: string]: UserSpendingModel[] } = {};
 
       models.forEach((model: any) => {
-        // Ensure we have valid dates to extract year
         const startDate = new Date(model.startDate);
         let year = "Unknown";
 
@@ -80,11 +82,10 @@ const useSpendingModelHistory = () => {
           id: model.id,
           modelId: model.spendingModelId,
           modelName: model.name,
-          income: model.income,
-          expense: model.expense,
-          period: `${new Date(model.startDate).toLocaleDateString("vi-VN")} - ${new Date(
-            model.endDate
-          ).toLocaleDateString("vi-VN")}`,
+          totalIncome: model.totalIncome,
+          totalExpense: model.totalExpense,
+          startDate: model.startDate,
+          endDate: model.endDate,
         };
 
         allModels.push(userSpendingModel);
@@ -99,30 +100,27 @@ const useSpendingModelHistory = () => {
 
       const groupedArray = Object.keys(groups).map((year) => ({
         year,
-        userSpendingModels: groups[year], // Make sure this property name matches what's used in the render function
+        userSpendingModels: groups[year], 
       }));
 
       setSpendingModelsByYear(groupedArray);
     }
   }, [spendingData]);
 
-  // Apply filtering when filter or spending models change
   useEffect(() => {
     if (allSpendingModels.length > 0) {
       const groups: { [key: string]: UserSpendingModel[] } = {};
 
       allSpendingModels.forEach((model) => {
-        if (activeFilter !== "ALL" && model.modelName.toUpperCase() !== activeFilter) {
+        if (activeFilter !== COMMON_CONSTANT.FILTER.FILTER_ALL && model.modelName.toUpperCase() !== activeFilter) {
           return;
         }
 
-        // Extract date from period and handle potential parsing errors
-        const dateParts = model.period.split(" - ")[0].split("/");
+        const startDate = new Date(model.startDate);
         let year = "Unknown";
 
-        if (dateParts.length >= 3) {
-          // Format is DD/MM/YYYY
-          year = dateParts[2];
+        if (!isNaN(startDate.getTime())) {
+          year = startDate.getFullYear().toString();
         }
 
         if (!groups[year]) {
@@ -138,25 +136,23 @@ const useSpendingModelHistory = () => {
   const applyFilter = (_filter: string, groups: { [key: string]: UserSpendingModel[] }) => {
     const groupedArray = Object.keys(groups).map((year) => ({
       year,
-      userSpendingModels: groups[year], // Make sure this property name matches what's used in the render function
+      userSpendingModels: groups[year],
     }));
 
     setSpendingModelsByYear(groupedArray);
   };
 
-  const formatCurrency = (value: number): string =>
-    new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    }).format(value);
-
   const handleViewPeriodHistory = (userSpendingId: string) => {
+    const model = allSpendingModels.find(model => model.id === userSpendingId);
+    
     router.push({
       pathname: HOME.PERIOD_HISTORY as any,
-      params: { 
+      params: {
         userSpendingId: userSpendingId,
-        startDate: allSpendingModels.find(model => model.id === userSpendingId)?.period.split(" - ")[0],
-        endDate: allSpendingModels.find(model => model.id === userSpendingId)?.period.split(" - ")[1]
+        startDate: formatDate(model?.startDate),
+        endDate: formatDate(model?.endDate),
+        totalIncome: model?.totalIncome,
+        totalExpense: model?.totalExpense,
       }
     });
   };
@@ -175,6 +171,7 @@ const useSpendingModelHistory = () => {
     },
     handler: {
       formatCurrency,
+      formatDate,
       setActiveFilter,
       handleBack,
       refetch,

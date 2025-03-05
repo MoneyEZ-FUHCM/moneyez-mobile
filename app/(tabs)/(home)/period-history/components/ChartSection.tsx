@@ -7,7 +7,8 @@ interface ChartSectionProps {
     income: number;
     expense: number;
     balance: number;
-    period: string;
+    startDate: string | string[];
+    endDate: string | string[];
   };
   formatCurrency: (value: number) => string;
 }
@@ -33,7 +34,7 @@ const ChartSection = ({ modelDetails, formatCurrency }: ChartSectionProps) => {
         showTooltip={false}
           />
       <Text style={{ marginTop: 10, fontSize: 14, color: '#555' }}>
-        {modelDetails.period}
+        {modelDetails.startDate} - {modelDetails.endDate}
       </Text>
     </View>
   );

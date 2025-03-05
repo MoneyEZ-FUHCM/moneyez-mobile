@@ -122,7 +122,7 @@ export default function IndividualHome() {
                 Tự động xóa khi chỉ tiêu ngoài hạn mức
               </Text>
             </Pressable>
-            <SpaceComponent width={17} />r
+            <SpaceComponent width={17} />
             <Pressable className="w-1/2 flex-1 rounded-lg border-[0.5px] border-primary bg-white">
               <Text className="p-2">
                 Tự động xóa khi chỉ tiêu ngoài hạn mức

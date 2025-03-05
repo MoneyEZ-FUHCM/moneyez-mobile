@@ -22,16 +22,16 @@ export default function SpendingModelHistory() {
           {spendingModel.modelName}
         </Text>
         <Text className="text-base font-medium text-[#00a010]">
-          {handler.formatCurrency(spendingModel.income)}
+          {handler.formatCurrency(spendingModel.totalIncome)}
         </Text>
       </View>
 
       <View className="mt-2 flex-row items-center justify-between">
         <Text className="text-sm italic text-[#021433]">
-          {spendingModel.period}
+          {handler.formatDate(spendingModel.startDate)} - {handler.formatDate(spendingModel.endDate)}
         </Text>
         <Text className="text-base font-medium text-[#cc0000]">
-          {handler.formatCurrency(spendingModel.expense)}
+          {handler.formatCurrency(spendingModel.totalExpense)}
         </Text>
       </View>
 
@@ -70,16 +70,14 @@ export default function SpendingModelHistory() {
               <Pressable
                 key={tab.id}
                 onPress={() => handler.setActiveFilter(tab.id)}
-                className={`rounded-2xl border px-4 py-2 ${
-                  state.activeFilter === tab.id
+                className={`rounded-2xl border px-4 py-2 ${state.activeFilter === tab.id
                     ? "border-[#609084] bg-[#609084]"
                     : "border-[#609084] bg-white"
-                }`}
+                  }`}
               >
                 <Text
-                  className={`text-base ${
-                    state.activeFilter === tab.id ? "text-white" : "text-[#609084]"
-                  }`}
+                  className={`text-base ${state.activeFilter === tab.id ? "text-white" : "text-[#609084]"
+                    }`}
                 >
                   {tab.label}
                 </Text>

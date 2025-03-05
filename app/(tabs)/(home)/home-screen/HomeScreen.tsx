@@ -133,7 +133,7 @@ const HomeScreen = () => {
                 </View>
               </View>
               <Text className="mb-6 mt-3 text-center text-[13px] font-medium text-[#757575]">
-                {TITLE.TOTAL_BALANCE}{" "}
+                {TITLE.TOTAL_BALANCE}
                 {state.isShow ? (
                   <Text className="font-medium">100.000đ</Text>
                 ) : (

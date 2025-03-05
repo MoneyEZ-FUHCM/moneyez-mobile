@@ -11,7 +11,6 @@ const TEXT_TRANSLATE_PERIOD_HISTORY = {
   LABELS: {
     INCOME: "Thu nhập",
     EXPENSE: "Chi tiêu",
-    LOADING: "Đang tải...",
   },
 
   // Button
@@ -21,9 +20,9 @@ const TEXT_TRANSLATE_PERIOD_HISTORY = {
 
   // Message
   MESSAGE_STATUS: {
-    LOADING_DATA: "Đang tải dữ liệu...",
     NO_TRANSACTIONS: "Không có giao dịch nào trong kỳ này.",
     ERROR_LOADING_DATA: "Có lỗi xảy ra khi tải dữ liệu.",
+    NO_DESCRIPTION: "Không có mô tả",
   },
 
   MESSAGE_ERROR: {},

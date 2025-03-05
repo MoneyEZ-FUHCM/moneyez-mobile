@@ -1,4 +1,5 @@
 import { PATH_NAME } from "@/helpers/constants/pathname";
+import { formatDate } from "@/helpers/libs";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { useGetCurrentUserSpendingModelQuery } from "@/services/userSpendingModel";
 import { router } from "expo-router";
@@ -51,15 +52,19 @@ const useIndividualHome = () => {
 
   const handleHistoryPress = () => {
     if (currentUserSpendingModel) {
-      const startDate = new Date(currentUserSpendingModel.data.startDate).toLocaleDateString("vi-VN");
-      const endDate = new Date(currentUserSpendingModel.data.endDate).toLocaleDateString("vi-VN");
+      const startDate = currentUserSpendingModel.data.startDate;
+      const endDate = currentUserSpendingModel.data.startDate;
+      const totalIncome = currentUserSpendingModel.data.totalIncome;
+      const totalExpense = currentUserSpendingModel.data.totalExpense;
       
       router.push({
         pathname: HOME.PERIOD_HISTORY as any,
         params: { 
           userSpendingId: currentUserSpendingModel.data.id,
           startDate: startDate,
-          endDate: endDate
+          endDate: endDate,
+          totalIncome: totalIncome,
+          totalExpense: totalExpense,
         }
       });
     } else {

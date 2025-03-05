@@ -50,6 +50,7 @@ const useHomeScreen = () => {
   }, []);
 
   const handleNavigateMenuItem = (url: string) => {
+    dispatch(setMainTabHidden(true));
     router.push(url as any);
   }
 

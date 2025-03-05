@@ -3,80 +3,94 @@ import { useLocalSearchParams, router } from "expo-router";
 import { useGetTransactionByModelQuery } from "@/services/transaction";
 import { useLazyGetSubCateByIdQuery } from "@/services/subCategory";
 import { PATH_NAME } from "@/helpers/constants/pathname";
+import { TransactionType } from "@/types/invidual.types";
+import { setMainTabHidden } from "@/redux/slices/tabSlice";
+import { useDispatch } from "react-redux";
+import { formatCurrency } from "@/helpers/libs";
 
-export interface Transaction {
+export interface TransactionViewModel {
   id: string;
   subcategory: string;
   amount: number;
-  type: 'income' | 'expense';
+  type: TransactionType;
   date: string;
   time: string;
   icon: string;
   description: string;
 }
 
+const formatTransaction = (
+  item: any,
+  subCateIcons: Record<string, string>
+): TransactionViewModel => {
+  const dateObj = new Date(item.transactionDate);
+  return {
+    id: item.id,
+    subcategory: item.description || "Không có mô tả",
+    amount: item.amount,
+    type: item.type.toLowerCase() === "income" ? "income" : "expense",
+    date: dateObj.toLocaleDateString("vi-VN"),
+    time: dateObj.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" }),
+    icon: subCateIcons[item.subcategoryId] || "pending",
+    description: item.description,
+  };
+};
+
 const usePeriodHistory = () => {
   const params = useLocalSearchParams();
-  const { userSpendingId, startDate, endDate } = params;
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [totalIncome, setTotalIncome] = useState(0);
-  const [totalExpense, setTotalExpense] = useState(0);
+  const { userSpendingId, startDate, endDate, totalIncome: incomeParam, totalExpense: expenseParam } = params;
+  const [transactions, setTransactions] = useState<TransactionViewModel[]>([]);
   const [fetchSubCate] = useLazyGetSubCateByIdQuery();
   const [subCateIcons, setSubCateIcons] = useState<Record<string, string>>({});
   const [fetchingIcons, setFetchingIcons] = useState(false);
+  const dispatch = useDispatch();
+
+  const totalIncome = Number(incomeParam || 0);
+  const totalExpense = Number(expenseParam || 0);
 
   const { HOME } = PATH_NAME;
 
-  const period = startDate && endDate
-    ? `${startDate} - ${endDate}`
-    : "Kỳ chi tiêu";
+  const { data: transactionsData, error, isLoading, refetch } =
+    useGetTransactionByModelQuery(
+      { modelId: userSpendingId, PageIndex: 1, PageSize: 5 },
+      { skip: !userSpendingId }
+    );
 
-  const {
-    data: transactionsData,
-    error,
-    isLoading,
-    refetch,
-  } = useGetTransactionByModelQuery({
-    modelId: userSpendingId,
-    PageIndex: 1,
-    PageSize: 3,
-  }, {
-    skip: !userSpendingId,
-  });
+  const fetchSubcategoryIcons = useCallback(
+    async (subcategoryIds: string[]) => {
+      const newIds = subcategoryIds.filter(id => !subCateIcons[id]);
+      if (newIds.length === 0) return;
+      setFetchingIcons(true);
+      try {
+        const iconPromises = newIds.map(async (id) => {
+          try {
+            const result = await fetchSubCate({ subcateId: id }).unwrap();
+            return { id, icon: result.data.icon };
+          } catch (err) {
+            console.error(`Failed to fetch icon for subcategory ${id}:`, err);
+            return { id, icon: "error" };
+          }
+        });
+        const icons = await Promise.all(iconPromises);
+        const iconMap = icons.reduce((acc, { id, icon }) => {
+          acc[id] = icon;
+          return acc;
+        }, {} as Record<string, string>);
+        setSubCateIcons(prev => ({ ...prev, ...iconMap }));
+      } finally {
+        setFetchingIcons(false);
+      }
+    },
+    [fetchSubCate, subCateIcons]
+  );
 
-  // Separate function to fetch subcategory icons
-  const fetchSubcategoryIcons = useCallback(async (subcategoryIds: string[]) => {
-    setFetchingIcons(true);
-    const iconPromises = subcategoryIds
-      .filter(id => !!id) // Filter out null/undefined IDs
-      .map(async (id) => {
-        try {
-          const result = await fetchSubCate({ subcateId: id }).unwrap();
-          return { id, icon: result.data.icon };
-        } catch (err) {
-          console.error(`Failed to fetch icon for subcategory ${id}:`, err);
-          return { id, icon: "error" };
-        }
-      });
-
-    const icons = await Promise.all(iconPromises);
-
-    const iconMap = icons.reduce((acc, { id, icon }) => {
-      acc[id] = icon;
-      return acc;
-    }, {} as Record<string, string>);
-
-    setSubCateIcons(prev => ({ ...prev, ...iconMap }));
-    setFetchingIcons(false);
-  }, [fetchSubCate]);
-
+  // Fetch icons when new transactions come in.
   useEffect(() => {
-    if (transactionsData?.items && transactionsData.items.length > 0) {
+    if (transactionsData?.items?.length) {
       const uniqueSubCateIds = Array.from(
         new Set(transactionsData.items.map((item: any) => item.subcategoryId))
       );
-
-      if (uniqueSubCateIds.length > 0) {
+      if (uniqueSubCateIds.length) {
         fetchSubcategoryIcons(uniqueSubCateIds);
       }
     }
@@ -84,70 +98,24 @@ const usePeriodHistory = () => {
 
   useEffect(() => {
     if (transactionsData?.items) {
-      let incomeTotal = 0;
-      let expenseTotal = 0;
-
       const formattedTransactions = transactionsData.items.map((item: any) => {
-        // Calculate totals
-        if (item.type === "INCOME") {
-          incomeTotal += item.amount;
-        } else {
-          expenseTotal += item.amount;
-        }
-
-        const date = new Date(item.transactionDate);
-        const formattedDate = date.toLocaleDateString("vi-VN");
-        const formattedTime = date.toLocaleTimeString("vi-VN", {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-
-        // Use a default icon if we don't have the real one yet
-        const icon = subCateIcons[item.subcategoryId] || "pending";
-
-        return {
-          id: item.id,
-          subcategory: item.description || "Không có mô tả",
-          amount: item.amount,
-          type: item.type.toLowerCase() === "income" ? "income" : "expense",
-          date: formattedDate,
-          time: formattedTime,
-          icon,
-          description: item.description,
-        };
+        return formatTransaction(item, subCateIcons);
       });
-
-      // Update state values
-      setTransactions(formattedTransactions as any);
-      setTotalIncome(incomeTotal);
-      setTotalExpense(expenseTotal);
+      setTransactions(formattedTransactions);
     }
   }, [transactionsData, subCateIcons]);
 
-  const formatCurrency = (value: number): string =>
-    new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    }).format(value);
-
-  const handleBack = () => {
-    router.back();
-  };
+  const handleBack = () => router.back();
 
   const navigateToPeriodHistoryDetail = () => {
+    dispatch(setMainTabHidden(true));
     router.push({
       pathname: HOME.PERIOD_HISTORY_DETAIL as any,
-      params: {
-        userSpendingId,
-        startDate,
-        endDate,
-      },
+      params: { userSpendingId, startDate, endDate, totalIncome, totalExpense },
     });
-  }
-
-  const refetchData = () => {
-    refetch();
   };
+
+  const refetchData = () => refetch();
 
   return {
     state: {
@@ -156,7 +124,8 @@ const usePeriodHistory = () => {
         income: totalIncome,
         expense: totalExpense,
         balance: totalIncome - totalExpense,
-        period: period,
+        startDate: startDate,
+        endDate: endDate,
       },
       isLoading: isLoading || fetchingIcons,
       isModelLoading: false,
