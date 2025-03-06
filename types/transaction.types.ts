@@ -31,3 +31,7 @@ export interface TransactionViewModel {
   subcategoryIcon: string;
   transactionDate: string;
 }
+
+export interface TransactionViewModelDetail extends TransactionViewModel {
+  subcategoryId: string;
+}

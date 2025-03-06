@@ -5,6 +5,13 @@ const TEXT_TRANSLATE_PERIOD_HISTORY = {
     BALANCE: "Tổng số dư kỳ này của bạn",
     STATISTICS: "Thống kê",
     TRANSACTIONS: "Các khoản thu chi",
+    AI_TEXT: "Chào bạn mình là MewMo. Kỳ này bạn đã tiết kiệm được",
+    STATISTIC: "Thống kê",
+    TYPE_TRANSACTION: "Loại giao dịch",
+    CATEGORY: "Danh mục",
+    TOTAL_INCOME: "Tổng thu",
+    TOTAL_EXPENSE: "Tổng chi",
+    LOADING_DATA: "Đang tải dữ liệu giao dịch...",
   },
 
   // Labels
@@ -16,6 +23,13 @@ const TEXT_TRANSLATE_PERIOD_HISTORY = {
   // Button
   BUTTON: {
     SEE_MORE: "Xem thêm >",
+    BUTTON_1: "Tự động xóa khi chỉ tiêu ngoài hạn mức",
+    BUTTON_2: "Tự động điều chỉnh ngân sách",
+    FILTER: "Lọc theo",
+    ALL: "Tất cả",
+    INCOME: "Thu nhập",
+    EXPENSE: "Chi tiêu",
+    CLEAR_FILTER: "Xóa bộ lộc",
   },
 
   // Message

@@ -1,9 +1,9 @@
-import { useEffect, useState, useCallback, useMemo } from "react";
-import { useLocalSearchParams, router } from "expo-router";
-import { useGetTransactionByModelQuery } from "@/services/transaction";
-import { useLazyGetSubCateByIdQuery } from "@/services/subCategory";
 import { formatCurrency } from "@/helpers/libs";
 import useDebounce from "@/hooks/useDebounce";
+import { useGetTransactionByIdQuery } from "@/services/transaction";
+import { TransactionViewModelDetail } from "@/types/transaction.types";
+import { router, useLocalSearchParams } from "expo-router";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 export interface Transaction {
   id: string;
@@ -17,24 +17,21 @@ export interface Transaction {
   subcategoryId: string;
 }
 
-const formatTransaction = (
-  item: any,
-  icons: Record<string, string>,
-): Transaction => {
+const formatTransaction = (item: TransactionViewModelDetail) => {
   const dateObj = new Date(item.transactionDate);
   return {
-    id: item.id,
-    subcategory: item.description || "Không có mô tả",
-    amount: item.amount,
-    type: item.type.toLowerCase() === "income" ? "income" : "expense",
+    id: item?.id,
+    subcategory: item?.description || "Không có mô tả",
+    amount: item?.amount,
+    type: item?.type?.toLowerCase() === "income" ? "income" : "expense",
     date: dateObj.toLocaleDateString("vi-VN"),
     time: dateObj.toLocaleTimeString("vi-VN", {
       hour: "2-digit",
       minute: "2-digit",
     }),
-    icon: icons[item.subcategoryId] || "receipt",
-    description: item.description,
-    subcategoryId: item.subcategoryId,
+    icon: item?.subcategoryIcon || "receipt",
+    description: item?.description,
+    subcategoryId: item?.subcategoryId,
   };
 };
 
@@ -48,7 +45,6 @@ const usePeriodHistoryDetail = () => {
     totalExpense: expenseParam,
   } = params;
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -62,9 +58,8 @@ const usePeriodHistoryDetail = () => {
   const [subcategories, setSubcategories] = useState<
     Array<{ id: string; name: string }>
   >([]);
-  const [fetchSubCate] = useLazyGetSubCateByIdQuery();
-  const [subCateIcons, setSubCateIcons] = useState<Record<string, string>>({});
-  const [fetchingIcons, setFetchingIcons] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+
   const totalIncome = Number(incomeParam || 0);
   const totalExpense = Number(expenseParam || 0);
 
@@ -73,92 +68,22 @@ const usePeriodHistoryDetail = () => {
     error,
     isLoading,
     refetch,
-  } = useGetTransactionByModelQuery(
-    { modelId: userSpendingId, PageIndex: currentPage, PageSize: 20 },
+  } = useGetTransactionByIdQuery(
+    { id: userSpendingId, PageIndex: 1, PageSize: 20 },
     { skip: !userSpendingId },
   );
-
-  const fetchSubcategoryIcons = useCallback(
-    async (subcategoryIds: string[]) => {
-      const newIds = subcategoryIds.filter((id) => !subCateIcons[id]);
-      if (newIds.length === 0) return;
-      setFetchingIcons(true);
-      try {
-        const iconPromises = newIds
-          .filter((id) => !!id)
-          .map(async (id) => {
-            try {
-              const result = await fetchSubCate({ subcateId: id }).unwrap();
-              return { id, icon: result.data.icon, name: result.data.name };
-            } catch (err) {
-              console.error(`Failed to fetch icon for subcategory ${id}:`, err);
-              return { id, icon: "receipt", name: "Unknown" };
-            }
-          });
-        const icons = await Promise.all(iconPromises);
-
-        const uniqueSubcategories = icons.reduce(
-          (acc, { id, name }) => {
-            if (id && !acc.some((item) => item.id === id)) {
-              acc.push({ id, name });
-            }
-            return acc;
-          },
-          [] as Array<{ id: string; name: string }>,
-        );
-        setSubcategories((prev) => {
-          const existing = [...prev];
-          uniqueSubcategories.forEach((category) => {
-            if (!existing.some((item) => item.id === category.id)) {
-              existing.push(category);
-            }
-          });
-          return existing;
-        });
-
-        const iconMap = icons.reduce(
-          (acc, { id, icon }) => {
-            if (id) acc[id] = icon;
-            return acc;
-          },
-          {} as Record<string, string>,
-        );
-        setSubCateIcons((prev) => ({ ...prev, ...iconMap }));
-      } finally {
-        setFetchingIcons(false);
-      }
-    },
-    [fetchSubCate, subCateIcons],
-  );
-
-  useEffect(() => {
-    if (transactionsData) {
-      if (transactionsData.totalCount)
-        setTotalCount(transactionsData.totalCount);
-      if (transactionsData.items && transactionsData.items.length > 0) {
-        const uniqueSubCateIds = Array.from(
-          new Set(
-            transactionsData.items.map((item: any) => item.subcategoryId),
-          ),
-        );
-        if (uniqueSubCateIds.length > 0) {
-          fetchSubcategoryIcons(uniqueSubCateIds);
-        }
-      }
-      setIsLoadingMore(false);
-    }
-  }, [transactionsData, fetchSubcategoryIcons]);
+  const totalCount = transactionsData?.totalCount ?? 0;
 
   useEffect(() => {
     if (transactionsData?.items) {
       const formattedTransactions = transactionsData.items.map((item: any) =>
-        formatTransaction(item, subCateIcons),
+        formatTransaction(item),
       );
 
       if (currentPage === 1) {
-        setTransactions(formattedTransactions);
+        setTransactions(formattedTransactions as TransactionViewModelDetail[]);
       } else {
-        setTransactions((prev) => {
+        setTransactions((prev: any) => {
           const merged = [...prev, ...formattedTransactions];
           // Remove duplicates based on transaction id.
           const unique = merged.filter(
@@ -169,7 +94,7 @@ const usePeriodHistoryDetail = () => {
         });
       }
     }
-  }, [transactionsData, subCateIcons, currentPage]);
+  }, [transactionsData, currentPage]);
 
   const filteredTransactions = useMemo(() => {
     return transactions.filter((transaction) => {
@@ -239,13 +164,14 @@ const usePeriodHistoryDetail = () => {
         startDate,
         endDate,
       },
-      isLoading: isLoading || fetchingIcons,
+      isLoading: isLoading,
       isLoadingMore,
       searchQuery,
       filterType,
       selectedSubcategory,
       subcategories,
       error,
+      showFilters,
     },
     handler: {
       formatCurrency,
@@ -256,6 +182,7 @@ const usePeriodHistoryDetail = () => {
       loadMoreData,
       resetFilters,
       refetchData,
+      setShowFilters,
     },
   };
 };

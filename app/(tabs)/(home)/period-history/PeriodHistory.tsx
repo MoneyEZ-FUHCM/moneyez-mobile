@@ -7,6 +7,7 @@ import {
 } from "@/components";
 import { PieChartCustom } from "@/components/PieChartCustom/PieChartCustom";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
+import { formatCurrency } from "@/helpers/libs";
 import { TransactionViewModel } from "@/types/transaction.types";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
@@ -61,7 +62,10 @@ export default function PeriodHistory() {
       {/* Statistics & Chart */}
       <SectionComponent rootClassName="bg-white relative mb-4 rounded-lg">
         <View className="p-4">
-          <PieChartCustom data={categories as any} title="Thống kê" />
+          <PieChartCustom
+            data={categories}
+            title={TEXT_TRANSLATE_PERIOD_HISTORY.TITLE.STATISTIC}
+          />
         </View>
       </SectionComponent>
 
@@ -69,12 +73,14 @@ export default function PeriodHistory() {
         <BudgetSummaryComponent
           summaryText={
             <>
-              Chào bạn mình là MewMo. Kỳ này bạn đã tiết kiệm được{" "}
-              <Text className="font-medium text-green">100.000đ.</Text>
+              {TEXT_TRANSLATE_PERIOD_HISTORY.TITLE.AI_TEXT}{" "}
+              <Text className="font-medium text-green">
+                {formatCurrency(modelDetails?.balance)}.
+              </Text>
             </>
           }
-          button1Text="Tự động xóa khi chỉ tiêu ngoài hạn mức"
-          button2Text="Tự động điều chỉnh ngân sách"
+          button1Text={TEXT_TRANSLATE_PERIOD_HISTORY.BUTTON.BUTTON_1}
+          button2Text={TEXT_TRANSLATE_PERIOD_HISTORY.BUTTON.BUTTON_2}
           onPressButton1={() => {}}
           onPressButton2={() => {}}
         />
@@ -97,7 +103,7 @@ export default function PeriodHistory() {
   );
 
   const renderEmptyList = () => (
-    <View className="flex-1 items-center justify-center">
+    <View className="mt-2 flex-1 items-center justify-center">
       <Text className="text-base text-gray-500">
         {isLoading
           ? COMMON_CONSTANT.LOADING_TRANSLATE.LOADING
@@ -112,12 +118,12 @@ export default function PeriodHistory() {
     return (
       <SafeAreaViewCustom rootClassName="flex-1 bg-[#fafafa]">
         <SectionComponent rootClassName="h-14 bg-white justify-center">
-          <View className="flex-row items-center justify-between px-4">
+          <View className="flex-row items-center justify-between px-5">
             <Pressable onPress={handler.handleBack}>
-              <MaterialIcons name="arrow-back" size={24} color="black" />
+              <MaterialIcons name="arrow-back" size={24} color="#609084" />
             </Pressable>
-            <Text className="text-xl font-semibold text-black">
-              {COMMON_CONSTANT.LOADING_TRANSLATE.LOADING}
+            <Text className="text-lg font-bold text-primary">
+              {modelDetails.startDate} - {modelDetails.endDate}
             </Text>
             <SpaceComponent width={24} />
           </View>
