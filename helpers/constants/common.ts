@@ -84,10 +84,10 @@ const COMMON_CONSTANT = {
     LOADING: "Đang tải...",
     ERROR_LOADING_DATA: "Có lỗi xảy ra khi tải dữ liệu.",
   },
-  
+
   FILTER: {
     FILTER_ALL: "ALL",
-    FILTER_ALL_LABEL: "Tất cả"
+    FILTER_ALL_LABEL: "Tất cả",
   },
 };
 

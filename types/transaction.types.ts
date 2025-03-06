@@ -19,4 +19,15 @@ export interface Transaction {
   isDeleted: boolean;
 }
 
-export default Transaction;
+export interface TransactionViewModel {
+  id: string;
+  subcategory: string;
+  amount: number;
+  type: TransactionType;
+  date: string;
+  time: string;
+  icon: string;
+  description: string;
+  subcategoryIcon: string;
+  transactionDate: string;
+}

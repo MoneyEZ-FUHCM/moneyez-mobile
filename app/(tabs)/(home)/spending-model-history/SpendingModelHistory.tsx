@@ -16,7 +16,7 @@ export default function SpendingModelHistory() {
   const { state, handler } = useSpendingModelHistory();
   const PRIMARY_COLOR = "#609084";
 
-  handler.useHideTabbar();
+  // handler.useHideTabbar();
 
   const renderSpendingModelItem = ({
     spendingModel,

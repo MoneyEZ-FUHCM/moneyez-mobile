@@ -149,6 +149,7 @@ const useSpendingModelHistory = () => {
     const model = allSpendingModels.find(
       (model) => model.id === userSpendingId,
     );
+    dispatch(setMainTabHidden(true));
 
     router.push({
       pathname: HOME.PERIOD_HISTORY as any,

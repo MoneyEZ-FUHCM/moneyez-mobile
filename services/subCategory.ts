@@ -21,6 +21,7 @@ const subCategoryApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetSubCateQuery, useLazyGetSubCateByIdQuery } = subCategoryApi;
+export const { useGetSubCateQuery, useLazyGetSubCateByIdQuery } =
+  subCategoryApi;
 
 export default subCategoryApi;

@@ -1,3 +1,4 @@
+import { getRandomColor } from "@/helpers/libs";
 import { useEffect, useMemo, useState } from "react";
 import {
   runOnJS,
@@ -12,29 +13,24 @@ export const usePieChart = (data: PieChartData[]) => {
   const rotation = useSharedValue(0);
   const labelOpacity = useSharedValue(0);
   const [isRotated, setIsRotated] = useState(false);
-  const originalConsoleLog = console.log;
 
-  // ẩn log
-  console.log = (...args) => {
-    if (
-      typeof args[0] === "string" &&
-      ["showTooltip", "tooltipSelectedIndex"].some((prefix) =>
-        args[0].startsWith(prefix),
-      )
-    ) {
-      return;
-    }
-    originalConsoleLog(...args);
-  };
+  const updateData = useMemo(
+    () =>
+      data.map((item) => ({
+        ...item,
+        color: item.color || getRandomColor(),
+      })),
+    [data],
+  );
 
   const highestIndex = useMemo(() => {
-    if (data.length === 0) return null;
-    return data.reduce(
+    if (updateData.length === 0) return null;
+    return updateData.reduce(
       (maxIndex, item, index) =>
-        item.percentage > data[maxIndex].percentage ? index : maxIndex,
+        item.percentage > updateData[maxIndex].percentage ? index : maxIndex,
       0,
     );
-  }, [data]);
+  }, [updateData]);
 
   const [selectedIndex, setSelectedIndex] = useState<number | null>(
     highestIndex,
@@ -59,13 +55,13 @@ export const usePieChart = (data: PieChartData[]) => {
 
   const pieData = useMemo(
     () =>
-      data.map((item, index) => ({
+      updateData.map((item, index) => ({
         ...item,
-        value: item.percentage,
+        value: item.plannedPercentage,
         focused: index === selectedIndex,
         showTooltip: index === selectedIndex,
       })),
-    [data, selectedIndex],
+    [updateData, selectedIndex],
   );
 
   const handlePress = (index: number) => {
@@ -90,6 +86,7 @@ export const usePieChart = (data: PieChartData[]) => {
       opacity,
       rotation,
       labelOpacity,
+      updateData,
       pieData,
       animatedStyles,
       selectedIndex,

@@ -1,42 +1,74 @@
-import { appInfo } from "@/helpers/constants/appInfos";
 import React from "react";
-import { Dimensions, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { BarChart } from "react-native-gifted-charts";
+import { SectionComponent } from "../SectionComponent";
+import { useBarChart } from "./hooks/useBarChart";
 
-interface BarChartData {
-  value: number;
+interface DataItem {
+  [key: string]: number | string;
   label: string;
 }
 
-interface BarChartCustomProps {
-  data: BarChartData[];
+interface GenericBarChartProps {
+  data: DataItem[];
+  categories: string[];
+  screenWidth: number;
 }
 
-const BarChartCustom = React.memo(({ data }: BarChartCustomProps) => {
-  const currentDateIndex = new Date().getDay();
-  const dow = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
-  const screenWidth = appInfo.sizes.WIDTH;
+const BarChartCustom = React.memo(
+  ({ data, categories, screenWidth }: GenericBarChartProps) => {
+    const { state, handler } = useBarChart(categories);
+    const PRIMARY_COLOR = "#609084";
+    const GRAY_COLOR = "#E7E7E7";
 
-  return (
-    <View style={{ width: screenWidth - 40 }} className="self-center">
-      <BarChart
-        barWidth={30}
-        spacing={16}
-        noOfSections={3}
-        barBorderRadius={6}
-        data={data.map((item) => ({
-          ...item,
-          frontColor:
-            item.label === dow[currentDateIndex] ? "#609084" : "#E7E7E7",
-          opacity: item.label === dow[currentDateIndex] ? 1 : 0.5,
-        }))}
-        yAxisThickness={0}
-        xAxisThickness={0}
-        isAnimated
-        animationDuration={300}
-      />
-    </View>
-  );
-});
+    return (
+      <SectionComponent
+        style={{ width: screenWidth - 40 }}
+        rootClassName="self-center"
+      >
+        <View className="mb-4 flex-row justify-end">
+          {categories.map((category) => (
+            <TouchableOpacity
+              key={category}
+              onPress={() => handler.handleSelectCategory(category)}
+              className={`mx-2 rounded-lg px-2 py-2 ${
+                state.selectedCategory === category
+                  ? "bg-primary"
+                  : "bg-gray-300"
+              }`}
+            >
+              <Text className="text-xs text-white">
+                {category.toUpperCase()}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        <BarChart
+          barWidth={30}
+          spacing={16}
+          noOfSections={3}
+          barBorderRadius={6}
+          data={data.map((item) => ({
+            value:
+              typeof item[state.selectedCategory] === "number"
+                ? (item[state.selectedCategory] as number)
+                : 0,
+            label: item.label,
+            frontColor:
+              item.label === state.dow[state.currentDateIndex]
+                ? PRIMARY_COLOR
+                : GRAY_COLOR,
+            opacity: item.label === state.dow[state.currentDateIndex] ? 1 : 0.5,
+          }))}
+          yAxisThickness={0}
+          xAxisThickness={0}
+          isAnimated
+          animationDuration={300}
+        />
+      </SectionComponent>
+    );
+  },
+);
 
 export { BarChartCustom };
