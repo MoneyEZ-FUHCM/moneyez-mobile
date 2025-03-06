@@ -1,7 +1,7 @@
 import ArrowDown from "@/assets/icons/arrow-trend-down.png";
 import ArrowUp from "@/assets/icons/arrow-trend-up.png";
-import Admin from "@/assets/images/logo/avatar_admin.jpg";
 import {
+  BudgetSummaryComponent,
   PieChartCustom,
   SafeAreaViewCustom,
   ScrollViewCustom,
@@ -38,14 +38,14 @@ export default function IndividualHome() {
             <Text className="text-sm text-black">
               {TEXT_TRANSLATE_INDIVIDUAL_HOME.TITLE.TOTAL_BALANCE}
             </Text>
-            <Pressable onPress={handler.handleHistoryPress}>
+            {/* <Pressable onPress={handler.handleHistoryPress}>
               <Text className="text-xs text-gray-500">
                 {TEXT_TRANSLATE_INDIVIDUAL_HOME.LABEL.TRANSACTION_HISTORY}
               </Text>
-            </Pressable>
+            </Pressable> */}
           </View>
           <Text className="mt-2 text-[28px] font-medium text-black">
-            {TEXT_TRANSLATE_INDIVIDUAL_HOME.LABEL.BALANCE_AMOUNT}
+            {state.totalSpent}
           </Text>
           {/* ACTION BUTTONS */}
           <View className="mt-3 flex-row justify-between">
@@ -89,46 +89,30 @@ export default function IndividualHome() {
 
         {/* PLACEHOLDER FOR CHART */}
         <SectionComponent rootClassName="mx-5 mt-4 rounded-[10px] bg-white p-4 shadow-sm">
-          <PieChartCustom data={state.PIE_CHART_DATA} title="Tổng quan" />
+          <PieChartCustom
+            data={state.categories}
+            title={TEXT_TRANSLATE_INDIVIDUAL_HOME.TITLE.OVERVIEW}
+          />
         </SectionComponent>
 
         {/* PLACEHOLDER FOR CHAT BOT */}
-        <SectionComponent rootClassName="mx-5 mt-16 mb-5 justify-center rounded-xl bg-thirdly border-primary border-[0.5px] p-4">
-          <View className="flex-row items-center gap-x-2">
-            <Image
-              source={Admin}
-              className="h-9 w-9 rounded-full"
-              resizeMode="cover"
-            />
-            <Text className="font-medium">
-              {TEXT_TRANSLATE_INDIVIDUAL_HOME.TITLE.AI_NAME}
-            </Text>
-          </View>
-          <SpaceComponent height={17} />
-          <View className="max-w-[90%] rounded-b-xl rounded-tr-xl bg-white p-2">
-            <Text>
-              Tháng này bạn đã chi{" "}
-              <Text className="font-medium text-red">7859$</Text> cho dịch vụ{" "}
-              <Text className="font-medium text-red">1,123$</Text> cho dịch vụ
-              2. <Text className="font-medium text-red">Tăng 3%</Text> so với
-              tháng trước, bạn nên chi tiêu cho dịch vụ 1 này cân nhắc hơn để
-              không vượt quá mục tiêu chi tiêu.
-            </Text>
-          </View>
-          <SpaceComponent height={10} />
-          <View className="flex-row">
-            <Pressable className="w-1/2 flex-1 rounded-lg border-[0.5px] border-primary bg-white">
-              <Text className="p-2">
-                Tự động xóa khi chỉ tiêu ngoài hạn mức
-              </Text>
-            </Pressable>
-            <SpaceComponent width={17} />
-            <Pressable className="w-1/2 flex-1 rounded-lg border-[0.5px] border-primary bg-white">
-              <Text className="p-2">
-                Tự động xóa khi chỉ tiêu ngoài hạn mức
-              </Text>
-            </Pressable>
-          </View>
+        <SectionComponent rootClassName="mx-5 mt-5">
+          <BudgetSummaryComponent
+            button1Text={TEXT_TRANSLATE_INDIVIDUAL_HOME.BUTTON.AI_BUTTON_1}
+            button2Text={TEXT_TRANSLATE_INDIVIDUAL_HOME.BUTTON.AI_BUTTON_2}
+            onPressButton1={() => {}}
+            onPressButton2={() => {}}
+            summaryText={
+              <>
+                Tháng này bạn đã chi{" "}
+                <Text className="font-medium text-red">7859$</Text> cho dịch vụ
+                1, <Text className="font-medium text-red">1,123$</Text> cho dịch
+                vụ 2. <Text className="font-medium text-red">Tăng 3%</Text> so
+                với tháng trước, bạn nên chi tiêu cho dịch vụ 1 này cân nhắc hơn
+                để không vượt quá mục tiêu chi tiêu.
+              </>
+            }
+          />
         </SectionComponent>
       </ScrollViewCustom>
     </SafeAreaViewCustom>

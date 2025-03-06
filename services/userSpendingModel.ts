@@ -23,10 +23,7 @@ const transactionApi = apiSlice.injectEndpoints({
         method: HTTP_METHOD.GET,
       }),
     }),
-    getCurrentUserSpendingModelChart: builder.query<
-      { data: UserSpendingChart },
-      void
-    >({
+    getCurrentUserSpendingModelChart: builder.query({
       query: () => ({
         url: `user-spending-models/current/chart`,
         method: HTTP_METHOD.GET,
