@@ -1,11 +1,5 @@
-import React, { useCallback, useRef, useState } from "react";
-import {
-  FlatList,
-  FlatListProps,
-  LayoutChangeEvent,
-  StyleProp,
-  ViewStyle,
-} from "react-native";
+import React, { useCallback } from "react";
+import { FlatList, FlatListProps, StyleProp, ViewStyle } from "react-native";
 
 interface FlatListCustomProps<T> extends Readonly<FlatListProps<T>> {
   readonly contentContainerStyle?: StyleProp<ViewStyle>;
@@ -21,45 +15,18 @@ export function FlatListCustom<T>({
   isBottomTab = true,
   ...props
 }: FlatListCustomProps<T>) {
-  const [listHeight, setListHeight] = useState<number>(0);
-  const [isScrollable, setIsScrollable] = useState<boolean>(false);
-  const lastCallTimeRef = useRef<number>(0);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  const handleLayout = (event: LayoutChangeEvent) => {
-    const { height } = event.nativeEvent.layout;
-    setListHeight(height);
-  };
-
-  const handleContentSizeChange = (contentHeight: number) => {
-    setIsScrollable(contentHeight < listHeight);
-  };
-
   const handleEndReached = useCallback(() => {
-    const now = Date.now();
-    if (!isLoading && onLoadMore && now - lastCallTimeRef.current > 1000) {
-      lastCallTimeRef.current = now;
-
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-
-      timeoutRef.current = setTimeout(() => {
-        onLoadMore?.();
-      }, 2000);
-    }
-  }, [isLoading, onLoadMore]);
+    onLoadMore?.();
+  }, [onLoadMore, isLoading]);
 
   return (
     <FlatList
       {...props}
       removeClippedSubviews={false}
-      onLayout={handleLayout}
-      onContentSizeChange={handleContentSizeChange}
       onEndReached={handleEndReached}
-      onEndReachedThreshold={0.1}
+      onEndReachedThreshold={0.3}
       contentContainerStyle={[
-        { paddingBottom: isScrollable && isBottomTab ? 90 : 0 },
+        { paddingBottom: isBottomTab ? 90 : 0 },
         contentContainerStyle,
       ]}
     />

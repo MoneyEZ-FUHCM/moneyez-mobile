@@ -1,0 +1,3 @@
+const INDIVIDUAL_HOME_CONSTANTS = {};
+
+export default INDIVIDUAL_HOME_CONSTANTS;

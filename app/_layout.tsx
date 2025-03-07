@@ -4,6 +4,7 @@ import { PATH_NAME } from "@/helpers/constants/pathname";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useMomentLocale } from "@/hooks/useMomentLocale";
 import { store } from "@/redux/store";
+import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import {
   DarkTheme,
   DefaultTheme,
@@ -47,17 +48,19 @@ export default function RootLayout() {
         <ThemeProvider
           value={colorScheme === THEME_COLOR.DARK ? DarkTheme : DefaultTheme}
         >
-          <Stack
-            screenOptions={{
-              headerShown: CONDITION.FALSE,
-              animation: ANIMATION_NAVIGATE_STACK.SLIDE_FROM_RIGHT,
-            }}
-          >
-            <Stack.Screen name={SPLASH.SPLASH_SCREEN} />
-            <Stack.Screen name={TABS.TABS_NAVIGATOR} />
-            <Stack.Screen name={AUTH.AUTH_NAVIGATOR} />
-            <Stack.Screen name={COMMON.ERROR_PAGE} />
-          </Stack>
+          <ActionSheetProvider>
+            <Stack
+              screenOptions={{
+                headerShown: CONDITION.FALSE,
+                animation: ANIMATION_NAVIGATE_STACK.SLIDE_FROM_RIGHT,
+              }}
+            >
+              <Stack.Screen name={SPLASH.SPLASH_SCREEN} />
+              <Stack.Screen name={TABS.TABS_NAVIGATOR} />
+              <Stack.Screen name={AUTH.AUTH_NAVIGATOR} />
+              <Stack.Screen name={COMMON.ERROR_PAGE} />
+            </Stack>
+          </ActionSheetProvider>
           <StatusBar style="auto" />
         </ThemeProvider>
       </LoadingWrapper>

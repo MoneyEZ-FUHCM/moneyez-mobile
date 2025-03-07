@@ -49,6 +49,11 @@ const useHomeScreen = () => {
     router.navigate(HOME.PERSONAL_EXPENSES_MODEL as any);
   }, []);
 
+  const handleNavigateMenuItem = (url: string) => {
+    dispatch(setMainTabHidden(true));
+    router.push(url as any);
+  }
+
   return {
     state: {
       isShow,
@@ -65,6 +70,7 @@ const useHomeScreen = () => {
     handler: {
       toggleVisibility,
       handleNavigateAddPersonalIncome,
+      handleNavigateMenuItem,
     },
   };
 };

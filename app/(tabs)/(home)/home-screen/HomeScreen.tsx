@@ -133,7 +133,7 @@ const HomeScreen = () => {
                 </View>
               </View>
               <Text className="mb-6 mt-3 text-center text-[13px] font-medium text-[#757575]">
-                {TITLE.TOTAL_BALANCE}{" "}
+                {TITLE.TOTAL_BALANCE}
                 {state.isShow ? (
                   <Text className="font-medium">100.000đ</Text>
                 ) : (
@@ -144,7 +144,7 @@ const HomeScreen = () => {
             <Text
               className="absolute bottom-3 right-3 font-semibold text-primary"
               onPress={() =>
-                router.navigate(PATH_NAME.HOME.INVIDUAL_HOME as any)
+                router.navigate(PATH_NAME.HOME.INDIVIDUAL_HOME as any)
               }
             >
               {BUTTON.DETAIL}
@@ -214,6 +214,9 @@ const HomeScreen = () => {
                 <TouchableOpacity
                   key={index}
                   className="w-1/4 items-center gap-y-1"
+                  onPress={() =>
+                    item.url && handler.handleNavigateMenuItem(item.url)
+                  }
                 >
                   <View className="rounded-lg bg-thirdly/70 p-2">
                     <Icon size="32" color="#609084" variant="Bold" />

@@ -12,9 +12,16 @@ const subCategoryApi = apiSlice.injectEndpoints({
       }),
       transformResponse: (response) => transformCommonResponse(response),
     }),
+    getSubCateById: builder.query({
+      query: ({ subcateId }) => ({
+        url: `/subcategories/${subcateId}`,
+        method: HTTP_METHOD.GET,
+      }),
+    }),
   }),
 });
 
-export const { useGetSubCateQuery } = subCategoryApi;
+export const { useGetSubCateQuery, useLazyGetSubCateByIdQuery } =
+  subCategoryApi;
 
 export default subCategoryApi;
