@@ -54,6 +54,18 @@ const TEXT_TRANSLATE_CREATE_GROUP = {
     CURRENT_BALANCE_INVALID: "Số dư hiện tại phải là một số hợp lệ",
     ALL_FIELDS_REQUIRED: "Vui lòng điền đầy đủ và chính xác tất cả các trường.",
   },
+  // Error Messages
+  ERROR_MESSAGES: {
+    GROUP_CREATION_FAILED: "Tạo nhóm thất bại, vui lòng thử lại sau",
+    NETWORK_ERROR: "Lỗi mạng, vui lòng kiểm tra kết nối của bạn",
+    UNKNOWN_ERROR: "Đã xảy ra lỗi, vui lòng thử lại",
+  },
+
+  SUCCESS_MESSAGES: {
+    GROUP_CREATED_SUCCESSFULLY: "Nhóm đã được tạo thành công",
+    CONTRIBUTION_SUCCESSFUL: "Góp quỹ thành công",
+    WITHDRAWAL_SUCCESSFUL: "Rút quỹ thành công",
+  },
 };
 
 export default TEXT_TRANSLATE_CREATE_GROUP;

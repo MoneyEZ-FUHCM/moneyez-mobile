@@ -104,13 +104,17 @@ const InviteMemberByEmail = () => {
           )}
         />
       ) : (
-        <View className="mb-24 flex-1 items-center justify-center">
-          <Image
-            source={NoData}
-            className="h-[75%] w-[75%] rounded-full"
-            resizeMode="contain"
-          />
-        </View>
+        search.length > 0 &&
+        filteredUsers.length === 0 &&
+        !isLoading && (
+          <View className="mb-24 flex-1 items-center justify-center">
+            <Image
+              source={NoData}
+              className="h-[75%] w-[75%] rounded-full"
+              resizeMode="contain"
+            />
+          </View>
+        )
       )}
     </SafeAreaViewCustom>
   );
