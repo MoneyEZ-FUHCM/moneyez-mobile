@@ -11,6 +11,7 @@ const groupApi = apiSlice.injectEndpoints({
         method: HTTP_METHOD.GET,
       }),
       transformResponse: (response) => transformCommonResponse(response),
+      providesTags: ["Group"],
     }),
     createGroup: builder.mutation({
       query: (payload) => ({
@@ -18,6 +19,7 @@ const groupApi = apiSlice.injectEndpoints({
         method: HTTP_METHOD.POST,
         body: payload,
       }),
+      invalidatesTags: ["Group"],
     }),
     updateGroup: builder.mutation({
       query: (payload) => ({
@@ -25,12 +27,14 @@ const groupApi = apiSlice.injectEndpoints({
         method: HTTP_METHOD.PUT,
         body: payload,
       }),
+      invalidatesTags: ["Group"],
     }),
     deleteGroup: builder.mutation({
       query: (id) => ({
         url: `/groups/${id}`,
         method: HTTP_METHOD.DELETE,
       }),
+      invalidatesTags: ["Group"],
     }),
   }),
 });

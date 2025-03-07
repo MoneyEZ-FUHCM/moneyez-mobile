@@ -69,7 +69,6 @@ const useCreateGroupScreen = () => {
   const handleCreateGroup = useCallback(
     async (payload: CreateGroupPayload) => {
       dispatch(setLoading(true));
-      console.log("payload", payload);
       const updatePayload = {
         ...payload,
         name: payload.groupName,

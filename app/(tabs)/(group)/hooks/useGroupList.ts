@@ -19,7 +19,7 @@ const useGroupList = () => {
 
   const dispatch = useDispatch();
 
-  const { data, isLoading, refetch } = useGetGroupsQuery({
+  const { data, isLoading } = useGetGroupsQuery({
     PageIndex: pageIndex,
     PageSize: pageSize,
   });
@@ -55,12 +55,6 @@ const useGroupList = () => {
     dispatch(setGroupTabHidden(false));
   }, [dispatch]);
 
-  const refreshGroups = useCallback(() => {
-    setPageIndex(1);
-    setGroups([]);
-    refetch();
-  }, [refetch]);
-
   return {
     state: {
       groups,
@@ -75,7 +69,6 @@ const useGroupList = () => {
       setGroups,
       setVisible: useCallback(setVisible, []),
       handleNavigateAndHideTabbar,
-      refreshGroups,
     },
   };
 };

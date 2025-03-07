@@ -96,7 +96,7 @@ const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: axiosBaseQuery,
   endpoints: () => ({}),
-  tagTypes: ["subCate"],
+  tagTypes: ["subCate", "Group"],
 });
 
 export default apiSlice;
