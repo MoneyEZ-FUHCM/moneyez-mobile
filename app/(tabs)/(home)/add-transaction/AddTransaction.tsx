@@ -24,21 +24,6 @@ export default function AddTransaction() {
 
   handler.useHideTabbar();
 
-  const ICONS_CATE = useMemo(
-    () => [
-      { icon: "home", color: "#FF5733" },
-      { icon: "business", color: "#33FF57" },
-      { icon: "work", color: "#3357FF" },
-      { icon: "shopping-cart", color: "#FF33A1" },
-      { icon: "settings", color: "#FFC300" },
-      { icon: "school", color: "#DAF7A6" },
-      { icon: "favorite", color: "#C70039" },
-      { icon: "star", color: "#900C3F" },
-      { icon: "attach-money", color: "#581845" },
-    ],
-    [],
-  );
-
   const renderTransactionTypeButton = useCallback(
     (type: "expense" | "income", label: string) => (
       <Pressable
@@ -112,7 +97,7 @@ export default function AddTransaction() {
         onSubmit={handler.handleCreateTransaction}
       >
         {({ handleSubmit }) => (
-          <ScrollView>
+          <ScrollView showsVerticalScrollIndicator={false}>
             <SectionComponent rootClassName="mx-5 mt-8">
               <View className="flex flex-row items-center space-x-4">
                 {renderTransactionTypeButton(
@@ -167,9 +152,7 @@ export default function AddTransaction() {
                     <ActivityIndicator size="small" color={PRIMARY_COLOR} />
                   </View>
                 ) : (
-                  state?.categories?.map((category, index) => {
-                    const { icon, color } =
-                      ICONS_CATE[index % ICONS_CATE.length];
+                  state?.categories?.map((category) => {
                     return (
                       <Pressable
                         key={category.id}
@@ -178,8 +161,10 @@ export default function AddTransaction() {
                       >
                         <CategoryItem
                           label={category.name}
-                          color={color}
-                          iconName={icon as keyof typeof MaterialIcons.glyphMap}
+                          color={PRIMARY_COLOR}
+                          iconName={
+                            category.icon as keyof typeof MaterialIcons.glyphMap
+                          }
                           isSelected={state.selectedCategory === category.id}
                           rootClassName="flex-1 justify-center min-h-[110px]"
                         />

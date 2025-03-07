@@ -1,6 +1,7 @@
 import { storage } from "@/configs/firebase";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { setLoading } from "@/redux/slices/loadingSlice";
+import { useActionSheet } from "@expo/react-native-action-sheet";
 import * as ImagePicker from "expo-image-picker";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useState } from "react";
@@ -8,6 +9,7 @@ import { ToastAndroid } from "react-native";
 import { useDispatch } from "react-redux";
 
 const useUploadImage = () => {
+  const { showActionSheetWithOptions } = useActionSheet();
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const { SYSTEM_ERROR } = COMMON_CONSTANT;
   const dispatch = useDispatch();
@@ -24,25 +26,69 @@ const useUploadImage = () => {
     } catch (error) {}
   };
 
-  const pickImageFromGallery = async () => {
-    try {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: "images",
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
+  const requestPermission = async (type: "camera" | "library") => {
+    if (type === "camera") {
+      const { status } = await ImagePicker.requestCameraPermissionsAsync();
+      return status === "granted";
+    } else {
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      return status === "granted";
+    }
+  };
 
-      if (!result.canceled && result.assets && result.assets.length > 0) {
+  const pickImage = async (type: "camera" | "library") => {
+    const hasPermission = await requestPermission(type);
+    if (!hasPermission) {
+      ToastAndroid.show("Bạn cần cấp quyền để tiếp tục!", ToastAndroid.SHORT);
+      return null;
+    }
+
+    try {
+      let result: ImagePicker.ImagePickerResult;
+      if (type === "camera") {
+        result = await ImagePicker.launchCameraAsync({
+          mediaTypes: "images",
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+      } else {
+        result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: "images",
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+      }
+
+      if (!result.canceled && result.assets?.length) {
         return result.assets[0];
       }
     } catch (error) {}
   };
 
   const pickAndUploadImage = async () => {
+    showActionSheetWithOptions(
+      {
+        options: ["Chụp ảnh", "Chọn từ thư viện", "Hủy"],
+        cancelButtonIndex: 2,
+        destructiveButtonIndex: 2,
+      },
+      async (buttonIndex) => {
+        if (buttonIndex === 0) {
+          await handleImage("camera");
+        } else if (buttonIndex === 1) {
+          await handleImage("library");
+        }
+      },
+    );
+  };
+
+  const handleImage = async (type: "camera" | "library") => {
     dispatch(setLoading(true));
     try {
-      const file = await pickImageFromGallery();
+      const file = await pickImage(type);
       if (!file) return;
 
       const downloadURL = await uploadImageToStorage(file);

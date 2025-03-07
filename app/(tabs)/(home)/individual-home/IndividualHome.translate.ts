@@ -1,9 +1,10 @@
-const TEXT_TRANSLATE_INVIDUAL_HOME = {
+const TEXT_TRANSLATE_INDIVIDUAL_HOME = {
   // Titles
   TITLE: {
     PERSONAL_EXPENSES: "Chi tiêu cá nhân",
     TOTAL_BALANCE: "Số dư hiện tại",
     AI_NAME: "MewMo",
+    OVERVIEW: "Tổng quan",
   },
 
   // Labels
@@ -24,6 +25,8 @@ const TEXT_TRANSLATE_INVIDUAL_HOME = {
   BUTTON: {
     VIEW_DETAILS: "Xem chi tiết",
     SEE_MORE: "Xem thêm",
+    AI_BUTTON_1: "Tự động hủy diệt khi chi tiêu ngoài hạn mức.",
+    AI_BUTTON_2: "Tự động hủy diệt khi chi tiêu ngoài hạn mức.",
   },
 
   // Error Messages
@@ -46,4 +49,4 @@ const TEXT_TRANSLATE_INVIDUAL_HOME = {
   },
 };
 
-export default TEXT_TRANSLATE_INVIDUAL_HOME;
+export default TEXT_TRANSLATE_INDIVIDUAL_HOME;
