@@ -13,27 +13,28 @@ const userSpendingModelApi = apiSlice.injectEndpoints({
         method: HTTP_METHOD.GET,
       }),
       transformResponse: (response) => transformCommonResponse(response),
+      providesTags: ["UserSpendingModel"],
     }),
-    getCurrentUserSpendingModel: builder.query<
-      { data: UserSpendingModel },
-      void
-    >({
+    getCurrentUserSpendingModel: builder.query<{ data: UserSpendingModel }, void>({
       query: () => ({
         url: `user-spending-models/current`,
         method: HTTP_METHOD.GET,
       }),
+      providesTags: ["UserSpendingModel"],
     }),
     getCurrentUserSpendingModelChart: builder.query({
       query: () => ({
         url: `user-spending-models/current/chart`,
         method: HTTP_METHOD.GET,
       }),
+      providesTags: ["UserSpendingModel"],
     }),
     getCurrentUserSpendingModelChartDetail: builder.query({
       query: ({ id }) => ({
         url: `user-spending-models/chart/${id}`,
         method: HTTP_METHOD.GET,
       }),
+      providesTags: ["UserSpendingModel"],
     }),
     getTransactionById: builder.query({
       query: ({ id, PageIndex, PageSize, type }) => ({

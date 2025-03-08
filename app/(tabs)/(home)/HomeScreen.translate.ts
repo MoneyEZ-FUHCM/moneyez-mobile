@@ -26,9 +26,12 @@ const TEXT_TRANSLATE_HOME = {
     DETAIL: "Chi tiết",
     SEE_MORE: "Xem thêm",
     ADD: "Thêm",
+    CREATE_USER_SPENDING_MODEL: "Tạo mô hình chi tiêu",
   },
 
-  MESSAGE_ERROR: {},
+  MESSAGE_ERROR: {
+    NO_CURRENT_SPENDING_MODEL: "Chưa có mô hình chi tiêu cá nhân nào"
+  },
 
   MESSAGE_SUCCESS: {},
 

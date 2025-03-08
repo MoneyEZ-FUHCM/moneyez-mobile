@@ -5,3 +5,15 @@ interface CreateGroupPayload {
   accountBankId: string;
   image: string;
 }
+
+interface Group {
+  id: string;
+  name: string;
+  nameUnsign: string;
+  description: string;
+  currentBalance: number;
+  status: string;
+  visibility: string;
+  imageUrl: string;
+  groupMembers: any[];
+}
