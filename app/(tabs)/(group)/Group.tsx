@@ -73,7 +73,9 @@ const Group = () => {
           renderItem={({ item }) => (
             <TouchableOpacity
               className="mb-3 flex-row items-center rounded-xl border border-gray-300 bg-white p-4 shadow-md"
-              onPress={handler.handleNavigateAndHideTabbar}
+              onPress={() => {
+                handler.handleNavigateAndHideTabbar(item.id);
+              }}
             >
               <Svg width="64" height="64" viewBox="0 0 64 64" fill="none">
                 <Rect width="64" height="64" fill="#E5E7EB" />

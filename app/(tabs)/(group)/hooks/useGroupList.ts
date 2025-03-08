@@ -49,11 +49,16 @@ const useGroupList = () => {
     }
   }, [data?.items, isLoading]);
 
-  const handleNavigateAndHideTabbar = useCallback(() => {
-    router.navigate(PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT as any);
-    dispatch(setMainTabHidden(true));
-    dispatch(setGroupTabHidden(false));
-  }, [dispatch]);
+  const handleNavigateAndHideTabbar = useCallback(
+    (groupId: string) => {
+      router.navigate(
+        `${PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT}?groupId=${groupId}` as any,
+      );
+      dispatch(setMainTabHidden(true));
+      dispatch(setGroupTabHidden(false));
+    },
+    [dispatch],
+  );
 
   return {
     state: {

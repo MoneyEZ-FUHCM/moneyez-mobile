@@ -84,7 +84,7 @@ const useCreateGroupScreen = () => {
             SUCCESS_MESSAGES.GROUP_CREATED_SUCCESSFULLY,
             ToastAndroid.SHORT,
           );
-          router.navigate(PATH_NAME.GROUP.CREATE_GROUP_STEP_2 as any);
+          router.navigate(PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT as any);
         }
       } catch (err: any) {
         ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);

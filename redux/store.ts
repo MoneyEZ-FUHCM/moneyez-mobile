@@ -4,14 +4,14 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import loadingReducer from "./slices/loadingSlice";
 import userReducer from "./slices/userSlice";
 import tabReducer from "./slices/tabSlice";
-import systemReducer from "./slices/systemSlice";
+import groupHomeDefaultReducer from "@/app/(tabs)/(group)/group-details/group-home/group-home-default/groupHomeDefaultSlice";
 
 const rootReducer = combineReducers({
   [authApi.reducerPath]: authApi.reducer,
   loading: loadingReducer,
   user: userReducer,
   tab: tabReducer,
-  system: systemReducer,
+  groupHomeDefault: groupHomeDefaultReducer,
 });
 
 export const store = configureStore({

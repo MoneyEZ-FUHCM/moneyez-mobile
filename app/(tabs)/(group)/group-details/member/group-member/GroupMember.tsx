@@ -16,6 +16,7 @@ import { Icon } from "react-native-paper";
 import GROUP_MEMBER_CONSTANT from "./GroupMember.constant";
 import TEXT_TRANSLATE_GROUP_MEMBER_DEFAULT from "./GroupMember.translate";
 import useGroupMember from "./hooks/useGroupMember";
+import useGroupHomeDefault from "../../group-home/group-home-default/hooks/useGroupHomeDefault";
 
 const GroupMember = () => {
   const { TITLE, TEXT, BUTTON } = TEXT_TRANSLATE_GROUP_MEMBER_DEFAULT;

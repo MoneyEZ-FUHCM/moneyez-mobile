@@ -14,7 +14,7 @@ import useInviteMember from "./hooks/useInviteMember";
 
 const InviteMember = () => {
   const members = INVITE_MEMBER_CONSTANTS.MEMBERS;
-  const { state, handler } = useInviteMember();
+  const { handler } = useInviteMember();
 
   return (
     <SafeAreaViewCustom>

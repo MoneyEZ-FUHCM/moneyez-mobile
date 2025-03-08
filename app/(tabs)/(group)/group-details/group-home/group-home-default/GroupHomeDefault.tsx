@@ -13,6 +13,7 @@ import {
 import TEXT_TRANSLATE_GROUP_HOME_DEFAULT from "./GroupHomeDefault.translate";
 import RECENT_ACTIVITIES from "./GroupHomeDefault.constant";
 import { PATH_NAME } from "@/helpers/constants/pathname";
+import useGroupHomeDefault from "./hooks/useGroupHomeDefault";
 
 const GroupHomeDefault = () => {
   const { TITLE, BUTTON, TEXT } = TEXT_TRANSLATE_GROUP_HOME_DEFAULT;
