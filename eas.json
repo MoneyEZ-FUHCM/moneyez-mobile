@@ -5,7 +5,10 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "GOOGLE_SERVICES_JSON": "@env:GOOGLE_SERVICES_JSON"
+      }
     },
     "preview": {
       "distribution": "internal",
@@ -13,6 +16,7 @@
         "buildType": "apk"
       },
       "env": {
+        "GOOGLE_SERVICES_JSON": "@env:GOOGLE_SERVICES_JSON",
         "EXPO_PUBLIC_API_KEY": "@env:EXPO_PUBLIC_API_KEY",
         "EXPO_PUBLIC_AUTH_DOMAIN": "@env:EXPO_PUBLIC_AUTH_DOMAIN",
         "EXPO_PUBLIC_PROJECT_ID": "@env:EXPO_PUBLIC_PROJECT_ID",
@@ -29,6 +33,7 @@
         "buildType": "apk"
       },
       "env": {
+        "GOOGLE_SERVICES_JSON": "@env:GOOGLE_SERVICES_JSON",
         "EXPO_PUBLIC_API_KEY": "@env:EXPO_PUBLIC_API_KEY",
         "EXPO_PUBLIC_AUTH_DOMAIN": "@env:EXPO_PUBLIC_AUTH_DOMAIN",
         "EXPO_PUBLIC_PROJECT_ID": "@env:EXPO_PUBLIC_PROJECT_ID",
