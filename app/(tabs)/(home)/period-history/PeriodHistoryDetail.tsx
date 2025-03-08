@@ -8,14 +8,23 @@ import {
 } from "@/components";
 import { TRANSACTION_TYPE } from "@/enums/globals";
 import { TransactionViewModelDetail } from "@/types/transaction.types";
-import { MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-import { ActivityIndicator, Image, Pressable, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import usePeriodHistoryDetail from "./hooks/usePeriodHistoryDetail";
 import TEXT_TRANSLATE_PERIOD_HISTORY from "./PeriodHistory.translate";
 
 export default function PeriodHistoryDetail() {
   const { state, handler } = usePeriodHistoryDetail();
+  const PRIMARY_COLOR = "#609084";
+
   const renderTransactionItem = ({
     item,
   }: {
@@ -82,7 +91,11 @@ export default function PeriodHistoryDetail() {
             </Text>
             <View className="flex-row gap-2">
               <Pressable
-                onPress={() => handler.setFilterType("")}
+                onPress={() => {
+                  handler.setFilterType("");
+
+                  handler.setIsFiltering(true);
+                }}
                 className={`rounded-full px-3 py-1 ${state.filterType === "" ? "bg-[#609084]" : "bg-[#f0f0f0]"}`}
               >
                 <Text
@@ -94,7 +107,11 @@ export default function PeriodHistoryDetail() {
                 </Text>
               </Pressable>
               <Pressable
-                onPress={() => handler.setFilterType(0)}
+                onPress={() => {
+                  handler.setFilterType(0);
+
+                  handler.setIsFiltering(true);
+                }}
                 className={`rounded-full px-3 py-1 ${state.filterType === TRANSACTION_TYPE.INCOME ? "bg-[#00a010]" : "bg-[#f0f0f0]"}`}
               >
                 <Text
@@ -108,7 +125,11 @@ export default function PeriodHistoryDetail() {
                 </Text>
               </Pressable>
               <Pressable
-                onPress={() => handler.setFilterType(1)}
+                onPress={() => {
+                  handler.setFilterType(1);
+
+                  handler.setIsFiltering(true);
+                }}
                 className={`rounded-full px-3 py-1 ${state.filterType === TRANSACTION_TYPE.EXPENSE ? "bg-[#cc0000]" : "bg-[#f0f0f0]"}`}
               >
                 <Text
@@ -244,32 +265,40 @@ export default function PeriodHistoryDetail() {
     );
   }
 
+  // <Pressable onPress={handler.handleBack}>
+  //   <MaterialIcons name="arrow-back" size={24} color="#609084" />
+  // </Pressable>
   return (
     <SafeAreaViewCustom rootClassName="flex-1 bg-[#fafafa]">
       {/* HEADER */}
-      <SectionComponent rootClassName="h-14 bg-white justify-center">
-        <View className="flex-row items-center justify-between px-5">
-          <Pressable onPress={handler.handleBack}>
-            <MaterialIcons name="arrow-back" size={24} color="#609084" />
-          </Pressable>
-          <Text className="text-lg font-bold text-primary">
-            {state.modelDetails.startDate} - {state.modelDetails.endDate}
-          </Text>
-          <SpaceComponent width={24} />
-        </View>
+      <SectionComponent rootClassName="relative bg-white shadow-md h-14 flex-row items-center justify-center">
+        <TouchableOpacity
+          onPress={handler.handleBack}
+          className="absolute left-5 rounded-full p-2"
+        >
+          <AntDesign name="close" size={24} color={PRIMARY_COLOR} />
+        </TouchableOpacity>
+        <Text className="text-lg font-bold text-primary">
+          {state.modelDetails.startDate} - {state.modelDetails.endDate}
+        </Text>
+        <TouchableOpacity
+          onPress={handler.handleRefetchData}
+          className="absolute right-5 rounded-full p-2"
+        >
+          <AntDesign name="reload1" size={24} color={PRIMARY_COLOR} />
+        </TouchableOpacity>
       </SectionComponent>
       <View className="px-5">
-        <View className="rounded-lg bg-white">
+        <View className="my-4 rounded-lg bg-white">
           {renderSummary()}
           {renderFilters()}
         </View>
-        <Text className="mt-2 text-lg font-semibold text-[#609084]">
+        <Text className="text-lg font-semibold text-[#609084]">
           Danh sách giao dịch ({state.totalCount})
         </Text>
       </View>
-
       {/* TRANSACTION LIST */}
-      <LoadingSectionWrapper isLoading={state.isFetching}>
+      <LoadingSectionWrapper isLoading={state.isFiltering}>
         <SectionComponent rootClassName="flex-1 mx-4 py-4 p-4 bg-white rounded-lg">
           <FlatListCustom
             data={state.transactions as any}
@@ -278,7 +307,6 @@ export default function PeriodHistoryDetail() {
             showsVerticalScrollIndicator={false}
             ListFooterComponent={renderFooter}
             contentContainerStyle={{ flexGrow: 1, paddingBottom: 24 }}
-            onRefresh={handler.refetchData}
             refreshing={state.isLoading && !state.isLoadingMore}
             onLoadMore={handler.loadMoreData}
             isLoading={state.isLoading}

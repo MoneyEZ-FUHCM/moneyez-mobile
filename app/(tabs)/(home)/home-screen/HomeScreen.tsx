@@ -39,7 +39,7 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaViewCustom rootClassName="relative">
-      <ScrollViewCustom showsVerticalScrollIndicator={false}>
+      <ScrollViewCustom isBottomTab showsVerticalScrollIndicator={false}>
         <SectionComponent
           rootClassName="relative flex-1"
           style={{

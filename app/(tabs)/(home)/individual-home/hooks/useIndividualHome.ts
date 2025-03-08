@@ -43,23 +43,13 @@ const useIndividualHome = () => {
 
   const handleHistoryPress = () => {
     if (currentUserSpendingModel) {
-      const startDate = currentUserSpendingModelChart?.data?.startDate;
-      const endDate = currentUserSpendingModelChart?.data?.startDate;
-      const totalIncome = currentUserSpendingModelChart?.data?.totalIncome;
-      const totalExpense = currentUserSpendingModelChart?.data?.totalExpense;
-
       router.push({
         pathname: HOME.PERIOD_HISTORY_DETAIL as any,
         params: {
           userSpendingId: currentUserSpendingModel?.data?.id,
-          startDate: formatDate(currentUserSpendingModel?.data?.startDate),
-          endDate: formatDate(currentUserSpendingModel?.data?.endDate),
-          totalIncome: currentUserSpendingModel?.data?.totalIncome,
-          totalExpense: currentUserSpendingModel?.data?.totalExpense,
         },
       });
     } else {
-      // Fallback if no current spending model is available
       router.navigate(HOME.SPENDING_MODEL_HISTORY as any);
     }
   };

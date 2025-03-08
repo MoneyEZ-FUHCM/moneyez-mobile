@@ -2,7 +2,8 @@ import { PATH_NAME } from "@/helpers/constants/pathname";
 import { setGroupTabHidden, setMainTabHidden } from "@/redux/slices/tabSlice";
 import { useGetGroupsQuery } from "@/services/group";
 import { router, useFocusEffect } from "expo-router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ToastAndroid } from "react-native";
 import { useDispatch } from "react-redux";
 import TEXT_TRANSLATE_GROUP_LIST from "../GroupList.translate";
 
@@ -15,15 +16,15 @@ const useGroupList = () => {
   const [visibleItems, setVisibleItems] = useState<{ [key: string]: boolean }>(
     {},
   );
-
   const [pageIndex, setPageIndex] = useState(1);
   const [groups, setGroups] = useState<any[]>([]);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [isFetchingData, setIsFetchingData] = useState(true);
+  const [isRefetching, setIsRefetching] = useState(false);
 
   const dispatch = useDispatch();
 
-  const { data, isLoading } = useGetGroupsQuery({
+  const { data, isLoading, refetch } = useGetGroupsQuery({
     PageIndex: pageIndex,
     PageSize: pageSize,
   });
@@ -38,15 +39,12 @@ const useGroupList = () => {
     }, [dispatch]),
   );
 
-  const totalCount = useMemo(() => data?.totalCount || 0, [data?.totalCount]);
-
-  // Load more handler
   const handleLoadMore = useCallback(() => {
     if (!isLoading && !isLoadingMore && data?.items.length === pageSize) {
       setIsLoadingMore(true);
       setPageIndex((prev) => prev + 1);
     }
-  }, [groups.length, totalCount, isLoadingMore]);
+  }, [isLoading, isLoadingMore, data?.items.length]);
 
   useEffect(() => {
     if (data?.items) {
@@ -54,7 +52,7 @@ const useGroupList = () => {
       setIsFetchingData(false);
       setIsLoadingMore(false);
     }
-  }, [data]);
+  }, [data?.items]);
 
   const handleNavigateAndHideTabbar = useCallback(() => {
     router.navigate(PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT as any);
@@ -62,15 +60,15 @@ const useGroupList = () => {
     dispatch(setGroupTabHidden(false));
   }, [dispatch]);
 
-  const handleCreateGroupAndHideTabbar = () => {
+  const handleCreateGroupAndHideTabbar = useCallback(() => {
     dispatch(setMainTabHidden(true));
     router.navigate(PATH_NAME.GROUP.CREATE_GROUP_STEP_1 as any);
-  };
+  }, [dispatch]);
 
-  const handleBack = () => {
+  const handleBack = useCallback(() => {
     router.back();
     dispatch(setMainTabHidden(false));
-  };
+  }, [dispatch]);
 
   const toggleVisibility = useCallback((groupId: string) => {
     setVisibleItems((prev) => ({
@@ -78,6 +76,22 @@ const useGroupList = () => {
       [groupId]: !prev[groupId],
     }));
   }, []);
+
+  const handleRefetchGrouplist = useCallback(() => {
+    if (isRefetching) {
+      ToastAndroid.show(
+        "Vui lòng đợi trước khi làm mới lại!",
+        ToastAndroid.SHORT,
+      );
+      return;
+    }
+
+    setIsRefetching(true);
+    refetch().finally(() => {
+      setTimeout(() => setIsRefetching(false), 2000);
+      ToastAndroid.show("Danh sách đã được cập nhật", ToastAndroid.SHORT);
+    });
+  }, [refetch, isRefetching]);
 
   return {
     state: {
@@ -97,6 +111,7 @@ const useGroupList = () => {
       handleNavigateAndHideTabbar,
       handleBack,
       handleCreateGroupAndHideTabbar,
+      handleRefetchGrouplist,
     },
   };
 };

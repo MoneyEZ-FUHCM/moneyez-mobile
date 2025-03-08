@@ -43,6 +43,16 @@ const userSpendingModelApi = apiSlice.injectEndpoints({
       transformResponse: (response) =>
         transformCommonResponse<Transaction>(response),
     }),
+
+    getUserSpendingModelDetail: builder.query<
+      { data: UserSpendingModel },
+      { id: string }
+    >({
+      query: ({ id }) => ({
+        url: `/user-spending-models/${id}`,
+        method: HTTP_METHOD.GET,
+      }),
+    }),
   }),
 });
 
@@ -52,6 +62,7 @@ export const {
   useGetCurrentUserSpendingModelChartQuery,
   useGetCurrentUserSpendingModelChartDetailQuery,
   useGetTransactionByIdQuery,
+  useGetUserSpendingModelDetailQuery,
 } = userSpendingModelApi;
 
 export default userSpendingModelApi;

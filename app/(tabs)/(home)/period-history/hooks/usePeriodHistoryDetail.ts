@@ -1,10 +1,14 @@
 import { TRANSACTION_TYPE } from "@/enums/globals";
-import { formatCurrency } from "@/helpers/libs";
+import { formatCurrency, formatDate } from "@/helpers/libs";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
-import { useGetTransactionByIdQuery } from "@/services/userSpendingModel";
+import {
+  useGetTransactionByIdQuery,
+  useGetUserSpendingModelDetailQuery,
+} from "@/services/userSpendingModel";
 import { TransactionViewModelDetail } from "@/types/transaction.types";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { ToastAndroid } from "react-native";
 import { useDispatch } from "react-redux";
 
 export interface Transaction {
@@ -40,37 +44,40 @@ const formatTransaction = (item: TransactionViewModelDetail) => {
 
 const usePeriodHistoryDetail = () => {
   const params = useLocalSearchParams();
-  const {
-    userSpendingId,
-    startDate,
-    endDate,
-    totalIncome: incomeParam,
-    totalExpense: expenseParam,
-  } = params;
+  const { userSpendingId } = params;
   const [transactions, setTransactions] = useState<any[]>([]);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(
     null,
   );
   const [pageIndex, setPageIndex] = useState(1);
+  const [isRefetching, setIsRefetching] = useState(false);
 
   const [subcategories, setSubcategories] = useState<
     Array<{ id: string; name: string }>
   >([]);
   const [showFilters, setShowFilters] = useState(false);
+  const [isFiltering, setIsFiltering] = useState(false);
 
-  const totalIncome = Number(incomeParam || 0);
-  const totalExpense = Number(expenseParam || 0);
   const dispatch = useDispatch();
 
   const pageSize = 10;
+
+  const {
+    data: userSpendingModelDetail,
+    refetch: handleRefetchUserSpendingModelDetail,
+    isFetching: isFetchingDetail,
+  } = useGetUserSpendingModelDetailQuery(
+    { id: userSpendingId as string },
+    { skip: !userSpendingId },
+  );
 
   useFocusEffect(
     useCallback(() => {
       dispatch(setMainTabHidden(true));
     }, [dispatch]),
   );
+
   const [filterType, setFilterType] = useState<
     TRANSACTION_TYPE.INCOME | TRANSACTION_TYPE.EXPENSE | ""
   >("");
@@ -78,7 +85,7 @@ const usePeriodHistoryDetail = () => {
     data: transactionsData,
     error,
     isLoading,
-    isFetching,
+    isFetching: isFetchingTransaction,
     refetch,
   } = useGetTransactionByIdQuery(
     {
@@ -113,6 +120,7 @@ const usePeriodHistoryDetail = () => {
         ...prevGroups,
         ...transactionsData.items.map(formatTransaction as any),
       ]);
+      setIsFiltering(false);
       setIsLoadingMore(false);
     }
   }, [transactionsData]);
@@ -132,43 +140,65 @@ const usePeriodHistoryDetail = () => {
     router.back();
   }, []);
 
-  const refetchData = useCallback(() => {
+  const handleRefetchData = useCallback(() => {
+    if (isRefetching) {
+      ToastAndroid.show(
+        "Vui lòng đợi trước khi làm mới lại!",
+        ToastAndroid.SHORT,
+      );
+      return;
+    }
+
+    setIsRefetching(true);
     setPageIndex(1);
-    refetch();
-  }, [refetch]);
+
+    Promise.all([refetch(), handleRefetchUserSpendingModelDetail()]).finally(
+      () => {
+        setIsRefetching(false);
+        ToastAndroid.show("Danh sách đã được cập nhật", ToastAndroid.SHORT);
+      },
+    );
+  }, [refetch, handleRefetchUserSpendingModelDetail, isRefetching]);
+
+  const modelDetails = useMemo(
+    () => ({
+      income: userSpendingModelDetail?.data?.totalIncome ?? 0,
+      expense: userSpendingModelDetail?.data?.totalExpense ?? 0,
+      balance:
+        (userSpendingModelDetail?.data?.totalIncome ?? 0) -
+        (userSpendingModelDetail?.data?.totalExpense ?? 0),
+      startDate: formatDate(userSpendingModelDetail?.data?.startDate),
+      endDate: formatDate(userSpendingModelDetail?.data?.endDate),
+    }),
+    [userSpendingModelDetail],
+  );
 
   return {
     state: {
       transactions,
       allTransactions: transactions,
       totalCount,
-      modelDetails: {
-        income: totalIncome,
-        expense: totalExpense,
-        balance: totalIncome - totalExpense,
-        startDate,
-        endDate,
-      },
+      modelDetails,
       isLoading,
       isLoadingMore,
-      searchQuery,
       filterType,
       selectedSubcategory,
       subcategories,
       error,
       showFilters,
-      isFetching,
+      isFetching: isFetchingDetail || isFetchingTransaction,
+      isFiltering,
     },
     handler: {
       formatCurrency,
       handleBack,
-      // handleFilterByType,
       handleFilterBySubcategory,
       loadMoreData,
       handleResetFilter,
-      refetchData,
+      handleRefetchData,
       setShowFilters,
       setFilterType,
+      setIsFiltering,
     },
   };
 };

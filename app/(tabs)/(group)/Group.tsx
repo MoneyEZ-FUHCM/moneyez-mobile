@@ -10,13 +10,12 @@ import { formatCurrency } from "@/helpers/libs";
 import { AntDesign } from "@expo/vector-icons";
 import React from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
-import TEXT_TRANSLATE_GROUP_LIST from "./GroupList.translate";
 import useGroupList from "./hooks/useGroupList";
+import TEXT_TRANSLATE_GROUP_LIST from "./GroupList.translate";
 
 const Group = () => {
   const { state, handler } = useGroupList();
-  const { groups, isLoading, isLoadingMore, visibleItems, isFetchingData } =
-    state;
+  const { groups, isLoadingMore, visibleItems, isFetchingData } = state;
   const { handleLoadMore } = handler;
   const PRIMARY_COLOR = "#609084";
 
@@ -26,13 +25,19 @@ const Group = () => {
       <SectionComponent rootClassName="relative bg-white shadow-md h-14 flex-row items-center justify-center">
         <TouchableOpacity
           onPress={handler.handleBack}
-          className="absolute left-5 rounded-full bg-gray-200 p-2"
+          className="absolute left-5 rounded-full p-2"
         >
-          <AntDesign name="close" size={20} color={PRIMARY_COLOR} />
+          <AntDesign name="close" size={24} color={PRIMARY_COLOR} />
         </TouchableOpacity>
         <Text className="text-lg font-bold text-gray-900">
           {TEXT_TRANSLATE_GROUP_LIST.TITLE.GROUP_FUND}
         </Text>
+        <TouchableOpacity
+          onPress={handler.handleRefetchGrouplist}
+          className="absolute right-5 rounded-full p-2"
+        >
+          <AntDesign name="reload1" size={24} color={PRIMARY_COLOR} />
+        </TouchableOpacity>
       </SectionComponent>
 
       <LoadingSectionWrapper isLoading={isFetchingData}>
@@ -44,7 +49,7 @@ const Group = () => {
             isBottomTab={groups?.length >= 6}
             isLoading={isLoadingMore}
             hasMore={state.data?.items?.length === state.pageSize}
-            keyExtractor={(item) => item?.id?.toString()}
+            keyExtractor={(_, index) => index.toString()}
             renderItem={({ item }) => (
               <TouchableOpacity
                 className="mb-4 flex-row items-center rounded-2xl border border-gray-200 bg-white p-4 shadow-lg"
@@ -85,15 +90,12 @@ const Group = () => {
             />
           </View>
         )}
-        <View className="absolute bottom-5 left-5 right-5">
+        <View className="absolute bottom-10 right-5">
           <TouchableOpacity
-            className="flex-row items-center justify-center rounded-full bg-primary px-6 py-4 shadow-lg"
+            className="h-14 w-14 items-center justify-center rounded-full bg-primary shadow-lg shadow-gray-400"
             onPress={handler.handleCreateGroupAndHideTabbar}
           >
-            <AntDesign name="pluscircleo" size={24} color="white" />
-            <Text className="ml-3 text-lg font-semibold text-white">
-              {TEXT_TRANSLATE_GROUP_LIST.BUTTON.CREATE_GROUP}
-            </Text>
+            <AntDesign name="addusergroup" size={24} color="white" />
           </TouchableOpacity>
         </View>
       </LoadingSectionWrapper>

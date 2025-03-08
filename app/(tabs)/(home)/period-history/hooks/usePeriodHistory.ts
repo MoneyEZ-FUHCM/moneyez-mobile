@@ -1,10 +1,10 @@
 import { PATH_NAME } from "@/helpers/constants/pathname";
-import { formatCurrency } from "@/helpers/libs";
-import useHideTabbar from "@/hooks/useHideTabbar";
+import { formatCurrency, formatDate } from "@/helpers/libs";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import {
   useGetCurrentUserSpendingModelChartDetailQuery,
   useGetTransactionByIdQuery,
+  useGetUserSpendingModelDetailQuery,
 } from "@/services/userSpendingModel";
 import { TransactionViewModel } from "@/types/transaction.types";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
@@ -30,19 +30,11 @@ const formatTransaction = (item: TransactionViewModel) => {
 
 const usePeriodHistory = () => {
   const params = useLocalSearchParams();
-  const {
-    userSpendingId,
-    startDate,
-    endDate,
-    totalIncome: incomeParam,
-    totalExpense: expenseParam,
-  } = params;
+  const { userSpendingId } = params;
 
   const dispatch = useDispatch();
   const [transactions, setTransactions] = useState<TransactionViewModel[]>([]);
 
-  const totalIncome = useMemo(() => Number(incomeParam || 0), [incomeParam]);
-  const totalExpense = useMemo(() => Number(expenseParam || 0), [expenseParam]);
   const {
     data: transactionsData,
     error,
@@ -53,14 +45,17 @@ const usePeriodHistory = () => {
     { id: userSpendingId, PageIndex: 1, PageSize: 20, type: "" },
     { skip: !userSpendingId },
   );
-
   const {
-    data: currentUserSpendingModelChart,
-    isLoading: isLoadingCurrentUserSpendingModelChart,
+    data: currentUserSpendingModelChartDetail,
+    isLoading: isLoadingCurrentUserSpendingModelChartDetail,
     isFetching,
     refetch: refetchChart,
   } = useGetCurrentUserSpendingModelChartDetailQuery(
     { id: userSpendingId },
+    { skip: !userSpendingId },
+  );
+  const { data: userSpendingModelDetail } = useGetUserSpendingModelDetailQuery(
+    { id: userSpendingId as string },
     { skip: !userSpendingId },
   );
 
@@ -97,19 +92,21 @@ const usePeriodHistory = () => {
     dispatch(setMainTabHidden(true));
     router.push({
       pathname: PATH_NAME.HOME.PERIOD_HISTORY_DETAIL as any,
-      params: { userSpendingId, startDate, endDate, totalIncome, totalExpense },
+      params: { userSpendingId },
     });
   };
 
   const modelDetails = useMemo(
     () => ({
-      income: totalIncome,
-      expense: totalExpense,
-      balance: totalIncome - totalExpense,
-      startDate,
-      endDate,
+      income: userSpendingModelDetail?.data?.totalIncome ?? 0,
+      expense: userSpendingModelDetail?.data?.totalExpense ?? 0,
+      balance:
+        (userSpendingModelDetail?.data?.totalIncome ?? 0) -
+        (userSpendingModelDetail?.data?.totalExpense ?? 0),
+      startDate: formatDate(userSpendingModelDetail?.data?.startDate),
+      endDate: formatDate(userSpendingModelDetail?.data?.endDate),
     }),
-    [totalIncome, totalExpense, startDate, endDate],
+    [userSpendingModelDetail],
   );
 
   return {
@@ -118,12 +115,12 @@ const usePeriodHistory = () => {
       modelDetails,
       isLoading:
         isLoading ||
-        isLoadingCurrentUserSpendingModelChart ||
+        isLoadingCurrentUserSpendingModelChartDetail ||
         isFetching ||
         isFetchingTransactions,
       error,
-      currentUserSpendingModelChart,
-      categories: currentUserSpendingModelChart?.data?.categories || [],
+      currentUserSpendingModelChart: currentUserSpendingModelChartDetail,
+      categories: currentUserSpendingModelChartDetail?.data?.categories || [],
     },
     handler: {
       formatCurrency,
