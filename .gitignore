@@ -36,7 +36,7 @@ yarn-error.*
 .env
 
 #google
-google-services.json
+# google-services.json
 
 #android
 android/

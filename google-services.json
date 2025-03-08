@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "285230826131",
+    "project_id": "exe201-9459a",
+    "storage_bucket": "exe201-9459a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:285230826131:android:19cc96f1824d80335c8366",
+        "android_client_info": {
+          "package_name": "com.ezmoney"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "285230826131-uc67uvkpon5o900pa713qho1anf1omrk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ezmoney",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "285230826131-lq476vlgf285b11gaiu2kvegn7v335q7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASvBFkeiCUhcJ3-QIFfweyobODKSBzLIM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "285230826131-lq476vlgf285b11gaiu2kvegn7v335q7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
