@@ -41,7 +41,6 @@ google-services.json
 #android
 android/
 
-eas-build-pre-install.sh
 
 
 # typescript
