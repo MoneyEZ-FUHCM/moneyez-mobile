@@ -42,9 +42,9 @@ const CreateGroup = () => {
         ) : (
           <Pressable
             onPress={handler.pickAndUploadImage}
-            className="h-[90px] w-[90px] items-center justify-center overflow-hidden rounded-full border border-gray-400 bg-gray-100 shadow-sm active:opacity-75"
+            className="relative mx-1 mb-2 h-[82px] w-[82px] items-center justify-center overflow-hidden rounded-lg border border-[#ccc]"
           >
-            <MaterialIcons name="add-a-photo" size={38} color="#777" />
+            <MaterialIcons name="add-circle-outline" size={40} color="#ccc" />
           </Pressable>
         )}
       </View>

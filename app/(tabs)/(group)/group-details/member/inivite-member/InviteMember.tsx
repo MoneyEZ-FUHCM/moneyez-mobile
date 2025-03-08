@@ -65,7 +65,7 @@ const InviteMember = () => {
       </Text>
 
       <FlatListCustom
-        data={members}
+        data={members ?? []}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View className="mb-2 flex-row items-center justify-between rounded-lg bg-white p-4">

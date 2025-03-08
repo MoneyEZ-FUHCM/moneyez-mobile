@@ -126,7 +126,8 @@ export default function SpendingModelHistory() {
       ) : state.spendingModelsByYear &&
         state.spendingModelsByYear.length > 0 ? (
         <FlatListCustom
-          data={state.spendingModelsByYear || []}
+          showsVerticalScrollIndicator={false}
+          data={state.spendingModelsByYear ?? []}
           renderItem={renderYearSection}
           keyExtractor={(item) => item.year}
           ListHeaderComponent={renderListHeader}
@@ -134,7 +135,6 @@ export default function SpendingModelHistory() {
             paddingTop: 4,
             paddingBottom: 24,
           }}
-          showsVerticalScrollIndicator={false}
         />
       ) : (
         <View className="mb-28 flex-1 items-center justify-center">

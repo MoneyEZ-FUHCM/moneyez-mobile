@@ -17,7 +17,7 @@ const TEXT_TRANSLATE_ADD_TRANSACTION = {
   BUTTON: {
     EXPENSE: "Chi tiêu",
     INCOME: "Khoản thu",
-    ADD_INCOME: "Thêm thu nhập",
+    ADD_INCOME: "Thêm khoản thu",
     ADD_EXPENSE: "Thêm chi tiêu",
     SEE_MORE: "Xem thêm",
   },

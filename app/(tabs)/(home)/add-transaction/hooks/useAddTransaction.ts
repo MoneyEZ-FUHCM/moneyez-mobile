@@ -1,24 +1,28 @@
 import { TRANSACTION_TYPE } from "@/enums/globals";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
+import { convertUTCToVietnamTime, parseCurrency } from "@/helpers/libs";
 import useHideTabbar from "@/hooks/useHideTabbar";
 import useUploadImage from "@/hooks/useUploadImage";
 import { setLoading } from "@/redux/slices/loadingSlice";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
-import { useGetSubCateQuery } from "@/services/subCategory";
+import { RootState } from "@/redux/store";
+import { useGetSpendingModelDetailQuery } from "@/services/spendingModel";
 import { useCreateTransactionMutation } from "@/services/transaction";
 import { useGetCurrentUserSpendingModelQuery } from "@/services/userSpendingModel";
+import { Category } from "@/types/category.types";
 import { TransactionType } from "@/types/invidual.types";
-import { router } from "expo-router";
+import { Subcategory } from "@/types/subCategory";
+import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ToastAndroid } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import TEXT_TRANSLATE_ADD_TRANSACTION from "../AddTransaction.translate";
 
 const useAddTransaction = (type: string) => {
-  const INCOME = "income";
-  const EXPENSE = "expense";
+  const INCOME = "INCOME";
+  const EXPENSE = "EXPENSE";
   const pageSize = 6;
   const dispatch = useDispatch();
   const { MESSAGE_VALIDATE, MESSAGE_SUCCESS } = TEXT_TRANSLATE_ADD_TRANSACTION;
@@ -26,11 +30,17 @@ const useAddTransaction = (type: string) => {
   const { HOME } = PATH_NAME;
   const { data: currentUserSpendingModel } =
     useGetCurrentUserSpendingModelQuery();
+  const currentModel = useSelector(
+    (state: RootState) => state.userSpendingModel.currentModel,
+  );
+
+  const { data: spendingModel, isLoading } = useGetSpendingModelDetailQuery(
+    { id: currentModel?.spendingModelId as string },
+    { skip: !currentModel?.spendingModelId },
+  );
 
   // state
-  const [pageIndex, setPageIndex] = useState(1);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [categories, setCategories] = useState<any[]>([]);
+
   const [transactionType, setTransactionType] = useState<TransactionType>(
     type === INCOME ? INCOME : EXPENSE,
   );
@@ -42,34 +52,40 @@ const useAddTransaction = (type: string) => {
 
   // hooks
   const { imageUrl, pickAndUploadImage } = useUploadImage();
-  const { data, isLoading } = useGetSubCateQuery({
-    PageIndex: pageIndex,
-    PageSize: pageSize,
-  });
   const [createTransaction] = useCreateTransactionMutation();
 
-  // derived state
-  const totalCount = data?.totalCount || 0;
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(setMainTabHidden(true));
+    }, [dispatch]),
+  );
 
-  // handlers
-  const handleLoadMore = useCallback(() => {
-    if (categories.length < totalCount && !isLoadingMore) {
-      setIsLoadingMore(true);
-      setPageIndex((prev) => prev + 1);
-    }
-  }, [categories.length, totalCount, isLoadingMore]);
+  const updateData = spendingModel?.data?.spendingModelCategories
+    ?.filter((item: Category) => item?.category?.type === transactionType)
+    ?.map((item: Category) => {
+      return {
+        ...item,
+        subcategories: item?.category?.subcategories?.map(
+          (sub: Subcategory) => ({
+            id: sub?.id,
+            name: sub?.name,
+            icon: sub?.icon,
+          }),
+        ),
+      };
+    });
 
-  useEffect(() => {
-    if (data?.items?.length) {
-      setCategories((prev) => {
-        const newItems = data.items.filter(
-          (item: any) => !prev.some((existing) => existing.id === item.id),
-        );
-        return [...prev, ...newItems];
+  const mapSubCategories = useMemo(() => {
+    const uniqueSubCategories = new Map();
+    updateData
+      ?.flatMap((item: Category) => item?.subcategories || [])
+      .forEach((sub: Subcategory) => {
+        if (!uniqueSubCategories.has(sub.id)) {
+          uniqueSubCategories.set(sub.id, sub);
+        }
       });
-      setIsLoadingMore(false);
-    }
-  }, [data?.items]);
+    return Array.from(uniqueSubCategories.values());
+  }, [updateData]);
 
   useEffect(() => {
     if (imageUrl && !images.includes(imageUrl)) {
@@ -110,16 +126,17 @@ const useAddTransaction = (type: string) => {
 
       dispatch(setLoading(true));
       const updatePayload = {
-        amount: payload.amount,
-        description: payload.description,
+        amount: parseCurrency(payload?.amount),
+        description: payload?.description,
         images: images,
         subcategoryId: selectedCategory,
-        transactionDate: payload.dob,
+        transactionDate: convertUTCToVietnamTime(payload?.dob),
         type:
           transactionType === EXPENSE
             ? TRANSACTION_TYPE.EXPENSE
             : TRANSACTION_TYPE.INCOME,
       };
+
       try {
         const res = await createTransaction(updatePayload).unwrap();
         if (res && res.status === HTTP_STATUS.SUCCESS.CREATED) {
@@ -141,16 +158,16 @@ const useAddTransaction = (type: string) => {
   const handleNext = () => {
     if (currentUserSpendingModel) {
       const startDate = new Date(
-        currentUserSpendingModel.data.startDate,
+        currentUserSpendingModel?.data?.startDate,
       ).toLocaleDateString("vi-VN");
       const endDate = new Date(
-        currentUserSpendingModel.data.endDate,
+        currentUserSpendingModel?.data?.endDate,
       ).toLocaleDateString("vi-VN");
 
-      router.push({
+      router.replace({
         pathname: HOME.PERIOD_HISTORY as any,
         params: {
-          userSpendingId: currentUserSpendingModel.data.id,
+          userSpendingId: currentUserSpendingModel?.data?.id,
           startDate: startDate,
           endDate: endDate,
         },
@@ -165,10 +182,8 @@ const useAddTransaction = (type: string) => {
       selectedCategory,
       date,
       initialValues,
-      categories,
-      totalCount,
+      mapSubCategories,
       isLoading,
-      isLoadingMore,
     },
     handler: {
       useHideTabbar,
@@ -179,7 +194,6 @@ const useAddTransaction = (type: string) => {
       setDate,
       handleCreateTransaction,
       validationSchema,
-      handleLoadMore,
     },
   };
 };

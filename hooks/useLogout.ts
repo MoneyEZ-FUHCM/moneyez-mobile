@@ -3,6 +3,7 @@ import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import apiSlice from "@/redux/slices/apiSlice";
 import { clearUserInfo } from "@/redux/slices/userSlice";
+import { clearCurrentModel } from "@/redux/slices/userSpendingModelSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { router } from "expo-router";
@@ -19,7 +20,7 @@ const useLogout = () => {
       await GoogleSignin.signOut();
       dispatch(clearUserInfo());
       dispatch(apiSlice.util.resetApiState());
-
+      dispatch(clearCurrentModel());
       ToastAndroid.show(
         TEXT_TRANSLATE_AUTH.MESSAGE_SUCCESS.LOGOUT_SUCCESS,
         ToastAndroid.SHORT,

@@ -24,7 +24,7 @@ export interface Transaction {
 }
 
 const formatTransaction = (item: TransactionViewModelDetail) => {
-  const dateObj = new Date(item.transactionDate);
+  const dateObj = new Date(item?.transactionDate);
   return {
     id: item?.id,
     name: item?.subCategoryName,
@@ -45,23 +45,35 @@ const formatTransaction = (item: TransactionViewModelDetail) => {
 const usePeriodHistoryDetail = () => {
   const params = useLocalSearchParams();
   const { userSpendingId } = params;
-  const [transactions, setTransactions] = useState<any[]>([]);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(
-    null,
-  );
-  const [pageIndex, setPageIndex] = useState(1);
-  const [isRefetching, setIsRefetching] = useState(false);
+  const dispatch = useDispatch();
 
+  const [transactions, setTransactions] = useState<
+    TransactionViewModelDetail[]
+  >([]);
   const [subcategories, setSubcategories] = useState<
     Array<{ id: string; name: string }>
   >([]);
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(
+    null,
+  );
+  const [filterType, setFilterType] = useState<
+    TRANSACTION_TYPE.INCOME | TRANSACTION_TYPE.EXPENSE | ""
+  >("");
   const [showFilters, setShowFilters] = useState(false);
   const [isFiltering, setIsFiltering] = useState(false);
-
-  const dispatch = useDispatch();
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isRefetching, setIsRefetching] = useState(false);
+  const [pageIndex, setPageIndex] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
 
   const pageSize = 10;
+
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(setMainTabHidden(true));
+      return () => dispatch(setMainTabHidden(false));
+    }, [dispatch]),
+  );
 
   const {
     data: userSpendingModelDetail,
@@ -72,15 +84,6 @@ const usePeriodHistoryDetail = () => {
     { skip: !userSpendingId },
   );
 
-  useFocusEffect(
-    useCallback(() => {
-      dispatch(setMainTabHidden(true));
-    }, [dispatch]),
-  );
-
-  const [filterType, setFilterType] = useState<
-    TRANSACTION_TYPE.INCOME | TRANSACTION_TYPE.EXPENSE | ""
-  >("");
   const {
     data: transactionsData,
     error,
@@ -94,14 +97,43 @@ const usePeriodHistoryDetail = () => {
       PageSize: pageSize,
       type: filterType,
     },
-    { skip: !userSpendingId },
+    { skip: !userSpendingId, refetchOnMountOrArgChange: true },
   );
-  const totalCount = transactionsData?.totalCount ?? 0;
 
   useEffect(() => {
-    setTransactions([]);
-    setPageIndex(1);
+    if (transactionsData?.totalCount !== undefined && pageIndex === 1) {
+      setTotalCount(transactionsData.totalCount);
+    }
+  }, [transactionsData?.totalCount, pageIndex]);
+
+  useEffect(() => {
+    if (transactions.length > 0) {
+      setTransactions([]);
+      setPageIndex(1);
+    }
   }, [filterType]);
+
+  useEffect(() => {
+    if (transactionsData?.items) {
+      setTransactions((prevTransactions: any) => {
+        const newTransactions = transactionsData.items.map(
+          formatTransaction as any,
+        );
+        const uniqueTransactions = [
+          ...prevTransactions,
+          ...newTransactions.filter(
+            (newTrans: any) =>
+              !prevTransactions.some(
+                (oldTrans: any) => oldTrans.id === newTrans.id,
+              ),
+          ),
+        ];
+        return uniqueTransactions;
+      });
+      setIsFiltering(false);
+      setIsLoadingMore(false);
+    }
+  }, [transactionsData?.items]);
 
   const loadMoreData = useCallback(() => {
     if (
@@ -112,33 +144,31 @@ const usePeriodHistoryDetail = () => {
       setIsLoadingMore(true);
       setPageIndex((prev) => prev + 1);
     }
-  }, [transactions.length, totalCount, isLoadingMore]);
-
-  useEffect(() => {
-    if (transactionsData?.items) {
-      setTransactions((prevGroups) => [
-        ...prevGroups,
-        ...transactionsData.items.map(formatTransaction as any),
-      ]);
-      setIsFiltering(false);
-      setIsLoadingMore(false);
-    }
-  }, [transactionsData]);
+  }, [transactionsData?.items.length, isLoadingMore, isLoading]);
 
   const handleResetFilter = useCallback(() => {
-    setFilterType("");
-  }, []);
+    if (filterType !== "") setFilterType("");
+  }, [filterType]);
 
   const handleFilterBySubcategory = useCallback(
     (subcategoryId: string | null) => {
-      setSelectedSubcategory(subcategoryId);
+      if (subcategoryId !== selectedSubcategory) {
+        setSelectedSubcategory(subcategoryId);
+      }
     },
-    [],
+    [selectedSubcategory],
   );
 
-  const handleBack = useCallback(() => {
-    router.back();
-  }, []);
+  const handleFilterPress = useCallback(
+    (type: string | number) => {
+      if (filterType === type) return;
+      setFilterType(type as any);
+      setIsFiltering(true);
+    },
+    [filterType, setFilterType, setIsFiltering],
+  );
+
+  const handleBack = useCallback(() => router.back(), []);
 
   const handleRefetchData = useCallback(() => {
     if (isRefetching) {
@@ -148,17 +178,17 @@ const usePeriodHistoryDetail = () => {
       );
       return;
     }
-
     setIsRefetching(true);
+    setFilterType("");
     setPageIndex(1);
-
+    setTransactions([]);
     Promise.all([refetch(), handleRefetchUserSpendingModelDetail()]).finally(
       () => {
         setIsRefetching(false);
         ToastAndroid.show("Danh sách đã được cập nhật", ToastAndroid.SHORT);
       },
     );
-  }, [refetch, handleRefetchUserSpendingModelDetail, isRefetching]);
+  }, [refetch, handleRefetchUserSpendingModelDetail]);
 
   const modelDetails = useMemo(
     () => ({
@@ -176,7 +206,6 @@ const usePeriodHistoryDetail = () => {
   return {
     state: {
       transactions,
-      allTransactions: transactions,
       totalCount,
       modelDetails,
       isLoading,
@@ -188,6 +217,9 @@ const usePeriodHistoryDetail = () => {
       showFilters,
       isFetching: isFetchingDetail || isFetchingTransaction,
       isFiltering,
+      transactionsData,
+      pageSize,
+      isRefetching,
     },
     handler: {
       formatCurrency,
@@ -197,8 +229,7 @@ const usePeriodHistoryDetail = () => {
       handleResetFilter,
       handleRefetchData,
       setShowFilters,
-      setFilterType,
-      setIsFiltering,
+      handleFilterPress,
     },
   };
 };
