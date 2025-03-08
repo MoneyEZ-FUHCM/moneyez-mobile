@@ -78,7 +78,7 @@ export default function PeriodHistoryDetail() {
           <MaterialIcons
             name={state.showFilters ? "expand-less" : "expand-more"}
             size={24}
-            color="#609084"
+            color={PRIMARY_COLOR}
           />
         </Pressable>
       </View>
@@ -96,7 +96,7 @@ export default function PeriodHistoryDetail() {
 
                   handler.setIsFiltering(true);
                 }}
-                className={`rounded-full px-3 py-1 ${state.filterType === "" ? "bg-[#609084]" : "bg-[#f0f0f0]"}`}
+                className={`rounded-full px-3 py-1 ${state.filterType === "" ? "bg-primary" : "bg-[#f0f0f0]"}`}
               >
                 <Text
                   className={
@@ -112,7 +112,7 @@ export default function PeriodHistoryDetail() {
 
                   handler.setIsFiltering(true);
                 }}
-                className={`rounded-full px-3 py-1 ${state.filterType === TRANSACTION_TYPE.INCOME ? "bg-[#00a010]" : "bg-[#f0f0f0]"}`}
+                className={`rounded-full px-3 py-1 ${state.filterType === TRANSACTION_TYPE.INCOME ? "bg-primary" : "bg-[#f0f0f0]"}`}
               >
                 <Text
                   className={
@@ -130,7 +130,7 @@ export default function PeriodHistoryDetail() {
 
                   handler.setIsFiltering(true);
                 }}
-                className={`rounded-full px-3 py-1 ${state.filterType === TRANSACTION_TYPE.EXPENSE ? "bg-[#cc0000]" : "bg-[#f0f0f0]"}`}
+                className={`rounded-full px-3 py-1 ${state.filterType === TRANSACTION_TYPE.EXPENSE ? "bg-primary" : "bg-[#f0f0f0]"}`}
               >
                 <Text
                   className={

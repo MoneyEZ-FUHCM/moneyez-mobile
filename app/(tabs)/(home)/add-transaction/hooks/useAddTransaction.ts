@@ -1,6 +1,7 @@
 import { TRANSACTION_TYPE } from "@/enums/globals";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
+import { convertUTCToVietnamTime } from "@/helpers/libs";
 import useHideTabbar from "@/hooks/useHideTabbar";
 import useUploadImage from "@/hooks/useUploadImage";
 import { setLoading } from "@/redux/slices/loadingSlice";
@@ -114,12 +115,13 @@ const useAddTransaction = (type: string) => {
         description: payload.description,
         images: images,
         subcategoryId: selectedCategory,
-        transactionDate: payload.dob,
+        transactionDate: convertUTCToVietnamTime(payload.dob),
         type:
           transactionType === EXPENSE
             ? TRANSACTION_TYPE.EXPENSE
             : TRANSACTION_TYPE.INCOME,
       };
+
       try {
         const res = await createTransaction(updatePayload).unwrap();
         if (res && res.status === HTTP_STATUS.SUCCESS.CREATED) {

@@ -8,25 +8,19 @@ import {
 } from "@/components";
 import { appInfo } from "@/helpers/constants/appInfos";
 import { PATH_NAME } from "@/helpers/constants/pathname";
+import { formatCurrency, formatDate } from "@/helpers/libs";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Coin, Eye, EyeSlash } from "iconsax-react-native";
-import React, { useEffect } from "react";
+import React from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import TEXT_TRANSLATE_HOME from "../HomeScreen.translate";
 import useHomeScreen from "../hooks/useHomeScreen";
-import { formatCurrency, formatDate } from "@/helpers/libs";
 
 const HomeScreen = () => {
   const { state, handler } = useHomeScreen();
   const { BUTTON, TITLE, MESSAGE_ERROR } = TEXT_TRANSLATE_HOME;
   const router = useRouter();
-
-  useEffect(() => {
-    if (!state.isLoadingSpendingModel && !state.currentSpendingModel) {
-      handler.handleNavigateAddPersonalIncome();
-    }
-  }, [state.currentSpendingModel, state.isLoadingSpendingModel]);
 
   const VisibilityIcon = ({
     visible,
@@ -76,7 +70,7 @@ const HomeScreen = () => {
             </View>
           </View>
           <View className="bottom-16 mx-5 rounded-2xl bg-white p-3 shadow-md shadow-gray-600">
-            {state.currentSpendingModel ? (
+            {state.currentSpendingModel && !state.isLoadingSpendingModel ? (
               <View>
                 <View className="mb-2 flex-row items-center justify-between">
                   <Text className="text-[19px] font-bold text-primary">
@@ -95,7 +89,8 @@ const HomeScreen = () => {
                 </View>
                 <View className="mb-3 flex-row justify-between">
                   <Text className="font-medium">
-                    {formatDate(state.currentSpendingModel.startDate)} - {formatDate(state.currentSpendingModel.endDate)}
+                    {formatDate(state.currentSpendingModel.startDate)} -{" "}
+                    {formatDate(state.currentSpendingModel.endDate)}
                   </Text>
                   <TouchableOpacity onPress={handler.toggleVisibility}>
                     <VisibilityIcon
@@ -118,7 +113,9 @@ const HomeScreen = () => {
                     </View>
                     {state.isShow ? (
                       <Text className="font-medium">
-                        {formatCurrency(state.currentSpendingModel.totalExpense)}
+                        {formatCurrency(
+                          state.currentSpendingModel.totalExpense,
+                        )}
                       </Text>
                     ) : (
                       <Text className="font-medium">{TITLE.VISIBLE_DATA}</Text>
@@ -137,7 +134,9 @@ const HomeScreen = () => {
                     </View>
                     {state.isShow ? (
                       <Text className="font-medium">
-                        {formatCurrency(state.currentSpendingModel.totalExpense)}
+                        {formatCurrency(
+                          state.currentSpendingModel.totalExpense,
+                        )}
                       </Text>
                     ) : (
                       <Text className="font-medium">{TITLE.VISIBLE_DATA}</Text>
@@ -148,7 +147,11 @@ const HomeScreen = () => {
                   {TITLE.TOTAL_BALANCE}
                   {state.isShow ? (
                     <Text className="font-medium">
-                      {(state.currentSpendingModel.totalIncome - state.currentSpendingModel.totalExpense).toLocaleString()}đ
+                      {(
+                        state.currentSpendingModel.totalIncome -
+                        state.currentSpendingModel.totalExpense
+                      ).toLocaleString()}
+                      đ
                     </Text>
                   ) : (
                     <Text className="font-medium">{TITLE.VISIBLE_DATA}</Text>
@@ -164,7 +167,9 @@ const HomeScreen = () => {
                   onPress={handler.handleNavigateAddPersonalIncome}
                   className="rounded-full bg-primary px-5 py-2"
                 >
-                  <Text className="text-white">{BUTTON.CREATE_USER_SPENDING_MODEL}</Text>
+                  <Text className="text-white">
+                    {BUTTON.CREATE_USER_SPENDING_MODEL}
+                  </Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -190,7 +195,10 @@ const HomeScreen = () => {
             ) : state.groupData && state.groupData.length > 0 ? (
               <>
                 {state.groupData?.slice(0, 2).map((group, index) => (
-                  <View key={index} className="flex-1 rounded-lg border border-secondary bg-white px-2 py-3">
+                  <View
+                    key={index}
+                    className="flex-1 rounded-lg border border-secondary bg-white px-2 py-3"
+                  >
                     <View className="flex-row justify-between">
                       <View className="flex-row items-center gap-1">
                         <Coin size="17" color="#609084" variant="Bulk" />
@@ -215,7 +223,9 @@ const HomeScreen = () => {
                 {state.groupData?.length > 2 && (
                   <TouchableOpacity
                     className="flex-1 rounded-lg border border-secondary bg-white px-2 py-3"
-                    // onPress={() => router.navigate(PATH_NAME.GROUPS.INDEX as any)}
+                    onPress={() =>
+                      router.navigate(PATH_NAME.GROUP.GROUP_LIST as any)
+                    }
                   >
                     <Text className="text-center font-bold text-primary">
                       {BUTTON.SEE_MORE}

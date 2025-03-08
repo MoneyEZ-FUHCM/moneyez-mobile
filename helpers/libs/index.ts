@@ -33,3 +33,8 @@ export const getRandomColor = () => {
   }
   return color;
 };
+
+export function convertUTCToVietnamTime(utcDate: Date): Date {
+  const vietnamOffsetInMs = 7 * 60 * 60 * 1000;
+  return new Date(utcDate.getTime() + vietnamOffsetInMs);
+}
