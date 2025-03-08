@@ -14,7 +14,7 @@ import { formatCurrency, formatDate } from "@/helpers/libs";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Coin, Eye, EyeSlash } from "iconsax-react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import TEXT_TRANSLATE_HOME from "../HomeScreen.translate";
 import useHomeScreen from "../hooks/useHomeScreen";
