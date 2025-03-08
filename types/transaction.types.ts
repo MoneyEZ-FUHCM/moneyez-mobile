@@ -22,6 +22,7 @@ export interface Transaction {
 export interface TransactionViewModel {
   id: string;
   subcategory: string;
+  subCategoryName: string;
   amount: number;
   type: TransactionType;
   date: string;

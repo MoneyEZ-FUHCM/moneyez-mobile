@@ -1,11 +1,11 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import apiSlice from "@/redux/slices/apiSlice";
-import { UserSpendingChart } from "@/types/category.types";
 import { UserSpendingModel } from "@/types/spendingModel.types";
 import { transformCommonResponse } from "@/types/system.types";
+import { Transaction } from "@/types/transaction.types";
 
 const { HTTP_METHOD } = COMMON_CONSTANT;
-const transactionApi = apiSlice.injectEndpoints({
+const userSpendingModelApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getUserSpendingModel: builder.query({
       query: ({ PageIndex, PageSize }) => ({
@@ -35,6 +35,14 @@ const transactionApi = apiSlice.injectEndpoints({
         method: HTTP_METHOD.GET,
       }),
     }),
+    getTransactionById: builder.query({
+      query: ({ id, PageIndex, PageSize, type }) => ({
+        url: `/user-spending-models/transactions/${id}?PageIndex=${PageIndex}&PageSize=${PageSize}${type !== "" ? `&type=${type}` : ""}&is_deleted=false`,
+        method: HTTP_METHOD.GET,
+      }),
+      transformResponse: (response) =>
+        transformCommonResponse<Transaction>(response),
+    }),
   }),
 });
 
@@ -43,6 +51,7 @@ export const {
   useGetUserSpendingModelQuery,
   useGetCurrentUserSpendingModelChartQuery,
   useGetCurrentUserSpendingModelChartDetailQuery,
-} = transactionApi;
+  useGetTransactionByIdQuery,
+} = userSpendingModelApi;
 
-export default transactionApi;
+export default userSpendingModelApi;

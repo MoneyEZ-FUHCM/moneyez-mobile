@@ -1,111 +1,150 @@
 import {
+  InputComponent,
   SafeAreaViewCustom,
   SectionComponent,
-  InputComponent,
 } from "@/components";
-import { AntDesign } from "@expo/vector-icons";
+import { formatCurrencyInput } from "@/helpers/libs";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import React from "react";
+import { Formik } from "formik";
+import React, { useMemo } from "react";
 import {
-  View,
-  Text,
-  TouchableOpacity,
+  Image,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import TEXT_TRANSLATE_CREATE_GROUP from "./CreateGroup.translate";
-import { Formik } from "formik";
 import useCreateGroupScreen from "../hooks/useCreateGroupScreen";
+import TEXT_TRANSLATE_CREATE_GROUP from "./CreateGroup.translate";
 
 const CreateGroup = () => {
   const { TITLE, STEPS, BUTTON, TEXT, PLACEHOLDER } =
     TEXT_TRANSLATE_CREATE_GROUP;
   const { state, handler } = useCreateGroupScreen();
 
+  const renderImage = useMemo(
+    () => (
+      <View className="flex flex-row items-center space-x-3">
+        {state?.imageUrl ? (
+          <Pressable
+            onPress={handler.pickAndUploadImage}
+            className="relative h-[90px] w-[90px] overflow-hidden rounded-full border border-gray-300 shadow-sm"
+          >
+            <Image
+              source={{ uri: state.imageUrl }}
+              className="h-full w-full"
+              resizeMode="cover"
+            />
+          </Pressable>
+        ) : (
+          <Pressable
+            onPress={handler.pickAndUploadImage}
+            className="h-[90px] w-[90px] items-center justify-center overflow-hidden rounded-full border border-gray-400 bg-gray-100 shadow-sm active:opacity-75"
+          >
+            <MaterialIcons name="add-a-photo" size={38} color="#777" />
+          </Pressable>
+        )}
+      </View>
+    ),
+    [state.imageUrl, handler],
+  );
+
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={{ flex: 1 }}
-    >
-      <SafeAreaViewCustom>
-        <SectionComponent rootClassName="flex-row justify-between items-center h-14 px-4">
-          <TouchableOpacity onPress={router.back}>
-            <AntDesign name="arrowleft" size={24} color="#000000" />
-          </TouchableOpacity>
-          <View className="flex-row items-center gap-1">
-            <Text className="text-lg font-bold text-black">
-              {TITLE.CREATE_NEW_GROUP}
-            </Text>
-          </View>
-          <TouchableOpacity></TouchableOpacity>
-        </SectionComponent>
-        <Formik
-          initialValues={{
-            name: state.groupName,
-            groupName: state.groupName,
-            description: state.description,
-            currentBalance: Number(state.currentBalance),
-            accountBankId: "fa077922-5f22-4428-e6a5-08dd5a25399b",
-            image:
-              "https://scontent.fsgn2-3.fna.fbcdn.net/v/t39.30808-1/470179908_1868434833564631_8029761738812755776_n.jpg?stp=dst-jpg_s320x320_tt6&_nc_cat=107&ccb=1-7&_nc_sid=e99d92&_nc_eui2=AeGvozjYw7Nx8cjmh5fvA_YJktlzzRd3ByOS2XPNF3cHI7jQ6qhUGfwIzdyrvKSpFsyOyNK29qATn6Gj4Q78OH_B&_nc_ohc=7PRN6c8nBCgQ7kNvgFkJjcJ&_nc_oc=Adg62PEUV5H8jtzS_mwmm6_P5NIFV2PWuOoEcceHgjTSGtMF-xQ-_nevw8i4M-PYO1IF4bnBK2tcD-N9jDWaLSHG&_nc_zt=24&_nc_ht=scontent.fsgn2-3.fna&_nc_gid=ABMvHGgMibx25_yjmnjrC_T&oh=00_AYC-dUeNyjKeZ2PJfj7r-eN5fXEppOwdJ05AEMn-4bXZ8w&oe=67CD1775",
-          }}
-          validationSchema={handler.validationSchema}
-          onSubmit={(values) => handler.handleCreateGroup(values)}
+    <SafeAreaViewCustom rootClassName="flex-1 bg-gray-50">
+      {/* Header */}
+      <SectionComponent rootClassName="relative flex-row bg-white items-center justify-center h-14 px-5 shadow-sm">
+        <TouchableOpacity
+          onPress={router.back}
+          className="absolute left-2 rounded-full p-2 active:opacity-75"
         >
-          {({ handleSubmit }) => (
-            <View className="flex-1 bg-white px-4 py-6">
-              <Text className="mb-2 text-lg font-bold text-primary">
-                {STEPS.INFORMATION}
-              </Text>
-              <View className="rounded-lg bg-gray-100 p-4">
-                <InputComponent
-                  name="groupName"
-                  label={TEXT.GROUP_NAME}
-                  placeholder={PLACEHOLDER.ENTER_GROUP_NAME}
-                  isRequired
-                  containerClass="mb-2"
-                  labelClass="text-sm text-gray-600"
-                  inputClass="text-sm text-gray-800"
-                />
-                <InputComponent
-                  name="description"
-                  label={TEXT.DESCRIPTION}
-                  placeholder={PLACEHOLDER.ENTER_DESCRIPTION}
-                  isRequired
-                  containerClass="mb-2"
-                  labelClass="text-sm text-gray-600"
-                  inputClass="text-sm text-gray-800"
-                />
-                <InputComponent
-                  name="currentBalance"
-                  label={TEXT.CURRENT_BALANCE}
-                  placeholder={PLACEHOLDER.ENTER_CURRENT_BALANCE}
-                  isRequired
-                  inputMode="numeric"
-                  containerClass="mb-2"
-                  labelClass="text-sm text-gray-600"
-                  inputClass="text-sm text-gray-800"
-                />
-              </View>
-              {!state.isKeyboardVisible && (
-                <View className="flex-1 justify-end pb-24">
-                  <TouchableOpacity
-                    onPress={() => handleSubmit()}
-                    className="w-full rounded-2xl px-4"
-                  >
-                    <View className="h-[49px] w-full items-center justify-center overflow-hidden rounded-[10px] bg-[#5f8f84]">
-                      <Text className="font-['Inter'] text-base font-extrabold text-white">
-                        {BUTTON.NEXT}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              )}
+          <AntDesign name="arrowleft" size={24} color="#609084" />
+        </TouchableOpacity>
+        <Text className="text-lg font-bold text-primary">
+          {TITLE.CREATE_NEW_GROUP}
+        </Text>
+      </SectionComponent>
+
+      <Formik
+        initialValues={{
+          name: "",
+          description: "",
+          currentBalance: "",
+          accountBankId: "",
+        }}
+        validationSchema={handler.validationSchema}
+        onSubmit={(values) => handler.handleCreateGroup(values as any)}
+      >
+        {({ handleSubmit }) => (
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            className="flex-1 px-6 py-6"
+          >
+            <Text className="mb-2 text-lg font-semibold text-primary">
+              {STEPS.INFORMATION}
+            </Text>
+
+            <View className="rounded-lg bg-white p-5 shadow-md">
+              {/* Nhập thông tin nhóm */}
+              <InputComponent
+                name="name"
+                label={TEXT.GROUP_NAME}
+                placeholder={PLACEHOLDER.ENTER_GROUP_NAME}
+                isRequired
+                containerClass="mb-5"
+                labelClass="text-sm text-gray-600"
+                inputClass="text-sm text-gray-800"
+              />
+              <InputComponent
+                name="description"
+                label={TEXT.DESCRIPTION}
+                placeholder={PLACEHOLDER.ENTER_DESCRIPTION}
+                isRequired
+                containerClass="mb-5"
+                labelClass="text-sm text-gray-600"
+                inputClass="text-sm text-gray-800"
+              />
+              <InputComponent
+                name="accountBankId"
+                label={TEXT.ACCOUNT_BANKING}
+                placeholder={PLACEHOLDER.ENTER_ACCOUNT_BANKING}
+                isRequired
+                containerClass="mb-5"
+                labelClass="text-sm text-gray-600"
+                inputClass="text-sm text-gray-800"
+              />
+              <InputComponent
+                name="currentBalance"
+                label={TEXT.CURRENT_BALANCE}
+                placeholder={PLACEHOLDER.ENTER_CURRENT_BALANCE}
+                isRequired
+                inputMode="numeric"
+                containerClass="mb-5"
+                labelClass="text-sm text-gray-600"
+                inputClass="text-sm text-gray-800"
+                formatter={formatCurrencyInput}
+              />
+              <Text className="mb-2 text-sm text-gray-600">Ảnh</Text>
+              {renderImage}
             </View>
-          )}
-        </Formik>
-      </SafeAreaViewCustom>
-    </KeyboardAvoidingView>
+
+            {/* Nút tiếp tục */}
+            <View className="absolute bottom-5 left-6 right-6">
+              <TouchableOpacity
+                onPress={() => handleSubmit()}
+                className="w-full items-center rounded-lg bg-primary py-3 shadow-lg"
+              >
+                <Text className="text-lg font-semibold text-white">
+                  {BUTTON.NEXT}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </KeyboardAvoidingView>
+        )}
+      </Formik>
+    </SafeAreaViewCustom>
   );
 };
 

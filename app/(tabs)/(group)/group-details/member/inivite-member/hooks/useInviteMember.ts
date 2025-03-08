@@ -1,4 +1,4 @@
-import { useDebounce } from "@/hooks/useDebounce";
+import useDebounce from "@/hooks/useDebounce";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";
 import { router } from "expo-router";
 import { useCallback, useEffect, useState } from "react";

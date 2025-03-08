@@ -13,6 +13,10 @@ export const formatCurrency = (value: number): string =>
     .format(value)
     .replace(/\s₫/, "đ");
 
+export const formatCurrencyInput = (value: string) => {
+  return value.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};
+
 export const formatDate = (
   date: moment.MomentInput,
   pattern: string = "DD/MM/YYYY",

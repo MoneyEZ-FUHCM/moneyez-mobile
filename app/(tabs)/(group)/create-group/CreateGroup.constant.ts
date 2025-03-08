@@ -33,4 +33,10 @@ const RECENT_ACTIVITIES = [
   },
 ];
 
+// const CREATE_GROUP_CONSTANT = {
+//   ERROR_CODE: {
+//     BANK_ACCOUNT_NOT_FOUND: "BankAccountNotFound",
+//   },
+// };
+
 export default RECENT_ACTIVITIES;

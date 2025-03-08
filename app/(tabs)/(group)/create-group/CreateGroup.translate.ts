@@ -24,6 +24,7 @@ const TEXT_TRANSLATE_CREATE_GROUP = {
     ENTER_GROUP_NAME: "Nhập tên nhóm",
     ENTER_DESCRIPTION: "Nhập mô tả",
     ENTER_CURRENT_BALANCE: "Nhập số dư hiện tại",
+    ENTER_ACCOUNT_BANKING: "Nhập số tài khoản",
   },
 
   // Text
@@ -31,6 +32,7 @@ const TEXT_TRANSLATE_CREATE_GROUP = {
     GROUP_NAME: "Tên nhóm",
     DESCRIPTION: "Mô tả",
     CURRENT_BALANCE: "Số dư hiện tại",
+    ACCOUNT_BANKING: "Số tài khoản",
     FUND_OVERVIEW: "🌿 Tích lũy cho tương lai",
     FUND_AMOUNT: "10.000đ",
     FUND_GOAL: "Tạo mục tiêu và hiện thực ước mơ nhé",
@@ -50,6 +52,7 @@ const TEXT_TRANSLATE_CREATE_GROUP = {
   MESSAGE_VALIDATE: {
     GROUP_NAME_REQUIRED: "Tên nhóm không được để trống",
     DESCRIPTION_REQUIRED: "Mô tả không được để trống",
+    ACCOUNT_BANKING_REQUIRED: "Số tài khoản không được để trống",
     CURRENT_BALANCE_REQUIRED: "Số dư hiện tại không được để trống",
     CURRENT_BALANCE_INVALID: "Số dư hiện tại phải là một số hợp lệ",
     ALL_FIELDS_REQUIRED: "Vui lòng điền đầy đủ và chính xác tất cả các trường.",

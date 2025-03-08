@@ -1,7 +1,11 @@
 import { PATH_NAME } from "@/helpers/constants/pathname";
-import { formatCurrency } from "@/helpers/libs";
+import { formatCurrency, formatDate } from "@/helpers/libs";
+import useHideTabbar from "@/hooks/useHideTabbar";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
-import { useGetCurrentUserSpendingModelChartQuery } from "@/services/userSpendingModel";
+import {
+  useGetCurrentUserSpendingModelChartQuery,
+  useGetCurrentUserSpendingModelQuery,
+} from "@/services/userSpendingModel";
 import { router } from "expo-router";
 import { useMemo } from "react";
 import { useDispatch } from "react-redux";
@@ -11,8 +15,12 @@ const useIndividualHome = () => {
   const INCOME = "income";
   const { HOME } = PATH_NAME;
   const dispatch = useDispatch();
-  const { data: currentUserSpendingModel } =
+  const { data: currentUserSpendingModelChart, isLoading } =
     useGetCurrentUserSpendingModelChartQuery({});
+  const { data: currentUserSpendingModel } =
+    useGetCurrentUserSpendingModelQuery();
+
+  useHideTabbar();
 
   const handleGoBack = () => {
     router.back();
@@ -24,19 +32,48 @@ const useIndividualHome = () => {
     dispatch(setMainTabHidden(true));
   };
 
-  const state = useMemo(() => {
+  const currentUserSpendingModelData = useMemo(() => {
     return {
-      categories: currentUserSpendingModel?.data?.categories || [],
-      totalSpent: formatCurrency(currentUserSpendingModel?.data?.totalSpent),
+      categories: currentUserSpendingModelChart?.data?.categories || [],
+      totalSpent: formatCurrency(
+        currentUserSpendingModelChart?.data?.totalSpent,
+      ),
     };
-  }, [currentUserSpendingModel]);
+  }, [currentUserSpendingModelChart, isLoading]);
+
+  const handleHistoryPress = () => {
+    if (currentUserSpendingModel) {
+      const startDate = currentUserSpendingModelChart?.data?.startDate;
+      const endDate = currentUserSpendingModelChart?.data?.startDate;
+      const totalIncome = currentUserSpendingModelChart?.data?.totalIncome;
+      const totalExpense = currentUserSpendingModelChart?.data?.totalExpense;
+
+      router.push({
+        pathname: HOME.PERIOD_HISTORY_DETAIL as any,
+        params: {
+          userSpendingId: currentUserSpendingModel?.data?.id,
+          startDate: formatDate(currentUserSpendingModel?.data?.startDate),
+          endDate: formatDate(currentUserSpendingModel?.data?.endDate),
+          totalIncome: currentUserSpendingModel?.data?.totalIncome,
+          totalExpense: currentUserSpendingModel?.data?.totalExpense,
+        },
+      });
+    } else {
+      // Fallback if no current spending model is available
+      router.navigate(HOME.SPENDING_MODEL_HISTORY as any);
+    }
+  };
 
   return {
-    state,
+    state: {
+      isLoading,
+      currentUserSpendingModelData,
+    },
     handler: {
       handleGoBack,
       handleAddExpense: () => navigateToTransaction(EXPENSE),
       handleAddIncome: () => navigateToTransaction(INCOME),
+      handleHistoryPress,
     },
   };
 };

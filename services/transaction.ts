@@ -27,14 +27,6 @@ const transactionApi = apiSlice.injectEndpoints({
       }),
       transformResponse: (response) => transformCommonResponse(response),
     }),
-    getTransactionById: builder.query({
-      query: ({ id, PageIndex, PageSize }) => ({
-        url: `/user-spending-models/transactions/${id}?PageIndex=${PageIndex}&PageSize=${PageSize}`,
-        method: HTTP_METHOD.GET,
-      }),
-      transformResponse: (response) =>
-        transformCommonResponse<Transaction>(response),
-    }),
   }),
 });
 
@@ -42,7 +34,6 @@ export const {
   useCreateTransactionMutation,
   useGetTransactionQuery,
   useGetTransactionByModelQuery,
-  useGetTransactionByIdQuery,
 } = transactionApi;
 
 export default transactionApi;

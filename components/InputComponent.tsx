@@ -22,6 +22,7 @@ interface CommonInputProps {
   labelClass?: string;
   inputClass?: string;
   errorTextClass?: string;
+  formatter?: (value: string) => string; // Hàm format dữ liệu
 }
 
 const InputComponent = ({
@@ -36,16 +37,25 @@ const InputComponent = ({
   labelClass = "",
   inputClass = "",
   errorTextClass = "",
+  formatter,
 }: CommonInputProps) => {
   const [field, meta, helpers] = useField(name);
   const [isPasswordVisible, setIsPasswordVisible] = useState(!isPrivate);
+
+  // Hàm xử lý thay đổi giá trị với định dạng (nếu có)
+  const handleChangeText = (text: string) => {
+    const formattedText = formatter ? formatter(text) : text;
+    helpers.setValue(formattedText);
+  };
 
   return (
     <View className={`${containerClass} mb-5`}>
       <View className="mb-1 flex-row items-center">
         {isRequired && <Text className="mr-1 text-red">*</Text>}
         <Text
-          className={`${labelClass} ${meta.touched && meta.error ? "text-red" : ""}`}
+          className={`${labelClass} ${
+            meta.touched && meta.error ? "text-red" : ""
+          }`}
         >
           {label}
         </Text>
@@ -54,12 +64,14 @@ const InputComponent = ({
         <TextInput
           className={`h-10 rounded-md border px-3 ${isPrivate && "pr-10"} ${
             icon ? "pl-10" : "pl-3"
-          } ${meta.touched && meta.error ? "border-red" : "border-gray-300"} ${inputClass}`}
+          } ${meta.touched && meta.error ? "border-red" : "border-gray-300"} ${
+            inputClass
+          }`}
           placeholder={placeholder}
           secureTextEntry={!isPasswordVisible && isPrivate}
           inputMode={inputMode}
           value={field.value}
-          onChangeText={(text) => helpers.setValue(text)}
+          onChangeText={handleChangeText} // Sử dụng hàm mới
           onBlur={() => helpers.setTouched(true)}
         />
 

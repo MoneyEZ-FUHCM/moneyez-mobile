@@ -123,7 +123,7 @@ export default function PeriodHistory() {
               <MaterialIcons name="arrow-back" size={24} color="#609084" />
             </Pressable>
             <Text className="text-lg font-bold text-primary">
-              {modelDetails.startDate} - {modelDetails.endDate}
+              {modelDetails?.startDate} - {modelDetails?.endDate}
             </Text>
             <SpaceComponent width={24} />
           </View>

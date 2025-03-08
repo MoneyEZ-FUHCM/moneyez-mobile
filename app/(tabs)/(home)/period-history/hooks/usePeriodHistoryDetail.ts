@@ -1,9 +1,11 @@
+import { TRANSACTION_TYPE } from "@/enums/globals";
 import { formatCurrency } from "@/helpers/libs";
-import useDebounce from "@/hooks/useDebounce";
-import { useGetTransactionByIdQuery } from "@/services/transaction";
+import { setMainTabHidden } from "@/redux/slices/tabSlice";
+import { useGetTransactionByIdQuery } from "@/services/userSpendingModel";
 import { TransactionViewModelDetail } from "@/types/transaction.types";
-import { router, useLocalSearchParams } from "expo-router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
 export interface Transaction {
   id: string;
@@ -21,6 +23,7 @@ const formatTransaction = (item: TransactionViewModelDetail) => {
   const dateObj = new Date(item.transactionDate);
   return {
     id: item?.id,
+    name: item?.subCategoryName,
     subcategory: item?.description || "Không có mô tả",
     amount: item?.amount,
     type: item?.type?.toLowerCase() === "income" ? "income" : "expense",
@@ -44,17 +47,14 @@ const usePeriodHistoryDetail = () => {
     totalIncome: incomeParam,
     totalExpense: expenseParam,
   } = params;
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [transactions, setTransactions] = useState<any[]>([]);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const debouncedSearchQuery = useDebounce(searchQuery, 500); // NEW: Debounce the search input
-  const [filterType, setFilterType] = useState<"all" | "income" | "expense">(
-    "all",
-  );
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(
     null,
   );
+  const [pageIndex, setPageIndex] = useState(1);
+
   const [subcategories, setSubcategories] = useState<
     Array<{ id: string; name: string }>
   >([]);
@@ -62,79 +62,64 @@ const usePeriodHistoryDetail = () => {
 
   const totalIncome = Number(incomeParam || 0);
   const totalExpense = Number(expenseParam || 0);
+  const dispatch = useDispatch();
 
+  const pageSize = 10;
+
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(setMainTabHidden(true));
+    }, [dispatch]),
+  );
+  const [filterType, setFilterType] = useState<
+    TRANSACTION_TYPE.INCOME | TRANSACTION_TYPE.EXPENSE | ""
+  >("");
   const {
     data: transactionsData,
     error,
     isLoading,
+    isFetching,
     refetch,
   } = useGetTransactionByIdQuery(
-    { id: userSpendingId, PageIndex: 1, PageSize: 20 },
+    {
+      id: userSpendingId,
+      PageIndex: pageIndex,
+      PageSize: pageSize,
+      type: filterType,
+    },
     { skip: !userSpendingId },
   );
   const totalCount = transactionsData?.totalCount ?? 0;
 
   useEffect(() => {
-    if (transactionsData?.items) {
-      const formattedTransactions = transactionsData.items.map((item: any) =>
-        formatTransaction(item),
-      );
-
-      if (currentPage === 1) {
-        setTransactions(formattedTransactions as TransactionViewModelDetail[]);
-      } else {
-        setTransactions((prev: any) => {
-          const merged = [...prev, ...formattedTransactions];
-          // Remove duplicates based on transaction id.
-          const unique = merged.filter(
-            (item, index, self) =>
-              index === self.findIndex((t) => t.id === item.id),
-          );
-          return unique;
-        });
-      }
-    }
-  }, [transactionsData, currentPage]);
-
-  const filteredTransactions = useMemo(() => {
-    return transactions.filter((transaction) => {
-      const matchesSearch = debouncedSearchQuery
-        ? transaction.description
-            .toLowerCase()
-            .includes(debouncedSearchQuery.toLowerCase())
-        : true;
-      const matchesType =
-        filterType === "all" ? true : transaction.type === filterType;
-      const matchesSubcategory = selectedSubcategory
-        ? transaction.subcategoryId === selectedSubcategory
-        : true;
-      return matchesSearch && matchesType && matchesSubcategory;
-    });
-  }, [transactions, debouncedSearchQuery, filterType, selectedSubcategory]);
+    setTransactions([]);
+    setPageIndex(1);
+  }, [filterType]);
 
   const loadMoreData = useCallback(() => {
-    if (transactions.length < totalCount && !isLoadingMore) {
+    if (
+      !isLoading &&
+      !isLoadingMore &&
+      transactionsData?.items.length === pageSize
+    ) {
       setIsLoadingMore(true);
-      setCurrentPage((prev) => prev + 1);
+      setPageIndex((prev) => prev + 1);
     }
   }, [transactions.length, totalCount, isLoadingMore]);
 
-  const resetFilters = useCallback(() => {
-    setSearchQuery("");
-    setFilterType("all");
-    setSelectedSubcategory(null);
-  }, []);
+  useEffect(() => {
+    if (transactionsData?.items) {
+      setTransactions((prevGroups) => [
+        ...prevGroups,
+        ...transactionsData.items.map(formatTransaction as any),
+      ]);
+      setIsLoadingMore(false);
+    }
+  }, [transactionsData]);
 
-  const handleSearch = useCallback((query: string) => {
-    setSearchQuery(query);
+  const handleResetFilter = useCallback(() => {
+    setFilterType("");
   }, []);
-
-  const handleFilterByType = useCallback(
-    (type: "all" | "income" | "expense") => {
-      setFilterType(type);
-    },
-    [],
-  );
 
   const handleFilterBySubcategory = useCallback(
     (subcategoryId: string | null) => {
@@ -148,13 +133,13 @@ const usePeriodHistoryDetail = () => {
   }, []);
 
   const refetchData = useCallback(() => {
-    setCurrentPage(1);
+    setPageIndex(1);
     refetch();
   }, [refetch]);
 
   return {
     state: {
-      transactions: filteredTransactions,
+      transactions,
       allTransactions: transactions,
       totalCount,
       modelDetails: {
@@ -164,7 +149,7 @@ const usePeriodHistoryDetail = () => {
         startDate,
         endDate,
       },
-      isLoading: isLoading,
+      isLoading,
       isLoadingMore,
       searchQuery,
       filterType,
@@ -172,17 +157,18 @@ const usePeriodHistoryDetail = () => {
       subcategories,
       error,
       showFilters,
+      isFetching,
     },
     handler: {
       formatCurrency,
       handleBack,
-      handleSearch,
-      handleFilterByType,
+      // handleFilterByType,
       handleFilterBySubcategory,
       loadMoreData,
-      resetFilters,
+      handleResetFilter,
       refetchData,
       setShowFilters,
+      setFilterType,
     },
   };
 };

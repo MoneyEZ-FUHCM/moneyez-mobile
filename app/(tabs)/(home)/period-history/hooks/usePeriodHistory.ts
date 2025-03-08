@@ -1,27 +1,30 @@
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { formatCurrency } from "@/helpers/libs";
+import useHideTabbar from "@/hooks/useHideTabbar";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
-import { useGetTransactionByIdQuery } from "@/services/transaction";
-import { useGetCurrentUserSpendingModelChartDetailQuery } from "@/services/userSpendingModel";
+import {
+  useGetCurrentUserSpendingModelChartDetailQuery,
+  useGetTransactionByIdQuery,
+} from "@/services/userSpendingModel";
 import { TransactionViewModel } from "@/types/transaction.types";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 
 const formatTransaction = (item: TransactionViewModel) => {
-  const dateObj = new Date(item.transactionDate);
+  const dateObj = new Date(item?.transactionDate);
   return {
-    id: item.id,
-    subcategory: item.description || "Không có mô tả",
-    amount: item.amount,
-    type: item.type.toLowerCase() === "income" ? "income" : "expense",
-    date: dateObj.toLocaleDateString("vi-VN"),
-    time: dateObj.toLocaleTimeString("vi-VN", {
+    id: item?.id,
+    subcategory: item?.description || "Không có mô tả",
+    amount: item?.amount,
+    type: item?.type?.toLowerCase() === "income" ? "income" : "expense",
+    date: dateObj?.toLocaleDateString("vi-VN"),
+    time: dateObj?.toLocaleTimeString("vi-VN", {
       hour: "2-digit",
       minute: "2-digit",
     }),
-    icon: item.subcategoryIcon || "pending",
-    description: item.description,
+    icon: item?.subcategoryIcon || "pending",
+    description: item?.description,
   };
 };
 
@@ -40,7 +43,6 @@ const usePeriodHistory = () => {
 
   const totalIncome = useMemo(() => Number(incomeParam || 0), [incomeParam]);
   const totalExpense = useMemo(() => Number(expenseParam || 0), [expenseParam]);
-
   const {
     data: transactionsData,
     error,
@@ -48,7 +50,7 @@ const usePeriodHistory = () => {
     isFetching: isFetchingTransactions,
     refetch: refetchTransaction,
   } = useGetTransactionByIdQuery(
-    { id: userSpendingId, PageIndex: 1, PageSize: 20 },
+    { id: userSpendingId, PageIndex: 1, PageSize: 20, type: "" },
     { skip: !userSpendingId },
   );
 
@@ -60,6 +62,16 @@ const usePeriodHistory = () => {
   } = useGetCurrentUserSpendingModelChartDetailQuery(
     { id: userSpendingId },
     { skip: !userSpendingId },
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(setMainTabHidden(true));
+
+      // return () => {
+      //   dispatch(setMainTabHidden(false));
+      // };
+    }, [dispatch]),
   );
 
   useEffect(() => {
@@ -76,7 +88,10 @@ const usePeriodHistory = () => {
     refetchChart();
   }, [refetchTransaction, refetchChart]);
 
-  const handleBack = useCallback(() => router.back(), []);
+  const handleBack = useCallback(() => {
+    router.back();
+    dispatch(setMainTabHidden(true));
+  }, []);
 
   const navigateToPeriodHistoryDetail = () => {
     dispatch(setMainTabHidden(true));

@@ -57,17 +57,17 @@ const useSpendingModelHistory = () => {
   useEffect(() => {
     setIsLoadingHistory(true);
     if (spendingData?.items) {
-      const models = spendingData.items.map((model: any) => ({
+      const models = spendingData.items?.map((model: any) => ({
         ...model,
-        totalIncome: model.totalIncome ?? 0,
-        totalExpense: model.totalExpense ?? 0,
+        totalIncome: model?.totalIncome ?? 0,
+        totalExpense: model?.totalExpense ?? 0,
       }));
 
       const allModels: UserSpendingModel[] = [];
       const groups: { [key: string]: UserSpendingModel[] } = {};
 
       models.forEach((model: any) => {
-        const startDate = new Date(model.startDate);
+        const startDate = new Date(model?.startDate);
         let year = "Unknown";
 
         if (!isNaN(startDate.getTime())) {
@@ -75,7 +75,7 @@ const useSpendingModelHistory = () => {
         }
 
         const userSpendingModel: UserSpendingModel = {
-          id: model.id,
+          id: model?.id,
           modelId: model.spendingModelId,
           modelName: model.name,
           totalIncome: model.totalIncome,
@@ -103,47 +103,6 @@ const useSpendingModelHistory = () => {
       setIsLoadingHistory(false);
     }
   }, [spendingData]);
-
-  useEffect(() => {
-    if (allSpendingModels.length > 0) {
-      const groups: { [key: string]: UserSpendingModel[] } = {};
-
-      allSpendingModels.forEach((model) => {
-        if (
-          activeFilter !== COMMON_CONSTANT.FILTER.FILTER_ALL &&
-          model.modelName.toUpperCase() !== activeFilter
-        ) {
-          return;
-        }
-
-        const startDate = new Date(model.startDate);
-        let year = "Unknown";
-
-        if (!isNaN(startDate.getTime())) {
-          year = startDate.getFullYear().toString();
-        }
-
-        if (!groups[year]) {
-          groups[year] = [];
-        }
-        groups[year].push(model);
-      });
-
-      applyFilter(activeFilter, groups);
-    }
-  }, [activeFilter, allSpendingModels]);
-
-  const applyFilter = (
-    _filter: string,
-    groups: { [key: string]: UserSpendingModel[] },
-  ) => {
-    const groupedArray = Object.keys(groups).map((year) => ({
-      year,
-      userSpendingModels: groups[year],
-    }));
-
-    setSpendingModelsByYear(groupedArray);
-  };
 
   const handleViewPeriodHistory = (userSpendingId: string) => {
     const model = allSpendingModels.find(

@@ -1,8 +1,10 @@
 import { TabBar } from "@/components";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import useHideTabbar from "@/hooks/useHideTabbar";
-import { Tabs } from "expo-router";
-import React from "react";
+import { setGroupTabHidden, setMainTabHidden } from "@/redux/slices/tabSlice";
+import { Tabs, useFocusEffect } from "expo-router";
+import React, { useCallback } from "react";
+import { useDispatch } from "react-redux";
 
 export default function GroupDetailTabLayout() {
   const {
@@ -11,7 +13,19 @@ export default function GroupDetailTabLayout() {
     BOTTOM_TAB_TRANSLATE,
     BOTTOM_TAB_NAME,
   } = COMMON_CONSTANT;
-  useHideTabbar();
+  // useHideTabbar();
+
+  const dispatch = useDispatch();
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(setMainTabHidden(true));
+      // dispatch(setGroupTabHidden(false));
+
+      // return () => {
+      //   dispatch(setMainTabHidden(false));
+      // };
+    }, [dispatch]),
+  );
 
   return (
     <Tabs
