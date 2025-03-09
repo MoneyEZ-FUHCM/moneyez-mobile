@@ -70,7 +70,7 @@ const HomeScreen = () => {
                   <Text className="text-base">{state?.userInfo?.fullName}</Text>
                 </View>
               </View>
-              <TouchableOpacity className="rounded-full bg-black/20 p-2">
+              <TouchableOpacity className="rounded-full bg-black/20 p-2" onPress={handler.handleNavigateNotification}>
                 <Feather name="bell" size={22} color="white" />
               </TouchableOpacity>
             </View>

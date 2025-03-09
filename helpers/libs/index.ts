@@ -29,3 +29,8 @@ export const getRandomColor = () => {
   }
   return color;
 };
+
+export const formatTime = (date: moment.MomentInput) => {
+  if (!date) return "N/A";
+  return moment(date).format("HH:mm");
+};

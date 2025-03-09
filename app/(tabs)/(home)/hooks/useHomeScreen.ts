@@ -77,6 +77,11 @@ const useHomeScreen = () => {
     router.push(url as any);
   }
 
+  const handleNavigateNotification = useCallback(() => {
+    dispatch(setMainTabHidden(true));
+    router.navigate(HOME.NOTIFICATION as any);
+  }, []);
+
   return {
     state: {
       isShow,
@@ -95,6 +100,7 @@ const useHomeScreen = () => {
       toggleVisibility,
       handleNavigateAddPersonalIncome,
       handleNavigateMenuItem,
+      handleNavigateNotification,
     },
   };
 };
