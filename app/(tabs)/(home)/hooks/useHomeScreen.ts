@@ -20,9 +20,6 @@ interface ItemType {
 
 const useHomeScreen = () => {
   const { POST_DATAS, MENU_ITEMS, GROUP_DATAS } = HOME_SCREEN_CONSTANTS;
-  const today = dayjs();
-  const startOfMonth = today.startOf("month").format("DD/MM");
-  const endOfMonth = today.endOf("month").format("DD/MM/YYYY");
   const currentIndexRef = useRef(0);
   const [isShow, setIsShow] = useState(false);
   const flatListRef = useRef<FlatList<ItemType>>(null);
@@ -87,9 +84,6 @@ const useHomeScreen = () => {
       POST_DATAS,
       MENU_ITEMS,
       GROUP_DATAS,
-      today,
-      startOfMonth,
-      endOfMonth,
       flatListRef,
       userInfo,
       currentSpendingModel,
