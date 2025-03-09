@@ -2,6 +2,7 @@ import { PATH_NAME } from "@/helpers/constants/pathname";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { selectUserInfo } from "@/redux/slices/userSlice";
 import { selectCurrentUserSpendingModel } from "@/redux/slices/userSpendingModelSlice";
+import { useGetGroupsQuery } from "@/services/group";
 import { useGetCurrentUserSpendingModelQuery } from "@/services/userSpendingModel";
 import dayjs from "dayjs";
 import { router } from "expo-router";
@@ -9,7 +10,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { FlatList } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import HOME_SCREEN_CONSTANTS from "../HomeScreen.const";
-import { useGetGroupsQuery } from "@/services/group";
 
 interface ItemType {
   id: string;
@@ -25,18 +25,24 @@ const useHomeScreen = () => {
   const endOfMonth = today.endOf("month").format("DD/MM/YYYY");
   const currentIndexRef = useRef(0);
   const [isShow, setIsShow] = useState(false);
+  const [isShowGroupBalance, setIsShowGroupBalance] = useState<{
+    [key: string]: boolean;
+  }>({});
   const flatListRef = useRef<FlatList<ItemType>>(null);
   const userInfo = useSelector(selectUserInfo);
   const currentSpendingModel = useSelector(selectCurrentUserSpendingModel);
   const dispatch = useDispatch();
   const { HOME } = PATH_NAME;
-  
-  const { isLoading, refetch: refetchSpendingModel } = useGetCurrentUserSpendingModelQuery(undefined, {});
+
+  const { isLoading, refetch: refetchSpendingModel } =
+    useGetCurrentUserSpendingModelQuery(undefined, {});
 
   // group loading
-  const { data, isLoading: isGroupLoading, refetch: refetchGroups } = useGetGroupsQuery(
-    { PageIndex: 1, PageSize: 10 },
-  );
+  const {
+    data,
+    isLoading: isGroupLoading,
+    refetch: refetchGroups,
+  } = useGetGroupsQuery({ PageIndex: 1, PageSize: 10 });
   const [groupData, setGroupData] = useState<Group[]>([]);
 
   useEffect(() => {
@@ -55,6 +61,13 @@ const useHomeScreen = () => {
 
   const toggleVisibility = useCallback(() => {
     setIsShow((prev) => !prev);
+  }, []);
+
+  const toggleVisibilityGroupBalance = useCallback((groupId: string) => {
+    setIsShowGroupBalance((prev) => ({
+      ...prev,
+      [groupId]: !prev[groupId],
+    }));
   }, []);
 
   useEffect(() => {
@@ -78,7 +91,7 @@ const useHomeScreen = () => {
   const handleNavigateMenuItem = (url: string) => {
     dispatch(setMainTabHidden(true));
     router.push(url as any);
-  }
+  };
 
   return {
     state: {
@@ -96,11 +109,13 @@ const useHomeScreen = () => {
       isLoadingSpendingModel: isLoading,
       groupData,
       isGroupLoading,
+      isShowGroupBalance,
     },
     handler: {
       toggleVisibility,
       handleNavigateAddPersonalIncome,
       handleNavigateMenuItem,
+      toggleVisibilityGroupBalance,
     },
   };
 };

@@ -39,7 +39,6 @@ const Group = () => {
           <AntDesign name="reload1" size={24} color={PRIMARY_COLOR} />
         </TouchableOpacity>
       </SectionComponent>
-
       <LoadingSectionWrapper isLoading={isFetchingData}>
         {groups && groups?.length > 0 ? (
           <FlatListCustom
@@ -49,7 +48,7 @@ const Group = () => {
             isBottomTab={groups?.length >= 6}
             isLoading={isLoadingMore}
             hasMore={state.data?.items?.length === state.pageSize}
-            keyExtractor={(_, index) => index.toString()}
+            keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
               <TouchableOpacity
                 className="mb-4 flex-row items-center rounded-2xl border border-gray-200 bg-white p-4 shadow-lg"
