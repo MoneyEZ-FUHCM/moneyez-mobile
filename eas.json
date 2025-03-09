@@ -7,21 +7,18 @@
       "developmentClient": true,
       "distribution": "internal",
       "android": {
-        "buildType": "apk",
-        "workflow": "generic"
+        "buildType": "apk"
       }
     },
     "preview": {
       "distribution": "internal",
       "android": {
-        "buildType": "apk",
-        "workflow": "generic"
+        "buildType": "apk"
       }
     },
     "production": {
       "android": {
-        "buildType": "apk",
-        "workflow": "generic"
+        "buildType": "apk"
       }
     }
   },
