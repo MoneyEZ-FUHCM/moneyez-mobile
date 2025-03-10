@@ -11,8 +11,6 @@ import { useMemo } from "react";
 import { useDispatch } from "react-redux";
 
 const useIndividualHome = () => {
-  const EXPENSE = "expense";
-  const INCOME = "income";
   const { HOME } = PATH_NAME;
   const dispatch = useDispatch();
   const { data: currentUserSpendingModelChart, isLoading } =
@@ -27,7 +25,7 @@ const useIndividualHome = () => {
     dispatch(setMainTabHidden(false));
   };
 
-  const navigateToTransaction = (type: "expense" | "income") => {
+  const navigateToTransaction = (type: "EXPENSE" | "INCOME") => {
     router.navigate(`${HOME.ADD_TRANSACTION}?type=${type}` as any);
     dispatch(setMainTabHidden(true));
   };
@@ -36,7 +34,8 @@ const useIndividualHome = () => {
     return {
       categories: currentUserSpendingModelChart?.data?.categories || [],
       totalSpent: formatCurrency(
-        currentUserSpendingModelChart?.data?.totalSpent,
+        (currentUserSpendingModel?.data?.totalIncome ?? 0) -
+          (currentUserSpendingModel?.data?.totalExpense ?? 0),
       ),
     };
   }, [currentUserSpendingModelChart, isLoading]);
@@ -61,8 +60,8 @@ const useIndividualHome = () => {
     },
     handler: {
       handleGoBack,
-      handleAddExpense: () => navigateToTransaction(EXPENSE),
-      handleAddIncome: () => navigateToTransaction(INCOME),
+      handleAddExpense: () => navigateToTransaction("EXPENSE"),
+      handleAddIncome: () => navigateToTransaction("INCOME"),
       handleHistoryPress,
     },
   };

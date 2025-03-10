@@ -145,7 +145,7 @@ const HomeScreen = () => {
                     {state.isShow ? (
                       <Text className="font-medium">
                         {formatCurrency(
-                          state.currentSpendingModel.totalExpense,
+                          state.currentSpendingModel?.totalExpense,
                         )}
                       </Text>
                     ) : (
@@ -166,7 +166,7 @@ const HomeScreen = () => {
                     {state.isShow ? (
                       <Text className="font-medium">
                         {formatCurrency(
-                          state.currentSpendingModel.totalExpense,
+                          state.currentSpendingModel?.totalIncome,
                         )}
                       </Text>
                     ) : (

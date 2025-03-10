@@ -7,10 +7,12 @@ import {
   SpaceComponent,
 } from "@/components";
 import { TextAreaComponent } from "@/components/TextAreaComponent";
+import { formatCurrencyInput } from "@/helpers/libs";
+import { Subcategory } from "@/types/subCategory";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import { Formik } from "formik";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import { ActivityIndicator, RadioButton } from "react-native-paper";
 import TEXT_TRANSLATE_ADD_TRANSACTION from "./AddTransaction.translate";
@@ -21,11 +23,14 @@ const PRIMARY_COLOR = "#609084";
 export default function AddTransaction() {
   const { type } = useLocalSearchParams();
   const { state, handler } = useAddTransaction(type as string);
+  const handleSubmitRef = useRef<() => void>(() => {});
 
   handler.useHideTabbar();
 
+  const formikRef = useRef<any>(null);
+
   const renderTransactionTypeButton = useCallback(
-    (type: "expense" | "income", label: string) => (
+    (type: "EXPENSE" | "INCOME", label: string) => (
       <Pressable
         onPress={() => handler.setTransactionType(type)}
         className={`flex h-16 flex-1 flex-row items-center rounded-lg border-[0.5px] bg-white p-4 ${
@@ -79,7 +84,7 @@ export default function AddTransaction() {
   );
 
   return (
-    <SafeAreaViewCustom rootClassName="flex-1 bg-[#fafafa]">
+    <SafeAreaViewCustom rootClassName="bg-[#fafafa] relative">
       <SectionComponent rootClassName="h-14 bg-white justify-center">
         <View className="flex-row items-center justify-between px-5">
           <Pressable onPress={handler.handleBack}>
@@ -92,126 +97,120 @@ export default function AddTransaction() {
         </View>
       </SectionComponent>
       <Formik
+        innerRef={(ref) => (formikRef.current = ref)}
         initialValues={state.initialValues}
         validationSchema={handler.validationSchema}
         onSubmit={handler.handleCreateTransaction}
       >
-        {({ handleSubmit }) => (
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <SectionComponent rootClassName="mx-5 mt-8">
-              <View className="flex flex-row items-center space-x-4">
-                {renderTransactionTypeButton(
-                  "expense",
-                  TEXT_TRANSLATE_ADD_TRANSACTION.BUTTON.EXPENSE,
-                )}
-                {renderTransactionTypeButton(
-                  "income",
-                  TEXT_TRANSLATE_ADD_TRANSACTION.BUTTON.INCOME,
-                )}
-              </View>
-            </SectionComponent>
+        {({ handleSubmit }) => {
+          handleSubmitRef.current = handleSubmit;
+          return (
+            <ScrollView showsVerticalScrollIndicator={false} className="mb-16">
+              <SectionComponent rootClassName="mx-5 mt-8">
+                <View className="flex flex-row items-center space-x-4">
+                  {renderTransactionTypeButton(
+                    "EXPENSE",
+                    TEXT_TRANSLATE_ADD_TRANSACTION.BUTTON.EXPENSE,
+                  )}
+                  {renderTransactionTypeButton(
+                    "INCOME",
+                    TEXT_TRANSLATE_ADD_TRANSACTION.BUTTON.INCOME,
+                  )}
+                </View>
+              </SectionComponent>
 
-            <SectionComponent rootClassName="bg-white m-4 p-2 rounded-lg">
-              <Text className="mb-3 text-base font-semibold text-primary">
-                {TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.INFORMATION}
-              </Text>
-              <InputComponent
-                name="amount"
-                label={TEXT_TRANSLATE_ADD_TRANSACTION.LABEL.MONEY_NUMBER}
-                placeholder={TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.INPUT_PRICE}
-                inputMode="numeric"
-                isRequired
-                labelClass="text-text-gray text-[12px] font-bold"
-              />
-              <SpaceComponent height={10} />
-              <DatePickerComponent
-                isRequired
-                label={TEXT_TRANSLATE_ADD_TRANSACTION.LABEL.DATE}
-                name="dob"
-                labelClass="text-text-gray text-[12px] font-bold"
-              />
-              <SpaceComponent height={10} />
-              <TextAreaComponent
-                name="description"
-                label={TEXT_TRANSLATE_ADD_TRANSACTION.LABEL.DESCRIPTION}
-                placeholder={
-                  TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.INPUT_DESCRIPTION
-                }
-                numberOfLines={6}
-                isRequired
-                labelClass="text-text-gray text-[12px] font-bold"
-              />
-            </SectionComponent>
-            <SectionComponent rootClassName="bg-white m-4 p-2 rounded-lg">
-              <Text className="mb-4 text-base font-semibold text-primary">
-                {TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.SEPERATE}
-              </Text>
-              <View className="flex-row flex-wrap">
-                {state.isLoading ? (
-                  <View className="h-44 w-full items-center justify-center">
-                    <ActivityIndicator size="small" color={PRIMARY_COLOR} />
-                  </View>
-                ) : (
-                  state?.categories?.map((category) => {
-                    return (
-                      <Pressable
-                        key={category.id}
-                        onPress={() => handler.setSelectedCategory(category.id)}
-                        className="mb-3 w-1/3 px-1.5"
-                      >
-                        <CategoryItem
-                          label={category.name}
-                          color={PRIMARY_COLOR}
-                          iconName={
-                            category.icon as keyof typeof MaterialIcons.glyphMap
-                          }
-                          isSelected={state.selectedCategory === category.id}
-                          rootClassName="flex-1 justify-center min-h-[110px]"
-                        />
-                      </Pressable>
-                    );
-                  })
-                )}
-              </View>
-              {state?.categories.length < state?.totalCount &&
-                !state.isLoadingMore && (
-                  <Pressable onPress={handler.handleLoadMore} className="my-2">
-                    <Text className="text-center text-sm text-[#757575]">
-                      {TEXT_TRANSLATE_ADD_TRANSACTION.BUTTON.SEE_MORE} &gt;
-                    </Text>
-                  </Pressable>
-                )}
-              {state.isLoadingMore && (
-                <ActivityIndicator
-                  size="small"
-                  color={PRIMARY_COLOR}
-                  className="my-2"
-                />
-              )}
-            </SectionComponent>
-            <SectionComponent rootClassName="bg-white m-4 p-4 rounded-lg">
-              <Text className="mb-4 text-base font-semibold text-primary">
-                {TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.IMAGE_BILL}
-              </Text>
-              <View className="flex-row flex-wrap gap-2">
-                {renderImageList}
-              </View>
-            </SectionComponent>
-            <SectionComponent rootClassName="mx-5 mb-7 rounded-lg">
-              <Pressable
-                onPress={() => handleSubmit()}
-                className="h-12 w-full items-center justify-center rounded-lg bg-primary"
-              >
-                <Text className="text-base font-semibold text-white">
-                  {state.transactionType === "expense"
-                    ? TEXT_TRANSLATE_ADD_TRANSACTION.BUTTON.ADD_EXPENSE
-                    : TEXT_TRANSLATE_ADD_TRANSACTION.BUTTON.ADD_INCOME}
+              <SectionComponent rootClassName="bg-white m-4 p-2 rounded-lg">
+                <Text className="mb-3 text-base font-semibold text-primary">
+                  {TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.INFORMATION}
                 </Text>
-              </Pressable>
-            </SectionComponent>
-          </ScrollView>
-        )}
+                <InputComponent
+                  name="amount"
+                  label={TEXT_TRANSLATE_ADD_TRANSACTION.LABEL.MONEY_NUMBER}
+                  placeholder={TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.INPUT_PRICE}
+                  inputMode="numeric"
+                  isRequired
+                  labelClass="text-text-gray text-[12px] font-bold"
+                  formatter={formatCurrencyInput}
+                />
+                <SpaceComponent height={10} />
+                <DatePickerComponent
+                  isRequired
+                  label={TEXT_TRANSLATE_ADD_TRANSACTION.LABEL.DATE}
+                  name="dob"
+                  labelClass="text-text-gray text-[12px] font-bold"
+                />
+                <SpaceComponent height={10} />
+                <TextAreaComponent
+                  name="description"
+                  label={TEXT_TRANSLATE_ADD_TRANSACTION.LABEL.DESCRIPTION}
+                  placeholder={
+                    TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.INPUT_DESCRIPTION
+                  }
+                  numberOfLines={6}
+                  isRequired
+                  labelClass="text-text-gray text-[12px] font-bold"
+                />
+              </SectionComponent>
+              <SectionComponent rootClassName="bg-white m-4 p-2 rounded-lg">
+                <Text className="mb-4 text-base font-semibold text-primary">
+                  {TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.SEPERATE}
+                </Text>
+                <View className="flex-row flex-wrap">
+                  {state.isLoading ? (
+                    <View className="h-44 w-full items-center justify-center">
+                      <ActivityIndicator size="small" color={PRIMARY_COLOR} />
+                    </View>
+                  ) : (
+                    state?.mapSubCategories?.map((subCategory: Subcategory) => {
+                      return (
+                        <Pressable
+                          key={subCategory.id}
+                          onPress={() =>
+                            handler.setSelectedCategory(subCategory.id)
+                          }
+                          className="mb-3 w-1/3 px-1.5"
+                        >
+                          <CategoryItem
+                            label={subCategory.name}
+                            color={PRIMARY_COLOR}
+                            iconName={
+                              subCategory.icon as keyof typeof MaterialIcons.glyphMap
+                            }
+                            isSelected={
+                              state.selectedCategory === subCategory.id
+                            }
+                            rootClassName="flex-1 justify-center min-h-[110px]"
+                          />
+                        </Pressable>
+                      );
+                    })
+                  )}
+                </View>
+              </SectionComponent>
+              <SectionComponent rootClassName="bg-white m-4 p-4 rounded-lg">
+                <Text className="mb-4 text-base font-semibold text-primary">
+                  {TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.IMAGE_BILL}
+                </Text>
+                <View className="flex-row flex-wrap gap-2">
+                  {renderImageList}
+                </View>
+              </SectionComponent>
+            </ScrollView>
+          );
+        }}
       </Formik>
+      <SectionComponent rootClassName=" px-5 rounded-lg absolute bottom-5 w-full flex-1">
+        <Pressable
+          onPress={() => handleSubmitRef.current()}
+          className="h-12 items-center justify-center rounded-lg bg-primary"
+        >
+          <Text className="text-base font-semibold text-white">
+            {state.transactionType.includes("EXPENSE")
+              ? TEXT_TRANSLATE_ADD_TRANSACTION.BUTTON.ADD_EXPENSE
+              : TEXT_TRANSLATE_ADD_TRANSACTION.BUTTON.ADD_INCOME}
+          </Text>
+        </Pressable>
+      </SectionComponent>
     </SafeAreaViewCustom>
   );
 }

@@ -11,6 +11,7 @@ const transactionApi = apiSlice.injectEndpoints({
         method: HTTP_METHOD.POST,
         body: payload,
       }),
+      invalidatesTags: ["transaction"],
     }),
     getTransaction: builder.query({
       query: ({ PageIndex, PageSize }) => ({
@@ -18,6 +19,7 @@ const transactionApi = apiSlice.injectEndpoints({
         method: HTTP_METHOD.GET,
       }),
       transformResponse: (response) => transformCommonResponse(response),
+      providesTags: ["transaction"],
     }),
     getTransactionByModel: builder.query({
       query: ({ modelId, PageIndex, PageSize }) => ({
@@ -25,6 +27,7 @@ const transactionApi = apiSlice.injectEndpoints({
         method: HTTP_METHOD.GET,
       }),
       transformResponse: (response) => transformCommonResponse(response),
+      providesTags: ["transaction"],
     }),
   }),
 });

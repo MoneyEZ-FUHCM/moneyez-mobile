@@ -1,19 +1,33 @@
 import useHideTabbar from "@/hooks/useHideTabbar";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { router } from "expo-router";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ToastAndroid } from "react-native";
 import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 import TEXT_TRANSLATE_PERSONAL_EXPENSES from "../PersonalExpensesModel.translate";
+import { useCreateUserSpendingModelMutation } from "@/services/userSpendingModel";
+import { useGetSpendingModelQuery } from "@/services/spendingModel";
 
 const usePersonalExpensesModel = () => {
   const CUSTOM_MODEL = "Tùy chọn";
-  const [selectedModel, setSelectedModel] = useState("80-20");
   const [customModel, setCustomModel] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [step, setStep] = useState(1);
   const dispatch = useDispatch();
+  const [crateSpendingModel] = useCreateUserSpendingModelMutation();
+  const { data, isLoading: isLoadingSpendingModel } = useGetSpendingModelQuery(
+    {},
+  );
+  const [selectedModel, setSelectedModel] = useState("");
+
+  let spendingModels = data?.items ?? [];
+  let selectedModelName =
+    spendingModels.find((model) => model.id === selectedModel)?.name ||
+    "Tùy chọn";
+
+  const customOption = { id: "custom", name: CUSTOM_MODEL };
+  spendingModels = [...spendingModels, customOption as any];
 
   useHideTabbar();
   const [selectedTime, setSelectedTime] = useState("1 tháng");
@@ -21,6 +35,12 @@ const usePersonalExpensesModel = () => {
     const today = new Date().toISOString().split("T")[0];
     return today;
   });
+
+  useEffect(() => {
+    if (spendingModels.length > 0 && !selectedModel) {
+      setSelectedModel(spendingModels[0].id);
+    }
+  }, [spendingModels, selectedModel]);
 
   const validationSchema = Yup.object({
     startDate: Yup.string()
@@ -35,19 +55,16 @@ const usePersonalExpensesModel = () => {
 
   const handleSetStep = (newStep: number) => {
     if (newStep === 3 && (!startDate || !selectedTime)) {
-      // Prevent moving to step 3 if startDate or selectedTime is not set
       return;
     }
     if (newStep === 3 && step !== 2) {
-      // Prevent jumping directly from step 1 to step 3
       return;
     }
     if (newStep < step && step === 3 && newStep !== 1 && newStep !== 2) {
-      // Allow going back to step 1 and step 2 from step 3
       return;
     }
 
-    if (selectedModel === CUSTOM_MODEL && !customModel.trim()) {
+    if (selectedModel === customOption.id && !customModel.trim()) {
       ToastAndroid.show(
         TEXT_TRANSLATE_PERSONAL_EXPENSES.MESSAGE_VALIDATE.CUSTOM_MODEL_REQUIRED,
         ToastAndroid.SHORT,
@@ -57,6 +74,21 @@ const usePersonalExpensesModel = () => {
     setStep(newStep);
   };
 
+  const handleCreateSpendingModel = useCallback(async () => {
+    const payload = {
+      spendingModelId: selectedModel,
+      periodUnit: selectedTime,
+      periodValue: selectedTime,
+      startDate,
+    };
+    console.log("chjeck handleCreateSpendingModel", payload);
+    try {
+      // const res = await crateSpendingModel(payload).unwrap();
+    } catch (err) {
+      console.log(err);
+    }
+  }, []);
+
   return {
     state: {
       selectedModel,
@@ -65,6 +97,9 @@ const usePersonalExpensesModel = () => {
       customModel,
       isModalVisible,
       step,
+      spendingModels,
+      isLoadingSpendingModel,
+      selectedModelName,
     },
     handler: {
       setSelectedModel,
@@ -75,6 +110,7 @@ const usePersonalExpensesModel = () => {
       setSelectedTime,
       setStartDate,
       validationSchema,
+      handleCreateSpendingModel,
     },
   };
 };

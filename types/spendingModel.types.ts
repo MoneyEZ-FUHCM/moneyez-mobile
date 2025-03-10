@@ -36,6 +36,7 @@ export interface UserSpendingModel {
   endDate: string;
   totalIncome: number;
   totalExpense: number;
+  spendingModelId?: string;
 }
 
 export interface SpendingModelHistoryState {
@@ -47,6 +48,27 @@ export interface SpendingModelHistoryState {
   activeFilter: string;
   isLoading: boolean;
   error: any;
+}
+
+export interface UserSpendingModelRequest {
+  spendingModelId: string;
+  periodUnit: number;
+  periodValue: number;
+  startDate: string;
+}
+
+export interface SpendingModelMap {
+  id: string;
+  name: string;
+  nameUnsign: string;
+  description: string;
+  isTemplate: boolean;
+  spendingModelCategories: [];
+  createdDate: string;
+  createdBy: string | null;
+  updatedDate: string | null;
+  updatedBy: string | null;
+  isDeleted: boolean;
 }
 
 export type UserSpendingModelApiResponse = BaseResponse<UserSpendingModel>;

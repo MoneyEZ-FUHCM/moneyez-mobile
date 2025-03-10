@@ -17,6 +17,10 @@ export const formatCurrencyInput = (value: string) => {
   return value.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
 
+export const parseCurrency = (formattedValue: string): number => {
+  return Number(formattedValue.replace(/\./g, ""));
+};
+
 export const formatDate = (
   date: moment.MomentInput,
   pattern: string = "DD/MM/YYYY",
