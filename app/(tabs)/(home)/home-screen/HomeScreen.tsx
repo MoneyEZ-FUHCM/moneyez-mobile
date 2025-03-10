@@ -28,8 +28,6 @@ const HomeScreen = () => {
 
   const currentSpendingModel = useSelector(selectCurrentUserSpendingModel);
 
-  console.log("check currentSpendingModel", currentSpendingModel);
-
   const VisibilityIcon = ({
     visible,
     onPress,
@@ -230,7 +228,7 @@ const HomeScreen = () => {
                   ))}
                 </SkeletonLoaderComponent>
               </View>
-            ) : state.groupData ? (
+            ) : state.groupData && state.groupData?.length > 0 ? (
               <>
                 {state.groupData?.slice(0, 2)?.map((group) => (
                   <View
@@ -279,12 +277,12 @@ const HomeScreen = () => {
               </>
             ) : (
               <View className="flex-1 items-center justify-center py-5">
-                <Text>No groups found</Text>
+                <Text>Chưa có nhóm</Text>
                 <TouchableOpacity
                   className="mt-3 rounded-full bg-primary px-5 py-2"
                   // onPress={() => router.navigate(PATH_NAME.GROUPS.CREATE as any)}
                 >
-                  <Text className="text-white">Create Group</Text>
+                  <Text className="text-white">Tạo nhóm</Text>
                 </TouchableOpacity>
               </View>
             )}

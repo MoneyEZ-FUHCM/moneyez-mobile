@@ -9,7 +9,10 @@ import { useCallback, useEffect, useState } from "react";
 import { ToastAndroid } from "react-native";
 import { useDispatch } from "react-redux";
 import * as Yup from "yup";
-import PERSONAL_EXPENSES_MODEL_CONSTANTS, { PeriodUnit, TIME_OPTIONS } from "../PersonalExpensesModel.constants";
+import PERSONAL_EXPENSES_MODEL_CONSTANTS, {
+  PeriodUnit,
+  TIME_OPTIONS,
+} from "../PersonalExpensesModel.constants";
 import TEXT_TRANSLATE_PERSONAL_EXPENSES from "../PersonalExpensesModel.translate";
 
 interface TimeOption {
@@ -35,8 +38,8 @@ const usePersonalExpensesModel = () => {
     spendingModels.find((model) => model?.id === selectedModel)?.name ||
     "Tùy chọn";
 
-const {MESSAGE_ERROR} =TEXT_TRANSLATE_PERSONAL_EXPENSES
-const {ERROR_CODE} = PERSONAL_EXPENSES_MODEL_CONSTANTS
+  const { MESSAGE_ERROR } = TEXT_TRANSLATE_PERSONAL_EXPENSES;
+  const { ERROR_CODE } = PERSONAL_EXPENSES_MODEL_CONSTANTS;
 
   // const customOption = { id: "custom", name: CUSTOM_MODEL };
   // spendingModels = [...spendingModels, customOption as any];
@@ -97,7 +100,7 @@ const {ERROR_CODE} = PERSONAL_EXPENSES_MODEL_CONSTANTS
     try {
       const res = await crateSpendingModel(payload).unwrap();
       if (res && res.status === HTTP_STATUS.SUCCESS.CREATED) {
-        router.navigate(PATH_NAME.HOME.INDIVIDUAL_HOME as any);
+        router.replace(PATH_NAME.HOME.INDIVIDUAL_HOME as any);
         ToastAndroid.show(
           "Tạo mô hình chi tiêu thành công",
           ToastAndroid.SHORT,

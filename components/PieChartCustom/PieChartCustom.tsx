@@ -32,7 +32,7 @@ const RenderDetailComponent = ({ pieData }: { pieData: PieChartData[] }) => (
                 className="h-2.5 w-2.5 rounded-full"
                 style={{ backgroundColor: item.color }}
               />
-              <Text className="ml-2 text-black">{`${item?.categoryName}: ${item?.plannedPercentage}%`}</Text>
+              <Text className="ml-2 text-black">{`${item?.categoryName}`}</Text>
             </View>
           ))}
       </View>
@@ -43,7 +43,7 @@ const RenderDetailComponent = ({ pieData }: { pieData: PieChartData[] }) => (
               className="h-2.5 w-2.5 rounded-full"
               style={{ backgroundColor: item?.color }}
             />
-            <Text className="ml-2 text-black">{`${item?.categoryName}: ${item?.plannedPercentage}%`}</Text>
+            <Text className="ml-2 text-black">{`${item?.categoryName}`}</Text>
           </View>
         ))}
       </View>

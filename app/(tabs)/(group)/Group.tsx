@@ -44,7 +44,7 @@ const Group = () => {
           <FlatListCustom
             className="mx-5 pt-5"
             showsVerticalScrollIndicator={false}
-            data={groups}
+            data={groups ?? []}
             isBottomTab={true}
             isLoading={isLoadingMore}
             hasMore={state.data?.items?.length === state.pageSize}
@@ -81,10 +81,10 @@ const Group = () => {
             onLoadMore={handleLoadMore}
           />
         ) : (
-          <View className="flex-1 items-center justify-center px-5">
+          <View className="mt-36 items-center justify-center px-5">
             <Image
               source={NoData}
-              className="h-[40%] w-full"
+              className="h-[400px] w-full"
               resizeMode="contain"
             />
           </View>
