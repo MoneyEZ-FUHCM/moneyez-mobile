@@ -176,6 +176,18 @@ const useLoginScreen = () => {
     }
   };
 
+  const getToken = async () => {
+    try {
+      const token = await messaging().getToken();
+      if (token) {
+        await AsyncStorage.setItem('fcmToken', token);
+      }
+      return token;
+    } catch (error) {
+      return null;
+    }
+  };
+
   return {
     state: {
       data,
@@ -189,6 +201,7 @@ const useLoginScreen = () => {
       loginValidationSchema,
       handleLogin,
       handleLoginGoogle,
+      getToken,
     },
   };
 };

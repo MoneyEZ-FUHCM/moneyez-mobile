@@ -18,13 +18,29 @@ import React, { useEffect } from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import TEXT_TRANSLATE_HOME from "../HomeScreen.translate";
 import useHomeScreen from "../hooks/useHomeScreen";
-import { useSelector } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useUpdateFcmTokenMutation } from "@/services/auth";
 import { selectCurrentUserSpendingModel } from "@/redux/slices/userSpendingModelSlice";
+import { useSelector } from "react-redux";
 
 const HomeScreen = () => {
   const { state, handler } = useHomeScreen();
   const { BUTTON, TITLE, MESSAGE_ERROR } = TEXT_TRANSLATE_HOME;
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const fcmToken = await AsyncStorage.getItem('fcmToken');
+        if (fcmToken) {
+          const formValues = {email: state.userInfo?.email, 'fcm-token': fcmToken};
+          useUpdateFcmTokenMutation(formValues as any);
+        }
+      } catch (err) {}
+    };
+
+    fetchData();
+  }, [state.userInfo]);
 
   const currentSpendingModel = useSelector(selectCurrentUserSpendingModel);
 
