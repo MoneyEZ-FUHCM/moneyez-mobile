@@ -56,6 +56,8 @@ const usePeriodHistory = () => {
     { skip: !userSpendingId },
   );
 
+  console.log("heck userSpendingId", userSpendingId);
+
   const {
     data: userSpendingModelDetail,
     refetch,

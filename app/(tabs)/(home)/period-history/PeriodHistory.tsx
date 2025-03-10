@@ -19,13 +19,15 @@ export default function PeriodHistory() {
   const { state, handler } = usePeriodHistory();
   const { transactions, modelDetails, isLoading, categories } = state;
 
+  console.log("heck categories",categories);
+
   const renderTransactionItem = ({ item }: { item: TransactionViewModel }) => (
     <View className="flex-row items-center justify-between border-b border-[#f0f0f0] py-3">
-      <View className="flex-row items-center gap-1.5">
+      <View className="flex-row items-center gap-1.5 flex-1">
         <View className="h-12 w-12 items-center justify-center rounded-full">
           <MaterialIcons name={item?.icon as any} size={30} color="#609084" />
         </View>
-        <View>
+        <View className="flex-1">
           <Text className="text-base font-medium text-black">
             {item?.subcategory
               ? item.subcategory.charAt(0).toUpperCase() +

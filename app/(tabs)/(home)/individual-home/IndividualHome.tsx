@@ -123,5 +123,5 @@ export default function IndividualHome() {
         </ScrollViewCustom>
       </LoadingSectionWrapper>
     </SafeAreaViewCustom>
-  );
+  ); 
 }

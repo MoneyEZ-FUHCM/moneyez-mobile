@@ -1,16 +1,25 @@
+import { COMMON_CONSTANT } from "@/helpers/constants/common";
+import { PATH_NAME } from "@/helpers/constants/pathname";
 import useHideTabbar from "@/hooks/useHideTabbar";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
+import { useGetSpendingModelQuery } from "@/services/spendingModel";
+import { useCreateUserSpendingModelMutation } from "@/services/userSpendingModel";
 import { router } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { ToastAndroid } from "react-native";
 import { useDispatch } from "react-redux";
 import * as Yup from "yup";
+import PERSONAL_EXPENSES_MODEL_CONSTANTS, { PeriodUnit, TIME_OPTIONS } from "../PersonalExpensesModel.constants";
 import TEXT_TRANSLATE_PERSONAL_EXPENSES from "../PersonalExpensesModel.translate";
-import { useCreateUserSpendingModelMutation } from "@/services/userSpendingModel";
-import { useGetSpendingModelQuery } from "@/services/spendingModel";
+
+interface TimeOption {
+  label: string;
+  unit: PeriodUnit;
+  value: number;
+}
 
 const usePersonalExpensesModel = () => {
-  const CUSTOM_MODEL = "Tùy chọn";
+  // const CUSTOM_MODEL = "Tùy chọn";
   const [customModel, setCustomModel] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [step, setStep] = useState(1);
@@ -20,17 +29,20 @@ const usePersonalExpensesModel = () => {
     {},
   );
   const [selectedModel, setSelectedModel] = useState("");
-
+  const { HTTP_STATUS, SYSTEM_ERROR } = COMMON_CONSTANT;
   let spendingModels = data?.items ?? [];
   let selectedModelName =
-    spendingModels.find((model) => model.id === selectedModel)?.name ||
+    spendingModels.find((model) => model?.id === selectedModel)?.name ||
     "Tùy chọn";
 
-  const customOption = { id: "custom", name: CUSTOM_MODEL };
-  spendingModels = [...spendingModels, customOption as any];
+const {MESSAGE_ERROR} =TEXT_TRANSLATE_PERSONAL_EXPENSES
+const {ERROR_CODE} = PERSONAL_EXPENSES_MODEL_CONSTANTS
+
+  // const customOption = { id: "custom", name: CUSTOM_MODEL };
+  // spendingModels = [...spendingModels, customOption as any];
 
   useHideTabbar();
-  const [selectedTime, setSelectedTime] = useState("1 tháng");
+  const [selectedTime, setSelectedTime] = useState<TimeOption>(TIME_OPTIONS[1]);
   const [startDate, setStartDate] = useState(() => {
     const today = new Date().toISOString().split("T")[0];
     return today;
@@ -64,30 +76,46 @@ const usePersonalExpensesModel = () => {
       return;
     }
 
-    if (selectedModel === customOption.id && !customModel.trim()) {
-      ToastAndroid.show(
-        TEXT_TRANSLATE_PERSONAL_EXPENSES.MESSAGE_VALIDATE.CUSTOM_MODEL_REQUIRED,
-        ToastAndroid.SHORT,
-      );
-      return;
-    }
+    // if (selectedModel === customOption.id && !customModel.trim()) {
+    //   ToastAndroid.show(
+    //     TEXT_TRANSLATE_PERSONAL_EXPENSES.MESSAGE_VALIDATE.CUSTOM_MODEL_REQUIRED,
+    //     ToastAndroid.SHORT,
+    //   );
+    //   return;
+    // }
     setStep(newStep);
   };
 
   const handleCreateSpendingModel = useCallback(async () => {
     const payload = {
       spendingModelId: selectedModel,
-      periodUnit: selectedTime,
-      periodValue: selectedTime,
+      periodUnit: selectedTime.unit,
+      periodValue: selectedTime.value,
       startDate,
     };
-    console.log("chjeck handleCreateSpendingModel", payload);
+
     try {
-      // const res = await crateSpendingModel(payload).unwrap();
-    } catch (err) {
-      console.log(err);
+      const res = await crateSpendingModel(payload).unwrap();
+      if (res && res.status === HTTP_STATUS.SUCCESS.CREATED) {
+        router.navigate(PATH_NAME.HOME.INDIVIDUAL_HOME as any);
+        ToastAndroid.show(
+          "Tạo mô hình chi tiêu thành công",
+          ToastAndroid.SHORT,
+        );
+      }
+    } catch (err: any) {
+      const error = err.data;
+
+      if (error && error.errorCode === ERROR_CODE.ALREADY_HAS_ACTIVE_MODEL) {
+        ToastAndroid.show(
+          MESSAGE_ERROR.ALREADY_HAS_ACTIVE_MODEL,
+          ToastAndroid.SHORT,
+        );
+        return;
+      }
+      ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
     }
-  }, []);
+  }, [selectedModel, selectedTime, startDate]);
 
   return {
     state: {

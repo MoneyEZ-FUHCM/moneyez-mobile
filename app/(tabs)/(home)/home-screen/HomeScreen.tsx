@@ -18,11 +18,17 @@ import React from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import TEXT_TRANSLATE_HOME from "../HomeScreen.translate";
 import useHomeScreen from "../hooks/useHomeScreen";
+import { useSelector } from "react-redux";
+import { selectCurrentUserSpendingModel } from "@/redux/slices/userSpendingModelSlice";
 
 const HomeScreen = () => {
   const { state, handler } = useHomeScreen();
   const { BUTTON, TITLE, MESSAGE_ERROR } = TEXT_TRANSLATE_HOME;
   const router = useRouter();
+
+  const currentSpendingModel = useSelector(selectCurrentUserSpendingModel);
+
+  console.log("check currentSpendingModel", currentSpendingModel);
 
   const VisibilityIcon = ({
     visible,
@@ -107,16 +113,6 @@ const HomeScreen = () => {
                   <Text className="text-[19px] font-bold text-primary">
                     {TITLE.PERSONAL_EXPENSES}
                   </Text>
-                  <TouchableOpacity
-                    onPress={handler.handleNavigateAddPersonalIncome}
-                  >
-                    <View className="flex-row items-center rounded-full border border-primary px-3 py-1">
-                      <Feather name="plus" size={16} color="#609084" />
-                      <Text className="font-md ml-1 text-[14px] text-primary">
-                        {BUTTON.ADD}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
                 </View>
                 <View className="mb-3 flex-row justify-between">
                   <Text className="font-medium">

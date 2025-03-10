@@ -2,6 +2,7 @@ import {
   CustomModal,
   DatePickerPersonalExpense,
   FlatListCustom,
+  LoadingSectionWrapper,
   SafeAreaViewCustom,
   SectionComponent,
   SpaceComponent,
@@ -19,6 +20,8 @@ const PersonalExpensesModel = () => {
   const { state, handler } = usePersonalExpensesModel();
   const MODELS = PERSONAL_EXPENSES_MODEL_CONSTANTS.MODELS;
   const STEPS = PERSONAL_EXPENSES_MODEL_CONSTANTS.STEPS;
+
+  console.log("check spendingModels", state.spendingModels);
 
   return (
     <SafeAreaViewCustom rootClassName="relative">
@@ -88,7 +91,9 @@ const PersonalExpensesModel = () => {
 
       {/* Model Selection */}
       {state.step === 1 ? (
-        <View className="mx-4 mt-4 rounded-xl bg-white p-4">
+        
+        <View className={`mx-4 mt-4 rounded-xl bg-white p-4 ${state.isLoadingSpendingModel ? "h-64" : ""}`}>
+          <LoadingSectionWrapper isLoading={state.isLoadingSpendingModel}>
           <Text className="mb-3 text-base font-medium">
             {TEXT_TRANSLATE_PERSONAL_EXPENSES.MODEL_SELECTION}
           </Text>
@@ -124,7 +129,7 @@ const PersonalExpensesModel = () => {
             )}
           />
           {/* Custom Input */}
-          {state.selectedModel === "custom" && (
+          {/* {state.selectedModel === "custom" && (
             <View className="mt-2">
               <TextInput
                 placeholder={
@@ -135,13 +140,15 @@ const PersonalExpensesModel = () => {
                 className="rounded-lg border border-gray-300 bg-white p-3"
               />
             </View>
-          )}
+          )} */}
           <TouchableOpacity className="mt-4">
             <Text className="text-green-600 text-center underline">
               {TEXT_TRANSLATE_PERSONAL_EXPENSES.HELP_TEXT}
             </Text>
           </TouchableOpacity>
+        </LoadingSectionWrapper>
         </View>
+
       ) : state.step === 2 ? (
         <View className="mx-4 mt-4 rounded-lg bg-white p-4 shadow-md">
           <DatePickerPersonalExpense
@@ -153,9 +160,9 @@ const PersonalExpensesModel = () => {
             <Text className="text-md mb-1 font-semibold text-primary">
               {TEXT_TRANSLATE_PERSONAL_EXPENSES.PERIOD}
             </Text>
-            {TIME_OPTIONS.map((option) => (
+            {TIME_OPTIONS.map((option, index) => (
               <TouchableOpacity
-                key={option}
+                key={index}
                 onPress={() => handler.setSelectedTime(option)}
                 className={`mt-2 rounded-lg border border-gray-300 p-3 ${
                   state.selectedTime === option
@@ -163,7 +170,7 @@ const PersonalExpensesModel = () => {
                     : "bg-white"
                 }`}
               >
-                <Text className="text-md">{option}</Text>
+                <Text className="text-md">{option?.label}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -190,7 +197,7 @@ const PersonalExpensesModel = () => {
             </View>
             <View className="mt-1 flex-col justify-between pr-14">
               <Text className="font-semibold text-primary">Thời hạn</Text>
-              <Text className="text-md">{state.selectedTime}</Text>
+              <Text className="text-md">{state.selectedTime.label }</Text>
             </View>
           </View>
 
