@@ -35,6 +35,10 @@ const Login = () => {
   const { FORM_NAME } = AUTH_SCREEN_CONSTANTS;
   const { AUTH } = PATH_NAME;
 
+  useEffect(() => {
+    handler.getToken();
+  }, []);
+
   return (
     <SafeAreaViewCustom
       rootClassName={`justify-center items-centers px-10 bg-white`}
