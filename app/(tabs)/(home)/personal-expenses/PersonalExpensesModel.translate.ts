@@ -15,6 +15,10 @@ const TEXT_TRANSLATE_PERSONAL_EXPENSES = {
   MESSAGE_VALIDATE: {
     CUSTOM_MODEL_REQUIRED: "Vui lòng nhập mô hình mà bạn muốn",
   },
+
+  MESSAGE_ERROR: {
+    ALREADY_HAS_ACTIVE_MODEL: "Bạn đã có mô hình chi tiêu đang hoạt động",
+  }
 };
 
 export default TEXT_TRANSLATE_PERSONAL_EXPENSES;

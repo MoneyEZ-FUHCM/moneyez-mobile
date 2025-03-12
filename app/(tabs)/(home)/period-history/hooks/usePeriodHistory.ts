@@ -45,6 +45,7 @@ const usePeriodHistory = () => {
     { id: userSpendingId, PageIndex: 1, PageSize: 20, type: "" },
     { skip: !userSpendingId },
   );
+
   const {
     data: currentUserSpendingModelChartDetail,
     isLoading: isLoadingCurrentUserSpendingModelChartDetail,
@@ -54,7 +55,12 @@ const usePeriodHistory = () => {
     { id: userSpendingId },
     { skip: !userSpendingId },
   );
-  const { data: userSpendingModelDetail } = useGetUserSpendingModelDetailQuery(
+
+  const {
+    data: userSpendingModelDetail,
+    refetch,
+    isFetching: isFetchingUserSpendingModelDetail,
+  } = useGetUserSpendingModelDetailQuery(
     { id: userSpendingId as string },
     { skip: !userSpendingId },
   );
@@ -62,12 +68,16 @@ const usePeriodHistory = () => {
   useFocusEffect(
     useCallback(() => {
       dispatch(setMainTabHidden(true));
-
-      // return () => {
-      //   dispatch(setMainTabHidden(false));
-      // };
     }, [dispatch]),
   );
+
+  useEffect(() => {
+    if (userSpendingId) {
+      refetchTransaction();
+      refetchChart();
+      refetch();
+    }
+  }, [userSpendingId]);
 
   useEffect(() => {
     if (transactionsData?.items) {
@@ -81,7 +91,8 @@ const usePeriodHistory = () => {
   const handleRefetch = useCallback(() => {
     refetchTransaction();
     refetchChart();
-  }, [refetchTransaction, refetchChart]);
+    refetch();
+  }, [refetchTransaction, refetchChart, refetch]);
 
   const handleBack = useCallback(() => {
     router.back();
@@ -117,7 +128,8 @@ const usePeriodHistory = () => {
         isLoading ||
         isLoadingCurrentUserSpendingModelChartDetail ||
         isFetching ||
-        isFetchingTransactions,
+        isFetchingTransactions ||
+        isFetchingUserSpendingModelDetail,
       error,
       currentUserSpendingModelChart: currentUserSpendingModelChartDetail,
       categories: currentUserSpendingModelChartDetail?.data?.categories || [],

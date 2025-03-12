@@ -1,4 +1,4 @@
-import NoData from "@/assets/images/InviteMemberAssets/not-found-result.png";
+import NoData from "@/assets/images/not-found-result.png";
 import {
   FlatListCustom,
   LoadingSectionWrapper,
@@ -31,31 +31,31 @@ export default function PeriodHistoryDetail() {
     item: TransactionViewModelDetail;
   }) => {
     return (
-      <View className="flex-row items-center justify-between border-b border-[#f0f0f0] py-3">
-        <View className="flex-row items-center gap-1.5">
-          <View className="h-12 w-12 items-center justify-center rounded-full">
-            <MaterialIcons name={item?.icon as any} size={30} color="#609084" />
-          </View>
-          <View>
-            <Text className="text-base font-medium text-black">
-              {item?.subcategory
-                ? item.subcategory.charAt(0).toUpperCase() +
-                  item.subcategory.slice(1)
-                : ""}
-            </Text>
-            <View className="flex-row">
-              <Text className="mr-3 text-sm text-[#929292]">{item?.date}</Text>
-              <Text className="text-sm text-[#929292]">• {item?.time}</Text>
+     <View className="flex-row items-center justify-between border-b border-[#f0f0f0] py-3">
+          <View className="flex-row items-center gap-1.5 flex-1">
+            <View className="h-12 w-12 items-center justify-center rounded-full">
+              <MaterialIcons name={item?.icon as any} size={30} color="#609084" />
+            </View>
+            <View className="flex-1">
+              <Text className="text-base font-medium text-black">
+                {item?.subcategory
+                  ? item.subcategory.charAt(0).toUpperCase() +
+                    item.subcategory.slice(1)
+                  : ""}
+              </Text>
+              <View className="flex-row">
+                <Text className="mr-3 text-sm text-[#929292]">{item?.date}</Text>
+                <Text className="text-sm text-[#929292]">• {item?.time}</Text>
+              </View>
             </View>
           </View>
+          <Text
+            className={`text-base font-semibold ${item?.type === "income" ? "text-[#00a010]" : "text-[#cc0000]"}`}
+          >
+            {item?.type === "income" ? "+" : "-"}{" "}
+            {handler.formatCurrency(item?.amount)}
+          </Text>
         </View>
-        <Text
-          className={`text-base font-semibold ${item?.type === "income" ? "text-[#00a010]" : "text-[#cc0000]"}`}
-        >
-          {item?.type === "income" ? "+" : "-"}{" "}
-          {handler.formatCurrency(item?.amount)}
-        </Text>
-      </View>
     );
   };
 
@@ -78,7 +78,7 @@ export default function PeriodHistoryDetail() {
           <MaterialIcons
             name={state.showFilters ? "expand-less" : "expand-more"}
             size={24}
-            color="#609084"
+            color={PRIMARY_COLOR}
           />
         </Pressable>
       </View>
@@ -91,12 +91,8 @@ export default function PeriodHistoryDetail() {
             </Text>
             <View className="flex-row gap-2">
               <Pressable
-                onPress={() => {
-                  handler.setFilterType("");
-
-                  handler.setIsFiltering(true);
-                }}
-                className={`rounded-full px-3 py-1 ${state.filterType === "" ? "bg-[#609084]" : "bg-[#f0f0f0]"}`}
+                onPress={() => handler.handleFilterPress("")}
+                className={`rounded-full px-3 py-1 ${state.filterType === "" ? "bg-primary" : "bg-[#f0f0f0]"}`}
               >
                 <Text
                   className={
@@ -107,12 +103,8 @@ export default function PeriodHistoryDetail() {
                 </Text>
               </Pressable>
               <Pressable
-                onPress={() => {
-                  handler.setFilterType(0);
-
-                  handler.setIsFiltering(true);
-                }}
-                className={`rounded-full px-3 py-1 ${state.filterType === TRANSACTION_TYPE.INCOME ? "bg-[#00a010]" : "bg-[#f0f0f0]"}`}
+                onPress={() => handler.handleFilterPress(0)}
+                className={`rounded-full px-3 py-1 ${state.filterType === TRANSACTION_TYPE.INCOME ? "bg-primary" : "bg-[#f0f0f0]"}`}
               >
                 <Text
                   className={
@@ -125,12 +117,8 @@ export default function PeriodHistoryDetail() {
                 </Text>
               </Pressable>
               <Pressable
-                onPress={() => {
-                  handler.setFilterType(1);
-
-                  handler.setIsFiltering(true);
-                }}
-                className={`rounded-full px-3 py-1 ${state.filterType === TRANSACTION_TYPE.EXPENSE ? "bg-[#cc0000]" : "bg-[#f0f0f0]"}`}
+                onPress={() => handler.handleFilterPress(1)}
+                className={`rounded-full px-3 py-1 ${state.filterType === TRANSACTION_TYPE.EXPENSE ? "bg-primary" : "bg-[#f0f0f0]"}`}
               >
                 <Text
                   className={
@@ -199,32 +187,26 @@ export default function PeriodHistoryDetail() {
   );
 
   const renderSummary = () => (
-    <View className="my-5 w-full rounded-lg bg-white px-2">
-      <View className="flex-row items-center justify-between">
-        <View>
-          <Text className="text-sm text-[#929292]">
+    <View className="my-2 w-full rounded-lg bg-white px-2 py-3 shadow-sm">
+      <View className="flex-row items-center justify-between gap-4">
+        <View className="flex-1 rounded-xl bg-[#f8fff9] p-3 border border-[#e6ffe9]">
+          <Text className="mb-1 text-sm font-medium text-[#929292]">
             {TEXT_TRANSLATE_PERIOD_HISTORY.TITLE.TOTAL_INCOME}
           </Text>
-          <Text className="text-base font-semibold text-[#00a010]">
+          <Text className="text-lg font-bold text-[#00a010]">
             {state.modelDetails?.income !== 0
               ? `+ ${handler.formatCurrency(state.modelDetails.income)}`
               : handler.formatCurrency(state.modelDetails.income)}
           </Text>
         </View>
-        <View>
-          <Text className="text-sm text-[#929292]">
-            {TEXT_TRANSLATE_PERIOD_HISTORY.TITLE.TOTAL_INCOME}
+        <View className="flex-1 rounded-xl bg-[#fff8f8] p-3 border border-[#ffe6e6]">
+          <Text className="mb-1 text-sm font-medium text-[#929292]">
+            {TEXT_TRANSLATE_PERIOD_HISTORY.TITLE.TOTAL_EXPENSE}
           </Text>
-          <Text className="text-base font-semibold text-[#cc0000]">
+          <Text className="text-lg font-bold text-[#cc0000]">
             {state.modelDetails?.expense !== 0
               ? `- ${handler.formatCurrency(state.modelDetails?.expense)}`
               : handler.formatCurrency(state.modelDetails?.expense)}
-          </Text>
-        </View>
-        <View>
-          <Text className="text-sm text-[#929292]">Số dư</Text>
-          <Text className="text-base font-semibold text-[#609084]">
-            {handler.formatCurrency(state.modelDetails?.balance)}
           </Text>
         </View>
       </View>
@@ -265,53 +247,55 @@ export default function PeriodHistoryDetail() {
     );
   }
 
-  // <Pressable onPress={handler.handleBack}>
-  //   <MaterialIcons name="arrow-back" size={24} color="#609084" />
-  // </Pressable>
   return (
-    <SafeAreaViewCustom rootClassName="flex-1 bg-[#fafafa]">
-      {/* HEADER */}
+    <SafeAreaViewCustom rootClassName="bg-[#fafafa]">
       <SectionComponent rootClassName="relative bg-white shadow-md h-14 flex-row items-center justify-center">
         <TouchableOpacity
           onPress={handler.handleBack}
-          className="absolute left-5 rounded-full p-2"
+          className="absolute left-3 rounded-full p-2"
         >
           <AntDesign name="close" size={24} color={PRIMARY_COLOR} />
         </TouchableOpacity>
         <Text className="text-lg font-bold text-primary">
-          {state.modelDetails.startDate} - {state.modelDetails.endDate}
+          {state.modelDetails?.startDate} - {state.modelDetails?.endDate}
         </Text>
         <TouchableOpacity
           onPress={handler.handleRefetchData}
-          className="absolute right-5 rounded-full p-2"
+          className="absolute right-3 rounded-full p-2"
         >
           <AntDesign name="reload1" size={24} color={PRIMARY_COLOR} />
         </TouchableOpacity>
       </SectionComponent>
-      <View className="px-5">
-        <View className="my-4 rounded-lg bg-white">
-          {renderSummary()}
-          {renderFilters()}
+      <LoadingSectionWrapper isLoading={state.isRefetching}>
+        <View className="px-5">
+          <View className="my-4 rounded-lg bg-white">
+            {renderSummary()}
+            {renderFilters()}
+          </View>
+          <Text className="text-lg font-semibold text-[#609084]">
+            Danh sách giao dịch ({state.totalCount})
+          </Text>
         </View>
-        <Text className="text-lg font-semibold text-[#609084]">
-          Danh sách giao dịch ({state.totalCount})
-        </Text>
-      </View>
-      {/* TRANSACTION LIST */}
-      <LoadingSectionWrapper isLoading={state.isFiltering}>
-        <SectionComponent rootClassName="flex-1 mx-4 py-4 p-4 bg-white rounded-lg">
-          <FlatListCustom
-            data={state.transactions as any}
-            renderItem={renderTransactionItem}
-            keyExtractor={(item) => item.id}
-            showsVerticalScrollIndicator={false}
-            ListFooterComponent={renderFooter}
-            contentContainerStyle={{ flexGrow: 1, paddingBottom: 24 }}
-            refreshing={state.isLoading && !state.isLoadingMore}
-            onLoadMore={handler.loadMoreData}
-            isLoading={state.isLoading}
-            ListEmptyComponent={renderEmptyList}
-          />
+        <SectionComponent
+          rootClassName={`mx-4 ${state.isFiltering ? "h-[55%]" : ""} py-4 p-4 bg-white rounded-lg`}
+        >
+          <LoadingSectionWrapper isLoading={state.isFiltering}>
+            <FlatListCustom
+              isBottomTab={true}
+              data={state.transactions ?? []}
+              renderItem={renderTransactionItem}
+              keyExtractor={(item) => item.id.toString()}
+              hasMore={state.transactionsData?.items?.length === state.pageSize}
+              showsVerticalScrollIndicator={false}
+              ListFooterComponent={renderFooter}
+              contentContainerStyle={{
+                paddingBottom: state.showFilters ? 680 : 500,
+              }}
+              onLoadMore={handler.loadMoreData}
+              isLoading={state.isLoadingMore}
+              ListEmptyComponent={renderEmptyList}
+            />
+          </LoadingSectionWrapper>
         </SectionComponent>
       </LoadingSectionWrapper>
     </SafeAreaViewCustom>

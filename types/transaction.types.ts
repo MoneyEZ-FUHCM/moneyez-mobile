@@ -24,7 +24,7 @@ export interface TransactionViewModel {
   subcategory: string;
   subCategoryName: string;
   amount: number;
-  type: TransactionType;
+  type: "income" | "expense";
   date: string;
   time: string;
   icon: string;

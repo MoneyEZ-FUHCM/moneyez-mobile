@@ -17,6 +17,7 @@ import { PATH_NAME } from "@/helpers/constants/pathname";
 const GroupHomeDefault = () => {
   const { TITLE, BUTTON, TEXT } = TEXT_TRANSLATE_GROUP_HOME_DEFAULT;
   const recentActivities = RECENT_ACTIVITIES;
+
   return (
     <SafeAreaViewCustom>
       <SectionComponent rootClassName="flex-row justify-between items-center h-14 px-4">

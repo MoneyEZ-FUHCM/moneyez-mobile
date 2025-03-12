@@ -1,5 +1,8 @@
 import React, { ReactNode } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
 const SafeAreaViewCustom = ({
   children,
@@ -8,8 +11,13 @@ const SafeAreaViewCustom = ({
   children: ReactNode;
   rootClassName?: string;
 }) => {
+  const insets = useSafeAreaInsets();
+
   return (
-    <SafeAreaView className={`${rootClassName} flex-1`}>
+    <SafeAreaView
+      className={`${rootClassName} flex-1`}
+      style={{ flex: 1, paddingBottom: insets.bottom }}
+    >
       {children}
     </SafeAreaView>
   );

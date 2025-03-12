@@ -13,12 +13,15 @@ export const usePieChart = (data: PieChartData[]) => {
   const rotation = useSharedValue(0);
   const labelOpacity = useSharedValue(0);
   const [isRotated, setIsRotated] = useState(false);
+  const [focusedSegment, setFocusedSegment] = useState<"Actual" | "Planned">(
+    "Actual",
+  );
 
   const updateData = useMemo(
     () =>
       data.map((item) => ({
         ...item,
-        color: item.color || getRandomColor(),
+        color: item.color ?? getRandomColor(),
       })),
     [data],
   );
@@ -27,7 +30,9 @@ export const usePieChart = (data: PieChartData[]) => {
     if (updateData.length === 0) return null;
     return updateData.reduce(
       (maxIndex, item, index) =>
-        item.percentage > updateData[maxIndex].percentage ? index : maxIndex,
+        item.actualPercentage > updateData[maxIndex].actualPercentage
+          ? index
+          : maxIndex,
       0,
     );
   }, [updateData]);
@@ -57,17 +62,24 @@ export const usePieChart = (data: PieChartData[]) => {
     () =>
       updateData.map((item, index) => ({
         ...item,
-        value: item.plannedPercentage,
+        value: item.actualPercentage,
         focused: index === selectedIndex,
         showTooltip: index === selectedIndex,
       })),
     [updateData, selectedIndex],
   );
 
-  const handlePress = (index: number) => {
+  const handleSelectCategory = (index: number) => {
     if (index === selectedIndex) return;
 
     setSelectedIndex(index);
+    setFocusedSegment("Actual");
+    labelOpacity.value = 0;
+    labelOpacity.value = withTiming(1, { duration: 500 });
+  };
+
+  const handlePress = (index: number) => {
+    setFocusedSegment((prev) => (prev === "Actual" ? "Planned" : "Actual"));
     labelOpacity.value = 0;
     labelOpacity.value = withTiming(1, { duration: 500 });
   };
@@ -91,7 +103,8 @@ export const usePieChart = (data: PieChartData[]) => {
       animatedStyles,
       selectedIndex,
       isRotated,
+      focusedSegment,
     },
-    handler: { handlePress },
+    handler: { handlePress, handleSelectCategory },
   };
 };

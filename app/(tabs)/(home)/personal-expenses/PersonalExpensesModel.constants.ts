@@ -59,8 +59,25 @@ const STEPS = [
     isActive: false,
   },
 ];
-export const TIME_OPTIONS = ["1 tuần", "1 tháng", "3 tháng", "6 tháng"];
 
-const PERSONAL_EXPENSES_MODEL_CONSTANTS = { MODELS, STEPS, TIME_OPTIONS };
+export enum PeriodUnit {
+  DAY = 0,
+  WEEK = 1,
+  MONTH = 2,
+  YEAR = 3,
+}
+
+export const TIME_OPTIONS = [
+  { label: "1 tuần", unit: PeriodUnit.WEEK, value: 1 },
+  { label: "1 tháng", unit: PeriodUnit.MONTH, value: 1 },
+  { label: "3 tháng", unit: PeriodUnit.MONTH, value: 3 },
+  { label: "6 tháng", unit: PeriodUnit.MONTH, value: 6 },
+];
+
+const ERROR_CODE= {
+  ALREADY_HAS_ACTIVE_MODEL: "UserAlreadyHasActiveSpendingModel",
+}
+
+const PERSONAL_EXPENSES_MODEL_CONSTANTS = { MODELS, STEPS, TIME_OPTIONS , ERROR_CODE};
 
 export default PERSONAL_EXPENSES_MODEL_CONSTANTS;

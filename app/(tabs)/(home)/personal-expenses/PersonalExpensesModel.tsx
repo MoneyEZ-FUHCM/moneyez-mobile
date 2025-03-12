@@ -1,13 +1,15 @@
 import {
   CustomModal,
   DatePickerPersonalExpense,
+  FlatListCustom,
+  LoadingSectionWrapper,
   SafeAreaViewCustom,
   SectionComponent,
   SpaceComponent,
 } from "@/components";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import React from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import usePersonalExpensesModel from "./hooks/usePersonalExpensesModel";
 import PERSONAL_EXPENSES_MODEL_CONSTANTS, {
   TIME_OPTIONS,
@@ -34,7 +36,7 @@ const PersonalExpensesModel = () => {
           <Entypo size={24} color="#000000" />
         </TouchableOpacity>
       </SectionComponent>
-      <View className="mx-4 flex-row items-center justify-between rounded-xl bg-white p-6 shadow-sm">
+      <SectionComponent rootClassName="mx-4 flex-row items-center justify-between rounded-xl bg-white p-6 shadow-sm">
         {STEPS.map((stepItem, index) => {
           const isActive = index + 1 <= state.step;
           return (
@@ -83,54 +85,69 @@ const PersonalExpensesModel = () => {
             </React.Fragment>
           );
         })}
-      </View>
+      </SectionComponent>
 
       {/* Model Selection */}
       {state.step === 1 ? (
-        <View className="mx-4 mt-4 rounded-xl bg-white p-4">
-          <Text className="mb-3 text-base font-medium">
-            {TEXT_TRANSLATE_PERSONAL_EXPENSES.MODEL_SELECTION}
-          </Text>
-          {MODELS.map((model) => (
-            <TouchableOpacity
-              key={model.name}
-              className={`mt-2 rounded-lg border border-gray-300 p-3 ${
-                state.selectedModel === model.name ? "bg-secondary" : "bg-white"
-              }`}
-              onPress={() => handler.setSelectedModel(model.name)}
-            >
-              <View className="flex-row items-center justify-between">
-                <Text>{model.name}</Text>
-                {model.name !== "Tùy chọn" && (
-                  <TouchableOpacity
-                    onPress={() => {
-                      handler.setIsModalVisible(true);
-                      handler.setSelectedModel(model.name);
-                    }}
-                  >
-                    <Entypo name="info-with-circle" size={18} color="#609084" />
-                  </TouchableOpacity>
-                )}
-              </View>
-            </TouchableOpacity>
-          ))}
-
-          {/* Custom Input */}
-          {state.selectedModel === "Tùy chọn" && (
-            <TextInput
-              placeholder={
-                TEXT_TRANSLATE_PERSONAL_EXPENSES.CUSTOM_MODEL_PLACEHOLDER
-              }
-              value={state.customModel}
-              onChangeText={handler.setCustomModel}
-              className="mt-2 rounded-lg border border-gray-300 bg-white p-3"
-            />
-          )}
-          <TouchableOpacity className="mt-4">
-            <Text className="text-green-600 text-center underline">
-              {TEXT_TRANSLATE_PERSONAL_EXPENSES.HELP_TEXT}
+        <View
+          className={`mx-4 mt-4 rounded-xl bg-white p-4 ${state.isLoadingSpendingModel ? "h-64" : ""}`}
+        >
+          <LoadingSectionWrapper isLoading={state.isLoadingSpendingModel}>
+            <Text className="mb-3 text-base font-medium">
+              {TEXT_TRANSLATE_PERSONAL_EXPENSES.MODEL_SELECTION}
             </Text>
-          </TouchableOpacity>
+            <FlatListCustom
+              isBottomTab={false}
+              data={state.spendingModels}
+              keyExtractor={(item) => item?.id.toString()}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  className={`mt-2 rounded-lg border border-gray-300 p-3 ${
+                    state.selectedModel === item?.id
+                      ? "bg-secondary"
+                      : "bg-white"
+                  }`}
+                  onPress={() => handler.setSelectedModel(item?.id)}
+                >
+                  <View className="flex-row items-center justify-between">
+                    <Text>{item?.name}</Text>
+                    {item?.name !== "custom" && (
+                      <TouchableOpacity
+                        onPress={() => {
+                          handler.setIsModalVisible(true);
+                          handler.setSelectedModel(item?.id);
+                        }}
+                      >
+                        <Entypo
+                          name="info-with-circle"
+                          size={18}
+                          color="#609084"
+                        />
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                </TouchableOpacity>
+              )}
+            />
+            {/* Custom Input */}
+            {/* {state.selectedModel === "custom" && (
+            <View className="mt-2">
+              <TextInput
+                placeholder={
+                  TEXT_TRANSLATE_PERSONAL_EXPENSES.CUSTOM_MODEL_PLACEHOLDER
+                }
+                value={state.customModel}
+                onChangeText={handler.setCustomModel}
+                className="rounded-lg border border-gray-300 bg-white p-3"
+              />
+            </View>
+          )} */}
+            <TouchableOpacity className="mt-4">
+              <Text className="text-green-600 text-center underline">
+                {TEXT_TRANSLATE_PERSONAL_EXPENSES.HELP_TEXT}
+              </Text>
+            </TouchableOpacity>
+          </LoadingSectionWrapper>
         </View>
       ) : state.step === 2 ? (
         <View className="mx-4 mt-4 rounded-lg bg-white p-4 shadow-md">
@@ -143,9 +160,9 @@ const PersonalExpensesModel = () => {
             <Text className="text-md mb-1 font-semibold text-primary">
               {TEXT_TRANSLATE_PERSONAL_EXPENSES.PERIOD}
             </Text>
-            {TIME_OPTIONS.map((option) => (
+            {TIME_OPTIONS.map((option, index) => (
               <TouchableOpacity
-                key={option}
+                key={index}
                 onPress={() => handler.setSelectedTime(option)}
                 className={`mt-2 rounded-lg border border-gray-300 p-3 ${
                   state.selectedTime === option
@@ -153,7 +170,7 @@ const PersonalExpensesModel = () => {
                     : "bg-white"
                 }`}
               >
-                <Text className="text-md">{option}</Text>
+                <Text className="text-md">{option?.label}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -165,10 +182,10 @@ const PersonalExpensesModel = () => {
             <Text className="font-semibold text-primary">Mô hình</Text>
             {state.customModel ? (
               <Text className="text-md mt-1">
-                {state.customModel} ({state.selectedModel})
+                {state.customModel} ({state.selectedModelName})
               </Text>
             ) : (
-              <Text className="text-md mt-1">{state.selectedModel}</Text>
+              <Text className="text-md mt-1">{state.selectedModelName}</Text>
             )}
           </View>
 
@@ -180,7 +197,7 @@ const PersonalExpensesModel = () => {
             </View>
             <View className="mt-1 flex-col justify-between pr-14">
               <Text className="font-semibold text-primary">Thời hạn</Text>
-              <Text className="text-md">{state.selectedTime}</Text>
+              <Text className="text-md">{state.selectedTime.label}</Text>
             </View>
           </View>
 
@@ -209,6 +226,7 @@ const PersonalExpensesModel = () => {
         <TouchableOpacity
           onPress={() => {
             if (state.step === 3) {
+              handler.handleCreateSpendingModel();
               return;
             }
             handler.setStep(state.step + 1);

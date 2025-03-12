@@ -19,3 +19,4 @@ export { DatePickerPersonalExpense } from "./PersonalExpenseCustom/DatePickerPer
 export { BudgetSummaryComponent } from "./BudgetSummaryComponent";
 export { BarChartCustom } from "./BarChartCustom/BarChartCustom";
 export { LoadingSectionWrapper } from "./LoadingSectionWrapper";
+export { SkeletonLoaderComponent } from "./SkeletonLoaderComponent";

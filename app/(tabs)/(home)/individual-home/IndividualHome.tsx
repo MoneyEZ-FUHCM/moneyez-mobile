@@ -34,7 +34,7 @@ export default function IndividualHome() {
       </SectionComponent>
       <LoadingSectionWrapper isLoading={state.isLoading}>
         <ScrollViewCustom
-          isBottomTab={false}
+          isBottomTab={true}
           showsVerticalScrollIndicator={false}
         >
           {/* BALANCE CARD */}
@@ -123,5 +123,5 @@ export default function IndividualHome() {
         </ScrollViewCustom>
       </LoadingSectionWrapper>
     </SafeAreaViewCustom>
-  );
+  ); 
 }

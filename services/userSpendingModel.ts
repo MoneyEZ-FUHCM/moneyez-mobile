@@ -15,7 +15,10 @@ const userSpendingModelApi = apiSlice.injectEndpoints({
       transformResponse: (response) => transformCommonResponse(response),
       providesTags: ["UserSpendingModel"],
     }),
-    getCurrentUserSpendingModel: builder.query<{ data: UserSpendingModel }, void>({
+    getCurrentUserSpendingModel: builder.query<
+      { data: UserSpendingModel },
+      void
+    >({
       query: () => ({
         url: `user-spending-models/current`,
         method: HTTP_METHOD.GET,
@@ -54,6 +57,13 @@ const userSpendingModelApi = apiSlice.injectEndpoints({
         method: HTTP_METHOD.GET,
       }),
     }),
+    createUserSpendingModel: builder.mutation({
+      query: (payload) => ({
+        url: `/user-spending-models/choose`,
+        method: HTTP_METHOD.POST,
+        body: payload,
+      }),
+    }),
   }),
 });
 
@@ -64,6 +74,7 @@ export const {
   useGetCurrentUserSpendingModelChartDetailQuery,
   useGetTransactionByIdQuery,
   useGetUserSpendingModelDetailQuery,
+  useCreateUserSpendingModelMutation,
 } = userSpendingModelApi;
 
 export default userSpendingModelApi;

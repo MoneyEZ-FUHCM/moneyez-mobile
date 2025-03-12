@@ -20,36 +20,35 @@ const Group = () => {
   const PRIMARY_COLOR = "#609084";
 
   return (
-    <SafeAreaViewCustom rootClassName="bg-gray-50">
+    <SafeAreaViewCustom rootClassName="bg-gray-50 relative">
       {/* Header */}
       <SectionComponent rootClassName="relative bg-white shadow-md h-14 flex-row items-center justify-center">
         <TouchableOpacity
           onPress={handler.handleBack}
-          className="absolute left-5 rounded-full p-2"
+          className="absolute left-3 rounded-full p-2"
         >
           <AntDesign name="close" size={24} color={PRIMARY_COLOR} />
         </TouchableOpacity>
-        <Text className="text-lg font-bold text-gray-900">
+        <Text className="text-lg font-bold text-primary">
           {TEXT_TRANSLATE_GROUP_LIST.TITLE.GROUP_FUND}
         </Text>
         <TouchableOpacity
           onPress={handler.handleRefetchGrouplist}
-          className="absolute right-5 rounded-full p-2"
+          className="absolute right-3 rounded-full p-2"
         >
           <AntDesign name="reload1" size={24} color={PRIMARY_COLOR} />
         </TouchableOpacity>
       </SectionComponent>
-
       <LoadingSectionWrapper isLoading={isFetchingData}>
         {groups && groups?.length > 0 ? (
           <FlatListCustom
-            className="mx-5 mt-4"
+            className="mx-5 pt-5"
             showsVerticalScrollIndicator={false}
-            data={groups}
-            isBottomTab={groups?.length >= 6}
+            data={groups ?? []}
+            isBottomTab={true}
             isLoading={isLoadingMore}
             hasMore={state.data?.items?.length === state.pageSize}
-            keyExtractor={(_, index) => index.toString()}
+            keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
               <TouchableOpacity
                 className="mb-4 flex-row items-center rounded-2xl border border-gray-200 bg-white p-4 shadow-lg"
@@ -59,7 +58,7 @@ const Group = () => {
                   src={item?.imageUrl}
                   alt="star"
                   className="h-14 w-14 rounded-full"
-                  resizeMode="cover"
+                  resizeMode="contain"
                 />
                 <View className="ml-4 flex-1 space-y-1">
                   <Text className="text-lg font-semibold text-gray-900">
@@ -82,23 +81,23 @@ const Group = () => {
             onLoadMore={handleLoadMore}
           />
         ) : (
-          <View className="flex-1 items-center justify-center px-5">
+          <View className="mt-36 items-center justify-center px-5">
             <Image
               source={NoData}
-              className="h-[40%] w-full"
+              className="h-[400px] w-full"
               resizeMode="contain"
             />
           </View>
         )}
-        <View className="absolute bottom-10 right-5">
-          <TouchableOpacity
-            className="h-14 w-14 items-center justify-center rounded-full bg-primary shadow-lg shadow-gray-400"
-            onPress={handler.handleCreateGroupAndHideTabbar}
-          >
-            <AntDesign name="addusergroup" size={24} color="white" />
-          </TouchableOpacity>
-        </View>
       </LoadingSectionWrapper>
+      <View className="absolute bottom-10 right-5">
+        <TouchableOpacity
+          className="h-14 w-14 items-center justify-center rounded-full bg-primary shadow-lg shadow-gray-400"
+          onPress={handler.handleCreateGroupAndHideTabbar}
+        >
+          <AntDesign name="addusergroup" size={24} color="white" />
+        </TouchableOpacity>
+      </View>
     </SafeAreaViewCustom>
   );
 };

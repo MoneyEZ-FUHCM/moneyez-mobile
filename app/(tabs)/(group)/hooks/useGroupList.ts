@@ -1,8 +1,9 @@
 import { PATH_NAME } from "@/helpers/constants/pathname";
+import useHideTabbar from "@/hooks/useHideTabbar";
 import { setGroupTabHidden, setMainTabHidden } from "@/redux/slices/tabSlice";
 import { useGetGroupsQuery } from "@/services/group";
-import { router, useFocusEffect } from "expo-router";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { router } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import { ToastAndroid } from "react-native";
 import { useDispatch } from "react-redux";
 import TEXT_TRANSLATE_GROUP_LIST from "../GroupList.translate";
@@ -29,15 +30,7 @@ const useGroupList = () => {
     PageSize: pageSize,
   });
 
-  useFocusEffect(
-    useCallback(() => {
-      dispatch(setMainTabHidden(true));
-
-      return () => {
-        dispatch(setMainTabHidden(false));
-      };
-    }, [dispatch]),
-  );
+  useHideTabbar();
 
   const handleLoadMore = useCallback(() => {
     if (!isLoading && !isLoadingMore && data?.items.length === pageSize) {
@@ -48,7 +41,14 @@ const useGroupList = () => {
 
   useEffect(() => {
     if (data?.items) {
-      setGroups((prevGroups) => [...prevGroups, ...data.items]);
+      setGroups((prevGroups) => {
+        const existingIds = new Set(prevGroups.map((item) => item.id));
+        const newItems = data.items.filter(
+          (item: any) => !existingIds.has(item.id),
+        );
+        return [...prevGroups, ...newItems];
+      });
+
       setIsFetchingData(false);
       setIsLoadingMore(false);
     }
@@ -103,6 +103,7 @@ const useGroupList = () => {
       visibleItems,
       pageSize,
       data,
+      isRefetching,
     },
     handler: {
       handleLoadMore,
