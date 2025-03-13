@@ -18,10 +18,10 @@ import React, { useEffect } from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import TEXT_TRANSLATE_HOME from "../HomeScreen.translate";
 import useHomeScreen from "../hooks/useHomeScreen";
+import { useSelector } from "react-redux";
+import { selectCurrentUserSpendingModel } from "@/redux/slices/userSpendingModelSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useUpdateFcmTokenMutation } from "@/services/auth";
-import { selectCurrentUserSpendingModel } from "@/redux/slices/userSpendingModelSlice";
-import { useSelector } from "react-redux";
 
 const HomeScreen = () => {
   const { state, handler } = useHomeScreen();
