@@ -26,9 +26,7 @@ export const startConnection = async (): Promise<void> => {
     });
 
     await connection.start();
-  } catch (err) {
-    console.error(err);
-  }
+  } catch (err) {}
 };
 
 const reconnect = async () => {
@@ -43,9 +41,7 @@ export const sendMessage = async (
   if (connection) {
     try {
       await connection.invoke(methodName, user, message);
-    } catch (err) {
-      console.error(err);
-    }
+    } catch (err) {}
   }
 };
 

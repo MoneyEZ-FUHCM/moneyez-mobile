@@ -6,7 +6,7 @@ import {
 } from "@/helpers/libs";
 import { setHiddenTabbar } from "@/redux/slices/tabSlice";
 import { router, useFocusEffect, useNavigation } from "expo-router";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Animated, FlatList } from "react-native";
 import { useDispatch } from "react-redux";
 import BOT_SCREEN_CONSTANTS from "../BotScreen.const";
@@ -19,47 +19,56 @@ export interface Message {
 }
 
 const useChatBotScreen = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState<string>("");
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedMessageIds, setSelectedMessageIds] = useState<Set<string>>(
-    new Set(),
-  );
-  const [showScrollToBottom, setShowScrollToBottom] = useState(false);
+  const [state, setState] = useState({
+    messages: [] as Message[],
+    input: "",
+    isModalVisible: false,
+    selectedMessageIds: new Set<string>(),
+    showScrollToBottom: false,
+    isBotTyping: false,
+    isSending: false,
+  });
+
   const { SUGGESTION } = BOT_SCREEN_CONSTANTS;
-
   const flatListRef = useRef<FlatList>(null);
-
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const moveAnim = useRef(new Animated.Value(0)).current;
   const lastOffsetY = useRef(0);
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const [inputMessage, setInputMessage] = useState("");
 
   useFocusEffect(
     useCallback(() => {
       dispatch(setHiddenTabbar(true));
-      return () => {
-        dispatch(setHiddenTabbar(false));
-      };
+      return () => dispatch(setHiddenTabbar(false));
     }, [dispatch]),
   );
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener("blur", () => {
-      dispatch(setHiddenTabbar(false));
-    });
+    const unsubscribe = navigation.addListener("blur", () =>
+      dispatch(setHiddenTabbar(false)),
+    );
     return unsubscribe;
   }, [navigation, dispatch]);
 
   useEffect(() => {
     startConnection();
-    receiveMessage("ReceiveMessage", (...newMessage) => {
-      console.log("check text", newMessage[1]);
-      console.log("check time", newMessage[2]);
-      // setMessages((prevMessages) => [...prevMessages, newMessage]);
+
+    receiveMessage("ReceiveMessage", (botName, newMessage) => {
+      setState((prev) => ({
+        ...prev,
+        isBotTyping: false,
+        messages: [
+          ...prev.messages,
+          {
+            id: newMessage.id || Date.now().toString(),
+            text: newMessage,
+            sender: "bot",
+            createdAt: newMessage.createdAt || new Date().toISOString(),
+          },
+        ],
+      }));
     });
 
     return () => {
@@ -67,14 +76,38 @@ const useChatBotScreen = () => {
     };
   }, []);
 
-  const handleSendMessages = async () => {
-    if (inputMessage.trim() === "") return;
-    await sendMessage(
-      "SendMessage",
-      "E001207B-F5FD-4F1E-10ED-08DD3B02ACB7",
-      `${inputMessage}`,
-    );
-    setInputMessage("");
+  const handleSendMessages = async (message?: string) => {
+    if (state.isSending) return;
+    const inputText = message || state.input.trim();
+    if (!inputText) return;
+    const newUserMessage: Message = {
+      id: Date.now().toString(),
+      text: inputText,
+      sender: "user",
+      createdAt: new Date().toISOString(),
+    };
+
+    setState((prev) => ({
+      ...prev,
+      messages: [...prev.messages, newUserMessage],
+      input: message ? state.input : "",
+      isBotTyping: true,
+      isSending: true,
+    }));
+
+    try {
+      await sendMessage(
+        "SendMessage",
+        "E001207B-F5FD-4F1E-10ED-08DD3B02ACB7",
+        inputText,
+      );
+    } catch {
+      setState((prev) => ({ ...prev, isBotTyping: false }));
+    } finally {
+      setTimeout(() => {
+        setState((prev) => ({ ...prev, isSending: false }));
+      }, 1000);
+    }
   };
 
   const handleBack = () => {
@@ -83,43 +116,50 @@ const useChatBotScreen = () => {
   };
 
   const toggleTimestamp = (id: string) => {
-    setSelectedMessageIds((prevIds) => {
-      const newIds = new Set(prevIds);
-      newIds.has(id) ? newIds.delete(id) : newIds.add(id);
-      return newIds;
+    setState((prev) => {
+      const selectedMessageIds = new Set(prev.selectedMessageIds);
+      selectedMessageIds.has(id)
+        ? selectedMessageIds.delete(id)
+        : selectedMessageIds.add(id);
+      return { ...prev, selectedMessageIds };
     });
   };
 
   const scrollToBottom = () => {
-    flatListRef.current?.scrollToEnd({ animated: true });
+    if (flatListRef.current) {
+      flatListRef.current.scrollToOffset({
+        offset: 0,
+        animated: true,
+      });
+    }
   };
 
   const handleScroll = (event: any) => {
     const offsetY = event.nativeEvent.contentOffset.y;
     const contentHeight = event.nativeEvent.contentSize.height;
-    const viewHeight = event.nativeEvent.layoutMeasurement.height;
     const threshold = contentHeight / 3;
 
-    if (offsetY + viewHeight < contentHeight - threshold) {
-      setShowScrollToBottom(true);
+    if (offsetY > threshold) {
+      setState((prev) => ({ ...prev, showScrollToBottom: true }));
       Animated.timing(fadeAnim, {
         toValue: 1,
         duration: 300,
         useNativeDriver: true,
       }).start();
     } else {
+      setState((prev) => ({ ...prev, showScrollToBottom: false }));
       Animated.timing(fadeAnim, {
         toValue: 0,
         duration: 300,
         useNativeDriver: true,
-      }).start(() => setShowScrollToBottom(false));
+      }).start();
     }
 
     lastOffsetY.current = offsetY;
   };
 
-  const activeScrollToBottomAnimation = () => {
-    if (showScrollToBottom) {
+  useEffect(() => {
+    if (state.showScrollToBottom) {
       const animation = Animated.loop(
         Animated.sequence([
           Animated.timing(moveAnim, {
@@ -135,47 +175,27 @@ const useChatBotScreen = () => {
         ]),
       );
       animation.start();
-
       return () => animation.stop();
     } else {
       moveAnim.setValue(0);
     }
-  };
-
-  const scrollToBottomEffect = () => {
-    setTimeout(() => {
-      flatListRef.current?.scrollToEnd({ animated: true });
-    }, 200);
-  };
-
-  useEffect(() => {
-    activeScrollToBottomAnimation();
-  }, [showScrollToBottom]);
+  }, [state.showScrollToBottom]);
 
   return {
-    state: {
-      messages,
-      input,
-      isModalVisible,
-      selectedMessageIds,
-      showScrollToBottom,
-      fadeAnim,
-      moveAnim,
-      flatListRef,
-      SUGGESTION,
-    },
+    state: useMemo(
+      () => ({ ...state, fadeAnim, moveAnim, flatListRef, SUGGESTION }),
+      [state],
+    ),
     handler: {
-      setInput,
+      setInput: (input: string) => setState((prev) => ({ ...prev, input })),
       sendMessage,
-      setIsModalVisible,
+      setIsModalVisible: (isModalVisible: boolean) =>
+        setState((prev) => ({ ...prev, isModalVisible })),
       handleBack,
       toggleTimestamp,
       scrollToBottom,
       handleScroll,
-      activeScrollToBottomAnimation,
-      scrollToBottomEffect,
-      sendMessages: handleSendMessages,
-      setInputMessage,
+      handleSendMessages,
     },
   };
 };
