@@ -23,7 +23,6 @@ const PATH_NAME = {
     GROUP_DETAIL: ":id",
     STATISTICS: "dashboard-group/GroupManangement",
     CREATE_GROUP_STEP_1: "create-group/CreateGroup",
-    // CREATE_GROUP_STEP_2: "create-group/CreateGroupStep2",
   },
   BOT: {
     CHATBOT: "chatbot/ChatBot",
@@ -36,6 +35,7 @@ const PATH_NAME = {
     PERIOD_HISTORY: "period-history/PeriodHistory",
     PERIOD_HISTORY_DETAIL: "period-history/PeriodHistoryDetail",
     PERSONAL_EXPENSES_MODEL: "personal-expenses/PersonalExpensesModel",
+    EXPENSES_DETAIL: "expenses/ExpenseDetail",
   },
   ACCOUNT: {
     ACCOUNT_SETTING: "setting/AccountSetting",
