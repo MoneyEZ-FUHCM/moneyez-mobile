@@ -20,6 +20,9 @@ interface ItemType {
 
 const useHomeScreen = () => {
   const { POST_DATAS, MENU_ITEMS, GROUP_DATAS } = HOME_SCREEN_CONSTANTS;
+  const today = dayjs();
+  const startOfMonth = today.startOf("month").format("DD/MM");
+  const endOfMonth = today.endOf("month").format("DD/MM/YYYY");
   const currentIndexRef = useRef(0);
   const [isShow, setIsShow] = useState(false);
   const [isShowGroupBalance, setIsShowGroupBalance] = useState<{
@@ -90,6 +93,11 @@ const useHomeScreen = () => {
     router.push(url as any);
   };
 
+  const handleNavigateNotification = useCallback(() => {
+    dispatch(setMainTabHidden(true));
+    router.navigate(HOME.NOTIFICATION as any);
+  }, []);
+
   return {
     state: {
       isShow,
@@ -97,6 +105,9 @@ const useHomeScreen = () => {
       POST_DATAS,
       MENU_ITEMS,
       GROUP_DATAS,
+      today,
+      startOfMonth,
+      endOfMonth,
       flatListRef,
       userInfo,
       currentSpendingModel,
@@ -110,6 +121,7 @@ const useHomeScreen = () => {
       handleNavigateAddPersonalIncome,
       handleNavigateMenuItem,
       toggleVisibilityGroupBalance,
+      handleNavigateNotification
     },
   };
 };
