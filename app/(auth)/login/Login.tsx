@@ -11,7 +11,7 @@ import {
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { router } from "expo-router";
 import { Formik } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Image,
   KeyboardAvoidingView,

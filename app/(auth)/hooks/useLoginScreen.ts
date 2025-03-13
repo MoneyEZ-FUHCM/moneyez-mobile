@@ -19,6 +19,7 @@ import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 import AUTH_SCREEN_CONSTANTS from "../AuthScreen.const";
 import TEXT_TRANSLATE_AUTH from "../AuthScreen.translate";
+import { getMessaging } from "@react-native-firebase/messaging";
 
 GoogleSignin.configure({
   webClientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID,
@@ -178,7 +179,7 @@ const useLoginScreen = () => {
 
   const getToken = async () => {
     try {
-      const token = await messaging().getToken();
+      const token = await getMessaging().getToken();
       if (token) {
         await AsyncStorage.setItem('fcmToken', token);
       }

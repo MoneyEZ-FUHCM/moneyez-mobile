@@ -66,6 +66,7 @@ const authApi = apiSlice.injectEndpoints({
         method: HTTP_METHOD.PUT,
         body: payload
       }),
+      invalidatesTags: ["User"],
     }),
   }),
 });
