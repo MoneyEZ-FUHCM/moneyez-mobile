@@ -75,7 +75,7 @@ const ChatBot: React.FC = () => {
             <TextInput
               className="mr-2 max-h-[112px] flex-1 break-words rounded-2xl border border-[#609084] p-2 text-base"
               placeholder="Nhập câu hỏi"
-              value={state.input}
+              // value={state.input}
               onChangeText={handler.setInputMessage}
               multiline
               textBreakStrategy="highQuality"

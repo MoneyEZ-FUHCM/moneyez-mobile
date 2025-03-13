@@ -1,15 +1,15 @@
-import { router, useFocusEffect, useNavigation } from "expo-router";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Alert, Animated, FlatList } from "react-native";
-import { useDispatch } from "react-redux";
-import BOT_SCREEN_CONSTANTS from "../BotScreen.const";
-import { setHiddenTabbar } from "@/redux/slices/tabSlice";
 import {
   receiveMessage,
   sendMessage,
   startConnection,
   stopConnection,
 } from "@/helpers/libs";
+import { setHiddenTabbar } from "@/redux/slices/tabSlice";
+import { router, useFocusEffect, useNavigation } from "expo-router";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Animated, FlatList } from "react-native";
+import { useDispatch } from "react-redux";
+import BOT_SCREEN_CONSTANTS from "../BotScreen.const";
 
 export interface Message {
   id: string;
@@ -36,7 +36,6 @@ const useChatBotScreen = () => {
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const [messagess, setMessagess] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
 
   useFocusEffect(
@@ -48,8 +47,6 @@ const useChatBotScreen = () => {
     }, [dispatch]),
   );
 
-  console.log("check messages", messages);
-
   useEffect(() => {
     const unsubscribe = navigation.addListener("blur", () => {
       dispatch(setHiddenTabbar(false));
@@ -57,88 +54,28 @@ const useChatBotScreen = () => {
     return unsubscribe;
   }, [navigation, dispatch]);
 
-  const ws = useRef<WebSocket | null>(null);
-
-  // useEffect(() => {
-  //   let reconnectTimeout: NodeJS.Timeout;
-
-  //   const connectWebSocket = () => {
-  //     ws.current = new WebSocket("wss://easymoney.anttravel.online/chatHub");
-
-  //     ws.current.onopen = () => {
-  //       console.log(" Connected to WebSocket");
-  //     };
-
-  //     ws.current.onmessage = (event) => {
-  //       console.log("Received:", event.data);
-  //       setMessages((prev) => [...prev, event.data]);
-  //     };
-
-  //     ws.current.onerror = (error) => {
-  //       console.error("WebSocket Error:", error);
-  //       Alert.alert("Lỗi Kết Nối", "Không thể kết nối đến máy chủ chat.");
-  //     };
-
-  //     ws.current.onclose = () => {
-  //       console.log("WebSocket Disconnected, attempting to reconnect...");
-  //       reconnectTimeout = setTimeout(connectWebSocket, 5000);
-  //     };
-  //   };
-
-  //   connectWebSocket();
-
-  //   return () => {
-  //     clearTimeout(reconnectTimeout);
-  //     ws.current?.close();
-  //   };
-  // }, []);
-
   useEffect(() => {
-    startConnection(); // Kết nối SignalR khi component mount
-
-    receiveMessage("ReceiveMessage", (newMessage) => {
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
+    startConnection();
+    receiveMessage("ReceiveMessage", (...newMessage) => {
+      console.log("check text", newMessage[1]);
+      console.log("check time", newMessage[2]);
+      // setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
 
     return () => {
-      stopConnection(); // Ngắt kết nối khi component unmount
+      stopConnection();
     };
   }, []);
 
-  // const sendMessages = async () => {
-  //   const payload = ["giaduc0123@gmail.com", `${inputMessage}`];
-  //   console.log("chjeck payload", payload);
-  //   await sendMessage("SendMessage", payload);
-  //   setInputMessage("");
-  // };
-
   const handleSendMessages = async () => {
     if (inputMessage.trim() === "") return;
-    await sendMessage("SendMessage", "giaduc0123@gmail.com", `${inputMessage}`);
+    await sendMessage(
+      "SendMessage",
+      "E001207B-F5FD-4F1E-10ED-08DD3B02ACB7",
+      `${inputMessage}`,
+    );
     setInputMessage("");
   };
-
-  // const sendMessage = (text?: string) => {
-  //   const message = text || input;
-  //   if (!message.trim()) return;
-  //   console.log("check ", message);
-  //   const sendPayload = {
-  //     arguments: ["giaducdang@gmail.com", `${message}`],
-  //     target: "SendMessage",
-  //     type: 1,
-  //   };
-  //   console.log("check sendPayload", sendPayload);
-
-  //   if (ws.current?.readyState === WebSocket.OPEN) {
-
-  //     ws.current.send(sendPayload as any);
-  //     setMessages((prev) => [...prev, sendPayload] as any);
-  //     setInput("");
-  //   } else {
-  //     console.log("err send");
-  //     Alert.alert("Lỗi", "Kết nối WebSocket chưa sẵn sàng.");
-  //   }
-  // };
 
   const handleBack = () => {
     router.back();
