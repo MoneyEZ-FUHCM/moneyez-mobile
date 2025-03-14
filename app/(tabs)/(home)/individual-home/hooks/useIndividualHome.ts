@@ -53,10 +53,17 @@ const useIndividualHome = () => {
     }
   };
 
+  const actualCategories = currentUserSpendingModelData?.categories?.filter(
+    (item: any) => {
+      return item?.plannedPercentage !== 0;
+    },
+  );
+
   return {
     state: {
       isLoading,
       currentUserSpendingModelData,
+      actualCategories,
     },
     handler: {
       handleGoBack,

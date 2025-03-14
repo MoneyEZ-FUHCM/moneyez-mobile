@@ -1,3 +1,4 @@
+import { formatCurrency } from "@/helpers/libs";
 import { BudgetCategory } from "@/types/category.types";
 import React from "react";
 import { FlatList, Text, View } from "react-native";
@@ -14,12 +15,44 @@ export interface PieChartData extends BudgetCategory {
   totalSpent: number;
   color?: string;
   id: number;
+  planningSpent: number;
 }
 
 interface PieChartCustomProps {
   data: PieChartData[];
   title: string;
 }
+
+const RenderDetailComponent = ({ pieData }: { pieData: PieChartData[] }) => (
+  <View className="mt-12 flex-row flex-wrap items-center px-1">
+    <View className="flex-1 flex-row justify-between">
+      <View className="w-1/2 pr-4">
+        {pieData
+          ?.slice(0, Math.ceil(pieData.length / 2))
+          ?.map((item, index) => (
+            <View key={index} className="mb-2 flex-row items-center">
+              <View
+                className="h-2.5 w-2.5 rounded-full"
+                style={{ backgroundColor: item.color }}
+              />
+              <Text className="ml-2 text-black">{`${item?.categoryName}: ${item?.plannedPercentage}%`}</Text>
+            </View>
+          ))}
+      </View>
+      <View className="w-1/2 pl-4">
+        {pieData?.slice(Math.ceil(pieData.length / 2))?.map((item, index) => (
+          <View key={index} className="mb-2 flex-row items-center">
+            <View
+              className="h-2.5 w-2.5 rounded-full"
+              style={{ backgroundColor: item?.color }}
+            />
+            <Text className="ml-2 text-black">{`${item?.categoryName}: ${item?.plannedPercentage}%`}</Text>
+          </View>
+        ))}
+      </View>
+    </View>
+  </View>
+);
 
 const RenderTagsComponent = ({
   pieData,
@@ -62,6 +95,27 @@ const PieChartCustom = React.memo(({ data, title }: PieChartCustomProps) => {
         onSelect={handler.handleSelectCategory}
       />
       <View className="mt-6 items-center">
+        {state.selectedIndex !== null && (
+          <View className="w-full flex-row justify-between bg-transparent px-2">
+            <View className="mb-2">
+              <Text className="text-sm font-medium text-gray-600">Thực tế</Text>
+              <Text className="text-xl font-extrabold text-primary">
+                {formatCurrency(
+                  state.updateData[state.selectedIndex]?.totalSpent,
+                )}
+              </Text>
+            </View>
+
+            <View>
+              <Text className="text-sm font-medium text-gray-600">Dự định</Text>
+              <Text className="text-xl font-extrabold text-secondary">
+                {formatCurrency(
+                  state.updateData[state.selectedIndex]?.planningSpent,
+                )}
+              </Text>
+            </View>
+          </View>
+        )}
         <Animated.View style={state.animatedStyles.pie}>
           <PieChart
             data={state.pieData
@@ -78,14 +132,14 @@ const PieChartCustom = React.memo(({ data, title }: PieChartCustomProps) => {
                     ...item,
                     value: actualPercentageNormalized,
                     label: "Actual",
-                    color: "#BAD8B6",
+                    color: "#609084",
                     focused: state.focusedSegment === "Actual",
                   },
                   {
                     ...item,
                     value: plannedPercentageNormalized,
                     label: "Planned",
-                    color: "#609084",
+                    color: "#BAD8B6",
                     focused: state.focusedSegment === "Planned",
                   },
                 ];
@@ -123,6 +177,7 @@ const PieChartCustom = React.memo(({ data, title }: PieChartCustomProps) => {
           />
         </Animated.View>
       </View>
+      <RenderDetailComponent pieData={state.pieData} />
     </SectionComponent>
   );
 });

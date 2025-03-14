@@ -95,7 +95,7 @@ export default function IndividualHome() {
           {/* PLACEHOLDER FOR CHART */}
           <SectionComponent rootClassName="mx-5 mt-4 rounded-[10px] bg-white p-4 shadow-sm">
             <PieChartCustom
-              data={state.currentUserSpendingModelData?.categories}
+              data={state.actualCategories}
               title={TEXT_TRANSLATE_INDIVIDUAL_HOME.TITLE.OVERVIEW}
             />
           </SectionComponent>
@@ -123,5 +123,5 @@ export default function IndividualHome() {
         </ScrollViewCustom>
       </LoadingSectionWrapper>
     </SafeAreaViewCustom>
-  ); 
+  );
 }
