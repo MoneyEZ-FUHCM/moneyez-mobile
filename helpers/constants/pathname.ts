@@ -38,6 +38,8 @@ const PATH_NAME = {
     PERSONAL_EXPENSES_MODEL: "personal-expenses/PersonalExpensesModel",
     NOTIFICATION: "notification/NotificationList",
     SPENDING_BUDGET_LIST: "spending-budget-list/SpendingBudgetList",
+    ADD_SPENDING_BUDGET_STEP_1: "add-spending-budget/CreateSpendingBudgetStep1",
+    ADD_SPENDING_BUDGET_STEP_2: "add-spending-budget/CreateSpendingBudgetStep2",
   },
   ACCOUNT: {
     ACCOUNT_SETTING: "setting/AccountSetting",

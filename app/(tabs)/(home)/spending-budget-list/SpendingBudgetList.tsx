@@ -4,7 +4,7 @@ import { SafeAreaViewCustom, SectionComponent } from "@/components";
 import { MaterialIcons } from "@expo/vector-icons";
 import useSpendingBudget from "./hooks/useSpendingBudgetList";
 import { formatCurrency } from "@/helpers/libs";
-import ProgressCircle from "./components/ProgressCircle";
+import ProgressCircle from "@/components/ProgressCircle";
 
 export default function SpendingBudget() {
   const { cycleInfo, budgetSections, handleAddBudget, handleBack } = useSpendingBudget();

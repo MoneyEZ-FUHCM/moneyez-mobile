@@ -21,7 +21,6 @@ export default function HomeLayout() {
       <Stack.Screen name={HOME.PERSONAL_EXPENSES_MODEL} />
       <Stack.Screen name={HOME.PERIOD_HISTORY} />
       <Stack.Screen name={HOME.PERIOD_HISTORY_DETAIL} />
-      <Stack.Screen name={HOME.PERIOD_HISTORY_DETAIL} />
     </Stack>
   );
 }
