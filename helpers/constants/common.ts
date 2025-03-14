@@ -89,6 +89,13 @@ const COMMON_CONSTANT = {
     FILTER_ALL: "ALL",
     FILTER_ALL_LABEL: "Tất cả",
   },
+
+  CHATBOT_CONNECTION_TRANSLATE: {
+    CONNECTING: "Đang kết nối lại...",
+    RECONNECT: "Kết nối bị gián đoạn, đang thử lại...",
+    CONNECTED: "Đã kết nối thành công!",
+    SYSTEM_ERROR: "Mất kết nối! Vui lòng kiểm tra lại mạng.",
+  },
 };
 
 export { COMMON_CONSTANT };

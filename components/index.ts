@@ -20,3 +20,4 @@ export { BudgetSummaryComponent } from "./BudgetSummaryComponent";
 export { BarChartCustom } from "./BarChartCustom/BarChartCustom";
 export { LoadingSectionWrapper } from "./LoadingSectionWrapper";
 export { SkeletonLoaderComponent } from "./SkeletonLoaderComponent";
+export { TypingIndicatorComponent } from "./TypeIndicatorComponent";

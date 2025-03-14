@@ -69,7 +69,7 @@ export const usePieChart = (data: PieChartData[]) => {
     [updateData, selectedIndex],
   );
 
-  const handleSelectCategory = (index: number) => {
+  const handleSelectCategory = (index: any) => {
     if (index === selectedIndex) return;
 
     setSelectedIndex(index);
