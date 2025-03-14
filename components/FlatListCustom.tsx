@@ -36,7 +36,7 @@ export function FlatListCustom<T>({
   return (
     <FlatList
       {...props}
-      removeClippedSubviews={true}
+      removeClippedSubviews={false}
       onEndReached={handleEndReached}
       onEndReachedThreshold={0.3}
       contentContainerStyle={[

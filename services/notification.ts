@@ -7,10 +7,13 @@ const { HTTP_METHOD } = COMMON_CONSTANT;
 const notificationApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getNotification: builder.query({
-      query: ({ PageIndex, PageSize }) => ({
-        url: `/notifications/user?PageIndex=${PageIndex}&PageSize=${PageSize}`,
-        method: HTTP_METHOD.GET,
-      }),
+      query: ({ PageIndex, PageSize, type }) => {
+        const url = `/notifications/user?PageIndex=${PageIndex}&PageSize=${PageSize}`;
+        return {
+          url: type ? `${url}&type=${type}` : url,
+          method: HTTP_METHOD.GET,
+        };
+      },
       transformResponse: (response) => transformCommonResponse<Notification>(response),
       providesTags: ["Notification"],
     }),

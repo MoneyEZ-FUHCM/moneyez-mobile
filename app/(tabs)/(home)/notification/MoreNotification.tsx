@@ -4,13 +4,14 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import useNotificationList from './hooks/useNotificationList';
 
 interface MoreNotificationProps {
+  activeTabType: string;
   notificationId: string;
   closeModal: () => void;
 }
 
-const MoreNotification = ({ notificationId, closeModal }: MoreNotificationProps) => {
+const MoreNotification = ({ activeTabType, notificationId, closeModal }: MoreNotificationProps) => {
 
-  const { handler } = useNotificationList();
+  const { handler } = useNotificationList(activeTabType);
 
   const handleMarkRead = () => {
     handler.handleMarkAsRead(notificationId);
