@@ -15,10 +15,7 @@ const userSpendingModelApi = apiSlice.injectEndpoints({
       transformResponse: (response) => transformCommonResponse(response),
       providesTags: ["UserSpendingModel"],
     }),
-    getCurrentUserSpendingModel: builder.query<
-      { data: UserSpendingModel },
-      void
-    >({
+    getCurrentUserSpendingModel: builder.query<{ data: UserSpendingModel }, void>({
       query: () => ({
         url: `user-spending-models/current`,
         method: HTTP_METHOD.GET,

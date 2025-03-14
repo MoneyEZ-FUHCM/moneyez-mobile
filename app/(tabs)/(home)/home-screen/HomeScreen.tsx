@@ -18,15 +18,11 @@ import React from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import TEXT_TRANSLATE_HOME from "../HomeScreen.translate";
 import useHomeScreen from "../hooks/useHomeScreen";
-import { useSelector } from "react-redux";
-import { selectCurrentUserSpendingModel } from "@/redux/slices/userSpendingModelSlice";
 
 const HomeScreen = () => {
   const { state, handler } = useHomeScreen();
   const { BUTTON, TITLE, MESSAGE_ERROR } = TEXT_TRANSLATE_HOME;
   const router = useRouter();
-
-  const currentSpendingModel = useSelector(selectCurrentUserSpendingModel);
 
   const VisibilityIcon = ({
     visible,
@@ -85,7 +81,7 @@ const HomeScreen = () => {
                   <Text className="text-base">{state?.userInfo?.fullName}</Text>
                 </View>
               </View>
-              <TouchableOpacity className="rounded-full bg-black/20 p-2">
+              <TouchableOpacity className="rounded-full bg-black/20 p-2" onPress={handler.handleNavigateNotification}>
                 <Feather name="bell" size={22} color="white" />
               </TouchableOpacity>
             </View>
@@ -214,73 +210,73 @@ const HomeScreen = () => {
         </SectionComponent>
         {(state.isGroupLoading ||
           (state.groupData && state.groupData.length > 0)) && (
-          <SectionComponent rootClassName="px-5 my-5">
-            <Text className="mb-2 text-[19px] font-bold text-primary">
-              {TITLE.MY_GROUP}
-            </Text>
-            <View className="gap-3">
-              {state.isGroupLoading ? (
-                <View>
-                  <SkeletonLoaderComponent>
-                    {[...Array(3)].map((_, index) => (
-                      <View key={index}>
-                        <GroupSkeletonItem />
-                        <SpaceComponent height={11} />
-                      </View>
-                    ))}
-                  </SkeletonLoaderComponent>
-                </View>
-              ) : state.groupData?.length > 0 ? (
-                <>
-                  {state.groupData.slice(0, 2).map((group) => (
-                    <View
-                      key={group?.id}
-                      className="flex-1 rounded-lg border border-secondary bg-white px-2 py-3"
-                    >
-                      <View className="flex-row justify-between">
-                        <View className="flex-row items-center gap-1">
-                          <Coin size="17" color="#609084" variant="Bulk" />
-                          <Text>{group.name}</Text>
+            <SectionComponent rootClassName="px-5 my-5">
+              <Text className="mb-2 text-[19px] font-bold text-primary">
+                {TITLE.MY_GROUP}
+              </Text>
+              <View className="gap-3">
+                {state.isGroupLoading ? (
+                  <View>
+                    <SkeletonLoaderComponent>
+                      {[...Array(3)].map((_, index) => (
+                        <View key={index}>
+                          <GroupSkeletonItem />
+                          <SpaceComponent height={11} />
                         </View>
-                        <View className="flex-row gap-3">
-                          {state.isShowGroupBalance[group.id] ? (
-                            <Text>{formatCurrency(group.currentBalance)}</Text>
-                          ) : (
-                            <Text>{TITLE.VISIBLE_DATA}</Text>
-                          )}
-                          <TouchableOpacity
-                            onPress={() =>
-                              handler.toggleVisibilityGroupBalance(group.id)
-                            }
-                          >
-                            <VisibilityIcon
-                              visible={state.isShowGroupBalance[group.id]}
+                      ))}
+                    </SkeletonLoaderComponent>
+                  </View>
+                ) : state.groupData?.length > 0 ? (
+                  <>
+                    {state.groupData.slice(0, 2).map((group) => (
+                      <View
+                        key={group?.id}
+                        className="flex-1 rounded-lg border border-secondary bg-white px-2 py-3"
+                      >
+                        <View className="flex-row justify-between">
+                          <View className="flex-row items-center gap-1">
+                            <Coin size="17" color="#609084" variant="Bulk" />
+                            <Text>{group.name}</Text>
+                          </View>
+                          <View className="flex-row gap-3">
+                            {state.isShowGroupBalance[group.id] ? (
+                              <Text>{formatCurrency(group.currentBalance)}</Text>
+                            ) : (
+                              <Text>{TITLE.VISIBLE_DATA}</Text>
+                            )}
+                            <TouchableOpacity
                               onPress={() =>
                                 handler.toggleVisibilityGroupBalance(group.id)
                               }
-                            />
-                          </TouchableOpacity>
+                            >
+                              <VisibilityIcon
+                                visible={state.isShowGroupBalance[group.id]}
+                                onPress={() =>
+                                  handler.toggleVisibilityGroupBalance(group.id)
+                                }
+                              />
+                            </TouchableOpacity>
+                          </View>
                         </View>
                       </View>
-                    </View>
-                  ))}
-                  {state.groupData.length > 2 && (
-                    <TouchableOpacity
-                      className="flex-1 rounded-lg border border-secondary bg-white px-2 py-3"
-                      onPress={() =>
-                        router.navigate(PATH_NAME.GROUP.GROUP_LIST as any)
-                      }
-                    >
-                      <Text className="text-center font-bold text-primary">
-                        {BUTTON.SEE_MORE}
-                      </Text>
-                    </TouchableOpacity>
-                  )}
-                </>
-              ) : null}
-            </View>
-          </SectionComponent>
-        )}
+                    ))}
+                    {state.groupData.length > 2 && (
+                      <TouchableOpacity
+                        className="flex-1 rounded-lg border border-secondary bg-white px-2 py-3"
+                        onPress={() =>
+                          router.navigate(PATH_NAME.GROUP.GROUP_LIST as any)
+                        }
+                      >
+                        <Text className="text-center font-bold text-primary">
+                          {BUTTON.SEE_MORE}
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+                  </>
+                ) : null}
+              </View>
+            </SectionComponent>
+          )}
 
         <SectionComponent rootClassName="px-5 my-2.5">
           <View className="flex-row flex-wrap gap-y-5">

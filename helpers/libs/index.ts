@@ -38,6 +38,11 @@ export const getRandomColor = () => {
   return color;
 };
 
+export const formatTime = (date: moment.MomentInput) => {
+  if (!date) return "N/A";
+  return moment(date).format("HH:mm");
+};
+
 export function convertUTCToVietnamTime(utcDate: Date): Date {
   const vietnamOffsetInMs = 7 * 60 * 60 * 1000;
   return new Date(utcDate.getTime() + vietnamOffsetInMs);
