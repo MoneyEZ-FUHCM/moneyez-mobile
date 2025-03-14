@@ -1,12 +1,62 @@
 import React from "react";
 import { View, Text, Pressable, ScrollView } from "react-native";
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import useCreateSpendingBudgetStep1 from "./hooks/useCreateSpendingBudgetStep1";
 
 export default function CreateSpendingBudgetStep1() {
-  const { categoryGroups, handleBack, handleContinue, handleSelectCategory } =
+  const { categoryGroups, selectedCategoryId, handleBack, handleContinue, handleSelectCategory } =
     useCreateSpendingBudgetStep1();
+
+  /**
+   * Renders a single category item row.
+   */
+  const renderCategoryItem = (item: any) => {
+    if (item.label === "Hiển thị thêm ...") {
+      return (
+        <Pressable
+          key={item.id}
+          onPress={() => handleSelectCategory(item)}
+          className="self-stretch rounded-lg border border-gray-300 flex-1 w-full overflow-hidden py-2.5 px-0 mb-3"
+        >
+          <Text className="text-base font-semibold text-gray-500 text-center w-full">
+            {item.label}
+          </Text>
+        </Pressable>
+      );
+    }
+
+    const isSelected = selectedCategoryId === item.id;
+    const isDisabled = item.status === 'created';
+
+    return (
+      <Pressable
+        key={item.id}
+        onPress={() => handleSelectCategory(item)}
+        className={`flex-row items-center justify-between p-3 border ${isSelected && !isDisabled ? 'border-[#609084]' : 'border-[#E5E7EB]'} rounded-lg mb-3`}
+        disabled={isDisabled}
+      >
+        {/* Left side: Icon + Label */}
+        <View className="flex-row items-center space-x-3">
+          <MaterialIcons name={item.icon} size={24} color="#609084" />
+          <Text className="text-base font-medium text-black">{item.label}</Text>
+        </View>
+
+        {/* Right side: radio circle or "Đã tạo ngân sách" pill */}
+        {item.status === "created" ? (
+          <View className="px-2 py-1 bg-gray-200 rounded-md">
+            <Text className="flex items-center justify-center text-sm font-semibold text-gray-500 text-center">Đã tạo ngân sách</Text>
+          </View>
+        ) : (
+          <MaterialCommunityIcons
+            name={isSelected ? "radiobox-marked" : "radiobox-blank"}
+            size={24}
+            color={isSelected ? "#609084" : "#999"}
+          />
+        )}
+      </Pressable>
+    );
+  };
 
   return (
     <SafeAreaViewCustom rootClassName="flex-1 bg-[#f9f9f9]">
@@ -38,21 +88,7 @@ export default function CreateSpendingBudgetStep1() {
             <Text className="text-base font-bold text-black mb-2">
               {group.title}
             </Text>
-            {group.items.map((item) => (
-              <Pressable
-                key={item.id}
-                onPress={() => handleSelectCategory(item)}
-                className="flex-row items-center justify-between p-3 border border-[#609084] rounded-lg mb-3"
-              >
-                <View className="flex-row items-center space-x-3">
-                  <MaterialIcons name={item.icon} size={30} color="#609084" />
-                  <Text className="font-bold text-black">{item.label}</Text>
-                </View>
-                {item.status === "created" && (
-                  <Text className="text-sm text-green-600">Đã tạo ngân sách</Text>
-                )}
-              </Pressable>
-            ))}
+            {group.items.map(renderCategoryItem)}
           </SectionComponent>
         ))}
       </ScrollView>
@@ -61,7 +97,8 @@ export default function CreateSpendingBudgetStep1() {
       <SectionComponent rootClassName="h-16 bg-white justify-center items-center border-t border-gray-300">
         <Pressable
           onPress={handleContinue}
-          className="bg-[#609084] rounded-lg py-3 px-6"
+          className={`${selectedCategoryId ? 'bg-[#609084]' : 'bg-[#a0c0ba]'} rounded-lg py-3 px-6`}
+          disabled={!selectedCategoryId}
         >
           <Text className="text-white text-lg font-semibold">Tiếp tục</Text>
         </Pressable>
