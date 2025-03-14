@@ -179,7 +179,7 @@ const useChatBotScreen = () => {
     (status: string) => {
       if (status === CHATBOT_CONNECTION.CONNECTING) return "yellow";
       if (status === CHATBOT_CONNECTION.DISCONNECTED) return "red";
-      return "green";
+      return "#05ff01";
     },
     [connectionStatus],
   );
