@@ -87,6 +87,8 @@ const RenderTagsComponent = ({
 const PieChartCustom = React.memo(({ data, title }: PieChartCustomProps) => {
   const { state, handler } = usePieChart(data);
 
+  console.log("check state", state.pieData);
+
   return (
     <SectionComponent>
       <Text className="text-lg font-bold">{title}</Text>
@@ -121,58 +123,43 @@ const PieChartCustom = React.memo(({ data, title }: PieChartCustomProps) => {
             data={state.pieData
               ?.filter((_, index) => index === state.selectedIndex)
               .flatMap((item: any) => {
-                const totalPercentage =
-                  item.actualPercentage + item.plannedPercentage;
-                const actualPercentageNormalized =
-                  (item.actualPercentage / totalPercentage) * 100;
-                const plannedPercentageNormalized =
-                  (item.plannedPercentage / totalPercentage) * 100;
+                const actualPercentage = Math.round(
+                  (item.totalSpent / item.planningSpent) * 100,
+                );
+                const plannedPercentage = 100 - actualPercentage;
+
                 return [
                   {
                     ...item,
-                    value: actualPercentageNormalized,
-                    label: "Actual",
+                    value: actualPercentage,
+                    text: `${actualPercentage}%`,
                     color: "#609084",
+                    textColor: "#FFFFFF",
                     focused: state.focusedSegment === "Actual",
                   },
                   {
                     ...item,
-                    value: plannedPercentageNormalized,
-                    label: "Planned",
+                    value: plannedPercentage,
+                    text: `${plannedPercentage}%`,
                     color: "#BAD8B6",
+                    textColor:
+                      state.focusedSegment === "Planned"
+                        ? "#000000"
+                        : "#808080",
+
                     focused: state.focusedSegment === "Planned",
                   },
                 ];
               })}
             donut
-            showGradient
+            showValuesAsLabels
             sectionAutoFocus
             animationDuration={1000}
-            radius={140}
+            radius={110}
             showText
             showValuesAsTooltipText
-            innerRadius={100}
-            centerLabelComponent={() =>
-              state.selectedIndex !== null && state.isRotated ? (
-                <Animated.View
-                  style={state.animatedStyles.fadeIn}
-                  className="items-center justify-center px-2"
-                >
-                  <Text className="mb-1 text-lg font-bold text-text-gray">
-                    {state.focusedSegment === "Actual" ? "Thực tế" : "Dự định"}
-                  </Text>
-                  <Text className="text-3xl font-bold text-black">
-                    {state.focusedSegment === "Actual"
-                      ? `${state.updateData[state.selectedIndex]?.actualPercentage}%`
-                      : `${state.updateData[state.selectedIndex]?.plannedPercentage}%`}
-                  </Text>
-
-                  <Text className="mt-1 text-center text-sm text-gray-500">
-                    {state.updateData[state.selectedIndex].categoryName}
-                  </Text>
-                </Animated.View>
-              ) : null
-            }
+            labelsPosition="outward"
+            innerRadius={30}
             onPress={(_item: any, index: number) => handler.handlePress(index)}
           />
         </Animated.View>

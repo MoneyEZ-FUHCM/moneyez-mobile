@@ -1,9 +1,9 @@
 import ArrowDown from "@/assets/icons/arrow-trend-down.png";
 import ArrowUp from "@/assets/icons/arrow-trend-up.png";
 import {
+  BarChartCustom,
   BudgetSummaryComponent,
   LoadingSectionWrapper,
-  PieChartCustom,
   SafeAreaViewCustom,
   ScrollViewCustom,
   SectionComponent,
@@ -11,13 +11,13 @@ import {
 } from "@/components";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-import { Image, Pressable, Text, View } from "react-native";
+import { Dimensions, Image, Pressable, Text, View } from "react-native";
 import TEXT_TRANSLATE_INDIVIDUAL_HOME from "./IndividualHome.translate";
 import useIndividualHome from "./hooks/useIndividualHome";
 
 export default function IndividualHome() {
   const { state, handler } = useIndividualHome();
-
+  console.log("check state.actualCategories", state.actualCategories);
   return (
     <SafeAreaViewCustom rootClassName="flex-1">
       {/* HEADER */}
@@ -94,9 +94,14 @@ export default function IndividualHome() {
 
           {/* PLACEHOLDER FOR CHART */}
           <SectionComponent rootClassName="mx-5 mt-4 rounded-[10px] bg-white p-4 shadow-sm">
-            <PieChartCustom
+            {/* <PieChartCustom
               data={state.actualCategories}
               title={TEXT_TRANSLATE_INDIVIDUAL_HOME.TITLE.OVERVIEW}
+            /> */}
+            {/* <StackedBarChartExample></StackedBarChartExample> */}
+            <BarChartCustom
+              data={state.actualCategories}
+              screenWidth={Dimensions.get("window").width}
             />
           </SectionComponent>
 

@@ -1,4 +1,5 @@
 import {
+  BarChartCustom,
   BudgetSummaryComponent,
   FlatListCustom,
   SafeAreaViewCustom,
@@ -11,7 +12,13 @@ import { formatCurrency } from "@/helpers/libs";
 import { TransactionViewModel } from "@/types/transaction.types";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Dimensions,
+  Pressable,
+  Text,
+  View,
+} from "react-native";
 import usePeriodHistory from "./hooks/usePeriodHistory";
 import TEXT_TRANSLATE_PERIOD_HISTORY from "./PeriodHistory.translate";
 
@@ -62,10 +69,14 @@ export default function PeriodHistory() {
       {/* Statistics & Chart */}
       <SectionComponent rootClassName="bg-white relative mb-4 rounded-lg">
         <View className="p-4">
-          <PieChartCustom
+          {/* <PieChartCustom
             data={categories}
             title={TEXT_TRANSLATE_PERIOD_HISTORY.TITLE.STATISTIC}
-          />
+          /> */}
+          <BarChartCustom
+            data={categories}
+            screenWidth={Dimensions.get("window").width}
+          ></BarChartCustom>
         </View>
       </SectionComponent>
 
