@@ -1,7 +1,7 @@
+import useNotificationList from '@/app/(tabs)/(home)/notification/hooks/useNotificationList';
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import useNotificationList from './hooks/useNotificationList';
 
 interface MoreNotificationProps {
   activeTabType: string;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,8 @@ import {
   Modal,
   StyleSheet,
   GestureResponderEvent,
+  Animated,
+  Dimensions,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import {
@@ -17,9 +19,9 @@ import {
   LoadingSectionWrapper,
 } from '@/components';
 import useNotificationList from './hooks/useNotificationList';
-import MoreNotification from './MoreNotification';
 import NOTIFICATION_CONSTANTS, { getNotificationIcon } from './NotificationList.const';
-import GestureRecognizer from 'react-native-swipe-gestures';
+import { FlingGestureHandler, Directions, State, GestureHandlerRootView } from 'react-native-gesture-handler';
+import MoreNotification from '@/components/MoreNotification';
 
 export default function NotificationList() {
   const { state, handler } = useNotificationList('all', 1, 20);
@@ -29,21 +31,50 @@ export default function NotificationList() {
   const tabs = NOTIFICATION_CONSTANTS.TABS;
   const currentIndex = tabs.findIndex(tab => tab.type === activeTab);
 
-  const handleSwipeLeft = () => {
+  // Create an Animated value and get screen width for sliding effect.
+  const slideAnim = useRef(new Animated.Value(0)).current;
+  const screenWidth = Dimensions.get('window').width;
+
+  // Function to animate swiping left.
+  const swipeLeftAnimation = () => {
     if (currentIndex < tabs.length - 1) {
-      setActiveTab(tabs[currentIndex + 1].type);
+      Animated.timing(slideAnim, {
+        toValue: -screenWidth,
+        duration: 300,
+        useNativeDriver: true,
+      }).start(() => {
+        // Change to next tab once animation completes.
+        setActiveTab(tabs[currentIndex + 1].type);
+        // Reset the animation offset (content comes in from the right).
+        slideAnim.setValue(screenWidth);
+        Animated.timing(slideAnim, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }).start();
+      });
     }
   };
 
-  const handleSwipeRight = () => {
+  // Function to animate swiping right.
+  const swipeRightAnimation = () => {
     if (currentIndex > 0) {
-      setActiveTab(tabs[currentIndex - 1].type);
+      Animated.timing(slideAnim, {
+        toValue: screenWidth,
+        duration: 300,
+        useNativeDriver: true,
+      }).start(() => {
+        // Change to previous tab.
+        setActiveTab(tabs[currentIndex - 1].type);
+        // Reset the animation offset (content comes in from the left).
+        slideAnim.setValue(-screenWidth);
+        Animated.timing(slideAnim, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }).start();
+      });
     }
-  };
-
-  const gestureConfig = {
-    velocityThreshold: 0.3,
-    directionalOffsetThreshold: 80,
   };
 
   if (isLoading) {
@@ -103,22 +134,22 @@ export default function NotificationList() {
   };
 
   return (
-    <SafeAreaViewCustom rootClassName="flex-1 bg-[#fafafa]">
-      {/* Header */}
-      <SectionComponent rootClassName="h-14 bg-white justify-center">
-        <View className="flex-row items-center justify-between px-4">
-          <Pressable onPress={handleGoBack}>
-            <MaterialIcons name="arrow-back" size={24} color="#609084" />
-          </Pressable>
-          <Text className="text-xl font-semibold text-black">
-            Thông báo ({noticeData.filter((n: any) => !n.isRead).length})
-          </Text>
-          <SpaceComponent width={24} />
-        </View>
-      </SectionComponent>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaViewCustom rootClassName="flex-1 bg-[#fafafa]">
+        {/* Header */}
+        <SectionComponent rootClassName="h-14 bg-white justify-center">
+          <View className="flex-row items-center justify-between px-4">
+            <Pressable onPress={handleGoBack}>
+              <MaterialIcons name="arrow-back" size={24} color="#609084" />
+            </Pressable>
+            <Text className="text-xl font-semibold text-black">
+              Thông báo ({noticeData.filter((n: any) => !n.isRead).length})
+            </Text>
+            <SpaceComponent width={24} />
+          </View>
+        </SectionComponent>
 
-      <GestureRecognizer onSwipeLeft={handleSwipeLeft} onSwipeRight={handleSwipeRight} config={gestureConfig} style={{ flex: 1 }}>
-        {/* Tabs */}
+        {/* Tabs (kept static) */}
         <View className="flex-row bg-white">
           {tabs.map((tab) => (
             <Pressable
@@ -126,39 +157,61 @@ export default function NotificationList() {
               onPress={() => setActiveTab(tab.type)}
               className={`flex-1 items-center border-b-2 py-3 ${activeTab === tab.type ? 'border-[#609084]' : 'border-transparent'}`}
             >
-              <Text className={`font-medium ${activeTab === tab.type ? 'text-[#021433]' : 'text-[#757575]'}`}>{tab.label}</Text>
+              <Text className={`font-medium ${activeTab === tab.type ? 'text-[#021433]' : 'text-[#757575]'}`}>
+                {tab.label}
+              </Text>
             </Pressable>
           ))}
         </View>
 
-        {/* Notification List with infinite scroll */}
-        <LoadingSectionWrapper isLoading={isLoadingMore}>
-          <FlatListCustom
-            data={noticeData}
-            renderItem={renderNotificationItem}
-            keyExtractor={(item) => item.id.toString()}
-            onLoadMore={loadMoreData}
-            hasMore={noticeData.length > 0 && noticeData.length === 20}
-            ListFooterComponent={renderFooter}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ padding: 16, gap: 12 }}
-          />
-        </LoadingSectionWrapper>
-      </GestureRecognizer>
-
-      <Modal visible={showMoreModal} transparent animationType="fade" onRequestClose={closeModal}>
-        <Pressable style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 0, 0, 0.3)' }]} onPress={closeModal}>
-          <View
-            style={getDialogStyle()}
-            onLayout={(e) => {
-              const { width, height } = e.nativeEvent.layout;
-              setDialogDimensions({ width, height });
+        {/* Swipeable Content */}
+        <FlingGestureHandler
+          direction={Directions.LEFT}
+          onHandlerStateChange={({ nativeEvent }) => {
+            if (nativeEvent.state === State.ACTIVE) {
+              swipeLeftAnimation();
+            }
+          }}
+        >
+          <FlingGestureHandler
+            direction={Directions.RIGHT}
+            onHandlerStateChange={({ nativeEvent }) => {
+              if (nativeEvent.state === State.ACTIVE) {
+                swipeRightAnimation();
+              }
             }}
           >
-            <MoreNotification activeTabType={activeTab} notificationId={selectedNoticeId} closeModal={closeModal} />
-          </View>
-        </Pressable>
-      </Modal>
-    </SafeAreaViewCustom>
+            <Animated.View style={{ flex: 1, transform: [{ translateX: slideAnim }] }}>
+              <LoadingSectionWrapper isLoading={isLoadingMore}>
+                <FlatListCustom
+                  data={noticeData}
+                  renderItem={renderNotificationItem}
+                  keyExtractor={(item) => item.id.toString()}
+                  onLoadMore={loadMoreData}
+                  hasMore={noticeData.length > 0 && noticeData.length === 20}
+                  ListFooterComponent={renderFooter}
+                  showsVerticalScrollIndicator={false}
+                  contentContainerStyle={{ padding: 16, gap: 12 }}
+                />
+              </LoadingSectionWrapper>
+            </Animated.View>
+          </FlingGestureHandler>
+        </FlingGestureHandler>
+
+        <Modal visible={showMoreModal} transparent animationType="fade" onRequestClose={closeModal}>
+          <Pressable style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 0, 0, 0.3)' }]} onPress={closeModal}>
+            <View
+              style={getDialogStyle()}
+              onLayout={(e) => {
+                const { width, height } = e.nativeEvent.layout;
+                setDialogDimensions({ width, height });
+              }}
+            >
+              <MoreNotification activeTabType={activeTab} notificationId={selectedNoticeId} closeModal={closeModal} />
+            </View>
+          </Pressable>
+        </Modal>
+      </SafeAreaViewCustom>
+    </GestureHandlerRootView>
   );
 }
