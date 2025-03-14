@@ -14,6 +14,7 @@ import React from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import TEXT_TRANSLATE_INDIVIDUAL_HOME from "./IndividualHome.translate";
 import useIndividualHome from "./hooks/useIndividualHome";
+import SpendingBudgetComponent from "./components/SpendingBudgetComponent";
 
 export default function IndividualHome() {
   const { state, handler } = useIndividualHome();
@@ -99,6 +100,10 @@ export default function IndividualHome() {
               title={TEXT_TRANSLATE_INDIVIDUAL_HOME.TITLE.OVERVIEW}
             />
           </SectionComponent>
+
+          {/* BUDGET CATEGORIES */}
+          <SpendingBudgetComponent></SpendingBudgetComponent>
+
 
           {/* PLACEHOLDER FOR CHAT BOT */}
           <SectionComponent rootClassName="mx-5 mt-5">

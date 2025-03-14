@@ -27,6 +27,7 @@ export default function HomeLayout() {
           animation: ANIMATION_NAVIGATE_STACK.SLIDE_FROM_BOTTOM,
         }}
       />
+      <Stack.Screen name={HOME.PERIOD_HISTORY_DETAIL} />
     </Stack>
   );
 }
