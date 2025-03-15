@@ -1,16 +1,16 @@
-import { useState, useEffect, useCallback } from 'react';
+import { formatDate, formatTime } from "@/helpers/libs";
+import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import {
   useGetNotificationQuery,
   useReadAllNotificationMutation,
   useReadNotificationMutation,
-} from '@/services/notification';
-import { formatDate, formatTime } from '@/helpers/libs';
-import { router } from 'expo-router';
-import { Dimensions } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { setMainTabHidden } from '@/redux/slices/tabSlice';
+} from "@/services/notification";
+import { router } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
+import { Dimensions } from "react-native";
+import { useDispatch } from "react-redux";
 
-type NotificationTabType = 'all' | string;
+type NotificationTabType = "all" | string;
 
 interface QueryParams {
   PageIndex: number;
@@ -18,18 +18,20 @@ interface QueryParams {
   type?: string;
 }
 
-const useNotificationList = (
-  initialActiveTab: NotificationTabType = 'all',
-  initialPageIndex = 1,
-  pageSize = 20
-) => {
+const useNotificationList = () => {
   // UI States
-  const [activeTab, setActiveTab] = useState<NotificationTabType>(initialActiveTab);
+  const initialActiveTab: NotificationTabType = "all";
+  const initialPageIndex = 1;
+  const pageSize = 10;
+  const [activeTab, setActiveTab] =
+    useState<NotificationTabType>(initialActiveTab);
   const [showMoreModal, setShowMoreModal] = useState(false);
-  const [selectedNoticeId, setSelectedNoticeId] = useState('');
+  const [selectedNoticeId, setSelectedNoticeId] = useState("");
   const [anchorPosition, setAnchorPosition] = useState({ x: 0, y: 0 });
-  const [dialogDimensions, setDialogDimensions] = useState({ width: 0, height: 0 });
-
+  const [dialogDimensions, setDialogDimensions] = useState({
+    width: 0,
+    height: 0,
+  });
   // Data States
   const [pageIndex, setPageIndex] = useState(initialPageIndex);
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -37,15 +39,14 @@ const useNotificationList = (
 
   // Build query parameters using activeTab (omit type if "all")
   const queryParams: QueryParams = { PageIndex: pageIndex, PageSize: pageSize };
-  if (activeTab !== 'all') {
+  if (activeTab !== "all") {
     queryParams.type = activeTab;
   }
-
-  const { data, isLoading, refetch, isError, error } = useGetNotificationQuery(queryParams);
+  const { data, isLoading, refetch, isError, error } =
+    useGetNotificationQuery(queryParams);
   const dispatch = useDispatch();
   const [readNotification] = useReadNotificationMutation();
   const [readAllNotification] = useReadAllNotificationMutation();
-
   // When navigating back, close any open modal first.
   const handleGoBack = () => {
     if (showMoreModal) {
@@ -54,12 +55,11 @@ const useNotificationList = (
     router.back();
     dispatch(setMainTabHidden(false));
   };
-
   // Update notifications when new data arrives
   useEffect(() => {
     if (data?.items) {
-      setNotifications(prev => {
-        const newNotifications = data.items.map((notice: any) => ({
+      setNotifications((prev) => {
+        const newNotifications = data.items?.map((notice: any) => ({
           id: notice.id,
           title: notice.title,
           type: notice.type,
@@ -68,22 +68,26 @@ const useNotificationList = (
           formattedDate: formatDate(notice.createdDate),
           formattedTime: formatTime(notice.createdDate),
         }));
-        return pageIndex === 1 ? newNotifications : [
+        const uniqueNotifications = [
           ...prev,
-          ...newNotifications.filter(newNoti => !prev.some(oldNoti => oldNoti.id === newNoti.id)),
+          ...newNotifications.filter(
+            (newTrans: any) =>
+              !prev.some((oldTrans: any) => oldTrans.id === newTrans.id),
+          ),
         ];
+        return uniqueNotifications;
       });
     }
     setIsLoadingMore(false);
-  }, [data?.items, pageIndex]);
+  }, [data?.items]);
 
   // Infinite scroll: load more if current page is full
   const loadMoreData = useCallback(() => {
     if (!isLoading && !isLoadingMore && data?.items?.length === pageSize) {
       setIsLoadingMore(true);
-      setPageIndex(prev => prev + 1);
+      setPageIndex((prev) => prev + 1);
     }
-  }, [data?.items, isLoading, isLoadingMore, pageSize]);
+  }, [data?.items.length, isLoading, isLoadingMore, pageSize]);
 
   const handleMarkAsRead = async (id: string) => {
     await readNotification(id);
@@ -96,11 +100,14 @@ const useNotificationList = (
   };
 
   // UI helper to open the modal. Call this with the notification id and the pageX, pageY positions.
-  const handleOpenMore = useCallback((id: string, pageX: number, pageY: number) => {
-    setSelectedNoticeId(id);
-    setAnchorPosition({ x: pageX, y: pageY });
-    setShowMoreModal(true);
-  }, []);
+  const handleOpenMore = useCallback(
+    (id: string, pageX: number, pageY: number) => {
+      setSelectedNoticeId(id);
+      setAnchorPosition({ x: pageX, y: pageY });
+      setShowMoreModal(true);
+    },
+    [],
+  );
 
   const closeModal = useCallback(() => {
     setShowMoreModal(false);
@@ -109,7 +116,8 @@ const useNotificationList = (
   // Returns the style for positioning the modal dialog.
   const getDialogStyle = useCallback(() => {
     const offset = 10;
-    const { height: windowHeight, width: windowWidth } = Dimensions.get('window');
+    const { height: windowHeight, width: windowWidth } =
+      Dimensions.get("window");
     let top;
     if (anchorPosition.y + dialogDimensions.height + offset > windowHeight) {
       top = anchorPosition.y - dialogDimensions.height - offset;
@@ -117,7 +125,7 @@ const useNotificationList = (
       top = anchorPosition.y + offset;
     }
     const right = windowWidth - anchorPosition.x;
-    return { position: 'absolute' as const, top, right };
+    return { position: "absolute" as const, top, right };
   }, [anchorPosition, dialogDimensions]);
 
   return {
@@ -134,6 +142,8 @@ const useNotificationList = (
       selectedNoticeId,
       anchorPosition,
       dialogDimensions,
+      pageSize,
+      data,
     },
     handler: {
       setActiveTab,

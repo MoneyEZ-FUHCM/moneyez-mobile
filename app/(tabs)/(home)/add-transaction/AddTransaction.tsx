@@ -12,11 +12,26 @@ import { Subcategory } from "@/types/subCategory";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import { Formik } from "formik";
-import React, { useCallback, useMemo, useRef } from "react";
-import { Image, Pressable, ScrollView, Text, View } from "react-native";
-import { ActivityIndicator, RadioButton } from "react-native-paper";
+import React, { useCallback, useMemo, useRef, useState } from "react";
+import {
+  FlatList,
+  Image,
+  Pressable,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import {
+  ActivityIndicator,
+  Button,
+  Menu,
+  RadioButton,
+} from "react-native-paper";
 import TEXT_TRANSLATE_ADD_TRANSACTION from "./AddTransaction.translate";
-import useAddTransaction from "./hooks/useAddTransaction";
+import useAddTransaction, {
+  CategoryListFilter,
+} from "./hooks/useAddTransaction";
 
 const PRIMARY_COLOR = "#609084";
 
@@ -28,7 +43,11 @@ export default function AddTransaction() {
   handler.useHideTabbar();
 
   const formikRef = useRef<any>(null);
+  const [visible, setVisible] = useState(false);
+  const [selected, setSelected] = useState("Chọn mục");
 
+  const openMenu = () => setVisible(true);
+  const closeMenu = () => setVisible(false);
   const renderTransactionTypeButton = useCallback(
     (type: "EXPENSE" | "INCOME", label: string) => (
       <Pressable
@@ -152,32 +171,65 @@ export default function AddTransaction() {
                 />
               </SectionComponent>
               <SectionComponent rootClassName="bg-white m-4 p-2 rounded-lg">
-                <Text className="mb-4 text-base font-semibold text-primary">
+                <Text className="text-lg font-bold tracking-tight text-primary">
                   {TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.SEPERATE}
                 </Text>
+                <View className="mx-3 my-2 flex-row items-center">
+                  <FlatList
+                    removeClippedSubviews={false}
+                    horizontal
+                    data={state.uniqueCategories}
+                    keyExtractor={(item) => item.categoryCode}
+                    renderItem={({
+                      item,
+                      index,
+                    }: {
+                      item: CategoryListFilter;
+                      index: number;
+                    }) => (
+                      <TouchableOpacity
+                        className={`my-1 mr-2.5 rounded-lg px-3 py-1 ${
+                          item?.categoryCode === state.selectedCategoryCode
+                            ? `scale-105 bg-primary ${index === 0 && "ml-1"} text-white shadow-xl shadow-primary/40`
+                            : "border border-gray-200 bg-white text-gray-800 shadow-sm"
+                        } transition-all duration-300`}
+                        onPress={() =>
+                          handler.handleSelectCategoryFilter(item?.categoryCode)
+                        }
+                      >
+                        <Text
+                          className={`text-xs ${item?.categoryCode === state.selectedCategoryCode ? "font-bold text-white" : "font-normal"} tracking-wide`}
+                        >
+                          {item?.categoryName}
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+                    showsHorizontalScrollIndicator={false}
+                  />
+                </View>
                 <View className="flex-row flex-wrap">
                   {state.isLoading ? (
                     <View className="h-44 w-full items-center justify-center">
                       <ActivityIndicator size="small" color={PRIMARY_COLOR} />
                     </View>
                   ) : (
-                    state?.mapSubCategories?.map((subCategory: Subcategory) => {
+                    state.mapSubCategories?.map((subCategory: Subcategory) => {
                       return (
                         <Pressable
-                          key={subCategory.id}
+                          key={subCategory?.id}
                           onPress={() =>
-                            handler.setSelectedCategory(subCategory.id)
+                            handler.setSelectedCategory(subCategory?.id)
                           }
                           className="mb-3 w-1/3 px-1.5"
                         >
                           <CategoryItem
-                            label={subCategory.name}
+                            label={subCategory?.name}
                             color={PRIMARY_COLOR}
                             iconName={
-                              subCategory.icon as keyof typeof MaterialIcons.glyphMap
+                              subCategory?.icon as keyof typeof MaterialIcons.glyphMap
                             }
                             isSelected={
-                              state.selectedCategory === subCategory.id
+                              state.selectedCategory === subCategory?.id
                             }
                             rootClassName="flex-1 justify-center min-h-[110px]"
                           />

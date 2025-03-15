@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef } from "react";
 import {
   View,
   Text,
@@ -9,31 +9,53 @@ import {
   GestureResponderEvent,
   Animated,
   Dimensions,
-} from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+} from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
 import {
   SafeAreaViewCustom,
   SectionComponent,
   SpaceComponent,
   FlatListCustom,
   LoadingSectionWrapper,
-} from '@/components';
-import useNotificationList from './hooks/useNotificationList';
-import NOTIFICATION_CONSTANTS, { getNotificationIcon } from './NotificationList.const';
-import { FlingGestureHandler, Directions, State, GestureHandlerRootView } from 'react-native-gesture-handler';
-import MoreNotification from '@/components/MoreNotification';
+} from "@/components";
+import useNotificationList from "./hooks/useNotificationList";
+import NOTIFICATION_CONSTANTS, {
+  getNotificationIcon,
+} from "./NotificationList.const";
+import {
+  FlingGestureHandler,
+  Directions,
+  State,
+  GestureHandlerRootView,
+} from "react-native-gesture-handler";
+import MoreNotification from "@/components/MoreNotification";
 
 export default function NotificationList() {
-  const { state, handler } = useNotificationList('all', 1, 20);
-  const { activeTab, noticeData, isLoading, isLoadingMore, showMoreModal, selectedNoticeId } = state;
-  const { setActiveTab, handleGoBack, handleOpenMore, closeModal, setDialogDimensions, getDialogStyle, loadMoreData } = handler;
+  const { state, handler } = useNotificationList();
+  const {
+    activeTab,
+    noticeData,
+    isLoading,
+    isLoadingMore,
+    showMoreModal,
+    selectedNoticeId,
+  } = state;
+  const {
+    setActiveTab,
+    handleGoBack,
+    handleOpenMore,
+    closeModal,
+    setDialogDimensions,
+    getDialogStyle,
+    loadMoreData,
+  } = handler;
 
   const tabs = NOTIFICATION_CONSTANTS.TABS;
-  const currentIndex = tabs.findIndex(tab => tab.type === activeTab);
+  const currentIndex = tabs.findIndex((tab) => tab.type === activeTab);
 
   // Create an Animated value and get screen width for sliding effect.
   const slideAnim = useRef(new Animated.Value(0)).current;
-  const screenWidth = Dimensions.get('window').width;
+  const screenWidth = Dimensions.get("window").width;
 
   // Function to animate swiping left.
   const swipeLeftAnimation = () => {
@@ -76,7 +98,6 @@ export default function NotificationList() {
       });
     }
   };
-
   if (isLoading) {
     return (
       <SafeAreaViewCustom rootClassName="flex-1 bg-[#fafafa]">
@@ -98,17 +119,30 @@ export default function NotificationList() {
   }
 
   const renderNotificationItem = ({ item }: { item: any }) => (
-    <Pressable key={item.id} className={`rounded-lg border border-gray-200 p-3 ${item.isRead ? 'bg-white' : 'bg-green-50'}`}>
+    <Pressable
+      key={item.id}
+      className={`rounded-lg border border-gray-200 p-3 ${item.isRead ? "bg-white" : "bg-green-50"}`}
+    >
       <View className="flex-row items-start gap-3">
         <View className="rounded-full bg-[#609084] p-2">
-          <MaterialIcons name={getNotificationIcon(item.type)} size={28} color="#ffffff" />
+          <MaterialIcons
+            name={getNotificationIcon(item.type)}
+            size={28}
+            color="#ffffff"
+          />
         </View>
         <View className="flex-1">
-          <View className="flex-row justify-between items-center">
-            <Text className="text-base font-semibold text-[#021433]">{item.title}</Text>
+          <View className="flex-row items-center justify-between">
+            <Text className="text-base font-semibold text-[#021433]">
+              {item.title}
+            </Text>
             <Pressable
               onPress={(event: GestureResponderEvent) =>
-                handleOpenMore(item.id, event.nativeEvent.pageX, event.nativeEvent.pageY)
+                handleOpenMore(
+                  item.id,
+                  event.nativeEvent.pageX,
+                  event.nativeEvent.pageY,
+                )
               }
             >
               <MaterialIcons name="more-horiz" size={24} color="#757575" />
@@ -123,15 +157,6 @@ export default function NotificationList() {
       </View>
     </Pressable>
   );
-
-  const renderFooter = () => {
-    if (!isLoadingMore) return null;
-    return (
-      <View className="flex items-center justify-center py-4">
-        <ActivityIndicator size="small" color="#609084" />
-      </View>
-    );
-  };
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -155,9 +180,11 @@ export default function NotificationList() {
             <Pressable
               key={tab.type}
               onPress={() => setActiveTab(tab.type)}
-              className={`flex-1 items-center border-b-2 py-3 ${activeTab === tab.type ? 'border-[#609084]' : 'border-transparent'}`}
+              className={`flex-1 items-center border-b-2 py-3 ${activeTab === tab.type ? "border-[#609084]" : "border-transparent"}`}
             >
-              <Text className={`font-medium ${activeTab === tab.type ? 'text-[#021433]' : 'text-[#757575]'}`}>
+              <Text
+                className={`font-medium ${activeTab === tab.type ? "text-[#021433]" : "text-[#757575]"}`}
+              >
                 {tab.label}
               </Text>
             </Pressable>
@@ -181,25 +208,37 @@ export default function NotificationList() {
               }
             }}
           >
-            <Animated.View style={{ flex: 1, transform: [{ translateX: slideAnim }] }}>
-              <LoadingSectionWrapper isLoading={isLoadingMore}>
-                <FlatListCustom
-                  data={noticeData}
-                  renderItem={renderNotificationItem}
-                  keyExtractor={(item) => item.id.toString()}
-                  onLoadMore={loadMoreData}
-                  hasMore={noticeData.length > 0 && noticeData.length === 20}
-                  ListFooterComponent={renderFooter}
-                  showsVerticalScrollIndicator={false}
-                  contentContainerStyle={{ padding: 16, gap: 12 }}
-                />
-              </LoadingSectionWrapper>
+            <Animated.View
+              style={{ flex: 1, transform: [{ translateX: slideAnim }] }}
+            >
+              <FlatListCustom
+                isBottomTab={false}
+                isLoading={isLoadingMore}
+                data={noticeData ?? []}
+                renderItem={renderNotificationItem}
+                keyExtractor={(item) => item.id.toString()}
+                onLoadMore={loadMoreData}
+                hasMore={state.data?.items?.length === state.pageSize}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ padding: 16, gap: 12 }}
+              />
             </Animated.View>
           </FlingGestureHandler>
         </FlingGestureHandler>
 
-        <Modal visible={showMoreModal} transparent animationType="fade" onRequestClose={closeModal}>
-          <Pressable style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 0, 0, 0.3)' }]} onPress={closeModal}>
+        <Modal
+          visible={showMoreModal}
+          transparent
+          animationType="fade"
+          onRequestClose={closeModal}
+        >
+          <Pressable
+            style={[
+              StyleSheet.absoluteFill,
+              { backgroundColor: "rgba(0, 0, 0, 0.3)" },
+            ]}
+            onPress={closeModal}
+          >
             <View
               style={getDialogStyle()}
               onLayout={(e) => {
@@ -207,7 +246,11 @@ export default function NotificationList() {
                 setDialogDimensions({ width, height });
               }}
             >
-              <MoreNotification activeTabType={activeTab} notificationId={selectedNoticeId} closeModal={closeModal} />
+              <MoreNotification
+                activeTabType={activeTab}
+                notificationId={selectedNoticeId}
+                closeModal={closeModal}
+              />
             </View>
           </Pressable>
         </Modal>

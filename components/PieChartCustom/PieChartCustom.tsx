@@ -1,21 +1,21 @@
 import { formatCurrency } from "@/helpers/libs";
 import { BudgetCategory } from "@/types/category.types";
+import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-import { FlatList, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { PieChart } from "react-native-gifted-charts";
-import Animated from "react-native-reanimated";
+import Animated, { useAnimatedStyle } from "react-native-reanimated";
 import { SectionComponent } from "../SectionComponent";
 import { usePieChart } from "./hooks/usePieChart";
 
 export interface PieChartData extends BudgetCategory {
-  focused?: any;
-  actualPercentage: number;
-  plannedPercentage: number;
-  categoryName: string;
-  totalSpent: number;
+  percentage: number;
+  label: string;
+  value: number;
   color?: string;
   id: number;
   planningSpent: number;
+  overSpent: number;
 }
 
 interface PieChartCustomProps {
@@ -24,7 +24,7 @@ interface PieChartCustomProps {
 }
 
 const RenderDetailComponent = ({ pieData }: { pieData: PieChartData[] }) => (
-  <View className="mt-12 flex-row flex-wrap items-center px-1">
+  <View className="mt-12 flex-row flex-wrap items-center">
     <View className="flex-1 flex-row justify-between">
       <View className="w-1/2 pr-4">
         {pieData
@@ -54,120 +54,81 @@ const RenderDetailComponent = ({ pieData }: { pieData: PieChartData[] }) => (
   </View>
 );
 
-const RenderTagsComponent = ({
-  pieData,
-  onSelect,
-}: {
-  pieData: PieChartData[];
-  onSelect: (index: number) => void;
-}) => (
-  <View className="mt-4 flex-row items-center">
-    <FlatList
-      removeClippedSubviews={false}
-      horizontal
-      data={pieData}
-      keyExtractor={(_, index) => index.toString()}
-      renderItem={({ item, index }) => (
-        <Text
-          className={`m-1 rounded-full px-3 py-1 text-sm font-medium ${
-            item?.focused
-              ? "bg-primary text-white"
-              : "bg-gray-200 text-gray-800"
-          }`}
-          onPress={() => onSelect(index)}
-        >
-          {item?.categoryName}
-        </Text>
-      )}
-      showsHorizontalScrollIndicator={false}
-    />
-  </View>
-);
-
 const PieChartCustom = React.memo(({ data, title }: PieChartCustomProps) => {
   const { state, handler } = usePieChart(data);
 
   return (
     <SectionComponent>
-      <Text className="text-lg font-bold">{title}</Text>
-      <RenderTagsComponent
-        pieData={state.pieData}
-        onSelect={handler.handleSelectCategory}
-      />
-      <View className="mt-6 items-center">
+      <Text className="text-lg font-bold text-gray-800">{title}</Text>
+      <View className="mt-4 items-center">
         {state.selectedIndex !== null && (
-          <View className="w-full flex-row justify-between bg-transparent px-2">
-            <View className="mb-2">
-              <Text className="text-sm font-medium text-gray-600">Thực tế</Text>
-              <Text className="text-xl font-extrabold text-primary">
-                {formatCurrency(
-                  state.updateData[state.selectedIndex]?.totalSpent,
-                )}
-              </Text>
+          <View className="w-full rounded-lg bg-gray-50/60 p-3">
+            <View className="flex-row items-center justify-between">
+              <View className="flex-1">
+                <Text className="text-sm font-medium text-gray-600">
+                  Thực tế
+                </Text>
+                <Text className="text-xl font-extrabold text-primary">
+                  {formatCurrency(
+                    state.updateData[state.selectedIndex]?.totalSpent,
+                  )}
+                </Text>
+              </View>
+              <View className="flex-1 items-end">
+                <Text className="text-sm font-medium text-gray-600">
+                  Dự định
+                </Text>
+                <Text className="text-xl font-extrabold text-secondary">
+                  {formatCurrency(
+                    state.updateData[state.selectedIndex]?.planningSpent,
+                  )}
+                </Text>
+              </View>
             </View>
-
-            <View>
-              <Text className="text-sm font-medium text-gray-600">Dự định</Text>
-              <Text className="text-xl font-extrabold text-secondary">
-                {formatCurrency(
-                  state.updateData[state.selectedIndex]?.planningSpent,
-                )}
-              </Text>
-            </View>
+            <Animated.View
+              style={[
+                useAnimatedStyle(() => ({
+                  height: state.height.value,
+                  opacity: state.opacity.value,
+                  overflow: "hidden",
+                })),
+              ]}
+            >
+              <View className="mt-1 flex-row items-center">
+                <MaterialIcons name="error-outline" size={16} color="red" />
+                <Text className="ml-1 text-sm font-semibold text-red">
+                  Vượt: {formatCurrency(state.overSpentValue)}
+                </Text>
+              </View>
+            </Animated.View>
           </View>
         )}
-        <Animated.View style={state.animatedStyles.pie}>
+        <Animated.View style={[state.animatedStyles.pie, { marginTop: 20 }]}>
           <PieChart
-            data={state.pieData
-              ?.filter((_, index) => index === state.selectedIndex)
-              .flatMap((item: any) => {
-                const totalPercentage =
-                  item.actualPercentage + item.plannedPercentage;
-                const actualPercentageNormalized =
-                  (item.actualPercentage / totalPercentage) * 100;
-                const plannedPercentageNormalized =
-                  (item.plannedPercentage / totalPercentage) * 100;
-                return [
-                  {
-                    ...item,
-                    value: actualPercentageNormalized,
-                    label: "Actual",
-                    color: "#609084",
-                    focused: state.focusedSegment === "Actual",
-                  },
-                  {
-                    ...item,
-                    value: plannedPercentageNormalized,
-                    label: "Planned",
-                    color: "#BAD8B6",
-                    focused: state.focusedSegment === "Planned",
-                  },
-                ];
-              })}
+            data={state.pieData?.map((item: any, index: any) => ({
+              ...item,
+              focused: index === state.selectedIndex,
+            }))}
             donut
             showGradient
             sectionAutoFocus
             animationDuration={1000}
             radius={140}
+            innerRadius={90}
             showText
             showValuesAsTooltipText
-            innerRadius={100}
             centerLabelComponent={() =>
               state.selectedIndex !== null && state.isRotated ? (
                 <Animated.View
                   style={state.animatedStyles.fadeIn}
                   className="items-center justify-center px-2"
                 >
-                  <Text className="mb-1 text-lg font-bold text-text-gray">
-                    {state.focusedSegment === "Actual" ? "Thực tế" : "Dự định"}
+                  <Text className="text-2xl font-bold text-black">
+                    {formatCurrency(
+                      state.updateData[state.selectedIndex].totalSpent,
+                    )}
                   </Text>
-                  <Text className="text-3xl font-bold text-black">
-                    {state.focusedSegment === "Actual"
-                      ? `${state.updateData[state.selectedIndex]?.actualPercentage}%`
-                      : `${state.updateData[state.selectedIndex]?.plannedPercentage}%`}
-                  </Text>
-
-                  <Text className="mt-1 text-center text-sm text-gray-500">
+                  <Text className="text-center text-sm text-gray-500">
                     {state.updateData[state.selectedIndex].categoryName}
                   </Text>
                 </Animated.View>
@@ -177,7 +138,7 @@ const PieChartCustom = React.memo(({ data, title }: PieChartCustomProps) => {
           />
         </Animated.View>
       </View>
-      <RenderDetailComponent pieData={state.pieData} />
+      <RenderDetailComponent pieData={state.pieDataCategory} />
     </SectionComponent>
   );
 });

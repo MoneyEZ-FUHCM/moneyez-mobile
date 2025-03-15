@@ -68,6 +68,9 @@ const usePeriodHistory = () => {
   useFocusEffect(
     useCallback(() => {
       dispatch(setMainTabHidden(true));
+      return () => {
+        dispatch(setMainTabHidden(false));
+      };
     }, [dispatch]),
   );
 

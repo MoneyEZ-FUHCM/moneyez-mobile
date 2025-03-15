@@ -1,7 +1,7 @@
-import useNotificationList from '@/app/(tabs)/(home)/notification/hooks/useNotificationList';
-import { MaterialIcons } from '@expo/vector-icons';
-import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import useNotificationList from "@/app/(tabs)/(home)/notification/hooks/useNotificationList";
+import { MaterialIcons } from "@expo/vector-icons";
+import React from "react";
+import { View, Text, TouchableOpacity } from "react-native";
 
 interface MoreNotificationProps {
   activeTabType: string;
@@ -9,8 +9,11 @@ interface MoreNotificationProps {
   closeModal: () => void;
 }
 
-const MoreNotification = ({ activeTabType, notificationId, closeModal }: MoreNotificationProps) => {
-
+const MoreNotification = ({
+  activeTabType,
+  notificationId,
+  closeModal,
+}: MoreNotificationProps) => {
   const { handler } = useNotificationList(activeTabType);
 
   const handleMarkRead = () => {
@@ -20,14 +23,13 @@ const MoreNotification = ({ activeTabType, notificationId, closeModal }: MoreNot
 
   const handleDeleteNotification = () => {
     // Implement delete notification logic here
-    console.log('Delete:', notificationId);
     closeModal();
   };
 
   return (
     <View className="rounded-xl bg-white px-4 py-2 shadow-md">
       <TouchableOpacity
-        className="flex-row items-center py-1 border-b border-gray-200"
+        className="flex-row items-center border-b border-gray-200 py-1"
         onPress={handleMarkRead}
       >
         <MaterialIcons name="check" size={24} color="#374151" />
@@ -35,7 +37,7 @@ const MoreNotification = ({ activeTabType, notificationId, closeModal }: MoreNot
       </TouchableOpacity>
 
       <TouchableOpacity
-        className="flex-row items-center py-1 border-b border-gray-200"
+        className="flex-row items-center border-b border-gray-200 py-1"
         onPress={handleDeleteNotification}
       >
         <MaterialIcons name="delete-outline" size={24} color="#374151" />

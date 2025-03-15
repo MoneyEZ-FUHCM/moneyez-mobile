@@ -30,12 +30,14 @@ const TEXT_TRANSLATE_HOME = {
   },
 
   MESSAGE_ERROR: {
-    NO_CURRENT_SPENDING_MODEL: "Chưa có mô hình chi tiêu cá nhân nào"
+    NO_CURRENT_SPENDING_MODEL: "Chưa có mô hình chi tiêu cá nhân nào",
   },
 
   MESSAGE_SUCCESS: {},
 
-  MESSAGE_VALIDATE: {},
+  MESSAGE_VALIDATE: {
+    CREATE_SPENDING_MODEL_REQUIRED: "Bạn cần tạo Mô hình chi tiêu trước",
+  },
 };
 
 export default TEXT_TRANSLATE_HOME;
