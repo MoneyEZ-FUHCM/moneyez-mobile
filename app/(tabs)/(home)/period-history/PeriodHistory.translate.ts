@@ -2,7 +2,7 @@ const TEXT_TRANSLATE_PERIOD_HISTORY = {
   // Title
   TITLE: {
     PERIOD_HISTORY: "Lịch sử kỳ",
-    BALANCE: "Tổng số dư kỳ này của bạn",
+    BALANCE: "Hạn mức chi tiêu kì này của bạn",
     STATISTICS: "Thống kê",
     TRANSACTIONS: "Các khoản thu chi",
     AI_TEXT: "Chào bạn mình là MewMo. Kỳ này bạn đã tiết kiệm được",

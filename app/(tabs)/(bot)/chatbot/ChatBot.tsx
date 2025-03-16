@@ -3,8 +3,9 @@ import {
   SafeAreaViewCustom,
   SectionComponent,
 } from "@/components";
-import { AntDesign, Entypo } from "@expo/vector-icons";
-import { ArrowCircleUp2, ShieldTick } from "iconsax-react-native";
+import { CHATBOT_CONNECTION } from "@/enums/globals";
+import { AntDesign, Entypo, Octicons } from "@expo/vector-icons";
+import { ArrowCircleUp2 } from "iconsax-react-native";
 import React from "react";
 import {
   KeyboardAvoidingView,
@@ -20,7 +21,7 @@ import useChatBotScreen from "../hooks/useChatbotScreen";
 import ChatMessages from "./ChatMessage";
 
 const ChatBot: React.FC = () => {
-  const { state, handler } = useChatBotScreen();
+  const { state, handler, signalR } = useChatBotScreen();
 
   return (
     <SafeAreaViewCustom>
@@ -41,9 +42,12 @@ const ChatBot: React.FC = () => {
           <Text className="text-lg font-bold text-primary">
             {TEXT_TRANSLATE_BOT.TITLE.AI_NAME}
           </Text>
-          <ShieldTick size="20" color="#609084" variant="Bold" />
+          <Octicons
+            name="dot-fill"
+            size={20}
+            color={handler.getStatusColorConnection(signalR.connectionStatus)}
+          />
         </View>
-
         <TouchableOpacity onPress={() => handler.setIsModalVisible(true)}>
           <Entypo name="info-with-circle" size={24} color="#609084" />
         </TouchableOpacity>
@@ -64,27 +68,37 @@ const ChatBot: React.FC = () => {
               <TouchableOpacity
                 key={index}
                 className="m-1 rounded-2xl bg-[#E6F2EF] px-3 py-2"
-                onPress={() => handler.sendMessage(item)}
+                onPress={() => handler.handleSendMessages(item)}
               >
                 <Text className="text-[#609084]">{item}</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
-
           <View className="flex-row items-center px-4 pb-4 pt-2">
             <TextInput
               className="mr-2 max-h-[112px] flex-1 break-words rounded-2xl border border-[#609084] p-2 text-base"
               placeholder="Nhập câu hỏi"
               value={state.input}
-              onChangeText={handler.setInput}
+              onChangeText={(text) => {
+                handler.setInput(text);
+              }}
               multiline
               textBreakStrategy="highQuality"
               scrollEnabled
             />
             <ArrowCircleUp2
-              size="32"
-              color="#609084"
-              onPress={() => handler.sendMessage()}
+              size={32}
+              color={
+                state.isSending ||
+                signalR.connectionStatus !== CHATBOT_CONNECTION.CONNECTED
+                  ? "#A0A0A0"
+                  : "#609084"
+              }
+              onPress={
+                !state.isSending
+                  ? () => handler.handleSendMessages()
+                  : undefined
+              }
               variant="Bold"
             />
           </View>

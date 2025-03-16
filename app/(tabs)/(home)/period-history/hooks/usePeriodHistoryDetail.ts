@@ -178,16 +178,20 @@ const usePeriodHistoryDetail = () => {
       );
       return;
     }
+
     setIsRefetching(true);
-    setFilterType("");
     setPageIndex(1);
-    setTransactions([]);
-    Promise.all([refetch(), handleRefetchUserSpendingModelDetail()]).finally(
-      () => {
+
+    Promise.all([refetch(), handleRefetchUserSpendingModelDetail()])
+      .then(([newData]) => {
+        if (newData?.data?.items) {
+          setTransactions(newData.data.items.map(formatTransaction as any));
+        }
+      })
+      .finally(() => {
         setIsRefetching(false);
         ToastAndroid.show("Danh sách đã được cập nhật", ToastAndroid.SHORT);
-      },
-    );
+      });
   }, [refetch, handleRefetchUserSpendingModelDetail]);
 
   const modelDetails = useMemo(

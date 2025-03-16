@@ -13,9 +13,6 @@ export const usePieChart = (data: PieChartData[]) => {
   const rotation = useSharedValue(0);
   const labelOpacity = useSharedValue(0);
   const [isRotated, setIsRotated] = useState(false);
-  const [focusedSegment, setFocusedSegment] = useState<"Actual" | "Planned">(
-    "Actual",
-  );
 
   const updateData = useMemo(
     () =>
@@ -30,9 +27,7 @@ export const usePieChart = (data: PieChartData[]) => {
     if (updateData.length === 0) return null;
     return updateData.reduce(
       (maxIndex, item, index) =>
-        item.actualPercentage > updateData[maxIndex].actualPercentage
-          ? index
-          : maxIndex,
+        item.percentage > updateData[maxIndex].percentage ? index : maxIndex,
       0,
     );
   }, [updateData]);
@@ -40,6 +35,17 @@ export const usePieChart = (data: PieChartData[]) => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(
     highestIndex,
   );
+
+  const overSpentValue =
+    selectedIndex !== null ? updateData[selectedIndex]?.overSpent || 0 : 0;
+  const showOverSpent = selectedIndex !== null && overSpentValue > 0;
+
+  const height = useSharedValue(showOverSpent ? 30 : 0);
+
+  useEffect(() => {
+    height.value = withTiming(showOverSpent ? 30 : 0, { duration: 300 });
+    opacity.value = withTiming(showOverSpent ? 1 : 0, { duration: 300 });
+  }, [showOverSpent]);
 
   useEffect(() => {
     opacity.value = withTiming(1, { duration: 500 });
@@ -58,7 +64,7 @@ export const usePieChart = (data: PieChartData[]) => {
     }
   }, [highestIndex]);
 
-  const pieData = useMemo(
+  const pieDataCategory = useMemo(
     () =>
       updateData.map((item, index) => ({
         ...item,
@@ -69,17 +75,50 @@ export const usePieChart = (data: PieChartData[]) => {
     [updateData, selectedIndex],
   );
 
-  const handleSelectCategory = (index: number) => {
-    if (index === selectedIndex) return;
+  const pieData = useMemo(() => {
+    const totalActual = updateData.reduce(
+      (sum, item) => sum + item.actualPercentage,
+      0,
+    );
+    const remainingPercentage = 100 - totalActual;
 
-    setSelectedIndex(index);
-    setFocusedSegment("Actual");
-    labelOpacity.value = 0;
-    labelOpacity.value = withTiming(1, { duration: 500 });
-  };
+    const additionalData =
+      remainingPercentage > 0
+        ? [
+            {
+              id: -1,
+              label: "Trống",
+              categoryName: "Trống",
+              percentage: remainingPercentage,
+              actualPercentage: remainingPercentage,
+              color: "#EBF0F199",
+              value: remainingPercentage,
+              focused: false,
+              showTooltip: true,
+            },
+          ]
+        : [];
+
+    return [
+      ...updateData.map((item, index) => ({
+        ...item,
+        value: item.actualPercentage,
+        focused: index === selectedIndex,
+        showTooltip: index === selectedIndex,
+        color:
+          item.actualPercentage > item.plannedPercentage &&
+          index === selectedIndex
+            ? "red"
+            : item.color,
+      })),
+      ...additionalData,
+    ];
+  }, [updateData, selectedIndex]);
 
   const handlePress = (index: number) => {
-    setFocusedSegment((prev) => (prev === "Actual" ? "Planned" : "Actual"));
+    if (index === selectedIndex || pieData[index]?.id === -1) return;
+
+    setSelectedIndex(index);
     labelOpacity.value = 0;
     labelOpacity.value = withTiming(1, { duration: 500 });
   };
@@ -103,8 +142,10 @@ export const usePieChart = (data: PieChartData[]) => {
       animatedStyles,
       selectedIndex,
       isRotated,
-      focusedSegment,
+      pieDataCategory,
+      overSpentValue,
+      height,
     },
-    handler: { handlePress, handleSelectCategory },
+    handler: { handlePress },
   };
 };

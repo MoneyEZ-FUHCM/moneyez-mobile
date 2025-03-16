@@ -9,9 +9,9 @@ import { router } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FlatList } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import HOME_SCREEN_CONSTANTS from "../HomeScreen.const";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useUpdateFcmTokenMutation } from "@/services/auth";
+import HOME_SCREEN_CONSTANTS from "../../HomeScreen.const";
 
 interface ItemType {
   id: string;
@@ -104,15 +104,12 @@ const useHomeScreen = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const fcmToken = await AsyncStorage.getItem('fcmToken');
+        const fcmToken = await AsyncStorage.getItem("fcmToken");
         if (fcmToken) {
-          console.log(fcmToken)
           const formValues = JSON.stringify(fcmToken);
           await updateFcmToken(formValues).unwrap();
         }
-      } catch (err) {
-        console.log(err);
-      }
+      } catch (err) {}
       fetchData();
     };
   }, []);

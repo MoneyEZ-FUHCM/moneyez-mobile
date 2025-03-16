@@ -1,4 +1,4 @@
-const TEXT_TRANSLATE_HOME = {
+const TEXT_TRANSLATE_NOTICE = {
   // Title
   TITLE: {
     PERSONAL_EXPENSES: "Chi tiêu cá nhân",
@@ -27,17 +27,21 @@ const TEXT_TRANSLATE_HOME = {
     SEE_MORE: "Xem thêm",
     ADD: "Thêm",
     CREATE_USER_SPENDING_MODEL: "Tạo mô hình chi tiêu",
+    DELETE_NOTICE: "Xóa thông báo",
+    MARK_AS_READ: "Đánh dấu đã đọc",
   },
 
   MESSAGE_ERROR: {
-    NO_CURRENT_SPENDING_MODEL: "Chưa có mô hình chi tiêu cá nhân nào",
+    NOTICE_NOT_EXIST: "Thông báo không tồn tại",
   },
 
-  MESSAGE_SUCCESS: {},
+  MESSAGE_SUCCESS: {
+    DELETE_NOTICE_SUCCESSFUL: "Xóa thông báo thành công",
+  },
 
   MESSAGE_VALIDATE: {
     CREATE_SPENDING_MODEL_REQUIRED: "Bạn cần tạo Mô hình chi tiêu trước",
   },
 };
 
-export default TEXT_TRANSLATE_HOME;
+export default TEXT_TRANSLATE_NOTICE;
