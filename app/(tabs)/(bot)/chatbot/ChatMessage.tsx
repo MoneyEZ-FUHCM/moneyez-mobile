@@ -60,7 +60,7 @@ const ChatMessages = ({ messages }: { messages: Message[] }) => {
         </View>
       )}
 
-      {!state.showScrollToBottom && (
+      {state.showScrollToBottom && (
         <Animated.View
           style={{
             opacity: state.fadeAnim,

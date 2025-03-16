@@ -1,6 +1,6 @@
 import {
   CategoryItem,
-  DatePickerComponent,
+  DatePickerTransactionComponent,
   InputComponent,
   SafeAreaViewCustom,
   SectionComponent,
@@ -79,9 +79,9 @@ export default function AddTransaction() {
             />
             <Pressable
               onPress={() => handler.handleDeleteImage(image)}
-              className="bg-red-500 absolute right-1 top-1 z-10 h-6 w-6 items-center justify-center rounded-full"
+              className="bg-red-500 absolute right-1 top-1 z-10 h-6 w-6 items-center justify-center rounded-full bg-gray-100"
             >
-              <MaterialIcons name="close" size={16} color="white" />
+              <MaterialIcons name="close" size={18} color="black" />
             </Pressable>
           </View>
         ))}
@@ -145,11 +145,13 @@ export default function AddTransaction() {
                   formatter={formatCurrencyInput}
                 />
                 <SpaceComponent height={10} />
-                <DatePickerComponent
+                <DatePickerTransactionComponent
                   isRequired
                   label={TEXT_TRANSLATE_ADD_TRANSACTION.LABEL.DATE}
                   name="dob"
                   labelClass="text-text-gray text-[12px] font-bold"
+                  createdDate={state.currentUserSpendingModel?.startDate}
+                  endDate={state.currentUserSpendingModel?.endDate}
                 />
                 <SpaceComponent height={10} />
                 <TextAreaComponent

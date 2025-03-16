@@ -189,7 +189,6 @@ const useChatBotScreen = () => {
       () => ({ ...state, fadeAnim, moveAnim, flatListRef, SUGGESTION }),
       [state],
     ),
-    connectionStatus,
     handler: {
       setInput: (input: string) => setState((prev) => ({ ...prev, input })),
       sendMessage,

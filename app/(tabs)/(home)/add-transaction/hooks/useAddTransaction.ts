@@ -34,7 +34,6 @@ const useAddTransaction = (type: string) => {
       ? TRANSACTION_TYPE_TEXT.INCOME
       : TRANSACTION_TYPE_TEXT.EXPENSE,
   );
-  const [date, setDate] = useState<Date>(new Date());
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>(
     undefined,
   );
@@ -198,7 +197,6 @@ const useAddTransaction = (type: string) => {
       transactionType,
       images,
       selectedCategory,
-      date,
       initialValues,
       mapSubCategories: mapSubCategories?.data,
       uniqueCategories,
@@ -206,6 +204,7 @@ const useAddTransaction = (type: string) => {
       selectedCategoryCode,
       flatListRef,
       formikRef,
+      currentUserSpendingModel,
     },
     handler: {
       handleBack,
@@ -213,7 +212,6 @@ const useAddTransaction = (type: string) => {
       pickAndUploadImage,
       deleteImage,
       setSelectedCategory,
-      setDate,
       handleCreateTransaction,
       handleSelectCategoryFilter,
       handleDeleteImage,
