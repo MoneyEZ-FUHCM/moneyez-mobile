@@ -31,31 +31,31 @@ export default function PeriodHistoryDetail() {
     item: TransactionViewModelDetail;
   }) => {
     return (
-     <View className="flex-row items-center justify-between border-b border-[#f0f0f0] py-3">
-          <View className="flex-row items-center gap-1.5 flex-1">
-            <View className="h-12 w-12 items-center justify-center rounded-full">
-              <MaterialIcons name={item?.icon as any} size={30} color="#609084" />
-            </View>
-            <View className="flex-1">
-              <Text className="text-base font-medium text-black">
-                {item?.subcategory
-                  ? item.subcategory.charAt(0).toUpperCase() +
-                    item.subcategory.slice(1)
-                  : ""}
-              </Text>
-              <View className="flex-row">
-                <Text className="mr-3 text-sm text-[#929292]">{item?.date}</Text>
-                <Text className="text-sm text-[#929292]">• {item?.time}</Text>
-              </View>
+      <View className="flex-row items-center justify-between border-b border-[#f0f0f0] py-3">
+        <View className="flex-1 flex-row items-center gap-1.5">
+          <View className="h-12 w-12 items-center justify-center rounded-full">
+            <MaterialIcons name={item?.icon as any} size={30} color="#609084" />
+          </View>
+          <View className="flex-1">
+            <Text className="text-base font-medium text-black">
+              {item?.subcategory
+                ? item.subcategory.charAt(0).toUpperCase() +
+                  item.subcategory.slice(1)
+                : ""}
+            </Text>
+            <View className="flex-row">
+              <Text className="mr-3 text-sm text-[#929292]">{item?.date}</Text>
+              <Text className="text-sm text-[#929292]">• {item?.time}</Text>
             </View>
           </View>
-          <Text
-            className={`text-base font-semibold ${item?.type === "income" ? "text-[#00a010]" : "text-[#cc0000]"}`}
-          >
-            {item?.type === "income" ? "+" : "-"}{" "}
-            {handler.formatCurrency(item?.amount)}
-          </Text>
         </View>
+        <Text
+          className={`text-base font-semibold ${item?.type === "income" ? "text-[#00a010]" : "text-[#cc0000]"}`}
+        >
+          {item?.type === "income" ? "+" : "-"}{" "}
+          {handler.formatCurrency(item?.amount)}
+        </Text>
+      </View>
     );
   };
 
@@ -189,7 +189,7 @@ export default function PeriodHistoryDetail() {
   const renderSummary = () => (
     <View className="my-2 w-full rounded-lg bg-white px-2 py-3 shadow-sm">
       <View className="flex-row items-center justify-between gap-4">
-        <View className="flex-1 rounded-xl bg-[#f8fff9] p-3 border border-[#e6ffe9]">
+        <View className="flex-1 rounded-xl border border-[#e6ffe9] bg-[#f8fff9] p-3">
           <Text className="mb-1 text-sm font-medium text-[#929292]">
             {TEXT_TRANSLATE_PERIOD_HISTORY.TITLE.TOTAL_INCOME}
           </Text>
@@ -199,7 +199,7 @@ export default function PeriodHistoryDetail() {
               : handler.formatCurrency(state.modelDetails.income)}
           </Text>
         </View>
-        <View className="flex-1 rounded-xl bg-[#fff8f8] p-3 border border-[#ffe6e6]">
+        <View className="flex-1 rounded-xl border border-[#ffe6e6] bg-[#fff8f8] p-3">
           <Text className="mb-1 text-sm font-medium text-[#929292]">
             {TEXT_TRANSLATE_PERIOD_HISTORY.TITLE.TOTAL_EXPENSE}
           </Text>

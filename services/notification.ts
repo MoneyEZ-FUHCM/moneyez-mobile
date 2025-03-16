@@ -14,7 +14,8 @@ const notificationApi = apiSlice.injectEndpoints({
           method: HTTP_METHOD.GET,
         };
       },
-      transformResponse: (response) => transformCommonResponse<Notification>(response),
+      transformResponse: (response) =>
+        transformCommonResponse<Notification>(response),
       providesTags: ["Notification"],
     }),
     getNotificationById: builder.query({
@@ -22,7 +23,8 @@ const notificationApi = apiSlice.injectEndpoints({
         url: `/notifications/${id}`,
         method: HTTP_METHOD.GET,
       }),
-      transformResponse: (response) => transformCommonResponse<Notification>(response),
+      transformResponse: (response) =>
+        transformCommonResponse<Notification>(response),
       providesTags: ["Notification"],
     }),
     readNotification: builder.mutation({
@@ -39,9 +41,22 @@ const notificationApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Notification"],
     }),
+    deleteNotification: builder.mutation({
+      query: (id) => ({
+        url: `/notifications/${id}`,
+        method: HTTP_METHOD.DELETE,
+      }),
+      invalidatesTags: ["Notification"],
+    }),
   }),
 });
 
-export const { useGetNotificationQuery, useGetNotificationByIdQuery, useReadAllNotificationMutation, useReadNotificationMutation } = notificationApi;
+export const {
+  useGetNotificationQuery,
+  useGetNotificationByIdQuery,
+  useReadAllNotificationMutation,
+  useReadNotificationMutation,
+  useDeleteNotificationMutation,
+} = notificationApi;
 
 export default notificationApi;

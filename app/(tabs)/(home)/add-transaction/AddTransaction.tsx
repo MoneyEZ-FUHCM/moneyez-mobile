@@ -43,11 +43,7 @@ export default function AddTransaction() {
   handler.useHideTabbar();
 
   const formikRef = useRef<any>(null);
-  const [visible, setVisible] = useState(false);
-  const [selected, setSelected] = useState("Chọn mục");
 
-  const openMenu = () => setVisible(true);
-  const closeMenu = () => setVisible(false);
   const renderTransactionTypeButton = useCallback(
     (type: "EXPENSE" | "INCOME", label: string) => (
       <Pressable
