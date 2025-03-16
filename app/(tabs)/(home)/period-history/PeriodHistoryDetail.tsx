@@ -7,8 +7,10 @@ import {
   SpaceComponent,
 } from "@/components";
 import { TRANSACTION_TYPE } from "@/enums/globals";
+import { PATH_NAME } from "@/helpers/constants/pathname";
 import { TransactionViewModelDetail } from "@/types/transaction.types";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React from "react";
 import {
   ActivityIndicator,
@@ -31,7 +33,12 @@ export default function PeriodHistoryDetail() {
     item: TransactionViewModelDetail;
   }) => {
     return (
-      <View className="flex-row items-center justify-between border-b border-[#f0f0f0] py-3">
+      <TouchableOpacity
+        onPress={() =>
+          router.navigate(PATH_NAME.HOME.TRANSACTION_DETAIL as any)
+        }
+        className="flex-row items-center justify-between border-b border-[#f0f0f0] py-3"
+      >
         <View className="flex-1 flex-row items-center gap-1.5">
           <View className="h-12 w-12 items-center justify-center rounded-full">
             <MaterialIcons name={item?.icon as any} size={30} color="#609084" />
@@ -55,7 +62,7 @@ export default function PeriodHistoryDetail() {
           {item?.type === "income" ? "+" : "-"}{" "}
           {handler.formatCurrency(item?.amount)}
         </Text>
-      </View>
+      </TouchableOpacity>
     );
   };
 

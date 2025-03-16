@@ -65,7 +65,13 @@ const userSpendingModelApi = apiSlice.injectEndpoints({
     }),
     getSubCategories: builder.query({
       query: ({ code, type }) => ({
-        url: `/user-spending-models/current/sub-categories?type=${type}${code !== "" ? `&code=${code}` : ""}`,
+        url: `/user-spending-models/current/sub-categories?type=${type}${code !== "" ? `&category_code=${code}&last_used=true` : "&last_used=true"}`,
+        method: HTTP_METHOD.GET,
+      }),
+    }),
+    getCurrentCategories: builder.query({
+      query: () => ({
+        url: `/user-spending-models/current/categories`,
         method: HTTP_METHOD.GET,
       }),
     }),
@@ -81,6 +87,7 @@ export const {
   useGetUserSpendingModelDetailQuery,
   useCreateUserSpendingModelMutation,
   useGetSubCategoriesQuery,
+  useGetCurrentCategoriesQuery,
 } = userSpendingModelApi;
 
 export default userSpendingModelApi;

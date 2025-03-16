@@ -23,3 +23,4 @@ export { SkeletonLoaderComponent } from "./SkeletonLoaderComponent";
 export { TypingIndicatorComponent } from "./TypeIndicatorComponent";
 export { ModalLizeComponent } from "./ModalLizeComponent";
 export { FlatListGestureCustom } from "./FlatListGestureCustom";
+export { ImageViewerComponent } from "./ImageViewerComponent";

@@ -5,6 +5,7 @@ import {
   ModalLizeComponent,
   SafeAreaViewCustom,
   SectionComponent,
+  SpaceComponent,
 } from "@/components";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { Bookmark, Forbidden2 } from "iconsax-react-native";
@@ -53,12 +54,12 @@ export default function NotificationList() {
   const renderNotificationItem = ({ item }: { item: any }) => (
     <Pressable
       key={item.id}
-      className={`rounded-lg border border-gray-200 p-3 ${item.isRead ? "bg-white" : "bg-thirdly"}`}
+      className={`rounded-lg border border-gray-200 p-3 ${item?.isRead ? "bg-white" : "bg-thirdly"}`}
     >
       <View className="flex-row items-start gap-3">
         <View className="rounded-full bg-primary p-2">
           <MaterialIcons
-            name={getNotificationIcon(item.type)}
+            name={getNotificationIcon(item?.type)}
             size={28}
             color="#ffffff"
           />
@@ -75,11 +76,12 @@ export default function NotificationList() {
             </Pressable>
           </View>
           <Text className="mt-1 text-sm text-[#1e1e1e]">
-            {item.message?.charAt(0)?.toUpperCase() + item?.message?.slice(1)}
+            {item?.message?.charAt(0)?.toUpperCase() + item?.message?.slice(1)}
           </Text>
+          <SpaceComponent height={3} />
           <View className="mt-2 flex-row justify-end gap-2">
-            <Text className="text-xs text-gray-500">{item.formattedTime}</Text>
-            <Text className="text-xs text-gray-500">{item.formattedDate}</Text>
+            <Text className="text-xs text-gray-500">{item?.formattedTime}</Text>
+            <Text className="text-xs text-gray-500">{item?.formattedDate}</Text>
           </View>
         </View>
       </View>

@@ -7,12 +7,14 @@ import {
   SpaceComponent,
 } from "@/components";
 import { TextAreaComponent } from "@/components/TextAreaComponent";
+import { TRANSACTION_TYPE_TEXT } from "@/enums/globals";
 import { formatCurrencyInput } from "@/helpers/libs";
+import { CategoryListFilter } from "@/types/category.types";
 import { Subcategory } from "@/types/subCategory";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import { Formik } from "formik";
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo } from "react";
 import {
   FlatList,
   Image,
@@ -22,30 +24,21 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import {
-  ActivityIndicator,
-  Button,
-  Menu,
-  RadioButton,
-} from "react-native-paper";
+import { ActivityIndicator, RadioButton } from "react-native-paper";
 import TEXT_TRANSLATE_ADD_TRANSACTION from "./AddTransaction.translate";
-import useAddTransaction, {
-  CategoryListFilter,
-} from "./hooks/useAddTransaction";
+import useAddTransaction from "./hooks/useAddTransaction";
 
 const PRIMARY_COLOR = "#609084";
 
 export default function AddTransaction() {
   const { type } = useLocalSearchParams();
   const { state, handler } = useAddTransaction(type as string);
-  const handleSubmitRef = useRef<() => void>(() => {});
-
-  handler.useHideTabbar();
-
-  const formikRef = useRef<any>(null);
 
   const renderTransactionTypeButton = useCallback(
-    (type: "EXPENSE" | "INCOME", label: string) => (
+    (
+      type: TRANSACTION_TYPE_TEXT.EXPENSE | TRANSACTION_TYPE_TEXT.INCOME,
+      label: string,
+    ) => (
       <Pressable
         onPress={() => handler.setTransactionType(type)}
         className={`flex h-16 flex-1 flex-row items-center rounded-lg border-[0.5px] bg-white p-4 ${
@@ -71,11 +64,10 @@ export default function AddTransaction() {
     ),
     [state.transactionType, handler],
   );
-
   const renderImageList = useMemo(
     () => (
       <>
-        {state?.images.map((image, index) => (
+        {state.images?.map((image, index) => (
           <View
             key={index}
             className="relative mx-1 mb-2 h-[82px] w-[82px] overflow-hidden rounded-lg border border-[#ccc]"
@@ -85,6 +77,12 @@ export default function AddTransaction() {
               className="h-full w-full"
               resizeMode="cover"
             />
+            <Pressable
+              onPress={() => handler.handleDeleteImage(image)}
+              className="bg-red-500 absolute right-1 top-1 z-10 h-6 w-6 items-center justify-center rounded-full"
+            >
+              <MaterialIcons name="close" size={16} color="white" />
+            </Pressable>
           </View>
         ))}
         <Pressable
@@ -112,28 +110,27 @@ export default function AddTransaction() {
         </View>
       </SectionComponent>
       <Formik
-        innerRef={(ref) => (formikRef.current = ref)}
+        innerRef={(ref) => (state.formikRef.current = ref)}
         initialValues={state.initialValues}
         validationSchema={handler.validationSchema}
         onSubmit={handler.handleCreateTransaction}
       >
         {({ handleSubmit }) => {
-          handleSubmitRef.current = handleSubmit;
+          handler.handleSubmitRef.current = handleSubmit;
           return (
             <ScrollView showsVerticalScrollIndicator={false} className="mb-16">
               <SectionComponent rootClassName="mx-5 mt-8">
                 <View className="flex flex-row items-center space-x-4">
                   {renderTransactionTypeButton(
-                    "EXPENSE",
+                    TRANSACTION_TYPE_TEXT.EXPENSE,
                     TEXT_TRANSLATE_ADD_TRANSACTION.BUTTON.EXPENSE,
                   )}
                   {renderTransactionTypeButton(
-                    "INCOME",
+                    TRANSACTION_TYPE_TEXT.INCOME,
                     TEXT_TRANSLATE_ADD_TRANSACTION.BUTTON.INCOME,
                   )}
                 </View>
               </SectionComponent>
-
               <SectionComponent rootClassName="bg-white m-4 p-2 rounded-lg">
                 <Text className="mb-3 text-base font-semibold text-primary">
                   {TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.INFORMATION}
@@ -166,16 +163,17 @@ export default function AddTransaction() {
                   labelClass="text-text-gray text-[12px] font-bold"
                 />
               </SectionComponent>
-              <SectionComponent rootClassName="bg-white m-4 p-2 rounded-lg">
+              <SectionComponent rootClassName="bg-white m-4 p-2 rounded-lg transition-all">
                 <Text className="text-lg font-bold tracking-tight text-primary">
                   {TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.SEPERATE}
                 </Text>
                 <View className="mx-3 my-2 flex-row items-center">
                   <FlatList
+                    ref={state.flatListRef}
                     removeClippedSubviews={false}
                     horizontal
-                    data={state.uniqueCategories}
-                    keyExtractor={(item) => item.categoryCode}
+                    data={state.uniqueCategories ?? []}
+                    keyExtractor={(item) => item.code}
                     renderItem={({
                       item,
                       index,
@@ -185,18 +183,18 @@ export default function AddTransaction() {
                     }) => (
                       <TouchableOpacity
                         className={`my-1 mr-2.5 rounded-lg px-3 py-1 ${
-                          item?.categoryCode === state.selectedCategoryCode
+                          item?.code === state.selectedCategoryCode
                             ? `scale-105 bg-primary ${index === 0 && "ml-1"} text-white shadow-xl shadow-primary/40`
                             : "border border-gray-200 bg-white text-gray-800 shadow-sm"
                         } transition-all duration-300`}
                         onPress={() =>
-                          handler.handleSelectCategoryFilter(item?.categoryCode)
+                          handler.handleSelectCategoryFilter(item?.code)
                         }
                       >
                         <Text
-                          className={`text-xs ${item?.categoryCode === state.selectedCategoryCode ? "font-bold text-white" : "font-normal"} tracking-wide`}
+                          className={`text-xs ${item?.code === state.selectedCategoryCode ? "font-bold text-white" : "font-normal"} tracking-wide`}
                         >
-                          {item?.categoryName}
+                          {item?.name}
                         </Text>
                       </TouchableOpacity>
                     )}
@@ -249,11 +247,11 @@ export default function AddTransaction() {
       </Formik>
       <SectionComponent rootClassName=" px-5 rounded-lg absolute bottom-5 w-full flex-1">
         <Pressable
-          onPress={() => handleSubmitRef.current()}
+          onPress={() => handler.handleSubmitRef.current()}
           className="h-12 items-center justify-center rounded-lg bg-primary"
         >
           <Text className="text-base font-semibold text-white">
-            {state.transactionType.includes("EXPENSE")
+            {state.transactionType.includes(TRANSACTION_TYPE_TEXT.EXPENSE)
               ? TEXT_TRANSLATE_ADD_TRANSACTION.BUTTON.ADD_EXPENSE
               : TEXT_TRANSLATE_ADD_TRANSACTION.BUTTON.ADD_INCOME}
           </Text>

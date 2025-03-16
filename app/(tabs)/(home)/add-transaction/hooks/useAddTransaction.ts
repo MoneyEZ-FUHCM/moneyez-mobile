@@ -1,4 +1,4 @@
-import { TRANSACTION_TYPE } from "@/enums/globals";
+import { TRANSACTION_TYPE, TRANSACTION_TYPE_TEXT } from "@/enums/globals";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { convertUTCToVietnamTime, parseCurrency } from "@/helpers/libs";
@@ -8,32 +8,31 @@ import { setLoading } from "@/redux/slices/loadingSlice";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { selectCurrentUserSpendingModel } from "@/redux/slices/userSpendingModelSlice";
 import { useCreateTransactionMutation } from "@/services/transaction";
-import { useGetSubCategoriesQuery } from "@/services/userSpendingModel";
+import {
+  useGetCurrentCategoriesQuery,
+  useGetSubCategoriesQuery,
+} from "@/services/userSpendingModel";
+import { CategoryListFilter } from "@/types/category.types";
 import { TransactionType } from "@/types/invidual.types";
 import { router, useFocusEffect } from "expo-router";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { ToastAndroid } from "react-native";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { FlatList, ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import TEXT_TRANSLATE_ADD_TRANSACTION from "../AddTransaction.translate";
 
-export interface CategoryListFilter {
-  categoryCode: string;
-  categoryName: string;
-  isFocused?: boolean;
-}
-
 const useAddTransaction = (type: string) => {
-  const INCOME = "INCOME";
-  const EXPENSE = "EXPENSE";
   const dispatch = useDispatch();
   const { MESSAGE_VALIDATE, MESSAGE_SUCCESS } = TEXT_TRANSLATE_ADD_TRANSACTION;
-  const { HTTP_STATUS, SYSTEM_ERROR } = COMMON_CONSTANT;
+  const { HTTP_STATUS, SYSTEM_ERROR, FILTER } = COMMON_CONSTANT;
   const { HOME } = PATH_NAME;
+
   const currentUserSpendingModel = useSelector(selectCurrentUserSpendingModel);
 
   const [transactionType, setTransactionType] = useState<TransactionType>(
-    type === INCOME ? INCOME : EXPENSE,
+    type === TRANSACTION_TYPE_TEXT.INCOME
+      ? TRANSACTION_TYPE_TEXT.INCOME
+      : TRANSACTION_TYPE_TEXT.EXPENSE,
   );
   const [date, setDate] = useState<Date>(new Date());
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>(
@@ -44,38 +43,55 @@ const useAddTransaction = (type: string) => {
   const [uniqueCategories, setUniqueCategories] = useState<
     CategoryListFilter[]
   >([]);
+  const flatListRef = useRef<FlatList>(null);
+  const formikRef = useRef<any>(null);
+  const handleSubmitRef = useRef<() => void>(() => {});
 
-  // hooks
-  const { imageUrl, pickAndUploadImage } = useUploadImage();
+  const { imageUrl, pickAndUploadImage, deleteImage } = useUploadImage();
   const [createTransaction] = useCreateTransactionMutation();
   const { data: mapSubCategories, isLoading } = useGetSubCategoriesQuery({
     type: transactionType,
     code: selectedCategoryCode,
   });
+  const { data: mapCategories } = useGetCurrentCategoriesQuery({});
+
+  useHideTabbar();
 
   useEffect(() => {
-    if (uniqueCategories.length === 0 && mapSubCategories?.data) {
+    if (mapCategories?.data) {
       const newCategories = Array.from(
         new Set(
-          mapSubCategories.data.map((item: CategoryListFilter) =>
+          mapCategories.data?.map((item: CategoryListFilter) =>
             JSON.stringify({
-              categoryName: item.categoryName,
-              categoryCode: item.categoryCode,
+              name: item?.name,
+              code: item?.code,
+              type: item?.type,
             }),
           ),
         ),
-      ).map((str) => JSON.parse(str as string));
+      )
+        .map((str) => JSON.parse(str as string))
+        .filter((item) => item.type === transactionType);
 
       setUniqueCategories([
-        { categoryName: "Tất cả", categoryCode: "" },
+        { name: FILTER.FILTER_ALL_LABEL, code: "" },
         ...newCategories,
       ]);
+      setSelectedCategoryCode("");
+      flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
     }
-  }, [mapSubCategories?.data]);
+  }, [mapCategories?.data, transactionType]);
 
-  const handleSelectCategoryFilter = (categoryCode: string) => {
-    setSelectedCategoryCode(categoryCode);
-  };
+  useEffect(() => {
+    if (imageUrl) {
+      setImages((prev) => {
+        if (!prev.includes(imageUrl)) {
+          return [...prev, imageUrl];
+        }
+        return prev;
+      });
+    }
+  }, [imageUrl]);
 
   useFocusEffect(
     useCallback(() => {
@@ -83,60 +99,14 @@ const useAddTransaction = (type: string) => {
     }, [dispatch]),
   );
 
-  // const updateData = spendingModel?.data?.spendingModelCategories
-  //   ?.filter((item: Category) => item?.category?.type === transactionType)
-  //   ?.map((item: Category) => {
-  //     return {
-  //       ...item,
-  //       subcategories: item?.category?.subcategories?.map(
-  //         (sub: Subcategory) => ({
-  //           id: sub?.id,
-  //           name: sub?.name,
-  //           icon: sub?.icon,
-  //         }),
-  //       ),
-  //     };
-  //   });
-
-  // const mapSubCategories = useMemo(() => {
-  //   const uniqueSubCategories = new Map();
-  //   updateData
-  //     ?.flatMap((item: Category) => item?.subcategories || [])
-  //     .forEach((sub: Subcategory) => {
-  //       if (!uniqueSubCategories.has(sub.id)) {
-  //         uniqueSubCategories.set(sub.id, sub);
-  //       }
-  //     });
-  //   return Array.from(uniqueSubCategories.values());
-  // }, [updateData]);
-
-  useEffect(() => {
-    if (imageUrl && !images.includes(imageUrl)) {
-      setImages((prev) => [...prev, imageUrl]);
-    }
-  }, [imageUrl, images]);
+  const handleSelectCategoryFilter = useCallback((categoryCode: string) => {
+    setSelectedCategoryCode(categoryCode);
+  }, []);
 
   const handleBack = useCallback(() => {
     router.back();
     dispatch(setMainTabHidden(false));
   }, [dispatch]);
-
-  const validationSchema = useMemo(
-    () =>
-      Yup.object().shape({
-        amount: Yup.string().required(MESSAGE_VALIDATE.MONEY_REQUIRED),
-        dob: Yup.string().required(MESSAGE_VALIDATE.DATE_REQUIRED),
-        description: Yup.string().required(
-          MESSAGE_VALIDATE.DESCRIPTION_REQUIRED,
-        ),
-      }),
-    [MESSAGE_VALIDATE],
-  );
-
-  const initialValues = useMemo(
-    () => ({ amount: "", description: "", dob: "" }),
-    [],
-  );
 
   const handleCreateTransaction = useCallback(
     async (payload: any) => {
@@ -151,11 +121,11 @@ const useAddTransaction = (type: string) => {
       const updatePayload = {
         amount: parseCurrency(payload?.amount),
         description: payload?.description,
-        images: images,
+        images,
         subcategoryId: selectedCategory,
         transactionDate: convertUTCToVietnamTime(payload?.dob),
         type:
-          transactionType === EXPENSE
+          transactionType === TRANSACTION_TYPE_TEXT.EXPENSE
             ? TRANSACTION_TYPE.EXPENSE
             : TRANSACTION_TYPE.INCOME,
       };
@@ -178,6 +148,14 @@ const useAddTransaction = (type: string) => {
     [selectedCategory, images, transactionType],
   );
 
+  const handleDeleteImage = useCallback(
+    async (url: string) => {
+      await deleteImage(url);
+      setImages((prev) => prev.filter((img) => img !== url));
+    },
+    [deleteImage, setImages],
+  );
+
   const handleNext = () => {
     if (currentUserSpendingModel) {
       const startDate = new Date(
@@ -191,12 +169,29 @@ const useAddTransaction = (type: string) => {
         pathname: HOME.PERIOD_HISTORY as any,
         params: {
           userSpendingId: currentUserSpendingModel?.id,
-          startDate: startDate,
-          endDate: endDate,
+          startDate,
+          endDate,
         },
       });
     }
   };
+
+  const validationSchema = useMemo(
+    () =>
+      Yup.object().shape({
+        amount: Yup.string().required(MESSAGE_VALIDATE.MONEY_REQUIRED),
+        dob: Yup.string().required(MESSAGE_VALIDATE.DATE_REQUIRED),
+        description: Yup.string().required(
+          MESSAGE_VALIDATE.DESCRIPTION_REQUIRED,
+        ),
+      }),
+    [MESSAGE_VALIDATE],
+  );
+
+  const initialValues = useMemo(
+    () => ({ amount: "", description: "", dob: "" }),
+    [],
+  );
 
   return {
     state: {
@@ -209,17 +204,21 @@ const useAddTransaction = (type: string) => {
       uniqueCategories,
       isLoading,
       selectedCategoryCode,
+      flatListRef,
+      formikRef,
     },
     handler: {
-      useHideTabbar,
       handleBack,
       setTransactionType,
       pickAndUploadImage,
+      deleteImage,
       setSelectedCategory,
       setDate,
       handleCreateTransaction,
-      validationSchema,
       handleSelectCategoryFilter,
+      handleDeleteImage,
+      validationSchema,
+      handleSubmitRef,
     },
   };
 };
