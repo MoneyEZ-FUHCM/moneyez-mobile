@@ -119,9 +119,7 @@ export default function ExpenseDetail() {
             </Text>
           </TouchableOpacity>
         </View>
-        <SectionComponent
-          rootClassName={`mx-4 ${state.isLoading ? "h-[55%]" : ""} py-4 bg-white rounded-lg`}
-        >
+        <SectionComponent rootClassName="bg-white rounded-lg mb-14">
           <LoadingSectionWrapper isLoading={state.isLoading}>
             <FlatListCustom
               isBottomTab={true}
