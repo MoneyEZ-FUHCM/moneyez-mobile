@@ -12,12 +12,15 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import {
   BarChartCustom,
   FlatListCustom,
+  LoadingSectionWrapper,
   SafeAreaViewCustom,
   SectionComponent,
 } from "@/components";
 import NoData from "@/assets/images/InviteMemberAssets/not-found-result.png";
 import TEXT_TRANSLATE_EXPENSE_DETAIL from "./ExpenseDetail.translate";
 import { useExpenseDetail } from "./hooks/useExpenseDetail";
+import { PATH_NAME } from "@/helpers/constants/pathname";
+import { router } from "expo-router";
 
 export default function ExpenseDetail() {
   const { state, handler } = useExpenseDetail();
@@ -93,53 +96,57 @@ export default function ExpenseDetail() {
       </SectionComponent>
       {/* Xu hướng chi tiêu */}
       <SectionComponent rootClassName="bg-white p-5 rounded-lg mb-4">
-        <View className="mb-2 flex-row">
-          <TouchableOpacity className="mr-2 rounded-lg bg-primary p-2">
-            <Text className="font-bold text-white">
-              {TEXT_TRANSLATE_EXPENSE_DETAIL.weekly}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="rounded-lg p-2">
-            <Text className="font-bold text-primary">
-              {TEXT_TRANSLATE_EXPENSE_DETAIL.monthly}
-            </Text>
-          </TouchableOpacity>
-        </View>
         <BarChartCustom
           data={CHART_DATA}
-          categories={["weekly", "monthly"]}
+          categories={["Theo Tuần", "Theo Tháng"]}
           screenWidth={Dimensions.get("window").width}
         />
       </SectionComponent>
       {/* Danh sách giao dịch */}
-      <View className="rounded-lg bg-white p-5 pb-16">
-        <Text className="mb-2 text-lg font-bold">
-          {TEXT_TRANSLATE_EXPENSE_DETAIL.transactionListTitle}
-        </Text>
-        <FlatListCustom
-          isBottomTab={true}
-          data={TRANSACTIONS}
-          renderItem={renderTransactionItem}
-          keyExtractor={(item) => item.id.toString()}
-          hasMore={TRANSACTIONS.length === 5}
-          showsVerticalScrollIndicator={false}
-          ListFooterComponent={() => (
-            <Text>{TEXT_TRANSLATE_EXPENSE_DETAIL.loadingMore}</Text>
-          )}
-          contentContainerStyle={{ paddingBottom: 500 }}
-          onLoadMore={loadMoreData}
-          isLoading={isLoading}
-          ListEmptyComponent={() => (
-            <View className="items-center justify-center px-5">
-              <Image
-                source={NoData}
-                className="h-[200px] w-full"
-                resizeMode="contain"
-              />
-            </View>
-          )}
-        />
-      </View>
+      <SectionComponent rootClassName="bg-white p-5 ">
+        <View className="mb-2 flex-row items-center justify-between">
+          <Text className="text-lg font-bold">
+            {TEXT_TRANSLATE_EXPENSE_DETAIL.transactionListTitle}
+          </Text>
+          <TouchableOpacity
+            className="rounded-lg bg-primary p-3"
+            onPress={() =>
+              router.navigate(PATH_NAME.HOME.PERIOD_HISTORY_DETAIL as any)
+            }
+          >
+            <Text className="text-center font-bold text-white">Xem Thêm</Text>
+          </TouchableOpacity>
+        </View>
+        <SectionComponent
+          rootClassName={`mx-4 ${state.isLoading ? "h-[55%]" : ""} py-4 bg-white rounded-lg`}
+        >
+          <LoadingSectionWrapper isLoading={state.isLoading}>
+            <FlatListCustom
+              isBottomTab={true}
+              data={TRANSACTIONS}
+              renderItem={renderTransactionItem}
+              keyExtractor={(item) => item.id.toString()}
+              hasMore={TRANSACTIONS.length === 5}
+              showsVerticalScrollIndicator={false}
+              ListFooterComponent={() => (
+                <Text>{TEXT_TRANSLATE_EXPENSE_DETAIL.loadingMore}</Text>
+              )}
+              contentContainerStyle={{ paddingBottom: 500 }}
+              onLoadMore={loadMoreData}
+              isLoading={isLoading}
+              ListEmptyComponent={() => (
+                <View className="items-center justify-center px-5">
+                  <Image
+                    source={NoData}
+                    className="h-[200px] w-full"
+                    resizeMode="contain"
+                  />
+                </View>
+              )}
+            />
+          </LoadingSectionWrapper>
+        </SectionComponent>
+      </SectionComponent>
     </SafeAreaViewCustom>
   );
 }
