@@ -8,21 +8,20 @@ import {
   Image,
 } from "react-native";
 import { ProgressBar } from "react-native-paper";
-import { BarChart } from "react-native-chart-kit";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import {
+  BarChartCustom,
   FlatListCustom,
   SafeAreaViewCustom,
   SectionComponent,
 } from "@/components";
-import { router } from "expo-router";
 import NoData from "@/assets/images/InviteMemberAssets/not-found-result.png";
 import TEXT_TRANSLATE_EXPENSE_DETAIL from "./ExpenseDetail.translate";
 import { useExpenseDetail } from "./hooks/useExpenseDetail";
 
 export default function ExpenseDetail() {
   const { state, handler } = useExpenseDetail();
-  const { TRANSACTIONS, isLoading } = state;
+  const { TRANSACTIONS, CHART_DATA, isLoading } = state;
   const { loadMoreData } = handler;
 
   const renderTransactionItem = ({ item }: any) => (
@@ -45,11 +44,11 @@ export default function ExpenseDetail() {
   );
 
   return (
-    <SafeAreaViewCustom rootClassName="flex-1 bg-gray-100 p-2 relative">
+    <SafeAreaViewCustom>
       {/* HEADER */}
       <SectionComponent rootClassName="h-14 bg-white justify-center mb-2">
         <View className="flex-row items-center justify-between px-5">
-          <Pressable onPress={router.back}>
+          <Pressable onPress={handler.handleGoBack}>
             <MaterialIcons name="arrow-back" size={24} color="#609084" />
           </Pressable>
           <Text className="text-lg font-bold text-black">
@@ -106,26 +105,14 @@ export default function ExpenseDetail() {
             </Text>
           </TouchableOpacity>
         </View>
-        <BarChart
-          data={{
-            labels: ["1", "2", "3"],
-            datasets: [{ data: [50, 180, 120] }],
-          }}
-          width={Dimensions.get("window").width - 40}
-          height={180}
-          yAxisLabel=""
-          yAxisSuffix="đ"
-          chartConfig={{
-            backgroundGradientFrom: "#fff",
-            backgroundGradientTo: "#fff",
-            color: () => "#609084",
-            labelColor: () => "#000",
-          }}
-          style={{ borderRadius: 10 }}
+        <BarChartCustom
+          data={CHART_DATA}
+          categories={["weekly", "monthly"]}
+          screenWidth={Dimensions.get("window").width}
         />
       </SectionComponent>
       {/* Danh sách giao dịch */}
-      <View className="rounded-lg bg-white p-5">
+      <View className="rounded-lg bg-white p-5 pb-16">
         <Text className="mb-2 text-lg font-bold">
           {TEXT_TRANSLATE_EXPENSE_DETAIL.transactionListTitle}
         </Text>
