@@ -15,18 +15,21 @@ import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Coin, Eye, EyeSlash } from "iconsax-react-native";
 import React from "react";
-import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  Text,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import TEXT_TRANSLATE_HOME from "../HomeScreen.translate";
-import useHomeScreen from "../hooks/useHomeScreen";
-import { useSelector } from "react-redux";
-import { selectCurrentUserSpendingModel } from "@/redux/slices/userSpendingModelSlice";
+import useHomeScreen from "./hooks/useHomeScreen";
 
 const HomeScreen = () => {
   const { state, handler } = useHomeScreen();
   const { BUTTON, TITLE, MESSAGE_ERROR } = TEXT_TRANSLATE_HOME;
   const router = useRouter();
-
-  const currentSpendingModel = useSelector(selectCurrentUserSpendingModel);
 
   const VisibilityIcon = ({
     visible,
@@ -85,7 +88,10 @@ const HomeScreen = () => {
                   <Text className="text-base">{state?.userInfo?.fullName}</Text>
                 </View>
               </View>
-              <TouchableOpacity className="rounded-full bg-black/20 p-2">
+              <TouchableOpacity
+                className="rounded-full bg-black/20 p-2"
+                onPress={handler.handleNavigateNotification}
+              >
                 <Feather name="bell" size={22} color="white" />
               </TouchableOpacity>
             </View>
@@ -232,7 +238,7 @@ const HomeScreen = () => {
                 </View>
               ) : state.groupData?.length > 0 ? (
                 <>
-                  {state.groupData.slice(0, 2).map((group) => (
+                  {state.groupData?.slice(0, 2)?.map((group) => (
                     <View
                       key={group?.id}
                       className="flex-1 rounded-lg border border-secondary bg-white px-2 py-3"
@@ -281,18 +287,35 @@ const HomeScreen = () => {
             </View>
           </SectionComponent>
         )}
-
-        <SectionComponent rootClassName="px-5 my-2.5">
+        <SectionComponent
+          rootClassName={`px-5 ${state.groupData.length === 0 ? "mt-7" : "my-2.5"}`}
+        >
           <View className="flex-row flex-wrap gap-y-5">
-            {state.MENU_ITEMS.map((item, index) => {
+            {state.MENU_ITEMS.map((item: any, index: number) => {
               const Icon = item.icon;
+              const handlePress = () => {
+                if (
+                  item.url === PATH_NAME.HOME.ADD_TRANSACTION &&
+                  !state.currentSpendingModel
+                ) {
+                  ToastAndroid.show(
+                    TEXT_TRANSLATE_HOME.MESSAGE_VALIDATE
+                      .CREATE_SPENDING_MODEL_REQUIRED,
+                    ToastAndroid.SHORT,
+                  );
+                  handler.handleNavigateMenuItem(
+                    PATH_NAME.HOME.PERSONAL_EXPENSES_MODEL,
+                  );
+                  return;
+                }
+                item?.url && handler.handleNavigateMenuItem(item?.url);
+              };
+
               return (
                 <TouchableOpacity
                   key={index}
                   className="w-1/4 items-center gap-y-1"
-                  onPress={() =>
-                    item?.url && handler.handleNavigateMenuItem(item?.url)
-                  }
+                  onPress={handlePress}
                 >
                   <View className="rounded-lg bg-thirdly/70 p-2">
                     <Icon size="32" color="#609084" variant="Bold" />

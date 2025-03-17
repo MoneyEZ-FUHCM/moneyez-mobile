@@ -5,12 +5,14 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { useMomentLocale } from "@/hooks/useMomentLocale";
 import { store } from "@/redux/store";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
+import messaging from "@react-native-firebase/messaging";
 import {
   DarkTheme,
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
+import * as Notifications from "expo-notifications";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
@@ -31,6 +33,36 @@ export default function RootLayout() {
     // Inter: require("@/assets/fonts/Inter-VariableFont_opsz,wght.ttf"),
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
+
+  useEffect(() => {
+    const requestPermissions = async () => {
+      await Notifications.requestPermissionsAsync();
+    };
+
+    requestPermissions();
+
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+      }),
+    });
+
+    messaging().onMessage(async (remoteMessage) => {
+      const notification = remoteMessage.notification;
+
+      const title = notification?.title ?? "MoneyEz";
+      const body = notification?.body ?? "Bạn có thông báo mới";
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title,
+          body,
+        },
+        trigger: null,
+      });
+    });
+  }, []);
 
   useEffect(() => {
     if (loaded) {

@@ -47,7 +47,6 @@ const userSpendingModelApi = apiSlice.injectEndpoints({
       transformResponse: (response) =>
         transformCommonResponse<Transaction>(response),
     }),
-
     getUserSpendingModelDetail: builder.query<
       { data: UserSpendingModel },
       { id: string }
@@ -64,6 +63,18 @@ const userSpendingModelApi = apiSlice.injectEndpoints({
         body: payload,
       }),
     }),
+    getSubCategories: builder.query({
+      query: ({ code, type }) => ({
+        url: `/user-spending-models/current/sub-categories?type=${type}${code !== "" ? `&category_code=${code}&last_used=true` : "&last_used=true"}`,
+        method: HTTP_METHOD.GET,
+      }),
+    }),
+    getCurrentCategories: builder.query({
+      query: () => ({
+        url: `/user-spending-models/current/categories`,
+        method: HTTP_METHOD.GET,
+      }),
+    }),
   }),
 });
 
@@ -75,6 +86,8 @@ export const {
   useGetTransactionByIdQuery,
   useGetUserSpendingModelDetailQuery,
   useCreateUserSpendingModelMutation,
+  useGetSubCategoriesQuery,
+  useGetCurrentCategoriesQuery,
 } = userSpendingModelApi;
 
 export default userSpendingModelApi;

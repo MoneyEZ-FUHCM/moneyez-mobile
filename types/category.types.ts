@@ -36,3 +36,10 @@ export interface Category {
   type: "EXPENSE" | "INCOME";
   subcategories: Subcategory[];
 }
+
+export interface CategoryListFilter {
+  code: string;
+  name: string;
+  type: string;
+  isFocused?: boolean;
+}

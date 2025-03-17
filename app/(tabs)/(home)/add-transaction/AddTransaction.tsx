@@ -1,19 +1,29 @@
 import {
   CategoryItem,
-  DatePickerComponent,
+  DatePickerTransactionComponent,
   InputComponent,
   SafeAreaViewCustom,
   SectionComponent,
   SpaceComponent,
 } from "@/components";
 import { TextAreaComponent } from "@/components/TextAreaComponent";
+import { TRANSACTION_TYPE_TEXT } from "@/enums/globals";
 import { formatCurrencyInput } from "@/helpers/libs";
+import { CategoryListFilter } from "@/types/category.types";
 import { Subcategory } from "@/types/subCategory";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import { Formik } from "formik";
-import React, { useCallback, useMemo, useRef } from "react";
-import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import React, { useCallback, useMemo } from "react";
+import {
+  FlatList,
+  Image,
+  Pressable,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { ActivityIndicator, RadioButton } from "react-native-paper";
 import TEXT_TRANSLATE_ADD_TRANSACTION from "./AddTransaction.translate";
 import useAddTransaction from "./hooks/useAddTransaction";
@@ -23,14 +33,12 @@ const PRIMARY_COLOR = "#609084";
 export default function AddTransaction() {
   const { type } = useLocalSearchParams();
   const { state, handler } = useAddTransaction(type as string);
-  const handleSubmitRef = useRef<() => void>(() => {});
-
-  handler.useHideTabbar();
-
-  const formikRef = useRef<any>(null);
 
   const renderTransactionTypeButton = useCallback(
-    (type: "EXPENSE" | "INCOME", label: string) => (
+    (
+      type: TRANSACTION_TYPE_TEXT.EXPENSE | TRANSACTION_TYPE_TEXT.INCOME,
+      label: string,
+    ) => (
       <Pressable
         onPress={() => handler.setTransactionType(type)}
         className={`flex h-16 flex-1 flex-row items-center rounded-lg border-[0.5px] bg-white p-4 ${
@@ -56,11 +64,10 @@ export default function AddTransaction() {
     ),
     [state.transactionType, handler],
   );
-
   const renderImageList = useMemo(
     () => (
       <>
-        {state?.images.map((image, index) => (
+        {state.images?.map((image, index) => (
           <View
             key={index}
             className="relative mx-1 mb-2 h-[82px] w-[82px] overflow-hidden rounded-lg border border-[#ccc]"
@@ -70,6 +77,12 @@ export default function AddTransaction() {
               className="h-full w-full"
               resizeMode="cover"
             />
+            <Pressable
+              onPress={() => handler.handleDeleteImage(image)}
+              className="bg-red-500 absolute right-1 top-1 z-10 h-6 w-6 items-center justify-center rounded-full bg-gray-100"
+            >
+              <MaterialIcons name="close" size={18} color="black" />
+            </Pressable>
           </View>
         ))}
         <Pressable
@@ -97,28 +110,27 @@ export default function AddTransaction() {
         </View>
       </SectionComponent>
       <Formik
-        innerRef={(ref) => (formikRef.current = ref)}
+        innerRef={(ref) => (state.formikRef.current = ref)}
         initialValues={state.initialValues}
         validationSchema={handler.validationSchema}
         onSubmit={handler.handleCreateTransaction}
       >
         {({ handleSubmit }) => {
-          handleSubmitRef.current = handleSubmit;
+          handler.handleSubmitRef.current = handleSubmit;
           return (
             <ScrollView showsVerticalScrollIndicator={false} className="mb-16">
               <SectionComponent rootClassName="mx-5 mt-8">
                 <View className="flex flex-row items-center space-x-4">
                   {renderTransactionTypeButton(
-                    "EXPENSE",
+                    TRANSACTION_TYPE_TEXT.EXPENSE,
                     TEXT_TRANSLATE_ADD_TRANSACTION.BUTTON.EXPENSE,
                   )}
                   {renderTransactionTypeButton(
-                    "INCOME",
+                    TRANSACTION_TYPE_TEXT.INCOME,
                     TEXT_TRANSLATE_ADD_TRANSACTION.BUTTON.INCOME,
                   )}
                 </View>
               </SectionComponent>
-
               <SectionComponent rootClassName="bg-white m-4 p-2 rounded-lg">
                 <Text className="mb-3 text-base font-semibold text-primary">
                   {TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.INFORMATION}
@@ -133,11 +145,13 @@ export default function AddTransaction() {
                   formatter={formatCurrencyInput}
                 />
                 <SpaceComponent height={10} />
-                <DatePickerComponent
+                <DatePickerTransactionComponent
                   isRequired
                   label={TEXT_TRANSLATE_ADD_TRANSACTION.LABEL.DATE}
                   name="dob"
                   labelClass="text-text-gray text-[12px] font-bold"
+                  createdDate={state.currentUserSpendingModel?.startDate}
+                  endDate={state.currentUserSpendingModel?.endDate}
                 />
                 <SpaceComponent height={10} />
                 <TextAreaComponent
@@ -151,33 +165,67 @@ export default function AddTransaction() {
                   labelClass="text-text-gray text-[12px] font-bold"
                 />
               </SectionComponent>
-              <SectionComponent rootClassName="bg-white m-4 p-2 rounded-lg">
-                <Text className="mb-4 text-base font-semibold text-primary">
+              <SectionComponent rootClassName="bg-white m-4 p-2 rounded-lg transition-all">
+                <Text className="text-lg font-bold tracking-tight text-primary">
                   {TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.SEPERATE}
                 </Text>
+                <View className="mx-3 my-2 flex-row items-center">
+                  <FlatList
+                    ref={state.flatListRef}
+                    removeClippedSubviews={false}
+                    horizontal
+                    data={state.uniqueCategories ?? []}
+                    keyExtractor={(item) => item.code}
+                    renderItem={({
+                      item,
+                      index,
+                    }: {
+                      item: CategoryListFilter;
+                      index: number;
+                    }) => (
+                      <TouchableOpacity
+                        className={`my-1 mr-2.5 rounded-lg px-3 py-1 ${
+                          item?.code === state.selectedCategoryCode
+                            ? `scale-105 bg-primary ${index === 0 && "ml-1"} text-white shadow-xl shadow-primary/40`
+                            : "border border-gray-200 bg-white text-gray-800 shadow-sm"
+                        } transition-all duration-300`}
+                        onPress={() =>
+                          handler.handleSelectCategoryFilter(item?.code)
+                        }
+                      >
+                        <Text
+                          className={`text-xs ${item?.code === state.selectedCategoryCode ? "font-bold text-white" : "font-normal"} tracking-wide`}
+                        >
+                          {item?.name}
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+                    showsHorizontalScrollIndicator={false}
+                  />
+                </View>
                 <View className="flex-row flex-wrap">
                   {state.isLoading ? (
                     <View className="h-44 w-full items-center justify-center">
                       <ActivityIndicator size="small" color={PRIMARY_COLOR} />
                     </View>
                   ) : (
-                    state?.mapSubCategories?.map((subCategory: Subcategory) => {
+                    state.mapSubCategories?.map((subCategory: Subcategory) => {
                       return (
                         <Pressable
-                          key={subCategory.id}
+                          key={subCategory?.id}
                           onPress={() =>
-                            handler.setSelectedCategory(subCategory.id)
+                            handler.setSelectedCategory(subCategory?.id)
                           }
                           className="mb-3 w-1/3 px-1.5"
                         >
                           <CategoryItem
-                            label={subCategory.name}
+                            label={subCategory?.name}
                             color={PRIMARY_COLOR}
                             iconName={
-                              subCategory.icon as keyof typeof MaterialIcons.glyphMap
+                              subCategory?.icon as keyof typeof MaterialIcons.glyphMap
                             }
                             isSelected={
-                              state.selectedCategory === subCategory.id
+                              state.selectedCategory === subCategory?.id
                             }
                             rootClassName="flex-1 justify-center min-h-[110px]"
                           />
@@ -201,11 +249,11 @@ export default function AddTransaction() {
       </Formik>
       <SectionComponent rootClassName=" px-5 rounded-lg absolute bottom-5 w-full flex-1">
         <Pressable
-          onPress={() => handleSubmitRef.current()}
+          onPress={() => handler.handleSubmitRef.current()}
           className="h-12 items-center justify-center rounded-lg bg-primary"
         >
           <Text className="text-base font-semibold text-white">
-            {state.transactionType.includes("EXPENSE")
+            {state.transactionType.includes(TRANSACTION_TYPE_TEXT.EXPENSE)
               ? TEXT_TRANSLATE_ADD_TRANSACTION.BUTTON.ADD_EXPENSE
               : TEXT_TRANSLATE_ADD_TRANSACTION.BUTTON.ADD_INCOME}
           </Text>

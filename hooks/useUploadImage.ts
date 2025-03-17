@@ -3,7 +3,12 @@ import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { setLoading } from "@/redux/slices/loadingSlice";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import * as ImagePicker from "expo-image-picker";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 import { useState } from "react";
 import { ToastAndroid } from "react-native";
 import { useDispatch } from "react-redux";
@@ -102,9 +107,20 @@ const useUploadImage = () => {
     }
   };
 
+  const deleteImage = async (url: string) => {
+    try {
+      const imageRef = ref(storage, url);
+      await deleteObject(imageRef);
+      ToastAndroid.show("Ảnh đã được gỡ thành công", ToastAndroid.SHORT);
+    } catch (error) {
+      ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
+    }
+  };
+
   return {
     imageUrl,
     pickAndUploadImage,
+    deleteImage,
   };
 };
 

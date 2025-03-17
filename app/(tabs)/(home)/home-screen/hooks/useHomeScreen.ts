@@ -9,7 +9,9 @@ import { router } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FlatList } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import HOME_SCREEN_CONSTANTS from "../HomeScreen.const";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useUpdateFcmTokenMutation } from "@/services/auth";
+import HOME_SCREEN_CONSTANTS from "../../HomeScreen.const";
 
 interface ItemType {
   id: string;
@@ -33,6 +35,7 @@ const useHomeScreen = () => {
   const currentSpendingModel = useSelector(selectCurrentUserSpendingModel);
   const dispatch = useDispatch();
   const { HOME } = PATH_NAME;
+  const [updateFcmToken] = useUpdateFcmTokenMutation();
 
   const { isLoading, refetch: refetchSpendingModel } =
     useGetCurrentUserSpendingModelQuery(undefined, {});
@@ -93,6 +96,24 @@ const useHomeScreen = () => {
     router.push(url as any);
   };
 
+  const handleNavigateNotification = useCallback(() => {
+    dispatch(setMainTabHidden(true));
+    router.navigate(HOME.NOTIFICATION as any);
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const fcmToken = await AsyncStorage.getItem("fcmToken");
+        if (fcmToken) {
+          const formValues = JSON.stringify(fcmToken);
+          await updateFcmToken(formValues).unwrap();
+        }
+      } catch (err) {}
+      fetchData();
+    };
+  }, []);
+
   return {
     state: {
       isShow,
@@ -116,6 +137,7 @@ const useHomeScreen = () => {
       handleNavigateAddPersonalIncome,
       handleNavigateMenuItem,
       toggleVisibilityGroupBalance,
+      handleNavigateNotification,
     },
   };
 };

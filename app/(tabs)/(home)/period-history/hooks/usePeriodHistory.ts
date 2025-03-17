@@ -68,6 +68,9 @@ const usePeriodHistory = () => {
   useFocusEffect(
     useCallback(() => {
       dispatch(setMainTabHidden(true));
+      return () => {
+        dispatch(setMainTabHidden(false));
+      };
     }, [dispatch]),
   );
 
@@ -120,6 +123,13 @@ const usePeriodHistory = () => {
     [userSpendingModelDetail],
   );
 
+  const actualCategories =
+    currentUserSpendingModelChartDetail?.data?.categories?.filter(
+      (item: any) => {
+        return item?.plannedPercentage !== 0;
+      },
+    );
+
   return {
     state: {
       transactions,
@@ -132,7 +142,7 @@ const usePeriodHistory = () => {
         isFetchingUserSpendingModelDetail,
       error,
       currentUserSpendingModelChart: currentUserSpendingModelChartDetail,
-      categories: currentUserSpendingModelChartDetail?.data?.categories || [],
+      categories: actualCategories || [],
     },
     handler: {
       formatCurrency,

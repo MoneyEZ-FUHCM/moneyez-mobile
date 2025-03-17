@@ -7,18 +7,28 @@ import {
   useGetCurrentUserSpendingModelQuery,
 } from "@/services/userSpendingModel";
 import { router } from "expo-router";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useDispatch } from "react-redux";
 
 const useIndividualHome = () => {
   const { HOME } = PATH_NAME;
   const dispatch = useDispatch();
-  const { data: currentUserSpendingModelChart, isLoading } =
-    useGetCurrentUserSpendingModelChartQuery({});
-  const { data: currentUserSpendingModel } =
-    useGetCurrentUserSpendingModelQuery();
+  const {
+    data: currentUserSpendingModelChart,
+    isLoading,
+    refetch: refetchCurrentUserSpendingModelChart,
+  } = useGetCurrentUserSpendingModelChartQuery({});
+  const {
+    data: currentUserSpendingModel,
+    refetch: refetchCurrentUserSpendingModel,
+  } = useGetCurrentUserSpendingModelQuery();
 
   useHideTabbar();
+
+  useEffect(() => {
+    refetchCurrentUserSpendingModelChart();
+    refetchCurrentUserSpendingModel();
+  }, []);
 
   const handleGoBack = () => {
     router.back();
@@ -53,10 +63,17 @@ const useIndividualHome = () => {
     }
   };
 
+  const actualCategories = currentUserSpendingModelData?.categories?.filter(
+    (item: any) => {
+      return item?.plannedPercentage !== 0;
+    },
+  );
+
   return {
     state: {
       isLoading,
       currentUserSpendingModelData,
+      actualCategories,
     },
     handler: {
       handleGoBack,

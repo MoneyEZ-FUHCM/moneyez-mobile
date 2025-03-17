@@ -11,7 +11,7 @@ import {
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { router } from "expo-router";
 import { Formik } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Image,
   KeyboardAvoidingView,
@@ -34,6 +34,10 @@ const Login = () => {
   const { BUTTON, TITLE, LABEL } = TEXT_TRANSLATE_AUTH;
   const { FORM_NAME } = AUTH_SCREEN_CONSTANTS;
   const { AUTH } = PATH_NAME;
+
+  useEffect(() => {
+    handler.getToken();
+  }, []);
 
   return (
     <SafeAreaViewCustom
