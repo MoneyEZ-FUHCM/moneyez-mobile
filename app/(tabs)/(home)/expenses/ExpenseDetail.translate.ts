@@ -8,6 +8,7 @@ const TEXT_TRANSLATE_EXPENSE_DETAIL = {
   monthly: "Theo tháng",
   transactionListTitle: "Danh sách giao dịch",
   loadingMore: "Loading more...",
+  more: "Xem Thêm",
 };
 
 export default TEXT_TRANSLATE_EXPENSE_DETAIL;

@@ -114,7 +114,9 @@ export default function ExpenseDetail() {
               router.navigate(PATH_NAME.HOME.PERIOD_HISTORY_DETAIL as any)
             }
           >
-            <Text className="text-center font-bold text-white">Xem Thêm</Text>
+            <Text className="text-center font-bold text-white">
+              {TEXT_TRANSLATE_EXPENSE_DETAIL.more}
+            </Text>
           </TouchableOpacity>
         </View>
         <SectionComponent
