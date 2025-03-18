@@ -9,6 +9,15 @@ export const useExpenseDetail = () => {
   const dispatch = useDispatch();
   const TRANSACTIONS = EXPENSE_DETAIL_CONSTANTS.TRANSACTIONS;
   const CHART_DATA = EXPENSE_DETAIL_CONSTANTS.CHART_DATA;
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const showAllTransactionsModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const closeAllTransactionsModal = () => {
+    setIsModalVisible(false);
+  };
 
   const loadMoreData = () => {
     console.log("Load more data");
@@ -23,11 +32,14 @@ export const useExpenseDetail = () => {
       TRANSACTIONS,
       CHART_DATA,
       isLoading,
+      isModalVisible,
     },
     handler: {
       loadMoreData,
       setIsLoading,
       handleGoBack,
+      showAllTransactionsModal,
+      closeAllTransactionsModal,
     },
   };
 };

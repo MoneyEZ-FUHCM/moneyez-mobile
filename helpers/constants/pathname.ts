@@ -37,7 +37,8 @@ const PATH_NAME = {
     PERSONAL_EXPENSES_MODEL: "personal-expenses/PersonalExpensesModel",
     NOTIFICATION: "notification/NotificationList",
     TRANSACTION_DETAIL: "transaction-detail/TransactionDetail",
-    EXPENSES_DETAIL: "expenses/ExpenseDetail",
+    EXPENSES_DETAIL: "expenses/expense-detail/ExpenseDetail",
+    UPDATE_EXPENSE: "expenses/update-expense/UpdateExpense",
   },
   ACCOUNT: {
     ACCOUNT_SETTING: "setting/AccountSetting",
