@@ -31,7 +31,7 @@ const EditBudgetScreen = () => {
             <MaterialIcons name="arrow-back" size={24} color="#609084" />
           </Pressable>
           <Text className="text-lg font-bold text-black">
-            {TEXT_TRANSLATE_UPDATE_EXPENSE.headerTitle}
+            {TEXT_TRANSLATE_UPDATE_EXPENSE.HEADER_TITLE}
           </Text>
           <Text></Text>
         </View>
@@ -41,10 +41,10 @@ const EditBudgetScreen = () => {
         {/* Thiết lập hạn mức */}
         <View className="mb-4">
           <Text className="text-lg font-semibold">
-            {TEXT_TRANSLATE_UPDATE_EXPENSE.setupLimit}
+            {TEXT_TRANSLATE_UPDATE_EXPENSE.SETUP_LIMIT}
           </Text>
           <Text className="text-sm text-gray-500">
-            {TEXT_TRANSLATE_UPDATE_EXPENSE.setupLimitDescription}
+            {TEXT_TRANSLATE_UPDATE_EXPENSE.SETUP_LIMIT_DESCRIPTION}
           </Text>
         </View>
 
@@ -55,12 +55,14 @@ const EditBudgetScreen = () => {
               <Ionicons name="car-outline" size={24} color="#4F8C8C" />
             </View>
             <Text className="ml-2 text-base font-semibold">
-              {TEXT_TRANSLATE_UPDATE_EXPENSE.category}
+              {TEXT_TRANSLATE_UPDATE_EXPENSE.CATEGORY}
             </Text>
           </View>
-          <Text className="mb-1 text-lg font-bold">Đi lại</Text>
+          <Text className="mb-1 text-lg font-bold">
+            {TEXT_TRANSLATE_UPDATE_EXPENSE.CATEGORY_NAME}
+          </Text>
           <Text className="text-base">
-            {TEXT_TRANSLATE_UPDATE_EXPENSE.maxBudget}{" "}
+            {TEXT_TRANSLATE_UPDATE_EXPENSE.MAX_BUDGET}{" "}
             <Text className="font-bold text-primary">{MAX_BUDGET}</Text>
           </Text>
 
@@ -81,7 +83,7 @@ const EditBudgetScreen = () => {
           onPress={handleCancel}
         >
           <Text className="text-base font-semibold text-primary">
-            {TEXT_TRANSLATE_UPDATE_EXPENSE.cancel}
+            {TEXT_TRANSLATE_UPDATE_EXPENSE.CANCEL}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -89,7 +91,7 @@ const EditBudgetScreen = () => {
           onPress={handleEdit}
         >
           <Text className="text-base font-semibold text-white">
-            {TEXT_TRANSLATE_UPDATE_EXPENSE.edit}
+            {TEXT_TRANSLATE_UPDATE_EXPENSE.EDIT}
           </Text>
         </TouchableOpacity>
       </SectionComponent>

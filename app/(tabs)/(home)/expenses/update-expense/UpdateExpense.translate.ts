@@ -1,13 +1,13 @@
 const TEXT_TRANSLATE_UPDATE_EXPENSE = {
-  headerTitle: "Chỉnh sửa ngân sách",
-  setupLimit: "Thiết lập hạn mức",
-  setupLimitDescription:
+  HEADER_TITLE: "Chỉnh sửa ngân sách",
+  SETUP_LIMIT: "Thiết lập hạn mức",
+  SETUP_LIMIT_DESCRIPTION:
     "Dựa theo mô hình sử dụng bạn đang chọn MoneyEz sẽ đưa ra mức ngân sách tối đa khác nhau",
-  category: "Danh mục",
-  categoryName: "Đi lại",
-  maxBudget: "Số tiền tối đa có thể đặt mục tiêu cho danh mục này là",
-  cancel: "Huỷ",
-  edit: "Chỉnh sửa",
+  CATEGORY: "Danh mục",
+  CATEGORY_NAME: "Đi lại",
+  MAX_BUDGET: "Số tiền tối đa có thể đặt mục tiêu cho danh mục này là",
+  CANCEL: "Huỷ",
+  EDIT: "Chỉnh sửa",
 };
 
 export default TEXT_TRANSLATE_UPDATE_EXPENSE;

@@ -1,14 +1,6 @@
 import React from "react";
-import {
-  View,
-  Text,
-  Pressable,
-  TouchableOpacity,
-  Dimensions,
-  Image,
-} from "react-native";
-import { ProgressBar } from "react-native-paper";
-import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { View, Text, TouchableOpacity, Dimensions, Image } from "react-native";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 import {
   BarChartCustom,
   FlatListCustom,
@@ -39,7 +31,7 @@ export default function ExpenseDetail() {
           <AntDesign name="close" size={24} color={PRIMARY_COLOR} />
         </TouchableOpacity>
         <Text className="text-lg font-bold text-primary">
-          {TEXT_TRANSLATE_EXPENSE_DETAIL.headerTitle}
+          {TEXT_TRANSLATE_EXPENSE_DETAIL.HEADER_TITLE}
         </Text>
         <TouchableOpacity className="absolute right-3 rounded-full p-2">
           <AntDesign name="reload1" size={24} color={PRIMARY_COLOR} />
@@ -47,49 +39,52 @@ export default function ExpenseDetail() {
       </SectionComponent>
       <SectionComponent rootClassName="bg-white p-5 rounded-lg mb-2">
         <View className="mb-2 flex-row items-center justify-between">
-          <View className="flex-row items-center">
+          <View className="flex-row items-start">
             <View className="h-14 w-14 items-center justify-center rounded-full border-[7px] border-primary bg-white">
               <Ionicons name="fast-food" size={24} color="#609084" />
             </View>
             <View className="ml-4">
               <View>
                 <Text className="text-lg font-bold">
-                  {TEXT_TRANSLATE_EXPENSE_DETAIL.budgetTitle}
+                  {TEXT_TRANSLATE_EXPENSE_DETAIL.BUDGET_TITLE}
                 </Text>
                 <Text className="text-sm text-gray-500">
-                  {TEXT_TRANSLATE_EXPENSE_DETAIL.budgetSubtitle}
+                  {TEXT_TRANSLATE_EXPENSE_DETAIL.BUDGET_SUBTITLE}
                 </Text>
                 <Text className="text-sm font-bold">
-                  {TEXT_TRANSLATE_EXPENSE_DETAIL.budgetRemaining}{" "}
+                  {TEXT_TRANSLATE_EXPENSE_DETAIL.BUDGET_REMAINING}{" "}
                   <Text className="text-green-500">2.000.000đ</Text>
                 </Text>
                 <View className="my-1 h-[1px] bg-gray-300" />
                 <Text className="flex-wrap text-sm text-gray-500">
-                  {TEXT_TRANSLATE_EXPENSE_DETAIL.budgetSpent}{" "}
+                  {TEXT_TRANSLATE_EXPENSE_DETAIL.BUDGET_SPENT}{" "}
                   <Text className="text-green-500 font-bold">1.600.000đ</Text> /
                   2.000.000đ
                 </Text>
               </View>
             </View>
           </View>
-          <TouchableOpacity
-            onPress={() =>
-              router.navigate(PATH_NAME.HOME.UPDATE_EXPENSE as any)
-            }
-          >
-            <Ionicons
-              name="ellipsis-vertical-outline"
-              size={24}
-              color="#609084"
-            />
-          </TouchableOpacity>
+          <View className="mt-[-50px]">
+            <TouchableOpacity
+              onPress={() =>
+                router.navigate(PATH_NAME.HOME.UPDATE_EXPENSE as any)
+              }
+            >
+              <Ionicons
+                name="ellipsis-vertical-outline"
+                size={24}
+                color="#609084"
+              />
+            </TouchableOpacity>
+          </View>
         </View>
 
+        {/* 
         <ProgressBar
           progress={1.6 / 2}
           color="#609084"
           className="mt-2 h-2 rounded-full"
-        />
+        /> */}
       </SectionComponent>
       {/* Xu hướng chi tiêu */}
       <SectionComponent rootClassName="bg-white p-5 rounded-lg mb-4">
@@ -103,16 +98,15 @@ export default function ExpenseDetail() {
       <SectionComponent rootClassName="bg-white p-5 ">
         <View className="mb-2 flex-row items-center justify-between">
           <Text className="text-lg font-bold">
-            {TEXT_TRANSLATE_EXPENSE_DETAIL.transactionListTitle}
+            {TEXT_TRANSLATE_EXPENSE_DETAIL.TRANSACTION_LIST_TITLE}
           </Text>
           <TouchableOpacity
-            className="rounded-lg bg-primary p-3"
             onPress={() =>
               router.navigate(PATH_NAME.HOME.PERIOD_HISTORY_DETAIL as any)
             }
           >
-            <Text className="text-center font-bold text-white">
-              {TEXT_TRANSLATE_EXPENSE_DETAIL.more}
+            <Text className="mb-2 text-center font-bold text-primary">
+              {TEXT_TRANSLATE_EXPENSE_DETAIL.MORE}
             </Text>
           </TouchableOpacity>
         </View>
