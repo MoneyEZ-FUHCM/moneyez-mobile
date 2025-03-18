@@ -40,8 +40,24 @@ export default function ExpenseDetail() {
       <SectionComponent rootClassName="bg-white p-5 rounded-lg mb-2">
         <View className="mb-2 flex-row items-center justify-between">
           <View className="flex-row items-start">
-            <View className="h-14 w-14 items-center justify-center rounded-full border-[7px] border-primary bg-white">
-              <Ionicons name="fast-food" size={24} color="#609084" />
+            <View className="relative h-14 w-14 items-center justify-center">
+              {/* Viền xám (chưa hoàn thành) */}
+              <View className="absolute inset-0 rounded-full border-[15px] border-gray-300" />
+
+              {/* Vòng tròn xanh hiển thị tiến trình */}
+              <View
+                className="absolute inset-0 rounded-full border-[7px] border-primary"
+                style={{
+                  transform: [{ rotate: `${(79 / 100) * 360}deg` }],
+                  borderTopColor: "transparent",
+                  borderRightColor: "transparent",
+                }}
+              />
+
+              {/* Biểu tượng ở giữa */}
+              <View className="z-10 h-10 w-10 items-center justify-center rounded-full bg-white">
+                <Ionicons name="fast-food" size={24} color="#609084" />
+              </View>
             </View>
             <View className="ml-4">
               <View>
