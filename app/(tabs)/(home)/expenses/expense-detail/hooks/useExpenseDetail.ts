@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { router } from "expo-router";
 import { useDispatch } from "react-redux";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
@@ -26,6 +26,10 @@ export const useExpenseDetail = () => {
     router.back();
     dispatch(setMainTabHidden(false));
   };
+  const handleBack = useCallback(() => {
+    router.back();
+    dispatch(setMainTabHidden(false));
+  }, [dispatch]);
 
   return {
     state: {
@@ -40,6 +44,7 @@ export const useExpenseDetail = () => {
       handleGoBack,
       showAllTransactionsModal,
       closeAllTransactionsModal,
+      handleBack,
     },
   };
 };

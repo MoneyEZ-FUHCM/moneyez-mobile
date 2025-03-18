@@ -8,7 +8,7 @@ import {
   Image,
 } from "react-native";
 import { ProgressBar } from "react-native-paper";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import {
   BarChartCustom,
   FlatListCustom,
@@ -26,20 +26,24 @@ export default function ExpenseDetail() {
   const { state, handler } = useExpenseDetail();
   const { TRANSACTIONS, CHART_DATA, isLoading } = state;
   const { loadMoreData } = handler;
+  const PRIMARY_COLOR = "#609084";
 
   return (
-    <SafeAreaViewCustom>
+    <SafeAreaViewCustom rootClassName="relative">
       {/* HEADER */}
-      <SectionComponent rootClassName="h-14 bg-white justify-center mb-2">
-        <View className="flex-row items-center justify-between px-5">
-          <Pressable onPress={handler.handleGoBack}>
-            <MaterialIcons name="arrow-back" size={24} color="#609084" />
-          </Pressable>
-          <Text className="text-lg font-bold text-black">
-            {TEXT_TRANSLATE_EXPENSE_DETAIL.headerTitle}
-          </Text>
-          <Text></Text>
-        </View>
+      <SectionComponent rootClassName="relative bg-white shadow-md h-14 flex-row items-center justify-center">
+        <TouchableOpacity
+          onPress={handler.handleGoBack}
+          className="absolute left-3 rounded-full p-2"
+        >
+          <AntDesign name="close" size={24} color={PRIMARY_COLOR} />
+        </TouchableOpacity>
+        <Text className="text-lg font-bold text-primary">
+          {TEXT_TRANSLATE_EXPENSE_DETAIL.headerTitle}
+        </Text>
+        <TouchableOpacity className="absolute right-3 rounded-full p-2">
+          <AntDesign name="reload1" size={24} color={PRIMARY_COLOR} />
+        </TouchableOpacity>
       </SectionComponent>
       <SectionComponent rootClassName="bg-white p-5 rounded-lg mb-2">
         <View className="mb-2 flex-row items-center justify-between">
@@ -59,7 +63,7 @@ export default function ExpenseDetail() {
                   {TEXT_TRANSLATE_EXPENSE_DETAIL.budgetRemaining}{" "}
                   <Text className="text-green-500">2.000.000đ</Text>
                 </Text>
-                <View className="my-1 h-[1px] w-full bg-gray-300" />
+                <View className="my-1 h-[1px] bg-gray-300" />
                 <Text className="flex-wrap text-sm text-gray-500">
                   {TEXT_TRANSLATE_EXPENSE_DETAIL.budgetSpent}{" "}
                   <Text className="text-green-500 font-bold">1.600.000đ</Text> /
