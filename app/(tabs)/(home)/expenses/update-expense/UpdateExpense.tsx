@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -13,10 +13,14 @@ import {
   SpaceComponent,
 } from "@/components";
 import { router } from "expo-router";
-import TEXT_TRANSLATE_EXPENSE_DETAIL from "../expense-detail/ExpenseDetail.translate";
+import TEXT_TRANSLATE_UPDATE_EXPENSE from "./UpdateExpense.translate";
+import { MAX_BUDGET } from "./UpdateExpense.const";
+import { useUpdateExpense } from "./hooks/useUpdateExpense";
 
 const EditBudgetScreen = () => {
-  const [budget, setBudget] = useState("400.000đ");
+  const { state, handler } = useUpdateExpense();
+  const { budget } = state;
+  const { setBudget, handleCancel, handleEdit } = handler;
 
   return (
     <SafeAreaViewCustom rootClassName="relative">
@@ -27,18 +31,20 @@ const EditBudgetScreen = () => {
             <MaterialIcons name="arrow-back" size={24} color="#609084" />
           </Pressable>
           <Text className="text-lg font-bold text-black">
-            {TEXT_TRANSLATE_EXPENSE_DETAIL.headerTitle}
+            {TEXT_TRANSLATE_UPDATE_EXPENSE.headerTitle}
           </Text>
           <Text></Text>
         </View>
       </SectionComponent>
+
       <View className="rounded-xl bg-white p-5">
         {/* Thiết lập hạn mức */}
         <View className="mb-4">
-          <Text className="text-lg font-semibold">Thiết lập hạn mức</Text>
+          <Text className="text-lg font-semibold">
+            {TEXT_TRANSLATE_UPDATE_EXPENSE.setupLimit}
+          </Text>
           <Text className="text-sm text-gray-500">
-            Dựa theo mô hình sử dụng bạn đang chọn MoneyEz sẽ đưa ra mức ngân
-            sách tối đa khác nhau
+            {TEXT_TRANSLATE_UPDATE_EXPENSE.setupLimitDescription}
           </Text>
         </View>
 
@@ -48,12 +54,14 @@ const EditBudgetScreen = () => {
             <View className="rounded-lg bg-superlight p-2">
               <Ionicons name="car-outline" size={24} color="#4F8C8C" />
             </View>
-            <Text className="ml-2 text-base font-semibold">Danh mục</Text>
+            <Text className="ml-2 text-base font-semibold">
+              {TEXT_TRANSLATE_UPDATE_EXPENSE.category}
+            </Text>
           </View>
           <Text className="mb-1 text-lg font-bold">Đi lại</Text>
           <Text className="text-base">
-            Số tiền tối đa có thể đặt mục tiêu cho danh mục này là{" "}
-            <Text className="font-bold text-primary">500.000</Text>
+            {TEXT_TRANSLATE_UPDATE_EXPENSE.maxBudget}{" "}
+            <Text className="font-bold text-primary">{MAX_BUDGET}</Text>
           </Text>
 
           {/* Ô nhập số tiền */}
@@ -65,13 +73,24 @@ const EditBudgetScreen = () => {
           />
         </View>
       </View>
+
       <SectionComponent rootClassName="flex-row flex-1 absolute bottom-5 mx-4">
         <SpaceComponent width={15} />
-        <TouchableOpacity className="mr-2 mt-10 w-1/2 flex-1 items-center rounded-lg border border-primary bg-white p-3">
-          <Text className="text-base font-semibold text-primary">Huỷ</Text>
+        <TouchableOpacity
+          className="mr-2 mt-10 w-1/2 flex-1 items-center rounded-lg border border-primary bg-white p-3"
+          onPress={handleCancel}
+        >
+          <Text className="text-base font-semibold text-primary">
+            {TEXT_TRANSLATE_UPDATE_EXPENSE.cancel}
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity className="mt-10 w-1/2 flex-1 items-center rounded-lg bg-primary p-3">
-          <Text className="text-base font-semibold text-white">Chỉnh sửa</Text>
+        <TouchableOpacity
+          className="mt-10 w-1/2 flex-1 items-center rounded-lg bg-primary p-3"
+          onPress={handleEdit}
+        >
+          <Text className="text-base font-semibold text-white">
+            {TEXT_TRANSLATE_UPDATE_EXPENSE.edit}
+          </Text>
         </TouchableOpacity>
       </SectionComponent>
     </SafeAreaViewCustom>
