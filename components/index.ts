@@ -25,3 +25,4 @@ export { ModalLizeComponent } from "./ModalLizeComponent";
 export { FlatListGestureCustom } from "./FlatListGestureCustom";
 export { ImageViewerComponent } from "./ImageViewerComponent";
 export { DatePickerTransactionComponent } from "./DatePickerTransactionComponent";
+export { ProgressCircleComponent } from "./ProgressCircleComponent";
