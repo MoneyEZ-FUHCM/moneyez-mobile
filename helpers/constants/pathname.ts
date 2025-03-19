@@ -56,6 +56,8 @@ const PATH_NAME = {
     INVITE_MEMBER: "group-details/member/inivite-member/InviteMember",
     INVITE_MEMBER_BY_EMAIL:
       "group-details/member/inivite-member/invite-member-by-email/InviteMemberbyEmail",
+    INVITE_MEMBER_BY_QR_CODE:
+      "group-details/member/inivite-member/invite-member-by-QR-code/InviteMemberByQRCode",
   },
 };
 

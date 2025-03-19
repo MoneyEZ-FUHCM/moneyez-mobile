@@ -14,7 +14,7 @@ import useInviteMember from "./hooks/useInviteMember";
 
 const InviteMember = () => {
   const members = INVITE_MEMBER_CONSTANTS.MEMBERS;
-  const { state, handler } = useInviteMember();
+  const { handler } = useInviteMember();
 
   return (
     <SafeAreaViewCustom>
@@ -45,16 +45,21 @@ const InviteMember = () => {
             </View>
           </View>
         </TouchableOpacity>
-        <View className="ml-2 flex flex-1 items-center rounded-lg bg-white p-3">
+        <TouchableOpacity
+          className="ml-2 flex flex-1 items-center rounded-lg bg-white p-3"
+          onPress={() => {
+            router.navigate(PATH_NAME.MEMBER.INVITE_MEMBER_BY_QR_CODE as any);
+          }}
+        >
           <Text className="text-sm font-semibold">
-            {TEXT_TRANSLATE_INVITE_MEMBER.INVITE_MEMBER.JOIN_LINK}
+            {TEXT_TRANSLATE_INVITE_MEMBER.INVITE_MEMBER.INVITE_BY_QR_CODE}
           </Text>
           <View className="flex-row pt-2">
             <View className="h-5 w-5 items-center justify-center rounded-full bg-primary">
               <AntDesign name="arrowright" size={12} color="#ffffff" />
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
 
       {/* Danh sách thành viên */}
