@@ -1,27 +1,12 @@
-import NoData from "@/assets/images/InviteMemberAssets/not-found-result.png";
-import {
-  FlatListCustom,
-  SafeAreaViewCustom,
-  SectionComponent,
-} from "@/components";
+import { SafeAreaViewCustom, SectionComponent } from "@/components";
 import useHideGroupTabbar from "@/hooks/useHideGroupTabbar";
 import AntDesign from "@expo/vector-icons/build/AntDesign";
 import React from "react";
-import {
-  ActivityIndicator,
-  Image,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import INVITE_MEMBER_CONSTANTS from "../InviteMember.constant";
-import INVITE_MEMBER_TEXT_TRANSLATE from "../InviteMember.translate";
+import { Text, TouchableOpacity, View } from "react-native";
 import useInviteMember from "../hooks/useInviteMember";
 
 const InviteMemberByEmail = () => {
-  const PRIMARY_COLOR = "#609084";
-  const { state, handler } = useInviteMember();
+  const { handler } = useInviteMember();
 
   useHideGroupTabbar();
 
