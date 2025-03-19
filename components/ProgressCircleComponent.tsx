@@ -1,4 +1,3 @@
-import { SectionComponent } from "@/components";
 import { Colors } from "@/helpers/constants/color";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
@@ -37,7 +36,7 @@ const ProgressCircleComponent = ({
   }, [value]);
 
   return (
-    <SectionComponent rootClassName="flex-1 items-center justify-center">
+    <View className="flex-1 items-center justify-center">
       <View
         className="relative items-center justify-center"
         style={{ width: size, height: size }}
@@ -58,7 +57,7 @@ const ProgressCircleComponent = ({
           style={{ position: "absolute" }}
         />
       </View>
-    </SectionComponent>
+    </View>
   );
 };
 
