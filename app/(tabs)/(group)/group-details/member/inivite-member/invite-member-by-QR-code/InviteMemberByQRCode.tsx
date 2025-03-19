@@ -1,13 +1,14 @@
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
 import useHideGroupTabbar from "@/hooks/useHideGroupTabbar";
 import AntDesign from "@expo/vector-icons/build/AntDesign";
-import React from "react";
+import React, { useRef } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import useInviteMember from "../hooks/useInviteMember";
 
 const InviteMemberByEmail = () => {
   const { handler } = useInviteMember();
-
+  const qrRef = useRef();
+  const inviteLink = "https://ezmoney.com.vn/daylalinhthamgianhom";
   useHideGroupTabbar();
 
   return (

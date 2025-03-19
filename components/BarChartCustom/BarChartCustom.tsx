@@ -26,7 +26,7 @@ const BarChartCustom = React.memo(
         style={{ width: screenWidth - 40 }}
         rootClassName="self-center"
       >
-        <View className="mb-4 flex-row justify-end">
+        <View className="mb-4 flex-row justify-start">
           {categories.map((category) => (
             <TouchableOpacity
               key={category}

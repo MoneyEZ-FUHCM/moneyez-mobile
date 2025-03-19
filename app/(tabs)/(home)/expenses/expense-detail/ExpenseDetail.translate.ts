@@ -6,6 +6,7 @@ const TEXT_TRANSLATE_EXPENSE_DETAIL = {
   BUDGET_SPENT: "Chi",
   WEEKLY: "Theo tuần",
   MONTHLY: "Theo tháng",
+  SPENDING_TREND: "Xu hướng chi tiêu",
   TRANSACTION_LIST_TITLE: "Danh sách giao dịch",
   LOADING_MORE: "Loading more...",
   MORE: "Xem Thêm",
