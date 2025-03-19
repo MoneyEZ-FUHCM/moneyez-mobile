@@ -2,29 +2,27 @@ import { SafeAreaViewCustom, SectionComponent } from "@/components";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { formatCurrency } from "@/helpers/libs";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
+import { FinancialGoal } from "@/types/financialGoal.type";
 import { MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import { useDispatch } from "react-redux";
 
-// Dummy data for budget categories
-const budgetCategories = [
-  { id: "1", name: "Ăn uống", amount: 3000000, icon: "restaurant" as keyof typeof MaterialIcons.glyphMap },
-  { id: "2", name: "Giải trí", amount: 2000000, icon: "local-movies" as keyof typeof MaterialIcons.glyphMap },
-  { id: "3", name: "Giáo dục", amount: 5000000, icon: "school" as keyof typeof MaterialIcons.glyphMap },
-];
-
 const { HOME } = PATH_NAME
 
-const SpendingBudgetComponent = () => {
+type SpendingBudgetComponentProps = {
+  data?: FinancialGoal[];
+}
+
+const SpendingBudgetComponent = ({ data }: SpendingBudgetComponentProps) => {
   const dispatch = useDispatch();
   const [isVisible, setIsVisible] = useState(true);
 
   const toggleVisibility = () => {
     setIsVisible(!isVisible);
   };
-  
+
   return (
     <SafeAreaViewCustom rootClassName="flex-1 bg-white p-4">
       {/* Header */}
@@ -41,10 +39,10 @@ const SpendingBudgetComponent = () => {
               Ngân sách chi tiêu
             </Text>
             <Pressable onPress={toggleVisibility}>
-              <MaterialIcons 
-                name={isVisible ? "visibility" : "visibility-off"} 
-                size={20} 
-                color="#000" 
+              <MaterialIcons
+                name={isVisible ? "visibility" : "visibility-off"}
+                size={20}
+                color="#000"
               />
             </Pressable>
           </View>
@@ -53,33 +51,42 @@ const SpendingBudgetComponent = () => {
       </SectionComponent>
 
       {/* Budget category list */}
-      {budgetCategories.map((item) => (
-        <SectionComponent key={item.id} rootClassName="mb-3">
-          <Pressable
-            className="flex-row items-center justify-between p-2 border border-[#bad8b6] rounded-lg"
-            onPress={() => { }}
-          >
-            <View className="flex-row items-center space-x-3">
-              <MaterialIcons name={item.icon} size={30} color="#609084" />
-              <View>
-                <Text className="text-base font-medium text-black">
-                  {item.name}
-                </Text>
-                <Text className="text-sm text-black">
-                  {isVisible ? formatCurrency(item.amount) : "••••••"}
-                </Text>
+      {data?.map((item) => {
+        const percentage = Math.min((item.currentAmount / item.targetAmount) * 100, 100);
+
+        return (
+          <SectionComponent key={item.id} rootClassName="mb-3">
+            <Pressable
+              className="p-2 border border-[#bad8b6] rounded-lg"
+              onPress={() => { }}
+            >
+              <View className="flex-row">
+                <View className="pr-3 justify-center self-stretch">
+                  <MaterialIcons name={item.icon || "account-balance"} size={30} color="#609084" />
+                </View>
+
+                <View className="flex-1">
+                  <View className="flex-row items-center justify-between mb-2">
+                    <Text className="text-base font-medium text-black">
+                      {item.name}
+                    </Text>
+                    <Text className="text-sm text-black">
+                      {isVisible ? formatCurrency(item.targetAmount) : "*****"}
+                    </Text>
+                  </View>
+
+                  <View className="w-full h-3 bg-[#ebefd6] rounded-full relative">
+                    <View
+                      className={`absolute left-0 top-0 h-full bg-[#609084] rounded-full`}
+                      style={{ width: `${percentage}%` }}
+                    />
+                  </View>
+                </View>
               </View>
-            </View>
-            {/* A simple progress bar indicator */}
-            <View className="w-1/3 h-2 bg-[#ebefd6] rounded-full relative">
-              <View
-                className="absolute left-0 top-0 h-full bg-[#609084] rounded-full"
-                style={{ width: "60%" }} // Adjust width as needed
-              />
-            </View>
-          </Pressable>
-        </SectionComponent>
-      ))}
+            </Pressable>
+          </SectionComponent>
+        );
+      })}
     </SafeAreaViewCustom>
   );
 };

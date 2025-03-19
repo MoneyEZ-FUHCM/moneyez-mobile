@@ -2,6 +2,7 @@ import { PATH_NAME } from "@/helpers/constants/pathname";
 import { formatCurrency } from "@/helpers/libs";
 import useHideTabbar from "@/hooks/useHideTabbar";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
+import { useGetPersonalFinancialGoalsQuery } from "@/services/financialGoal";
 import {
   useGetCurrentUserSpendingModelChartQuery,
   useGetCurrentUserSpendingModelQuery,
@@ -23,11 +24,17 @@ const useIndividualHome = () => {
     refetch: refetchCurrentUserSpendingModel,
   } = useGetCurrentUserSpendingModelQuery();
 
+  const {
+    data: personalFinancialGoals,
+    refetch: refetchPersonalFinancialGoals,
+  } = useGetPersonalFinancialGoalsQuery({ PageIndex: 1, PageSize: 3 });
+
   useHideTabbar();
 
   useEffect(() => {
     refetchCurrentUserSpendingModelChart();
     refetchCurrentUserSpendingModel();
+    refetchPersonalFinancialGoals();
   }, []);
 
   const handleGoBack = () => {
@@ -45,7 +52,7 @@ const useIndividualHome = () => {
       categories: currentUserSpendingModelChart?.data?.categories || [],
       totalSpent: formatCurrency(
         (currentUserSpendingModel?.data?.totalIncome ?? 0) -
-          (currentUserSpendingModel?.data?.totalExpense ?? 0),
+        (currentUserSpendingModel?.data?.totalExpense ?? 0),
       ),
     };
   }, [currentUserSpendingModelChart, isLoading]);
@@ -69,11 +76,15 @@ const useIndividualHome = () => {
     },
   );
 
+  const personalFinancialGoalsData = personalFinancialGoals?.items || [];
+
+
   return {
     state: {
       isLoading,
       currentUserSpendingModelData,
       actualCategories,
+      personalFinancialGoalsData
     },
     handler: {
       handleGoBack,
