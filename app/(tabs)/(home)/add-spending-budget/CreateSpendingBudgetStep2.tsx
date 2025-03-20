@@ -3,6 +3,7 @@ import { View, Text, Pressable } from "react-native";
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
 import { MaterialIcons } from "@expo/vector-icons";
 import useCreateSpendingBudgetStep2 from "./hooks/useCreateSpendingBudgetStep2";
+import TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP2 from "./CreateSpendingBudgetStep2.translate";
 
 export default function CreateSpendingBudgetStep2() {
   const { selectedCategory, handleBack, handleCreateBudget } =
@@ -16,7 +17,9 @@ export default function CreateSpendingBudgetStep2() {
           <Pressable onPress={handleBack}>
             <MaterialIcons name="arrow-back" size={24} color="#609084" />
           </Pressable>
-          <Text className="text-lg font-bold text-[#609084]">Tạo ngân sách</Text>
+          <Text className="text-lg font-bold text-[#609084]">
+            {TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP2.TITLE.MAIN_TITLE}
+          </Text>
           <View style={{ width: 24 }} />
         </View>
       </SectionComponent>
@@ -25,10 +28,10 @@ export default function CreateSpendingBudgetStep2() {
       <SectionComponent rootClassName="bg-white m-4 rounded-lg p-4">
         <View className="mb-4">
           <Text className="text-base font-semibold text-black">
-            Thiết lập hạn mức
+            {TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP2.TITLE.SETUP_LIMIT}
           </Text>
           <Text className="text-sm text-gray-500">
-            Dựa theo mô hình sử dụng bạn đang chọn, MoneyEz sẽ đưa ra mức ngân sách tối đa khác nhau.
+            {TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP2.TITLE.SETUP_DESCRIPTION}
           </Text>
         </View>
 
@@ -40,7 +43,7 @@ export default function CreateSpendingBudgetStep2() {
           </View>
           <View className="items-end">
             <Text className="text-sm text-gray-500">
-              Số tiền tối đa:{" "}
+              {TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP2.LABELS.MAX_AMOUNT}{" "}
               <Text className="font-bold text-black">
                 {selectedCategory.maxAmountFormatted}
               </Text>
@@ -51,7 +54,7 @@ export default function CreateSpendingBudgetStep2() {
         {/* Budget Input/Display */}
         <SectionComponent rootClassName="bg-white rounded-lg p-4 mt-4">
           <Text className="text-sm text-gray-500 mb-2">
-            Số tiền hiện tại của bạn:
+            {TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP2.LABELS.CURRENT_AMOUNT}
           </Text>
           <View className="border border-[#609084] rounded-lg p-3">
             <Text className="text-2xl font-bold text-black">
@@ -67,7 +70,9 @@ export default function CreateSpendingBudgetStep2() {
           onPress={handleCreateBudget}
           className="bg-[#609084] rounded-lg py-3 px-6"
         >
-          <Text className="text-white text-lg font-semibold">Tạo ngân sách</Text>
+          <Text className="text-white text-lg font-semibold">
+            {TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP2.BUTTON.CREATE_BUDGET}
+          </Text>
         </Pressable>
       </SectionComponent>
     </SafeAreaViewCustom>
