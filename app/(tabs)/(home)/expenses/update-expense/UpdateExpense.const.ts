@@ -1,2 +1,6 @@
-export const DEFAULT_BUDGET = "400.000đ";
-export const MAX_BUDGET = "500.000";
+const UPDATE_EXPENSE_CONSTANTS = {
+  DEFAULT_BUDGET: "400.000đ",
+  MAX_BUDGET: "500.000",
+};
+
+export default UPDATE_EXPENSE_CONSTANTS;

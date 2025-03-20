@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Dimensions,
-  Image,
-  ScrollView,
-} from "react-native";
+import { View, Text, TouchableOpacity, Dimensions, Image } from "react-native";
 import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import {
   FlatListCustom,
@@ -17,11 +10,11 @@ import {
 } from "@/components";
 import NoData from "@/assets/images/InviteMemberAssets/not-found-result.png";
 import TEXT_TRANSLATE_EXPENSE_DETAIL from "./ExpenseDetail.translate";
-import { useExpenseDetail } from "./hooks/useExpenseDetail";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { router } from "expo-router";
-import { formatCurrency } from "@/helpers/libs";
 import { BarChartCustom } from "@/components/ExpenseDetailCustom/BarChartCustom";
+import useExpenseDetail from "./hooks/useExpenseDetail";
+
 export default function ExpenseDetail() {
   const { state, handler } = useExpenseDetail();
   const { TRANSACTIONS, CHART_DATA, isLoading } = state;
@@ -29,10 +22,10 @@ export default function ExpenseDetail() {
   const PRIMARY_COLOR = "#609084";
 
   const renderTransactionItem = ({ item }: { item: any }) => (
-    <View className="flex-row items-center justify-between border-b border-white bg-white p-5 py-3">
+    <View className="mx-2 flex-row items-center justify-between bg-white p-5">
       <View className="flex-1 flex-row items-center gap-3.5">
         <View className="items-center justify-center">
-          <MaterialIcons name="bolt" size={30} color="#609084" />
+          <MaterialIcons name={item.icon} size={30} color="#609084" />
         </View>
         <View className="mr-2 flex-1">
           <Text className="text-base font-medium text-black">{item.name}</Text>
@@ -43,7 +36,7 @@ export default function ExpenseDetail() {
         </View>
       </View>
       <Text
-        className={`text-base font-semibold ${
+        className={`text-base font-bold ${
           item.amount < 0 ? "text-red" : "text-primary"
         }`}
       >
@@ -53,7 +46,7 @@ export default function ExpenseDetail() {
   );
   const renderListHeader = () => (
     <>
-      <SectionComponent rootClassName="bg-white pt-5 px-5 pb-2 rounded-lg mb-2">
+      <SectionComponent rootClassName="bg-white mx-2 pt-5 px-5 pb-2 rounded-lg mb-2">
         <View className="mb-2 flex-row items-center justify-between">
           <View className="flex-row items-start">
             <View className="relative h-14 w-14 items-center justify-center">
@@ -104,8 +97,8 @@ export default function ExpenseDetail() {
         </View>
       </SectionComponent>
       {/* Xu hướng chi tiêu */}
-      <SectionComponent rootClassName="bg-white p-5 rounded-lg mb-2">
-        <Text className="pb-2 pl-2 text-lg font-bold text-black">
+      <SectionComponent rootClassName="bg-white mx-2 p-5 rounded-lg mb-2">
+        <Text className="pb-2 text-lg font-bold text-black">
           {TEXT_TRANSLATE_EXPENSE_DETAIL.SPENDING_TREND}
         </Text>
         <BarChartCustom
@@ -114,7 +107,7 @@ export default function ExpenseDetail() {
           screenWidth={Dimensions.get("window").width}
         />
       </SectionComponent>
-      <SectionComponent rootClassName="bg-white pt-5 px-5 rounded-lg">
+      <SectionComponent rootClassName="bg-white mx-2 pt-5 px-5 rounded-lg">
         <View className="flex-row items-center justify-between">
           <Text className="pl-2 text-lg font-bold text-black">
             {TEXT_TRANSLATE_EXPENSE_DETAIL.TRANSACTION_LIST_TITLE}
@@ -143,32 +136,30 @@ export default function ExpenseDetail() {
       </SectionComponent>
 
       {/* Danh sách giao dịch */}
-      <SectionComponent>
-        <SectionComponent rootClassName="bg-[#fafafa] rounded-lg">
-          <LoadingSectionWrapper isLoading={isLoading}>
-            {TRANSACTIONS && TRANSACTIONS.length > 0 ? (
-              <FlatListCustom
-                className=""
-                showsVerticalScrollIndicator={false}
-                data={TRANSACTIONS}
-                isBottomTab={true}
-                isLoading={isLoading}
-                ListHeaderComponent={renderListHeader}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={renderTransactionItem}
-                onLoadMore={loadMoreData}
+      <SectionComponent rootClassName="bg-[#fafafa] rounded-lg">
+        <LoadingSectionWrapper isLoading={isLoading}>
+          {TRANSACTIONS && TRANSACTIONS.length > 0 ? (
+            <FlatListCustom
+              className=""
+              showsVerticalScrollIndicator={false}
+              data={TRANSACTIONS}
+              isBottomTab={true}
+              isLoading={isLoading}
+              ListHeaderComponent={renderListHeader}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={renderTransactionItem}
+              onLoadMore={loadMoreData}
+            />
+          ) : (
+            <View className="mt-36 items-center justify-center px-5">
+              <Image
+                source={NoData}
+                className="h-[400px] w-full"
+                resizeMode="contain"
               />
-            ) : (
-              <View className="mt-36 items-center justify-center px-5">
-                <Image
-                  source={NoData}
-                  className="h-[400px] w-full"
-                  resizeMode="contain"
-                />
-              </View>
-            )}
-          </LoadingSectionWrapper>
-        </SectionComponent>
+            </View>
+          )}
+        </LoadingSectionWrapper>
       </SectionComponent>
     </SafeAreaViewCustom>
   );

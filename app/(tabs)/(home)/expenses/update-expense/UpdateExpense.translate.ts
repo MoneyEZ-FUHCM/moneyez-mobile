@@ -7,7 +7,7 @@ const TEXT_TRANSLATE_UPDATE_EXPENSE = {
   CATEGORY_NAME: "Đi lại",
   MAX_BUDGET: "Số tiền tối đa có thể đặt mục tiêu cho danh mục này là",
   CANCEL: "Huỷ",
-  EDIT: "Chỉnh sửa",
+  EDIT: "Cập Nhật",
 };
 
 export default TEXT_TRANSLATE_UPDATE_EXPENSE;

@@ -41,7 +41,7 @@ const GroupHomeDefault = () => {
         ></ImageBackground>
 
         {/* Fund Overview Card */}
-        <View className="mx-4 -mt-8 rounded-2xl bg-white p-4 shadow-md">
+        <View className="mx-4 mt-8 rounded-2xl bg-white p-4 shadow-md">
           <Text className="text-lg font-bold">{TEXT.FUND_OVERVIEW}</Text>
           <Text className="text-2xl font-bold text-gray-800">
             {TEXT.FUND_AMOUNT}
@@ -64,7 +64,7 @@ const GroupHomeDefault = () => {
         </View>
 
         {/* Recent Activities */}
-        <View className="z-10 mx-4 mb-24 mt-4 rounded-2xl bg-white p-4 shadow-md">
+        <View className="z-10 mx-4 mt-4 rounded-2xl bg-white p-4 shadow-md">
           <Text className="mb-4 text-lg font-bold">
             {TEXT.RECENT_ACTIVITIES}
           </Text>
@@ -87,6 +87,37 @@ const GroupHomeDefault = () => {
               <View className="items-end">
                 <Text className="text-xs text-gray-500">{activity.date}</Text>
                 <Text className="font-bold">{activity.amount}</Text>
+              </View>
+            </View>
+          ))}
+          <TouchableOpacity className="mt-4 flex-row items-center justify-center">
+            <Text className="pr-3 text-center font-bold text-[#609084]">
+              {BUTTON.VIEW_ALL}
+            </Text>
+            <AntDesign name="right" size={16} color="#609084" />
+          </TouchableOpacity>
+        </View>
+        {/* Recent Activities */}
+        <View className="z-10 mx-4 mb-24 mt-4 rounded-2xl bg-white p-4 shadow-md">
+          <Text className="mb-4 text-lg font-bold">{TEXT.EDIT_LOG}</Text>
+          {recentActivities.map((activity, index) => (
+            <View
+              key={index}
+              className="flex-row border-b border-gray-200 py-2"
+            >
+              <Image
+                source={{ uri: activity.avatar }}
+                className="h-10 w-10 rounded-full"
+              />
+              <View className="ml-4 flex-1">
+                <View className="flex-row">
+                  <Text className="mt-3 font-bold">{activity.name}</Text>
+                  <Text className="mt-3"> {TEXT.LEFT_GROUP}</Text>
+                </View>
+              </View>
+              <View className="items-end">
+                <Text className="text-xs text-gray-500">{activity.date}</Text>
+                <Text className="text-xs text-gray-500">20:00</Text>
               </View>
             </View>
           ))}

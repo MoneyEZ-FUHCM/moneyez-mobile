@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import EXPENSE_DETAIL_CONSTANTS from "../ExpenseDetail.const";
 
-export const useExpenseDetail = () => {
+const useExpenseDetail = () => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const TRANSACTIONS = EXPENSE_DETAIL_CONSTANTS.TRANSACTIONS;
@@ -48,3 +48,5 @@ export const useExpenseDetail = () => {
     },
   };
 };
+
+export default useExpenseDetail;

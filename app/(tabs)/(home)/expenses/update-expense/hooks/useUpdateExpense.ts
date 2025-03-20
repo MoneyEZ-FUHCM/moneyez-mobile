@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { DEFAULT_BUDGET } from "../UpdateExpense.const";
+import UPDATE_EXPENSE_CONSTANTS from "../UpdateExpense.const";
 
 export const useUpdateExpense = () => {
-  const [budget, setBudget] = useState(DEFAULT_BUDGET);
+  const [budget, setBudget] = useState(UPDATE_EXPENSE_CONSTANTS.DEFAULT_BUDGET);
 
   const handleCancel = () => {
     console.log("Cancel editing budget");

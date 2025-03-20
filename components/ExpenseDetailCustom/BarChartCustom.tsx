@@ -31,13 +31,13 @@ const BarChartCustom = React.memo(
             <TouchableOpacity
               key={category}
               onPress={() => handler.handleSelectCategory(category)}
-              className={`mx-2 rounded-lg px-2 py-2 ${
+              className={`mx-1 rounded-lg border border-primary bg-secondary px-6 py-2 ${
                 state.selectedCategory === category
-                  ? "bg-primary"
-                  : "bg-gray-300"
+                  ? "bg-secondary"
+                  : "bg-white"
               }`}
             >
-              <Text className="text-xs text-white">
+              <Text className="text-xs font-extrabold text-black">
                 {category.toUpperCase()}
               </Text>
             </TouchableOpacity>
