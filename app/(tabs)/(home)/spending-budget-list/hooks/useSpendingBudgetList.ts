@@ -2,12 +2,13 @@ import { PATH_NAME } from "@/helpers/constants/pathname";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { useDispatch } from "react-redux";
 
 const useSpendingBudget = () => {
   const dispatch = useDispatch();
-  const { HOME } = PATH_NAME
+  const { HOME } = PATH_NAME;
+  
   const [cycleInfo] = useState({
     cycle: "01.03 đến 31.03.2025",
     remainingDays: 23,
@@ -55,17 +56,29 @@ const useSpendingBudget = () => {
   const handleAddBudget = useCallback(() => {
     dispatch(setMainTabHidden(true));
     router.push(HOME.ADD_SPENDING_BUDGET_STEP_1 as any);
-  }, []);
+  }, [dispatch, HOME.ADD_SPENDING_BUDGET_STEP_1]);
 
   const handleBack = useCallback(() => {
     router.back();
   }, []);
 
+  const handleBudgetPress = useCallback((budgetId: string) => {
+    console.log(`Budget ${budgetId} pressed`);
+  }, []);
+
   return {
-    cycleInfo,
-    budgetSections,
-    handleAddBudget,
-    handleBack,
+    state: useMemo(
+      () => ({
+        cycleInfo,
+        budgetSections,
+      }),
+      [cycleInfo, budgetSections]
+    ),
+    handler: {
+      handleAddBudget,
+      handleBack,
+      handleBudgetPress,
+    }
   };
 };
 

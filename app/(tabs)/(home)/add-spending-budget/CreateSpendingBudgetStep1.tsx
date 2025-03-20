@@ -3,16 +3,15 @@ import { View, Text, Pressable, ScrollView } from "react-native";
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import useCreateSpendingBudgetStep1 from "./hooks/useCreateSpendingBudgetStep1";
+import TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP1 from "./CreateSpendingBudgetStep1.translate";
 
 export default function CreateSpendingBudgetStep1() {
-  const { categoryGroups, selectedCategoryId, handleBack, handleContinue, handleSelectCategory } =
-    useCreateSpendingBudgetStep1();
+  const { state, handler } = useCreateSpendingBudgetStep1();
+  const { categoryGroups, selectedCategoryId } = state;
+  const { handleBack, handleContinue, handleSelectCategory } = handler;
 
-  /**
-   * Renders a single category item row.
-   */
   const renderCategoryItem = (item: any) => {
-    if (item.label === "Hiển thị thêm ...") {
+    if (item.label === TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP1.BUTTON.SHOW_MORE) {
       return (
         <Pressable
           key={item.id}
@@ -36,16 +35,16 @@ export default function CreateSpendingBudgetStep1() {
         className={`flex-row items-center justify-between p-3 border ${isSelected && !isDisabled ? 'border-[#609084]' : 'border-[#E5E7EB]'} rounded-lg mb-3`}
         disabled={isDisabled}
       >
-        {/* Left side: Icon + Label */}
         <View className="flex-row items-center space-x-3">
           <MaterialIcons name={item.icon} size={24} color="#609084" />
           <Text className="text-base font-medium text-black">{item.label}</Text>
         </View>
 
-        {/* Right side: radio circle or "Đã tạo ngân sách" pill */}
         {item.status === "created" ? (
           <View className="px-2 py-1 bg-gray-200 rounded-md">
-            <Text className="flex items-center justify-center text-sm font-semibold text-gray-500 text-center">Đã tạo ngân sách</Text>
+            <Text className="flex items-center justify-center text-sm font-semibold text-gray-500 text-center">
+              {TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP1.LABELS.BUDGET_CREATED}
+            </Text>
           </View>
         ) : (
           <MaterialCommunityIcons
@@ -66,7 +65,9 @@ export default function CreateSpendingBudgetStep1() {
           <Pressable onPress={handleBack}>
             <MaterialIcons name="arrow-back" size={24} color="#609084" />
           </Pressable>
-          <Text className="text-lg font-bold text-[#609084]">Tạo ngân sách</Text>
+          <Text className="text-lg font-bold text-[#609084]">
+            {TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP1.TITLE.MAIN_TITLE}
+          </Text>
           <View style={{ width: 24 }} />
         </View>
       </SectionComponent>
@@ -74,10 +75,10 @@ export default function CreateSpendingBudgetStep1() {
       {/* Instruction */}
       <SectionComponent rootClassName="bg-white m-4 rounded-lg p-4">
         <Text className="text-base font-semibold text-black mb-1">
-          Chọn danh mục chi tiêu theo mô hình đang sử dụng
+          {TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP1.TITLE.INSTRUCTION_TITLE}
         </Text>
         <Text className="text-sm text-gray-500">
-          Bạn sẽ nhận được thông báo khi hoàn thành mục tiêu
+          {TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP1.TITLE.INSTRUCTION_SUBTITLE}
         </Text>
       </SectionComponent>
 
@@ -100,7 +101,9 @@ export default function CreateSpendingBudgetStep1() {
           className={`${selectedCategoryId ? 'bg-[#609084]' : 'bg-[#a0c0ba]'} rounded-lg py-3 px-6`}
           disabled={!selectedCategoryId}
         >
-          <Text className="text-white text-lg font-semibold">Tiếp tục</Text>
+          <Text className="text-white text-lg font-semibold">
+            {TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP1.BUTTON.CONTINUE}
+          </Text>
         </Pressable>
       </SectionComponent>
     </SafeAreaViewCustom>

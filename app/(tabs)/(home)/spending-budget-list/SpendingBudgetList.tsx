@@ -5,9 +5,12 @@ import { MaterialIcons } from "@expo/vector-icons";
 import useSpendingBudget from "./hooks/useSpendingBudgetList";
 import { formatCurrency } from "@/helpers/libs";
 import ProgressCircle from "@/components/ProgressCircle";
+import TEXT_TRANSLATE_SPENDING_BUDGET from "./SpendingBudgetList.translate";
 
 export default function SpendingBudget() {
-  const { cycleInfo, budgetSections, handleAddBudget, handleBack } = useSpendingBudget();
+  const { state, handler } = useSpendingBudget();
+  const { cycleInfo, budgetSections } = state;
+  const { handleAddBudget, handleBack, handleBudgetPress } = handler;
 
   return (
     <SafeAreaViewCustom rootClassName="flex-1 bg-[#f9f9f9]">
@@ -17,7 +20,9 @@ export default function SpendingBudget() {
           <Pressable onPress={handleBack}>
             <MaterialIcons name="arrow-back" size={24} color="#609084" />
           </Pressable>
-          <Text className="text-lg font-bold text-[#609084]">Ngân sách chi tiêu</Text>
+          <Text className="text-lg font-bold text-[#609084]">
+            {TEXT_TRANSLATE_SPENDING_BUDGET.TITLE.MAIN_TITLE}
+          </Text>
           <View style={{ width: 24 }} />
         </View>
       </SectionComponent>
@@ -36,7 +41,7 @@ export default function SpendingBudget() {
           <Pressable onPress={handleAddBudget} className="flex-row items-center">
             <MaterialIcons name="add" size={24} color="#609084" />
             <Text className="ml-2 text-base font-semibold text-[#609084]">
-              Thêm ngân sách
+              {TEXT_TRANSLATE_SPENDING_BUDGET.BUTTON.ADD_BUDGET}
             </Text>
           </Pressable>
         </View>
@@ -57,7 +62,7 @@ export default function SpendingBudget() {
               return (
                 <Pressable
                   key={item.id}
-                  onPress={() => {}}
+                  onPress={() => handleBudgetPress(item.id)}
                   className="flex-row items-center justify-between p-3 border border-[#609084] rounded-lg mb-3"
                 >
                   <View className="flex-row items-center space-x-3">
@@ -71,14 +76,16 @@ export default function SpendingBudget() {
                       <View className="flex-col gap-1">
                         <View className="flex-row items-center">
                           <Text className="text-sm text-[#808080] w-16">
-                            Còn lại{" "}
+                            {TEXT_TRANSLATE_SPENDING_BUDGET.LABELS.REMAINING}
                           </Text>
                           <Text className="font-bold text-primary">
                             {formatCurrency(item.remaining)}
                           </Text>
                         </View>
                         <View className="flex-row items-center">
-                          <Text className="text-sm text-text-gray w-16">Chi </Text>
+                          <Text className="text-sm text-text-gray w-16">
+                            {TEXT_TRANSLATE_SPENDING_BUDGET.LABELS.SPENT}
+                          </Text>
                           <View className="flex-row items-center">
                             <Text className="font-bold text-black">
                               {formatCurrency(item.spent)}
