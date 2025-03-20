@@ -129,19 +129,7 @@ const PersonalExpensesModel = () => {
                 </TouchableOpacity>
               )}
             />
-            {/* Custom Input */}
-            {/* {state.selectedModel === "custom" && (
-            <View className="mt-2">
-              <TextInput
-                placeholder={
-                  TEXT_TRANSLATE_PERSONAL_EXPENSES.CUSTOM_MODEL_PLACEHOLDER
-                }
-                value={state.customModel}
-                onChangeText={handler.setCustomModel}
-                className="rounded-lg border border-gray-300 bg-white p-3"
-              />
-            </View>
-          )} */}
+
             <TouchableOpacity className="mt-4">
               <Text className="text-green-600 text-center underline">
                 {TEXT_TRANSLATE_PERSONAL_EXPENSES.HELP_TEXT}

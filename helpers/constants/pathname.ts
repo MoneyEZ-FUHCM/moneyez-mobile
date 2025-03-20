@@ -23,7 +23,8 @@ const PATH_NAME = {
     GROUP_DETAIL: ":id",
     STATISTICS: "dashboard-group/GroupManangement",
     CREATE_GROUP_STEP_1: "create-group/CreateGroup",
-    // CREATE_GROUP_STEP_2: "create-group/CreateGroupStep2",
+    CREATE_FUND_CONTRIBUTION_REQUEST:
+      "fund-contribution-request/FundContributionRequest",
   },
   BOT: {
     CHATBOT: "chatbot/ChatBot",
@@ -38,6 +39,8 @@ const PATH_NAME = {
     PERSONAL_EXPENSES_MODEL: "personal-expenses/PersonalExpensesModel",
     NOTIFICATION: "notification/NotificationList",
     TRANSACTION_DETAIL: "transaction-detail/TransactionDetail",
+    EXPENSES_DETAIL: "expenses/expense-detail/ExpenseDetail",
+    UPDATE_EXPENSE: "expenses/update-expense/UpdateExpense",
   },
   ACCOUNT: {
     ACCOUNT_SETTING: "setting/AccountSetting",
@@ -55,6 +58,8 @@ const PATH_NAME = {
     INVITE_MEMBER: "group-details/member/inivite-member/InviteMember",
     INVITE_MEMBER_BY_EMAIL:
       "group-details/member/inivite-member/invite-member-by-email/InviteMemberbyEmail",
+    INVITE_MEMBER_BY_QR_CODE:
+      "group-details/member/inivite-member/invite-member-by-QR-code/InviteMemberByQRCode",
   },
 };
 

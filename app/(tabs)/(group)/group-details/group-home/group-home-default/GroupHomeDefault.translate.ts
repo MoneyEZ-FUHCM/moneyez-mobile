@@ -44,7 +44,9 @@ const TEXT_TRANSLATE_GROUP_HOME_DEFAULT = {
     QR_CONTRIBUTE: "QR góp quỹ",
     STATISTICS: "Thống kê",
     RECENT_ACTIVITIES: "Hoạt động gần đây",
-    NEW: "Mới",
+    RE: "Mới",
+    EDIT_LOG: "Nhật ký chỉnh sửa",
+    LEFT_GROUP: "Đã Rời nhóm",
   },
   // Validation Messages
   MESSAGE_VALIDATE: {

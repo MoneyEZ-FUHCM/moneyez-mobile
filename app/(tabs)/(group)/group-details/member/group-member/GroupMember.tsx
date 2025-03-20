@@ -13,7 +13,6 @@ import {
   View,
 } from "react-native";
 import { Icon } from "react-native-paper";
-import GROUP_MEMBER_CONSTANT from "./GroupMember.constant";
 import TEXT_TRANSLATE_GROUP_MEMBER_DEFAULT from "./GroupMember.translate";
 import useGroupMember from "./hooks/useGroupMember";
 
@@ -131,9 +130,7 @@ const GroupMember = () => {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() =>
-              router.navigate(GROUP_MEMBER_CONSTANT.GROUP_FUND_ROUTE as any)
-            }
+            onPress={() => router.navigate(PATH_NAME.GROUP.GROUP_FUND as any)}
             className="mt-2 flex-row items-center justify-between rounded-lg bg-white px-2 py-3"
           >
             <View className="flex-row items-center">
