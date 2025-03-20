@@ -105,6 +105,7 @@ export default function IndividualHome() {
           <SectionComponent>
             <SpendingBudgetComponent 
               data={state.personalFinancialGoalsData} 
+              onHeaderPress={handler.handleSpendingBudgetPress}
             />
           </SectionComponent>
 

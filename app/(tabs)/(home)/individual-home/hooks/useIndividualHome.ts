@@ -78,6 +78,10 @@ const useIndividualHome = () => {
 
   const personalFinancialGoalsData = personalFinancialGoals?.items || [];
 
+  const handleSpendingBudgetPress = () => {
+    dispatch(setMainTabHidden(true));
+    router.push(HOME.SPENDING_BUDGET_LIST as any)
+  }
 
   return {
     state: {
@@ -91,6 +95,7 @@ const useIndividualHome = () => {
       handleAddExpense: () => navigateToTransaction("EXPENSE"),
       handleAddIncome: () => navigateToTransaction("INCOME"),
       handleHistoryPress,
+      handleSpendingBudgetPress,
     },
   };
 };

@@ -1,22 +1,17 @@
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { formatCurrency } from "@/helpers/libs";
-import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { FinancialGoal } from "@/types/financialGoal.type";
 import { MaterialIcons } from "@expo/vector-icons";
-import { router } from "expo-router";
 import React, { useState } from "react";
 import { Pressable, Text, View } from "react-native";
-import { useDispatch } from "react-redux";
-
-const { HOME } = PATH_NAME
 
 type SpendingBudgetComponentProps = {
   data?: FinancialGoal[];
+  onHeaderPress?: () => void;
 }
 
-const SpendingBudgetComponent = ({ data }: SpendingBudgetComponentProps) => {
-  const dispatch = useDispatch();
+const SpendingBudgetComponent = ({ data, onHeaderPress }: SpendingBudgetComponentProps) => {
   const [isVisible, setIsVisible] = useState(true);
 
   const toggleVisibility = () => {
@@ -29,10 +24,7 @@ const SpendingBudgetComponent = ({ data }: SpendingBudgetComponentProps) => {
       <SectionComponent rootClassName="mb-4">
         <Pressable
           className="flex-row items-center justify-between p-2"
-          onPress={() => {
-            dispatch(setMainTabHidden(true));
-            router.push(HOME.SPENDING_BUDGET_LIST as any)
-          }}
+          onPress={onHeaderPress}
         >
           <View className="flex-row items-center space-x-2">
             <Text className="text-lg font-semibold text-black">
