@@ -2,7 +2,7 @@ import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { BarChart } from "react-native-gifted-charts";
 import { SectionComponent } from "../SectionComponent";
-import { useBarChart } from "./hooks/useBarChart";
+import { useBarChart } from "../BarChartCustom/hooks/useBarChart";
 
 interface DataItem {
   [key: string]: number | string;
@@ -26,7 +26,7 @@ const BarChartCustom = React.memo(
         style={{ width: screenWidth - 40 }}
         rootClassName="self-center"
       >
-        <View className="mb-4 flex-row justify-end">
+        <View className="mb-4 flex-row justify-start">
           {categories.map((category) => (
             <TouchableOpacity
               key={category}

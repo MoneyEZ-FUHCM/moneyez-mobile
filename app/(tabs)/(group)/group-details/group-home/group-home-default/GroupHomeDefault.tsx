@@ -62,75 +62,7 @@ const GroupHomeDefault = () => {
             </TouchableOpacity>
           </View>
         </View>
-        <View className="mx-4 mt-4 rounded-2xl bg-white p-4 shadow-md">
-          <View className="mb-4 flex-row items-center justify-between">
-            <View className="flex-row items-center">
-              <AntDesign name="wallet" size={24} color="orange" />
-              <Text className="ml-2 text-[14px] font-normal">
-                {TEXT.AUTO_SAVE}
-              </Text>
-            </View>
-            <TouchableOpacity className="rounded-[10px] border border-gray-300 bg-white px-4 py-1">
-              <Text className="text-sm font-bold text-black">
-                {BUTTON.ACTIVATE}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          {/* Savings Info */}
-          <View className="flex-row justify-between rounded-2xl bg-thirdly/70 p-4">
-            <View className="w-1/3 items-center">
-              <AntDesign name="exclamationcircleo" size={30} color="#609084" />
-              <Text className="mt-2 text-sm font-bold">{TEXT.ONLY_FROM}</Text>
-              <Text className="text-xs text-gray-600">{TEXT.IN_FUND}</Text>
-            </View>
-            <View className="w-1/3 items-center">
-              <AntDesign name="linechart" size={30} color="#609084" />
-              <Text className="mt-2 text-sm font-bold">{TEXT.EARN_UP_TO}</Text>
-              <Text className="text-xs text-gray-600">{TEXT.PER_YEAR}</Text>
-            </View>
-            <View className="w-1/3 items-center">
-              <AntDesign name="creditcard" size={30} color="#609084" />
-              <Text className="mt-2 text-[12px] font-bold">
-                {TEXT.FLEXIBLE_PAYMENT}
-              </Text>
-            </View>
-          </View>
-        </View>
-        <View className="mt-2 flex-row justify-between bg-white p-4">
-          <View className="flex-row justify-between">
-            <View className="w-1/3 items-center">
-              <Ionicons
-                name="notifications-outline"
-                size={30}
-                color="#609084"
-              />
-              <Text className="mt-2 text-center text-xs">
-                {TEXT.REMIND_CONTRIBUTE}
-              </Text>
-            </View>
-            <View className="relative w-1/3 items-center">
-              <View className="absolute right-0 top-0 rounded-full bg-[#FF3B30] px-2">
-                <Text className="text-xs text-white">{TEXT.NEW}</Text>
-              </View>
-              <Ionicons name="qr-code-outline" size={30} color="#609084" />
-              <Text className="mt-2 text-center text-xs">
-                {TEXT.QR_CONTRIBUTE}
-              </Text>
-            </View>
-            <View className="w-1/3 items-center">
-              <TouchableOpacity
-                onPress={() =>
-                  router.navigate(PATH_NAME.GROUP.STATISTICS as any)
-                }
-              >
-                <Ionicons name="bar-chart-outline" size={30} color="#609084" />
-                <Text className="mt-2 text-center text-xs">
-                  {TEXT.STATISTICS}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
+
         {/* Recent Activities */}
         <View className="z-10 mx-4 mb-24 mt-4 rounded-2xl bg-white p-4 shadow-md">
           <Text className="mb-4 text-lg font-bold">

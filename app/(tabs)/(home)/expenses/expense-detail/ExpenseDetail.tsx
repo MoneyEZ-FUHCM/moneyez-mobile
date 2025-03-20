@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import {
-  BarChartCustom,
   FlatListCustom,
   LoadingSectionWrapper,
   ProgressCircleComponent,
@@ -22,6 +21,7 @@ import { useExpenseDetail } from "./hooks/useExpenseDetail";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { router } from "expo-router";
 import { formatCurrency } from "@/helpers/libs";
+import { BarChartCustom } from "@/components/ExpenseDetailCustom/BarChartCustom";
 export default function ExpenseDetail() {
   const { state, handler } = useExpenseDetail();
   const { TRANSACTIONS, CHART_DATA, isLoading } = state;
