@@ -103,7 +103,8 @@ const apiSlice = createApi({
     "transaction",
     "spendingModel",
     "Notification",
-    "User"
+    "User",
+    "FinancialGoal",
   ],
 });
 
