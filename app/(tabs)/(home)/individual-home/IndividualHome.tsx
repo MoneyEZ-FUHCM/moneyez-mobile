@@ -14,6 +14,7 @@ import React from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import TEXT_TRANSLATE_INDIVIDUAL_HOME from "./IndividualHome.translate";
 import useIndividualHome from "./hooks/useIndividualHome";
+import SpendingBudgetComponent from "@/components/SpendingBudgetComponent";
 
 export default function IndividualHome() {
   const { state, handler } = useIndividualHome();
@@ -100,13 +101,21 @@ export default function IndividualHome() {
             />
           </SectionComponent>
 
+          {/* BUDGET CATEGORIES */}
+          <SectionComponent>
+            <SpendingBudgetComponent 
+              data={state.personalFinancialGoalsData} 
+              onHeaderPress={handler.handleSpendingBudgetPress}
+            />
+          </SectionComponent>
+
           {/* PLACEHOLDER FOR CHAT BOT */}
           <SectionComponent rootClassName="mx-5 mt-5">
             <BudgetSummaryComponent
               button1Text={TEXT_TRANSLATE_INDIVIDUAL_HOME.BUTTON.AI_BUTTON_1}
               button2Text={TEXT_TRANSLATE_INDIVIDUAL_HOME.BUTTON.AI_BUTTON_2}
-              onPressButton1={() => {}}
-              onPressButton2={() => {}}
+              onPressButton1={() => { }}
+              onPressButton2={() => { }}
               summaryText={
                 <>
                   Tháng này bạn đã chi{" "}
