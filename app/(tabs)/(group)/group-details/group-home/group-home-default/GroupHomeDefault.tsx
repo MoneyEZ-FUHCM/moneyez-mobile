@@ -62,7 +62,25 @@ const GroupHomeDefault = () => {
             </TouchableOpacity>
           </View>
         </View>
+        <View className="mx-4 mt-4 flex-row justify-around rounded-2xl bg-white p-4 shadow-md">
+          <TouchableOpacity
+            className="items-center"
+            onPress={() =>
+              router.push(
+                PATH_NAME.GROUP.CREATE_FUND_CONTRIBUTION_REQUEST as any,
+              )
+            }
+          >
+            <AntDesign name="wallet" size={24} color="#5F8575" />
+            <Text className="mt-1 font-bold text-primary">Nhắc góp quỹ</Text>
+          </TouchableOpacity>
 
+          {/* Thống kê */}
+          <TouchableOpacity className="items-center">
+            <AntDesign name="linechart" size={24} color="#5F8575" />
+            <Text className="mt-1 font-bold text-primary">Thống kê</Text>
+          </TouchableOpacity>
+        </View>
         {/* Recent Activities */}
         <View className="z-10 mx-4 mt-4 rounded-2xl bg-white p-4 shadow-md">
           <Text className="mb-4 text-lg font-bold">
