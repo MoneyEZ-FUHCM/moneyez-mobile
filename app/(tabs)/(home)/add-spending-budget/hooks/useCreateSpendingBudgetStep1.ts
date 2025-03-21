@@ -13,7 +13,7 @@ export interface CategoryItem {
   id: string;
   label: string;
   icon: keyof typeof MaterialIcons.glyphMap;
-  status: 'notCreated' | 'created' | 'more';
+  status: "notCreated" | "created" | "more";
   subcategoryId?: string;
   categoryCode?: string;
 }
@@ -60,7 +60,7 @@ const useCreateSpendingBudgetStep1 = () => {
       const groups: CategoryGroup[] = [];
 
       const expenseCategories = categoriesData.data.filter(
-        (category: Category) => category.type === "EXPENSE"
+        (category: Category) => category.type === "EXPENSE",
       );
 
       expenseCategories.forEach((category: Category) => {
@@ -72,10 +72,12 @@ const useCreateSpendingBudgetStep1 = () => {
           allItems.push({
             id: subcategory.id,
             label: subcategory.name,
-            icon: (subcategory.icon as keyof typeof MaterialIcons.glyphMap) || "account-balance",
+            icon:
+              (subcategory.icon as keyof typeof MaterialIcons.glyphMap) ||
+              "account-balance",
             status: hasBudget ? "created" : "notCreated",
             subcategoryId: subcategory.id,
-            categoryCode: category.code
+            categoryCode: category.code,
           });
         });
 
@@ -89,10 +91,11 @@ const useCreateSpendingBudgetStep1 = () => {
           if (showMoreNeeded) {
             items.push({
               id: `more-${category.code}`,
-              label: TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP1.BUTTON.SHOW_MORE,
+              label:
+                TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP1.BUTTON.SHOW_MORE,
               icon: "more-horiz" as keyof typeof MaterialIcons.glyphMap,
               status: "more",
-              categoryCode: category.code
+              categoryCode: category.code,
             });
           }
 
@@ -102,14 +105,14 @@ const useCreateSpendingBudgetStep1 = () => {
             items: items,
             allItems: allItems,
             visibleCount: visibleCount,
-            itemsPerPage: ITEMS_PER_PAGE
+            itemsPerPage: ITEMS_PER_PAGE,
           });
         }
       });
 
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
-        categoryGroups: groups
+        categoryGroups: groups,
       }));
 
       setIsLoading(false);
@@ -121,17 +124,17 @@ const useCreateSpendingBudgetStep1 = () => {
   }, []);
 
   const handleSelectCategory = useCallback((item: CategoryItem) => {
-    if (item.status === 'created') {
+    if (item.status === "created") {
       return;
     }
 
-    if (item.status === 'more' && item.categoryCode) {
-      setState(prev => {
-        const updatedGroups = prev.categoryGroups.map(group => {
+    if (item.status === "more" && item.categoryCode) {
+      setState((prev) => {
+        const updatedGroups = prev.categoryGroups.map((group) => {
           if (group.id === item.categoryCode) {
             const newVisibleCount = Math.min(
               group.visibleCount + group.itemsPerPage,
-              group.allItems.length
+              group.allItems.length,
             );
 
             const newVisibleItems = group.allItems.slice(0, newVisibleCount);
@@ -141,17 +144,18 @@ const useCreateSpendingBudgetStep1 = () => {
             if (showMoreNeeded) {
               items.push({
                 id: `more-${group.id}`,
-                label: TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP1.BUTTON.SHOW_MORE,
+                label:
+                  TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP1.BUTTON.SHOW_MORE,
                 icon: "more-horiz" as keyof typeof MaterialIcons.glyphMap,
                 status: "more",
-                categoryCode: group.id
+                categoryCode: group.id,
               });
             }
 
             return {
               ...group,
               items,
-              visibleCount: newVisibleCount
+              visibleCount: newVisibleCount,
             };
           }
           return group;
@@ -159,47 +163,53 @@ const useCreateSpendingBudgetStep1 = () => {
 
         return {
           ...prev,
-          categoryGroups: updatedGroups
+          categoryGroups: updatedGroups,
         };
       });
       return;
     }
 
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
-      selectedCategoryId: prev.selectedCategoryId === item.id ? null : item.id
+      selectedCategoryId: prev.selectedCategoryId === item.id ? null : item.id,
     }));
   }, []);
 
   const handleContinue = useCallback(() => {
     if (state.selectedCategoryId) {
       const selectedItem = state.categoryGroups
-        .flatMap(group => group.allItems)
-        .find(item => item.id === state.selectedCategoryId);
+        .flatMap((group) => group.allItems)
+        .find((item) => item.id === state.selectedCategoryId);
       router.push({
         pathname: HOME.ADD_SPENDING_BUDGET_STEP_2 as any,
         params: {
           subcategoryId: selectedItem?.subcategoryId,
           icon: selectedItem?.icon,
-          name: selectedItem?.label
-        }
+          name: selectedItem?.label,
+        },
       });
     }
-  }, [state.selectedCategoryId, state.categoryGroups, HOME.ADD_SPENDING_BUDGET_STEP_2]);
+  }, [
+    state.selectedCategoryId,
+    state.categoryGroups,
+    HOME.ADD_SPENDING_BUDGET_STEP_2,
+  ]);
 
   return {
-    state: useMemo(() => ({
-      ...state,
-      isLoading
-    }), [state, isLoading]),
-
+    state: useMemo(
+      () => ({
+        ...state,
+        isLoading,
+      }),
+      [state, isLoading],
+    ),
     handler: {
       handleBack,
       handleContinue,
       handleSelectCategory,
       setSelectedCategory: (categoryId: string | null) =>
-        setState(prev => ({ ...prev, selectedCategoryId: categoryId })),
-    }
+        setState((prev) => ({ ...prev, selectedCategoryId: categoryId })),
+    },
   };
 };
 

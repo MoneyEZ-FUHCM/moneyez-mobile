@@ -1,14 +1,14 @@
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { formatCurrency } from "@/helpers/libs";
-import useHideTabbar from "@/hooks/useHideTabbar";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { useGetPersonalFinancialGoalsQuery } from "@/services/financialGoal";
 import {
   useGetCurrentUserSpendingModelChartQuery,
   useGetCurrentUserSpendingModelQuery,
 } from "@/services/userSpendingModel";
-import { router } from "expo-router";
-import { useEffect, useMemo } from "react";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useEffect, useMemo } from "react";
+import { BackHandler } from "react-native";
 import { useDispatch } from "react-redux";
 
 const useIndividualHome = () => {
@@ -29,7 +29,11 @@ const useIndividualHome = () => {
     refetch: refetchPersonalFinancialGoals,
   } = useGetPersonalFinancialGoalsQuery({ PageIndex: 1, PageSize: 3 });
 
-  useHideTabbar();
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(setMainTabHidden(true));
+    }, [dispatch]),
+  );
 
   useEffect(() => {
     refetchCurrentUserSpendingModelChart();
@@ -37,10 +41,23 @@ const useIndividualHome = () => {
     refetchPersonalFinancialGoals();
   }, []);
 
-  const handleGoBack = () => {
+  const handleGoBack = useCallback(() => {
     router.back();
     dispatch(setMainTabHidden(false));
-  };
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        handleGoBack();
+        return true;
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [handleGoBack]),
+  );
 
   const navigateToTransaction = (type: "EXPENSE" | "INCOME") => {
     router.navigate(`${HOME.ADD_TRANSACTION}?type=${type}` as any);
@@ -52,10 +69,10 @@ const useIndividualHome = () => {
       categories: currentUserSpendingModelChart?.data?.categories || [],
       totalSpent: formatCurrency(
         (currentUserSpendingModel?.data?.totalIncome ?? 0) -
-        (currentUserSpendingModel?.data?.totalExpense ?? 0),
+          (currentUserSpendingModel?.data?.totalExpense ?? 0),
       ),
     };
-  }, [currentUserSpendingModelChart, isLoading]);
+  }, [currentUserSpendingModelChart]);
 
   const handleHistoryPress = () => {
     if (currentUserSpendingModel) {
@@ -80,15 +97,15 @@ const useIndividualHome = () => {
 
   const handleSpendingBudgetPress = () => {
     dispatch(setMainTabHidden(true));
-    router.push(HOME.SPENDING_BUDGET_LIST as any)
-  }
+    router.push(HOME.SPENDING_BUDGET_LIST as any);
+  };
 
   return {
     state: {
       isLoading,
       currentUserSpendingModelData,
       actualCategories,
-      personalFinancialGoalsData
+      personalFinancialGoalsData,
     },
     handler: {
       handleGoBack,

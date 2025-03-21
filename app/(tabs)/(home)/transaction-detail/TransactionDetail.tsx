@@ -12,6 +12,7 @@ import React from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import useTransactionDetail from "./hooks/useTransactionDetail";
 import TEXT_TRANSLATE_TRANSACTION_DETAIL from "./TransactionDetail.translate";
+import { formatCurrency } from "@/helpers/libs";
 
 const PRIMARY_COLOR = "#609084";
 
@@ -34,11 +35,17 @@ const TransactionDetail = () => {
       <SectionComponent rootClassName="mx-5 bg-white py-3 px-3 mt-5 rounded-[10px]">
         <View className="mb-5 flex-row space-x-3 rounded-xl border-[0.5px] border-gray-300 px-4 py-2.5">
           <View className="rounded-full bg-primary p-2">
-            <MaterialIcons name={"person"} size={28} color="#ffffff" />
+            <MaterialIcons
+              name={state.transactionDetail?.subcategoryIcon}
+              size={28}
+              color="#ffffff"
+            />
           </View>
           <View>
-            <Text>Tiền điện</Text>
-            <Text className="text-base font-bold text-red">- 400000</Text>
+            <Text>{state.transactionDetail?.description}</Text>
+            <Text className="text-base font-bold text-red">
+              {formatCurrency(state.transactionDetail?.amount)}
+            </Text>
           </View>
         </View>
         <View className="gap-6">
@@ -50,25 +57,27 @@ const TransactionDetail = () => {
               12:00 - 01/01/2025
             </Text>
           </View>
-          <View className="flex-row justify-between">
+          {/* <View className="flex-row justify-between">
             <Text className="flex-1 font-medium text-text-gray">
               {TEXT_TRANSLATE_TRANSACTION_DETAIL.TITLE.TRANSACTION_CODE}
             </Text>
             <Text className="flex-1 text-right font-bold">
               40d4-951d-c0173ea743fe
             </Text>
-          </View>
+          </View> */}
           <View className="flex-row justify-between">
             <Text className="flex-1 font-medium text-text-gray">
               {TEXT_TRANSLATE_TRANSACTION_DETAIL.TITLE.SUBCATEGORY}
             </Text>
             <View className="flex-1 flex-row items-center justify-end space-x-2">
               <MaterialIcons
-                name="arrow-back"
+                name={state.transactionDetail?.subcategoryIcon}
                 size={24}
                 color={PRIMARY_COLOR}
               />
-              <Text className="font-bold">Thời gian</Text>
+              <Text className="font-bold">
+                {state.transactionDetail?.subcategoryName}
+              </Text>
             </View>
           </View>
           <View className="flex-row justify-between">
@@ -77,7 +86,7 @@ const TransactionDetail = () => {
             </Text>
             <View className="flex-1 flex-row items-center justify-end space-x-2">
               <MaterialIcons
-                name="arrow-back"
+                name={state.transactionDetail?.icon}
                 size={24}
                 color={PRIMARY_COLOR}
               />
@@ -89,7 +98,8 @@ const TransactionDetail = () => {
               {TEXT_TRANSLATE_TRANSACTION_DETAIL.TITLE.DESCRIPTION}
             </Text>
             <Text className="min-h-[72px] rounded-lg border border-gray-300 p-1.5 text-xs leading-[18px]">
-              Tiền điện tháng 12/2024
+              {/* Tiền điện tháng 12/2024 */}
+              {state.transactionDetail?.description}
             </Text>
           </View>
           <View className="space-y-2">
@@ -101,7 +111,7 @@ const TransactionDetail = () => {
               className="relative mx-1 mb-2 h-16 w-16 overflow-hidden rounded-lg"
             >
               <Image
-                source={Admin}
+                source={state.transactionDetail?.images}
                 className="h-full w-full"
                 resizeMode="cover"
               />

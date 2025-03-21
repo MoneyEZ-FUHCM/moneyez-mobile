@@ -1,4 +1,5 @@
 import { TRANSACTION_TYPE } from "@/enums/globals";
+import { PATH_NAME } from "@/helpers/constants/pathname";
 import { formatCurrency, formatDate } from "@/helpers/libs";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import {
@@ -82,6 +83,16 @@ const usePeriodHistoryDetail = () => {
   } = useGetUserSpendingModelDetailQuery(
     { id: userSpendingId as string },
     { skip: !userSpendingId },
+  );
+
+  const handleNavigateTransactionDetail = useCallback(
+    (transactionId: string) => {
+      router.navigate({
+        pathname: PATH_NAME.HOME.TRANSACTION_DETAIL as any,
+        params: { transactionId: transactionId },
+      });
+    },
+    [],
   );
 
   const {
@@ -234,6 +245,7 @@ const usePeriodHistoryDetail = () => {
       handleRefetchData,
       setShowFilters,
       handleFilterPress,
+      handleNavigateTransactionDetail,
     },
   };
 };

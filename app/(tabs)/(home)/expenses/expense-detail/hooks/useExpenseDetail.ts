@@ -1,7 +1,7 @@
-import { useCallback, useState } from "react";
-import { router } from "expo-router";
-import { useDispatch } from "react-redux";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
+import { router, useLocalSearchParams } from "expo-router";
+import { useCallback, useState } from "react";
+import { useDispatch } from "react-redux";
 import EXPENSE_DETAIL_CONSTANTS from "../ExpenseDetail.const";
 
 const useExpenseDetail = () => {
@@ -10,6 +10,9 @@ const useExpenseDetail = () => {
   const TRANSACTIONS = EXPENSE_DETAIL_CONSTANTS.TRANSACTIONS;
   const CHART_DATA = EXPENSE_DETAIL_CONSTANTS.CHART_DATA;
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const { budgetId } = useLocalSearchParams();
+
+  console.log("check budgetId123", budgetId);
 
   const showAllTransactionsModal = () => {
     setIsModalVisible(true);
@@ -22,13 +25,10 @@ const useExpenseDetail = () => {
   const loadMoreData = () => {
     console.log("Load more data");
   };
-  const handleGoBack = () => {
-    router.back();
-    dispatch(setMainTabHidden(false));
-  };
+
   const handleBack = useCallback(() => {
     router.back();
-    dispatch(setMainTabHidden(false));
+    dispatch(setMainTabHidden(true));
   }, [dispatch]);
 
   return {
@@ -41,10 +41,9 @@ const useExpenseDetail = () => {
     handler: {
       loadMoreData,
       setIsLoading,
-      handleGoBack,
+      handleBack,
       showAllTransactionsModal,
       closeAllTransactionsModal,
-      handleBack,
     },
   };
 };

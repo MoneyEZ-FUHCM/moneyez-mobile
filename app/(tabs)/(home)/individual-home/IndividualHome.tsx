@@ -100,22 +100,20 @@ export default function IndividualHome() {
               title={TEXT_TRANSLATE_INDIVIDUAL_HOME.TITLE.OVERVIEW}
             />
           </SectionComponent>
-
+          <SpaceComponent height={22} />
           {/* BUDGET CATEGORIES */}
-          <SectionComponent>
-            <SpendingBudgetComponent 
-              data={state.personalFinancialGoalsData} 
-              onHeaderPress={handler.handleSpendingBudgetPress}
-            />
-          </SectionComponent>
-
+          <SpendingBudgetComponent
+            data={state.personalFinancialGoalsData}
+            onHeaderPress={handler.handleSpendingBudgetPress}
+          />
+          <SpaceComponent height={22} />
           {/* PLACEHOLDER FOR CHAT BOT */}
-          <SectionComponent rootClassName="mx-5 mt-5">
+          <SectionComponent rootClassName="mx-5 ">
             <BudgetSummaryComponent
               button1Text={TEXT_TRANSLATE_INDIVIDUAL_HOME.BUTTON.AI_BUTTON_1}
               button2Text={TEXT_TRANSLATE_INDIVIDUAL_HOME.BUTTON.AI_BUTTON_2}
-              onPressButton1={() => { }}
-              onPressButton2={() => { }}
+              onPressButton1={() => {}}
+              onPressButton2={() => {}}
               summaryText={
                 <>
                   Tháng này bạn đã chi{" "}

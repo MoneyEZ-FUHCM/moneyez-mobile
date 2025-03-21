@@ -34,9 +34,7 @@ export default function PeriodHistoryDetail() {
   }) => {
     return (
       <TouchableOpacity
-        onPress={() =>
-          router.navigate(PATH_NAME.HOME.TRANSACTION_DETAIL as any)
-        }
+        onPress={() => handler.handleNavigateTransactionDetail(item.id)}
         className="flex-row items-center justify-between border-b border-[#f0f0f0] py-3"
       >
         <View className="flex-1 flex-row items-center gap-1.5">

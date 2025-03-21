@@ -139,6 +139,7 @@ const useAddTransaction = (type: string) => {
           handleNext();
         }
       } catch (err: any) {
+        console.log("err", err);
         ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
       } finally {
         dispatch(setLoading(false));

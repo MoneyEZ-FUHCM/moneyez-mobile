@@ -2,15 +2,15 @@ import { PATH_NAME } from "@/helpers/constants/pathname";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { selectUserInfo } from "@/redux/slices/userSlice";
 import { selectCurrentUserSpendingModel } from "@/redux/slices/userSpendingModelSlice";
+import { useUpdateFcmTokenMutation } from "@/services/auth";
 import { useGetGroupsQuery } from "@/services/group";
 import { useGetCurrentUserSpendingModelQuery } from "@/services/userSpendingModel";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import dayjs from "dayjs";
 import { router } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FlatList } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useUpdateFcmTokenMutation } from "@/services/auth";
 import HOME_SCREEN_CONSTANTS from "../../HomeScreen.const";
 
 interface ItemType {
@@ -56,9 +56,6 @@ const useHomeScreen = () => {
 
   useEffect(() => {
     refetchGroups();
-  }, []);
-
-  useEffect(() => {
     refetchSpendingModel();
   }, []);
 
