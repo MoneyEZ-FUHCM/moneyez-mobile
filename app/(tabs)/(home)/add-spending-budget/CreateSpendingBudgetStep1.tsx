@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Pressable, ScrollView } from "react-native";
+import { View, Text, Pressable, ScrollView, ActivityIndicator } from "react-native";
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import useCreateSpendingBudgetStep1 from "./hooks/useCreateSpendingBudgetStep1";
@@ -7,11 +7,11 @@ import TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP1 from "./CreateSpendingBudgetS
 
 export default function CreateSpendingBudgetStep1() {
   const { state, handler } = useCreateSpendingBudgetStep1();
-  const { categoryGroups, selectedCategoryId } = state;
+  const { categoryGroups, selectedCategoryId, isLoading } = state;
   const { handleBack, handleContinue, handleSelectCategory } = handler;
 
   const renderCategoryItem = (item: any) => {
-    if (item.label === TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP1.BUTTON.SHOW_MORE) {
+    if (item.status === "more") {
       return (
         <Pressable
           key={item.id}
@@ -57,6 +57,29 @@ export default function CreateSpendingBudgetStep1() {
     );
   };
 
+  if (isLoading) {
+    return (
+      <SafeAreaViewCustom rootClassName="flex-1 bg-[#f9f9f9]">
+        <SectionComponent rootClassName="h-14 bg-white justify-center px-5">
+          <View className="flex-row items-center justify-between">
+            <Pressable onPress={handleBack}>
+              <MaterialIcons name="arrow-back" size={24} color="#609084" />
+            </Pressable>
+            <Text className="text-lg font-bold text-[#609084]">
+              {TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP1.TITLE.MAIN_TITLE}
+            </Text>
+            <View style={{ width: 24 }} />
+          </View>
+        </SectionComponent>
+        
+        <View className="flex-1 justify-center items-center">
+          <ActivityIndicator size="large" color="#609084" />
+          <Text className="text-gray-500 mt-4">Đang tải dữ liệu...</Text>
+        </View>
+      </SafeAreaViewCustom>
+    );
+  }
+
   return (
     <SafeAreaViewCustom rootClassName="flex-1 bg-[#f9f9f9]">
       {/* Header */}
@@ -95,10 +118,10 @@ export default function CreateSpendingBudgetStep1() {
       </ScrollView>
 
       {/* Continue Button */}
-      <SectionComponent rootClassName="h-16 bg-white justify-center items-center border-t border-gray-300">
+      <SectionComponent rootClassName="h-16 bg-white justify-center items-center border-t border-gray-300 mx-6">
         <Pressable
           onPress={handleContinue}
-          className={`${selectedCategoryId ? 'bg-[#609084]' : 'bg-[#a0c0ba]'} rounded-lg py-3 px-6`}
+          className={`${selectedCategoryId ? 'bg-[#609084]' : 'bg-[#a0c0ba]'} w-full rounded-lg py-3 px-6 items-center`}
           disabled={!selectedCategoryId}
         >
           <Text className="text-white text-lg font-semibold">

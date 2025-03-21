@@ -134,6 +134,7 @@ const useSpendingBudget = () => {
   }, []);
 
   const handleBudgetPress = useCallback((budgetId: string) => {
+    // TODO: Navigate to budget detail screen
     console.log(`Budget ${budgetId} pressed`);
   }, []);
 
