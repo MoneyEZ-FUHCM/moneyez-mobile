@@ -26,7 +26,7 @@ export const formatDate = (
   pattern: string = "DD/MM/YYYY",
 ): string => {
   if (!date) return "N/A";
-  return moment(date).format(pattern);
+  return moment.utc(date).format(pattern);
 };
 
 export const formatDateMonth = (
@@ -43,6 +43,14 @@ export const formatDateMonthYear = (
 ): string => {
   if (!date) return "N/A";
   return moment(date).format(pattern);
+};
+
+export const formatDateTime = (
+  date: moment.MomentInput,
+  pattern: string = "HH:mm",
+): string => {
+  if (!date) return "N/A";
+  return moment.utc(date).format(pattern);
 };
 
 export const getRandomColor = () => {

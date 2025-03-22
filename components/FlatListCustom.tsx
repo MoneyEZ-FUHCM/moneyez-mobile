@@ -49,7 +49,7 @@ export function FlatListCustom<T>({
             <ActivityIndicator size="small" color={PRIMARY_COLOR} />
           </View>
         ) : !hasMore ? (
-          <View className="items-center">
+          <View className="my-3 items-center">
             <Text className="text-primary">
               ---------- Đã tải xong ----------
             </Text>

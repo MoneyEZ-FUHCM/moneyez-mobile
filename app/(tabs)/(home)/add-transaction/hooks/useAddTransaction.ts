@@ -2,10 +2,9 @@ import { TRANSACTION_TYPE, TRANSACTION_TYPE_TEXT } from "@/enums/globals";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { convertUTCToVietnamTime, parseCurrency } from "@/helpers/libs";
-import useHideTabbar from "@/hooks/useHideTabbar";
 import useUploadImage from "@/hooks/useUploadImage";
-import { setLoading } from "@/redux/slices/loadingSlice";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
+import { setTransactionData } from "@/redux/slices/transactionSlice";
 import { selectCurrentUserSpendingModel } from "@/redux/slices/userSpendingModelSlice";
 import { useCreateTransactionMutation } from "@/services/transaction";
 import {
@@ -14,9 +13,11 @@ import {
 } from "@/services/userSpendingModel";
 import { CategoryListFilter } from "@/types/category.types";
 import { TransactionType } from "@/types/invidual.types";
+import { Subcategory } from "@/types/subCategory";
+import { TransactionPreviewPayload } from "@/types/transaction.types";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { FlatList, ToastAndroid } from "react-native";
+import { BackHandler, FlatList, ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import TEXT_TRANSLATE_ADD_TRANSACTION from "../AddTransaction.translate";
@@ -34,14 +35,14 @@ const useAddTransaction = (type: string) => {
       ? TRANSACTION_TYPE_TEXT.INCOME
       : TRANSACTION_TYPE_TEXT.EXPENSE,
   );
-  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(
-    undefined,
-  );
+  const [selectedSubCategory, setSelectedSubCategory] = useState<
+    string | undefined
+  >(undefined);
   const [images, setImages] = useState<string[]>([]);
-  const [selectedCategoryCode, setSelectedCategoryCode] = useState("");
   const [uniqueCategories, setUniqueCategories] = useState<
     CategoryListFilter[]
   >([]);
+  const [selectedCategoryCode, setSelectedCategoryCode] = useState("");
   const flatListRef = useRef<FlatList>(null);
   const formikRef = useRef<any>(null);
   const handleSubmitRef = useRef<() => void>(() => {});
@@ -54,7 +55,18 @@ const useAddTransaction = (type: string) => {
   });
   const { data: mapCategories } = useGetCurrentCategoriesQuery({});
 
-  useHideTabbar();
+  const selectedSubCategoryData = mapSubCategories?.data?.find(
+    (subCategory: Subcategory) => subCategory.id === selectedSubCategory,
+  );
+
+  const subCategoryName = selectedSubCategoryData?.name || "";
+  const subCategoryIcon = selectedSubCategoryData?.icon || "";
+
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(setMainTabHidden(true));
+    }, [dispatch]),
+  );
 
   useEffect(() => {
     if (mapCategories?.data) {
@@ -109,43 +121,33 @@ const useAddTransaction = (type: string) => {
 
   const handleCreateTransaction = useCallback(
     async (payload: any) => {
-      if (!selectedCategory) {
+      if (!selectedSubCategory) {
         return ToastAndroid.show(
           MESSAGE_VALIDATE.SUBCATEGORY_REQUIRED,
           ToastAndroid.SHORT,
         );
       }
-
-      dispatch(setLoading(true));
-      const updatePayload = {
+      const updatePayload: TransactionPreviewPayload = {
         amount: parseCurrency(payload?.amount),
-        description: payload?.description,
-        images,
-        subcategoryId: selectedCategory,
-        transactionDate: convertUTCToVietnamTime(payload?.dob),
+        description: payload?.description || "",
+        images: images || [],
+        subcategoryId: selectedSubCategory,
+        subCategoryName: subCategoryName,
+        subCategoryIcon: subCategoryIcon,
+        transactionDate: convertUTCToVietnamTime(payload?.dob).toISOString(),
         type:
           transactionType === TRANSACTION_TYPE_TEXT.EXPENSE
             ? TRANSACTION_TYPE.EXPENSE
             : TRANSACTION_TYPE.INCOME,
       };
 
-      try {
-        const res = await createTransaction(updatePayload).unwrap();
-        if (res && res.status === HTTP_STATUS.SUCCESS.CREATED) {
-          ToastAndroid.show(
-            MESSAGE_SUCCESS.CREATE_TRANSACTION_SUCCESSFUL,
-            ToastAndroid.CENTER,
-          );
-          handleNext();
-        }
-      } catch (err: any) {
-        console.log("err", err);
-        ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
-      } finally {
-        dispatch(setLoading(false));
-      }
+      dispatch(setTransactionData(updatePayload));
+
+      router.navigate({
+        pathname: HOME.TRANSACTION_DETAIL as any,
+      });
     },
-    [selectedCategory, images, transactionType],
+    [selectedSubCategory, images, transactionType],
   );
 
   const handleDeleteImage = useCallback(
@@ -156,25 +158,25 @@ const useAddTransaction = (type: string) => {
     [deleteImage, setImages],
   );
 
-  const handleNext = () => {
-    if (currentUserSpendingModel) {
-      const startDate = new Date(
-        currentUserSpendingModel?.startDate,
-      ).toLocaleDateString("vi-VN");
-      const endDate = new Date(
-        currentUserSpendingModel?.endDate,
-      ).toLocaleDateString("vi-VN");
+  // const handleNext = () => {
+  //   if (currentUserSpendingModel) {
+  //     const startDate = new Date(
+  //       currentUserSpendingModel?.startDate,
+  //     ).toLocaleDateString("vi-VN");
+  //     const endDate = new Date(
+  //       currentUserSpendingModel?.endDate,
+  //     ).toLocaleDateString("vi-VN");
 
-      router.replace({
-        pathname: HOME.PERIOD_HISTORY as any,
-        params: {
-          userSpendingId: currentUserSpendingModel?.id,
-          startDate,
-          endDate,
-        },
-      });
-    }
-  };
+  //     router.replace({
+  //       pathname: HOME.PERIOD_HISTORY as any,
+  //       params: {
+  //         userSpendingId: currentUserSpendingModel?.id,
+  //         startDate,
+  //         endDate,
+  //       },
+  //     });
+  //   }
+  // };
 
   const validationSchema = useMemo(
     () =>
@@ -193,11 +195,24 @@ const useAddTransaction = (type: string) => {
     [],
   );
 
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        handleBack();
+        return true;
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [handleBack]),
+  );
+
   return {
     state: {
       transactionType,
       images,
-      selectedCategory,
+      selectedSubCategory,
       initialValues,
       mapSubCategories: mapSubCategories?.data,
       uniqueCategories,
@@ -212,7 +227,7 @@ const useAddTransaction = (type: string) => {
       setTransactionType,
       pickAndUploadImage,
       deleteImage,
-      setSelectedCategory,
+      setSelectedSubCategory,
       handleCreateTransaction,
       handleSelectCategoryFilter,
       handleDeleteImage,

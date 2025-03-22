@@ -12,8 +12,6 @@ const useExpenseDetail = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { budgetId } = useLocalSearchParams();
 
-  console.log("check budgetId123", budgetId);
-
   const showAllTransactionsModal = () => {
     setIsModalVisible(true);
   };

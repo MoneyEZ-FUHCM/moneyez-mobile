@@ -46,7 +46,6 @@ const usePeriodHistory = () => {
     { skip: !userSpendingId },
   );
 
-  console.log("check userSpendingId", userSpendingId);
   const {
     data: currentUserSpendingModelChartDetail,
     isLoading: isLoadingCurrentUserSpendingModelChartDetail,

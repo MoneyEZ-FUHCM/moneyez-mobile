@@ -102,12 +102,18 @@ export default function IndividualHome() {
           </SectionComponent>
           <SpaceComponent height={22} />
           {/* BUDGET CATEGORIES */}
-          <SpendingBudgetComponent
-            data={state.personalFinancialGoalsData}
-            onHeaderPress={handler.handleSpendingBudgetPress}
-          />
-          <SpaceComponent height={22} />
-          {/* PLACEHOLDER FOR CHAT BOT */}
+          {state.personalFinancialGoalsData &&
+          state.personalFinancialGoalsData?.length > 0 ? (
+            <>
+              <SpendingBudgetComponent
+                data={state.personalFinancialGoalsData}
+                onHeaderPress={handler.handleSpendingBudgetPress}
+              />
+              <SpaceComponent height={22} />
+            </>
+          ) : (
+            <View />
+          )}
           <SectionComponent rootClassName="mx-5 ">
             <BudgetSummaryComponent
               button1Text={TEXT_TRANSLATE_INDIVIDUAL_HOME.BUTTON.AI_BUTTON_1}

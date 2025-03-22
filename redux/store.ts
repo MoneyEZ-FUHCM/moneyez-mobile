@@ -6,6 +6,7 @@ import userReducer from "./slices/userSlice";
 import tabReducer from "./slices/tabSlice";
 import systemReducer from "./slices/systemSlice";
 import userSpendingModelReducer from "./slices/userSpendingModelSlice";
+import transactionReducer from "./slices/transactionSlice";
 
 const rootReducer = combineReducers({
   [authApi.reducerPath]: authApi.reducer,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   tab: tabReducer,
   system: systemReducer,
   userSpendingModel: userSpendingModelReducer,
+  transaction: transactionReducer,
 });
 
 export const store = configureStore({

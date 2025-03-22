@@ -1,16 +1,19 @@
 import NoData from "@/assets/images/not-found-result.png";
+import NoImages from "@/assets/images/no-images.png";
 import {
   FlatListCustom,
+  ImageViewerComponent,
   LoadingSectionWrapper,
+  ModalLizeComponent,
   SafeAreaViewCustom,
   SectionComponent,
-  SpaceComponent,
+  SkeletonLoaderComponent,
 } from "@/components";
 import { TRANSACTION_TYPE } from "@/enums/globals";
-import { PATH_NAME } from "@/helpers/constants/pathname";
+import { Colors } from "@/helpers/constants/color";
+import { formatCurrency, formatDate, formatDateTime } from "@/helpers/libs";
 import { TransactionViewModelDetail } from "@/types/transaction.types";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
-import { router } from "expo-router";
 import React from "react";
 import {
   ActivityIndicator,
@@ -20,12 +23,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import usePeriodHistoryDetail from "./hooks/usePeriodHistoryDetail";
 import TEXT_TRANSLATE_PERIOD_HISTORY from "./PeriodHistory.translate";
 
 export default function PeriodHistoryDetail() {
   const { state, handler } = usePeriodHistoryDetail();
-  const PRIMARY_COLOR = "#609084";
 
   const renderTransactionItem = ({
     item,
@@ -64,6 +67,33 @@ export default function PeriodHistoryDetail() {
     );
   };
 
+  const renderGroupSkeleton = () => (
+    <View className="mx-5 mt-5 rounded-[10px] bg-white px-3 py-3">
+      <View className="mb-5 flex-row space-x-3 rounded-xl border-[0.5px] border-gray-300 px-4 py-2.5">
+        <View className="h-10 w-10 rounded-full bg-gray-300" />
+        <View className="flex-1">
+          <View className="h-4 w-3/4 rounded bg-gray-300" />
+          <View className="mt-2 h-4 w-1/2 rounded bg-gray-300" />
+        </View>
+      </View>
+      <View className="gap-6">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <View key={index} className="flex-row items-center justify-between">
+            <View className="h-4 w-1/3 rounded bg-gray-300" />
+            <View className="h-4 w-1/2 rounded bg-gray-300" />
+          </View>
+        ))}
+      </View>
+      <View className="my-6">
+        <View className="h-20 w-full rounded bg-gray-300" />
+      </View>
+      <View className="">
+        <View className="mb-3 h-4 w-1/3 rounded bg-gray-300" />
+        <View className="h-16 w-16 rounded bg-gray-300" />
+      </View>
+    </View>
+  );
+
   const renderFooter = () => {
     if (!state.isLoadingMore) return null;
     return (
@@ -83,7 +113,7 @@ export default function PeriodHistoryDetail() {
           <MaterialIcons
             name={state.showFilters ? "expand-less" : "expand-more"}
             size={24}
-            color={PRIMARY_COLOR}
+            color={Colors.colors.primary}
           />
         </Pressable>
       </View>
@@ -228,81 +258,228 @@ export default function PeriodHistoryDetail() {
     </View>
   );
 
-  if (state.isLoading) {
-    return (
-      <SafeAreaViewCustom rootClassName="flex-1 bg-[#fafafa]">
-        <SectionComponent rootClassName="h-24 bg-white justify-center">
-          <View className="flex-row items-center justify-between px-4">
-            <Pressable onPress={handler.handleBack}>
-              <MaterialIcons name="arrow-back" size={24} color="black" />
-            </Pressable>
-            <Text className="text-xl font-semibold text-black">
-              {state.modelDetails.startDate} - {state.modelDetails.endDate}
-            </Text>
-            <SpaceComponent width={24} />
-          </View>
-        </SectionComponent>
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#609084" />
-          <Text className="mt-2 text-[#609084]">
-            {TEXT_TRANSLATE_PERIOD_HISTORY.TITLE.LOADING_DATA}
-          </Text>
-        </View>
-      </SafeAreaViewCustom>
-    );
-  }
-
   return (
-    <SafeAreaViewCustom rootClassName="bg-[#fafafa]">
-      <SectionComponent rootClassName="relative bg-white shadow-md h-14 flex-row items-center justify-center">
-        <TouchableOpacity
-          onPress={handler.handleBack}
-          className="absolute left-3 rounded-full p-2"
+    <GestureHandlerRootView>
+      <SafeAreaViewCustom rootClassName="bg-[#fafafa]">
+        {state.isLoading ? (
+          <>
+            <SectionComponent rootClassName="relative bg-white shadow-md h-14 flex-row items-center justify-center">
+              <TouchableOpacity
+                onPress={handler.handleBack}
+                className="absolute left-3 rounded-full p-2"
+              >
+                <AntDesign
+                  name="close"
+                  size={24}
+                  color={Colors.colors.primary}
+                />
+              </TouchableOpacity>
+              <Text className="text-lg font-bold text-primary">
+                {state.modelDetails?.startDate} - {state.modelDetails?.endDate}
+              </Text>
+              <TouchableOpacity
+                onPress={handler.handleRefetchData}
+                className="absolute right-3 rounded-full p-2"
+              >
+                <AntDesign
+                  name="reload1"
+                  size={24}
+                  color={Colors.colors.primary}
+                />
+              </TouchableOpacity>
+            </SectionComponent>
+            <View className="flex-1 items-center justify-center">
+              <ActivityIndicator size="large" color="#609084" />
+              <Text className="mt-2 text-[#609084]">
+                {TEXT_TRANSLATE_PERIOD_HISTORY.TITLE.LOADING_DATA}
+              </Text>
+            </View>
+          </>
+        ) : (
+          <>
+            <SectionComponent rootClassName="relative bg-white shadow-md h-14 flex-row items-center justify-center">
+              <TouchableOpacity
+                onPress={handler.handleBack}
+                className="absolute left-3 rounded-full p-2"
+              >
+                <AntDesign
+                  name="close"
+                  size={24}
+                  color={Colors.colors.primary}
+                />
+              </TouchableOpacity>
+              <Text className="text-lg font-bold text-primary">
+                {state.modelDetails?.startDate} - {state.modelDetails?.endDate}
+              </Text>
+              <TouchableOpacity
+                onPress={handler.handleRefetchData}
+                className="absolute right-3 rounded-full p-2"
+              >
+                <AntDesign
+                  name="reload1"
+                  size={24}
+                  color={Colors.colors.primary}
+                />
+              </TouchableOpacity>
+            </SectionComponent>
+            <LoadingSectionWrapper isLoading={state.isRefetching}>
+              <View className="px-5">
+                <View className="my-4 rounded-lg bg-white">
+                  {renderSummary()}
+                  {renderFilters()}
+                </View>
+                <Text className="text-lg font-semibold text-[#609084]">
+                  Danh sách giao dịch ({state.totalCount})
+                </Text>
+              </View>
+              <SectionComponent
+                rootClassName={`mx-4 ${state.isFiltering ? "h-[55%]" : ""} py-4 p-4 bg-white rounded-lg`}
+              >
+                <LoadingSectionWrapper isLoading={state.isFiltering}>
+                  <FlatListCustom
+                    isBottomTab={true}
+                    data={state.transactions ?? []}
+                    renderItem={renderTransactionItem}
+                    keyExtractor={(item) => item.id.toString()}
+                    hasMore={
+                      state.transactionsData?.items?.length === state.pageSize
+                    }
+                    showsVerticalScrollIndicator={false}
+                    ListFooterComponent={renderFooter}
+                    contentContainerStyle={{
+                      paddingBottom: state.showFilters ? 680 : 500,
+                    }}
+                    onLoadMore={handler.loadMoreData}
+                    isLoading={state.isLoadingMore}
+                    ListEmptyComponent={renderEmptyList}
+                  />
+                </LoadingSectionWrapper>
+              </SectionComponent>
+            </LoadingSectionWrapper>
+          </>
+        )}
+        <ModalLizeComponent
+          ref={state.modalizeRef}
+          modalStyle={{
+            minHeight: 530,
+          }}
         >
-          <AntDesign name="close" size={24} color={PRIMARY_COLOR} />
-        </TouchableOpacity>
-        <Text className="text-lg font-bold text-primary">
-          {state.modelDetails?.startDate} - {state.modelDetails?.endDate}
-        </Text>
-        <TouchableOpacity
-          onPress={handler.handleRefetchData}
-          className="absolute right-3 rounded-full p-2"
-        >
-          <AntDesign name="reload1" size={24} color={PRIMARY_COLOR} />
-        </TouchableOpacity>
-      </SectionComponent>
-      <LoadingSectionWrapper isLoading={state.isRefetching}>
-        <View className="px-5">
-          <View className="my-4 rounded-lg bg-white">
-            {renderSummary()}
-            {renderFilters()}
-          </View>
-          <Text className="text-lg font-semibold text-[#609084]">
-            Danh sách giao dịch ({state.totalCount})
-          </Text>
-        </View>
-        <SectionComponent
-          rootClassName={`mx-4 ${state.isFiltering ? "h-[55%]" : ""} py-4 p-4 bg-white rounded-lg`}
-        >
-          <LoadingSectionWrapper isLoading={state.isFiltering}>
-            <FlatListCustom
-              isBottomTab={true}
-              data={state.transactions ?? []}
-              renderItem={renderTransactionItem}
-              keyExtractor={(item) => item.id.toString()}
-              hasMore={state.transactionsData?.items?.length === state.pageSize}
-              showsVerticalScrollIndicator={false}
-              ListFooterComponent={renderFooter}
-              contentContainerStyle={{
-                paddingBottom: state.showFilters ? 680 : 500,
-              }}
-              onLoadMore={handler.loadMoreData}
-              isLoading={state.isLoadingMore}
-              ListEmptyComponent={renderEmptyList}
-            />
-          </LoadingSectionWrapper>
-        </SectionComponent>
-      </LoadingSectionWrapper>
-    </SafeAreaViewCustom>
+          {state.isLoadingTransactionDetail ? (
+            <SkeletonLoaderComponent>
+              {renderGroupSkeleton()}
+            </SkeletonLoaderComponent>
+          ) : (
+            <>
+              <SectionComponent rootClassName="mx-5 bg-white py-3 px-2 mt-5 rounded-[10px]">
+                <View className="mb-5 flex-row space-x-3 rounded-xl border-[0.5px] border-gray-300 px-4 py-2.5">
+                  <View className="rounded-full bg-superlight p-2">
+                    <MaterialIcons
+                      name={state.transactionDetail?.subcategoryIcon}
+                      size={28}
+                      color={Colors.colors.primary}
+                    />
+                  </View>
+                  <View>
+                    <Text className="font-semibold">
+                      {state.transactionDetail?.description}
+                    </Text>
+                    <Text className="text-base font-bold text-red">
+                      {formatCurrency(state.transactionDetail?.amount)}
+                    </Text>
+                  </View>
+                </View>
+                <View className="gap-5">
+                  <View className="flex-row items-center justify-between">
+                    <Text className="flex-1 font-medium text-text-gray">
+                      {TEXT_TRANSLATE_PERIOD_HISTORY.TITLE.TIME}
+                    </Text>
+                    <Text className="flex-1 text-right font-bold">
+                      {formatDateTime(state.transactionDetail?.transactionDate)}{" "}
+                      - {formatDate(state.transactionDetail?.transactionDate)}
+                    </Text>
+                  </View>
+                  <View className="flex-row items-center justify-between">
+                    <Text className="flex-1 font-medium text-text-gray">
+                      {TEXT_TRANSLATE_PERIOD_HISTORY.TITLE.SUBCATEGORY}
+                    </Text>
+                    <View className="flex-1 flex-row items-center justify-end space-x-2">
+                      <View className="rounded-full bg-superlight p-2">
+                        <MaterialIcons
+                          name={state.transactionDetail?.subcategoryIcon}
+                          size={24}
+                          color={Colors.colors.primary}
+                        />
+                      </View>
+                      <Text className="font-bold">
+                        {state.transactionDetail?.subcategoryName}
+                      </Text>
+                    </View>
+                  </View>
+                  <View className="flex-row items-center justify-between">
+                    <Text className="flex-1 font-medium text-text-gray">
+                      {TEXT_TRANSLATE_PERIOD_HISTORY.TITLE.PAYMENT_METHOD}
+                    </Text>
+                    <View className="flex-1 flex-row items-center justify-end space-x-2">
+                      <MaterialIcons
+                        name={state.transactionDetail?.icon}
+                        size={24}
+                        color={Colors.colors.primary}
+                      />
+                      <Text className="font-bold">Tiền mặt</Text>
+                    </View>
+                  </View>
+                  <View className="space-y-2">
+                    <Text className="font-medium text-text-gray">
+                      {TEXT_TRANSLATE_PERIOD_HISTORY.TITLE.DESCRIPTION}
+                    </Text>
+                    <Text className="min-h-[72px] rounded-lg border border-gray-300 p-1.5 text-xs leading-[18px]">
+                      {state.transactionDetail?.description}
+                    </Text>
+                  </View>
+                  {state.transactionDetail?.images?.length > 0 ? (
+                    <View className="space-y-2">
+                      <Text className="font-medium text-text-gray">
+                        {TEXT_TRANSLATE_PERIOD_HISTORY.TITLE.IMAGE_TRANSACTION}
+                      </Text>
+                      <View className="flex-row flex-wrap">
+                        {state.transactionDetail.images.map(
+                          (image: string, index: number) => (
+                            <Pressable
+                              key={index}
+                              onPress={handler.handleSetImageView}
+                              className="relative mx-1 mb-2 h-16 w-16 overflow-hidden rounded-lg"
+                            >
+                              <Image
+                                source={{ uri: image }}
+                                className="h-full w-full"
+                                resizeMode="cover"
+                              />
+                            </Pressable>
+                          ),
+                        )}
+                      </View>
+                    </View>
+                  ) : (
+                    <View className="space-y-2">
+                      <Text className="font-medium text-text-gray">
+                        {TEXT_TRANSLATE_PERIOD_HISTORY.TITLE.IMAGE_TRANSACTION}
+                      </Text>
+                      <Pressable className="relative mx-1 mb-2 h-16 w-16 overflow-hidden rounded-lg">
+                        <Image
+                          source={NoImages}
+                          className="h-full w-full"
+                          resizeMode="contain"
+                        />
+                      </Pressable>
+                    </View>
+                  )}
+                </View>
+              </SectionComponent>
+              <ImageViewerComponent images={state.transactionDetail?.images} />
+            </>
+          )}
+        </ModalLizeComponent>
+      </SafeAreaViewCustom>
+    </GestureHandlerRootView>
   );
 }

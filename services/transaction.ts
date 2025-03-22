@@ -42,6 +42,7 @@ export const {
   useCreateTransactionMutation,
   useGetTransactionQuery,
   useGetTransactionByModelQuery,
+  useLazyGetTransactionDetailQuery,
   useGetTransactionDetailQuery,
 } = transactionApi;
 
