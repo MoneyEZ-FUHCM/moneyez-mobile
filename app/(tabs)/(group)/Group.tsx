@@ -52,7 +52,7 @@ const Group = () => {
             renderItem={({ item }) => (
               <TouchableOpacity
                 className="mb-4 flex-row items-center rounded-2xl border border-gray-200 bg-white p-4 shadow-lg"
-                onPress={handler.handleNavigateAndHideTabbar}
+                onPress={handler.handleNavigateAndHideTabbar(item)}
               >
                 <Image
                   src={item?.imageUrl}
