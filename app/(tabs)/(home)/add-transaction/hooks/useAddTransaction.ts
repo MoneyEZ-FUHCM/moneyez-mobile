@@ -6,7 +6,6 @@ import useUploadImage from "@/hooks/useUploadImage";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { setTransactionData } from "@/redux/slices/transactionSlice";
 import { selectCurrentUserSpendingModel } from "@/redux/slices/userSpendingModelSlice";
-import { useCreateTransactionMutation } from "@/services/transaction";
 import {
   useGetCurrentCategoriesQuery,
   useGetSubCategoriesQuery,
@@ -48,7 +47,6 @@ const useAddTransaction = (type: string) => {
   const handleSubmitRef = useRef<() => void>(() => {});
 
   const { imageUrl, pickAndUploadImage, deleteImage } = useUploadImage();
-  const [createTransaction] = useCreateTransactionMutation();
   const { data: mapSubCategories, isLoading } = useGetSubCategoriesQuery({
     type: transactionType,
     code: selectedCategoryCode,
@@ -119,7 +117,7 @@ const useAddTransaction = (type: string) => {
     dispatch(setMainTabHidden(false));
   }, [dispatch]);
 
-  const handleCreateTransaction = useCallback(
+  const handlePreviewTransaction = useCallback(
     async (payload: any) => {
       if (!selectedSubCategory) {
         return ToastAndroid.show(
@@ -157,26 +155,6 @@ const useAddTransaction = (type: string) => {
     },
     [deleteImage, setImages],
   );
-
-  // const handleNext = () => {
-  //   if (currentUserSpendingModel) {
-  //     const startDate = new Date(
-  //       currentUserSpendingModel?.startDate,
-  //     ).toLocaleDateString("vi-VN");
-  //     const endDate = new Date(
-  //       currentUserSpendingModel?.endDate,
-  //     ).toLocaleDateString("vi-VN");
-
-  //     router.replace({
-  //       pathname: HOME.PERIOD_HISTORY as any,
-  //       params: {
-  //         userSpendingId: currentUserSpendingModel?.id,
-  //         startDate,
-  //         endDate,
-  //       },
-  //     });
-  //   }
-  // };
 
   const validationSchema = useMemo(
     () =>
@@ -228,7 +206,7 @@ const useAddTransaction = (type: string) => {
       pickAndUploadImage,
       deleteImage,
       setSelectedSubCategory,
-      handleCreateTransaction,
+      handlePreviewTransaction,
       handleSelectCategoryFilter,
       handleDeleteImage,
       validationSchema,

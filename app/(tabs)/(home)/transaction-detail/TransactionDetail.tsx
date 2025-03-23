@@ -6,13 +6,11 @@ import {
 } from "@/components";
 import { ImageViewerComponent } from "@/components/ImageViewerComponent";
 import { Colors } from "@/helpers/constants/color";
-import { PATH_NAME } from "@/helpers/constants/pathname";
 import { formatCurrency, formatDate, formatDateTime } from "@/helpers/libs";
 import { MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
 import { Image, Pressable, Text, View } from "react-native";
-import { useSelector } from "react-redux";
 import TEXT_TRANSLATE_TRANSACTION_DETAIL from "./TransactionDetail.translate";
 import useTransactionDetail from "./hooks/useTransactionDetail";
 

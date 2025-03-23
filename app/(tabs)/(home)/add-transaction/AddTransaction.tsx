@@ -113,7 +113,7 @@ export default function AddTransaction() {
         innerRef={(ref) => (state.formikRef.current = ref)}
         initialValues={state.initialValues}
         validationSchema={handler.validationSchema}
-        onSubmit={handler.handleCreateTransaction}
+        onSubmit={handler.handlePreviewTransaction}
       >
         {({ handleSubmit }) => {
           handler.handleSubmitRef.current = handleSubmit;
