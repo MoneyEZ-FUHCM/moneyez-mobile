@@ -23,6 +23,8 @@ interface CommonInputProps {
   inputClass?: string;
   errorTextClass?: string;
   formatter?: (value: string) => string; // Hàm format dữ liệu
+  multiline?: boolean;
+  maxLength?: number;
 }
 
 const InputComponent = ({
@@ -37,6 +39,8 @@ const InputComponent = ({
   labelClass = "",
   inputClass = "",
   errorTextClass = "",
+  multiline = false,
+  maxLength,
   formatter,
 }: CommonInputProps) => {
   const [field, meta, helpers] = useField(name);
@@ -48,31 +52,39 @@ const InputComponent = ({
     helpers.setValue(formattedText);
   };
 
+  const currentLength = field.value ? field.value.length : 0;
+
   return (
     <View className={`${containerClass} mb-5`}>
-      <View className="mb-1 flex-row items-center">
-        {isRequired && <Text className="mr-1 text-red">*</Text>}
-        <Text
-          className={`${labelClass} ${
-            meta.touched && meta.error ? "text-red" : ""
-          }`}
-        >
-          {label}
-        </Text>
+      <View className="mb-1 flex-row items-center justify-between">
+        <View className="flex-row items-center">
+          {isRequired && <Text className="mr-1 text-red">*</Text>}
+          <Text className={`${labelClass} ${meta.touched && meta.error ? "text-red" : ""}`}>
+            {label}
+          </Text>
+          {multiline && maxLength && (
+          <Text className="text-[12px] text-gray-500">
+            {" "}({currentLength}/{maxLength})
+          </Text>
+        )}
+        </View>
       </View>
       <View className="relative">
         <TextInput
-          className={`h-10 rounded-md border px-3 ${isPrivate && "pr-10"} ${
-            icon ? "pl-10" : "pl-3"
-          } ${meta.touched && meta.error ? "border-red" : "border-gray-300"} ${
-            inputClass
-          }`}
+          className={`${multiline ? "h-24" : "h-10"} rounded-md border px-3 ${
+            isPrivate ? "pr-10" : ""
+          } ${icon ? "pl-10" : "pl-3"} ${
+            meta.touched && meta.error ? "border-red" : "border-gray-300"
+          } ${inputClass}`}
           placeholder={placeholder}
           secureTextEntry={!isPasswordVisible && isPrivate}
           inputMode={inputMode}
           value={field.value}
           onChangeText={handleChangeText} // Sử dụng hàm mới
           onBlur={() => helpers.setTouched(true)}
+          multiline={multiline}
+          maxLength={maxLength}
+          style={{ textAlignVertical: "top", paddingTop: 8 }}
         />
 
         {icon && <View className="absolute left-3 top-2.5">{icon}</View>}
