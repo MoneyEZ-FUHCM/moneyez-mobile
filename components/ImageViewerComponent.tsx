@@ -12,10 +12,11 @@ interface ImageViewerProps {
 const ImageViewerComponent = ({ images, imageIndex = 0 }: ImageViewerProps) => {
   const dispatch = useDispatch();
   const isShowImageViewer = useSelector(selectImageView);
+  const formattedImages = images?.map((image) => ({ uri: image }));
 
   return (
     <ImageView
-      images={images}
+      images={formattedImages as []}
       imageIndex={imageIndex}
       visible={isShowImageViewer}
       onRequestClose={() => dispatch(setImageView(false))}

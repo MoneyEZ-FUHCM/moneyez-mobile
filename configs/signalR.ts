@@ -3,7 +3,6 @@ import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { setConnectionStatus } from "@/redux/slices/systemSlice";
 import { store } from "@/redux/store";
 import * as signalR from "@microsoft/signalr";
-import { ToastAndroid } from "react-native";
 
 const SIGNALR_URL = process.env.EXPO_PUBLIC_SIGNALR_URL as string;
 
@@ -26,10 +25,10 @@ export const startConnection = async (): Promise<void> => {
 
     connection.onclose(async (error) => {
       store.dispatch(setConnectionStatus(CHATBOT_CONNECTION.CONNECTING));
-      ToastAndroid.show(
-        CHATBOT_CONNECTION_TRANSLATE.RECONNECT,
-        ToastAndroid.SHORT,
-      );
+      // ToastAndroid.show(
+      //   CHATBOT_CONNECTION_TRANSLATE.RECONNECT,
+      //   ToastAndroid.SHORT,
+      // );
       await reconnect();
     });
 
@@ -51,16 +50,16 @@ export const startConnection = async (): Promise<void> => {
 
     await connection.start();
     store.dispatch(setConnectionStatus(CHATBOT_CONNECTION.CONNECTED));
-    ToastAndroid.show(
-      CHATBOT_CONNECTION_TRANSLATE.CONNECTED,
-      ToastAndroid.SHORT,
-    );
+    // ToastAndroid.show(
+    //   CHATBOT_CONNECTION_TRANSLATE.CONNECTED,
+    //   ToastAndroid.SHORT,
+    // );
   } catch (err) {
     store.dispatch(setConnectionStatus(CHATBOT_CONNECTION.DISCONNECTED));
-    ToastAndroid.show(
-      CHATBOT_CONNECTION_TRANSLATE.SYSTEM_ERROR,
-      ToastAndroid.LONG,
-    );
+    // ToastAndroid.show(
+    //   CHATBOT_CONNECTION_TRANSLATE.SYSTEM_ERROR,
+    //   ToastAndroid.LONG,
+    // );
   }
 };
 

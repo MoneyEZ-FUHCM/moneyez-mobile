@@ -113,7 +113,7 @@ export default function AddTransaction() {
         innerRef={(ref) => (state.formikRef.current = ref)}
         initialValues={state.initialValues}
         validationSchema={handler.validationSchema}
-        onSubmit={handler.handleCreateTransaction}
+        onSubmit={handler.handlePreviewTransaction}
       >
         {({ handleSubmit }) => {
           handler.handleSubmitRef.current = handleSubmit;
@@ -132,40 +132,6 @@ export default function AddTransaction() {
                 </View>
               </SectionComponent>
               <SectionComponent rootClassName="bg-white m-4 p-2 rounded-lg">
-                <Text className="mb-3 text-base font-semibold text-primary">
-                  {TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.INFORMATION}
-                </Text>
-                <InputComponent
-                  name="amount"
-                  label={TEXT_TRANSLATE_ADD_TRANSACTION.LABEL.MONEY_NUMBER}
-                  placeholder={TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.INPUT_PRICE}
-                  inputMode="numeric"
-                  isRequired
-                  labelClass="text-text-gray text-[12px] font-bold"
-                  formatter={formatCurrencyInput}
-                />
-                <SpaceComponent height={10} />
-                <DatePickerTransactionComponent
-                  isRequired
-                  label={TEXT_TRANSLATE_ADD_TRANSACTION.LABEL.DATE}
-                  name="dob"
-                  labelClass="text-text-gray text-[12px] font-bold"
-                  createdDate={state.currentUserSpendingModel?.startDate}
-                  endDate={state.currentUserSpendingModel?.endDate}
-                />
-                <SpaceComponent height={10} />
-                <TextAreaComponent
-                  name="description"
-                  label={TEXT_TRANSLATE_ADD_TRANSACTION.LABEL.DESCRIPTION}
-                  placeholder={
-                    TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.INPUT_DESCRIPTION
-                  }
-                  numberOfLines={6}
-                  isRequired
-                  labelClass="text-text-gray text-[12px] font-bold"
-                />
-              </SectionComponent>
-              <SectionComponent rootClassName="bg-white m-4 p-2 rounded-lg transition-all">
                 <Text className="text-lg font-bold tracking-tight text-primary">
                   {TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.SEPERATE}
                 </Text>
@@ -203,7 +169,7 @@ export default function AddTransaction() {
                     showsHorizontalScrollIndicator={false}
                   />
                 </View>
-                <View className="flex-row flex-wrap">
+                <View className="mt-1 flex-row flex-wrap">
                   {state.isLoading ? (
                     <View className="h-44 w-full items-center justify-center">
                       <ActivityIndicator size="small" color={PRIMARY_COLOR} />
@@ -213,9 +179,13 @@ export default function AddTransaction() {
                       return (
                         <Pressable
                           key={subCategory?.id}
-                          onPress={() =>
-                            handler.setSelectedCategory(subCategory?.id)
-                          }
+                          onPress={() => {
+                            handler.setSelectedSubCategory(subCategory?.id);
+                            state.formikRef.current?.setFieldValue(
+                              "description",
+                              subCategory?.name,
+                            );
+                          }}
                           className="mb-3 w-1/3 px-1.5"
                         >
                           <CategoryItem
@@ -225,7 +195,7 @@ export default function AddTransaction() {
                               subCategory?.icon as keyof typeof MaterialIcons.glyphMap
                             }
                             isSelected={
-                              state.selectedCategory === subCategory?.id
+                              state.selectedSubCategory === subCategory?.id
                             }
                             rootClassName="flex-1 justify-center min-h-[110px]"
                           />
@@ -234,6 +204,40 @@ export default function AddTransaction() {
                     })
                   )}
                 </View>
+              </SectionComponent>
+              <SectionComponent rootClassName="bg-white m-4 p-2 rounded-lg">
+                <Text className="mb-3 text-base font-semibold text-primary">
+                  {TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.INFORMATION}
+                </Text>
+                <InputComponent
+                  name="amount"
+                  label={TEXT_TRANSLATE_ADD_TRANSACTION.LABEL.MONEY_NUMBER}
+                  placeholder={TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.INPUT_PRICE}
+                  inputMode="numeric"
+                  isRequired
+                  labelClass="text-text-gray text-[12px] font-bold"
+                  formatter={formatCurrencyInput}
+                />
+                <SpaceComponent height={10} />
+                <DatePickerTransactionComponent
+                  isRequired
+                  label={TEXT_TRANSLATE_ADD_TRANSACTION.LABEL.DATE}
+                  name="dob"
+                  labelClass="text-text-gray text-[12px] font-bold"
+                  createdDate={state.currentUserSpendingModel?.startDate}
+                  endDate={state.currentUserSpendingModel?.endDate}
+                />
+                <SpaceComponent height={10} />
+                <TextAreaComponent
+                  name="description"
+                  label={TEXT_TRANSLATE_ADD_TRANSACTION.LABEL.DESCRIPTION}
+                  placeholder={
+                    TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.INPUT_DESCRIPTION
+                  }
+                  numberOfLines={6}
+                  isRequired
+                  labelClass="text-text-gray text-[12px] font-bold"
+                />
               </SectionComponent>
               <SectionComponent rootClassName="bg-white m-4 p-4 rounded-lg">
                 <Text className="mb-4 text-base font-semibold text-primary">

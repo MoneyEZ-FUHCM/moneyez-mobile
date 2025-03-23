@@ -11,6 +11,7 @@ const ProgressCircleComponent = ({
   iconName = "question-mark",
   iconSize = 30,
   iconColor = Colors.colors.primary,
+  thickness = 4,
 }: {
   value: number;
   size?: number;
@@ -18,6 +19,7 @@ const ProgressCircleComponent = ({
   iconName?: keyof typeof MaterialIcons.glyphMap;
   iconSize?: number;
   iconColor?: string;
+  thickness?: number;
 }) => {
   const [progress, setProgress] = useState(0);
 
@@ -44,7 +46,7 @@ const ProgressCircleComponent = ({
         <Progress.Circle
           size={size}
           progress={progress}
-          thickness={4}
+          thickness={thickness}
           color={color}
           borderWidth={0}
           unfilledColor="#eee"

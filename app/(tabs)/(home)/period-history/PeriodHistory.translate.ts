@@ -12,6 +12,13 @@ const TEXT_TRANSLATE_PERIOD_HISTORY = {
     TOTAL_INCOME: "Tổng thu",
     TOTAL_EXPENSE: "Tổng chi",
     LOADING_DATA: "Đang tải dữ liệu giao dịch...",
+    TITLE_DETAIL: "Chi tiết thu chi",
+    TIME: "Ngày tạo",
+    TRANSACTION_CODE: "Mã giao dịch",
+    SUBCATEGORY: "Danh mục chi tiêu",
+    PAYMENT_METHOD: "Phương thức thanh toán",
+    DESCRIPTION: "Mô tả",
+    IMAGE_TRANSACTION: "Ảnh hóa đơn",
   },
 
   // Labels
@@ -30,6 +37,8 @@ const TEXT_TRANSLATE_PERIOD_HISTORY = {
     INCOME: "Thu nhập",
     EXPENSE: "Chi tiêu",
     CLEAR_FILTER: "Xóa bộ lộc",
+    CLOSE: "Đóng",
+    ADD_NEW_TRANSACTION: "Tạo giao dịch mới",
   },
 
   // Message

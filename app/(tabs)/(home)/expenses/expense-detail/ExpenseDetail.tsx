@@ -1,18 +1,18 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Dimensions, Image } from "react-native";
-import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import NoData from "@/assets/images/InviteMemberAssets/not-found-result.png";
 import {
+  BarChartExpenseCustom,
   FlatListCustom,
   LoadingSectionWrapper,
   ProgressCircleComponent,
   SafeAreaViewCustom,
   SectionComponent,
 } from "@/components";
-import NoData from "@/assets/images/InviteMemberAssets/not-found-result.png";
-import TEXT_TRANSLATE_EXPENSE_DETAIL from "./ExpenseDetail.translate";
 import { PATH_NAME } from "@/helpers/constants/pathname";
+import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { BarChartCustom } from "@/components/ExpenseDetailCustom/BarChartCustom";
+import React from "react";
+import { Dimensions, Image, Text, TouchableOpacity, View } from "react-native";
+import TEXT_TRANSLATE_EXPENSE_DETAIL from "./ExpenseDetail.translate";
 import useExpenseDetail from "./hooks/useExpenseDetail";
 
 export default function ExpenseDetail() {
@@ -50,7 +50,6 @@ export default function ExpenseDetail() {
         <View className="mb-2 flex-row items-center justify-between">
           <View className="flex-row items-start">
             <View className="relative h-14 w-14 items-center justify-center">
-              {/* Biểu tượng ở giữa */}
               <ProgressCircleComponent
                 value={1.6 / 2}
                 size={56}
@@ -101,9 +100,9 @@ export default function ExpenseDetail() {
         <Text className="pb-2 text-lg font-bold text-black">
           {TEXT_TRANSLATE_EXPENSE_DETAIL.SPENDING_TREND}
         </Text>
-        <BarChartCustom
+        <BarChartExpenseCustom
           data={CHART_DATA}
-          categories={["Theo Tuần", "Theo Tháng"]}
+          categories={["Tuần", "Tháng"]}
           screenWidth={Dimensions.get("window").width}
         />
       </SectionComponent>
@@ -122,10 +121,10 @@ export default function ExpenseDetail() {
       {/* HEADER */}
       <SectionComponent rootClassName="relative bg-white shadow-md h-14 flex-row items-center justify-center">
         <TouchableOpacity
-          onPress={handler.handleGoBack}
+          onPress={handler.handleBack}
           className="absolute left-3 rounded-full p-2"
         >
-          <AntDesign name="close" size={24} color={PRIMARY_COLOR} />
+          <MaterialIcons name="arrow-back" size={24} color={PRIMARY_COLOR} />
         </TouchableOpacity>
         <Text className="text-lg font-bold text-primary">
           {TEXT_TRANSLATE_EXPENSE_DETAIL.HEADER_TITLE}

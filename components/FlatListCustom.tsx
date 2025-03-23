@@ -50,7 +50,9 @@ export function FlatListCustom<T>({
           </View>
         ) : !hasMore ? (
           <View className="my-3 items-center">
-            <Text className="text-primary">Đã tải xong</Text>
+            <Text className="text-primary">
+              ---------- Đã tải xong ----------
+            </Text>
           </View>
         ) : null
       }

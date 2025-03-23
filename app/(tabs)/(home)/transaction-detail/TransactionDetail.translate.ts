@@ -12,6 +12,7 @@ const TEXT_TRANSLATE_TRANSACTION_DETAIL = {
   BUTTON: {
     CLOSE: "Đóng",
     ADD_NEW_TRANSACTION: "Tạo giao dịch mới",
+    CONFRIM: "Xác nhận",
   },
 };
 

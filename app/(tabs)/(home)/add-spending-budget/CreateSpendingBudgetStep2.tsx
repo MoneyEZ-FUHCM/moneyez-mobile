@@ -1,30 +1,41 @@
-import React from "react";
-import { View, Text, Pressable, ActivityIndicator } from "react-native";
-import { InputComponent, SafeAreaViewCustom, SectionComponent } from "@/components";
+import {
+  InputComponent,
+  SafeAreaViewCustom,
+  SectionComponent,
+  SpaceComponent,
+} from "@/components";
+import { Colors } from "@/helpers/constants/color";
+import { formatCurrencyInput } from "@/helpers/libs";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Formik } from "formik";
+import React from "react";
+import { Pressable, Text, View } from "react-native";
 import * as Yup from "yup";
-import useCreateSpendingBudgetStep2 from "./hooks/useCreateSpendingBudgetStep2";
 import TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP2 from "./CreateSpendingBudgetStep2.translate";
-import { formatCurrencyInput } from "@/helpers/libs";
+import useCreateSpendingBudgetStep2 from "./hooks/useCreateSpendingBudgetStep2";
 
-const { TITLE, LABELS, MESSAGE_VALIDATE, BUTTON } = TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP2;
+const { TITLE, LABELS, MESSAGE_VALIDATE, BUTTON } =
+  TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP2;
 const BudgetSchema = Yup.object().shape({
   amount: Yup.string()
     .required(MESSAGE_VALIDATE.AMOUNT_REQUIRED)
-    .test("is-valid-amount", MESSAGE_VALIDATE.AMOUNT_MUST_GREATER_THAN_ZERO, value => {
-      const numericValue = value ? parseInt(value.replace(/\D/g, "")) : 0;
-      return numericValue > 0;
-    })
+    .test(
+      "is-valid-amount",
+      MESSAGE_VALIDATE.AMOUNT_MUST_GREATER_THAN_ZERO,
+      (value) => {
+        const numericValue = value ? parseInt(value.replace(/\D/g, "")) : 0;
+        return numericValue > 0;
+      },
+    ),
 });
 
 export default function CreateSpendingBudgetStep2() {
-  const { state, handler } = useCreateSpendingBudgetStep2();
-  const { selectedCategory, isSubmitting, isLoading } = state;
+  const { state, handler, refState } = useCreateSpendingBudgetStep2();
+  const { selectedCategory } = state;
   const { handleBack, handleCreateBudget } = handler;
 
   const initialValues = {
-    amount: '',
+    amount: "",
   };
 
   return (
@@ -32,21 +43,17 @@ export default function CreateSpendingBudgetStep2() {
       {/* Header */}
       <SectionComponent rootClassName="h-14 bg-white justify-center px-5">
         <View className="flex-row items-center justify-between">
-          <Pressable onPress={handleBack} disabled={isSubmitting}>
-            <MaterialIcons
-              name="arrow-back"
-              size={24}
-              color={isSubmitting ? "#a0a0a0" : "#609084"}
-            />
+          <Pressable onPress={handleBack}>
+            <MaterialIcons name="arrow-back" size={24} color={"#609084"} />
           </Pressable>
           <Text className="text-lg font-bold text-[#609084]">
             {TITLE.MAIN_TITLE}
           </Text>
-          <View style={{ width: 24 }} />
+          <SpaceComponent width={24} />
         </View>
       </SectionComponent>
-
       <Formik
+        innerRef={(ref) => (refState.formikRef.current = ref)}
         initialValues={initialValues}
         validationSchema={BudgetSchema}
         onSubmit={(values) => {
@@ -54,81 +61,71 @@ export default function CreateSpendingBudgetStep2() {
           handleCreateBudget(numericAmount);
         }}
       >
-        {(formikProps) => (
-          <>
-            {/* Budget Limit Setup */}
-            <SectionComponent rootClassName="bg-white mx-4 my-2 rounded-lg p-4">
-              <View className="mb-4">
-                <Text className="text-base font-semibold text-black">
-                  {TITLE.SETUP_LIMIT}
-                </Text>
-                <Text className="text-sm text-gray-500">
-                  {TITLE.SETUP_DESCRIPTION}
-                </Text>
-              </View>
-            </SectionComponent>
-
-            <SectionComponent rootClassName="bg-white mx-4 my-2 rounded-lg p-4">
-              <View className="flex-row items-center p-3 rounded-lg">
-                <View className="mr-3 rounded-lg bg-superlight p-2">
-                  <MaterialIcons name={selectedCategory.icon} size={32} color="#609084" />
+        {({ handleSubmit }) => {
+          handler.handleSubmitRef.current = handleSubmit;
+          return (
+            <>
+              <SectionComponent rootClassName="bg-white my-2 rounded-lg p-4">
+                <View className="mb-4">
+                  <Text className="text-base font-semibold text-black">
+                    {TITLE.SETUP_LIMIT}
+                  </Text>
+                  <Text className="text-sm text-gray-500">
+                    {TITLE.SETUP_DESCRIPTION}
+                  </Text>
                 </View>
-                <View className="flex-1">
-                  <Text className="text-sm text-gray-500">{LABELS.SUBCATEGORY}</Text>
-                  <Text className="font-bold text-black">{selectedCategory.label}</Text>
-                </View>
-              </View>
-
-              {/* Budget Input/Display */}
-              <SectionComponent rootClassName="bg-white rounded-lg p-4 mt-4">
-                <InputComponent
-                  name="amount"
-                  label={"Số tiền tối đa"}
-                  placeholder={"Nhập số tiền tối đa"}
-                  inputMode="numeric"
-                  isRequired
-                  labelClass="text-text-gray text-[12px] font-bold"
-                  formatter={formatCurrencyInput}
-                />
               </SectionComponent>
-            </SectionComponent>
-
-            {/* Create Budget Button */}
-            <SectionComponent rootClassName="h-16 bg-white justify-center items-center border-t border-gray-300 mx-6">
-              <Pressable
-                className={`bg-[#609084] w-full rounded-lg py-3 px-6 items-center ${!formikProps.isValid || isSubmitting ? 'opacity-70' : ''
-                  }`}
-                onPress={() => formikProps.handleSubmit()}
-                disabled={!formikProps.isValid || isSubmitting}
-              >
-                {isSubmitting ? (
-                  <View className="flex-row items-center">
-                    <ActivityIndicator color="white" size="small" />
-                    <Text className="text-white text-lg font-semibold ml-2">
-                      {LABELS.PROCESSING}
+              <SectionComponent rootClassName="bg-white mx-4 my-2 rounded-lg py-2">
+                <View className="flex-row items-center rounded-lg p-3">
+                  <View className="mr-3 rounded-lg bg-superlight p-2">
+                    <MaterialIcons
+                      name={selectedCategory.icon}
+                      size={32}
+                      color={Colors.colors.primary}
+                    />
+                  </View>
+                  <View className="flex-1">
+                    <Text className="text-sm text-gray-500">
+                      {LABELS.SUBCATEGORY}
+                    </Text>
+                    <Text className="font-bold text-black">
+                      {selectedCategory.label}
                     </Text>
                   </View>
-                ) : (
-                  <Text className="text-white text-lg font-semibold">
-                    {BUTTON.CREATE_BUDGET}
-                  </Text>
-                )}
-              </Pressable>
-            </SectionComponent>
-
-            {isLoading && (
-              <View className="absolute inset-0 bg-black/20 items-center justify-center">
-                <View className="bg-white p-4 rounded-lg">
-                  <ActivityIndicator color="#609084" size="large" />
-                  <Text className="text-center mt-2 text-[#609084] font-medium">
-                    {LABELS.PROCESSING}
+                </View>
+                <View className="mx-4">
+                  <Text className="text-sm text-text-gray">
+                    Số tiền tối đa bạn có thể đặt mục tiêu cho danh mục này là{" "}
+                    <Text className="font-bold text-primary">500.000đ</Text>
                   </Text>
                 </View>
-              </View>
-            )}
-          </>
-        )}
+                <SectionComponent rootClassName="bg-white rounded-lg p-4">
+                  <InputComponent
+                    name="amount"
+                    label={"Số tiền tối đa"}
+                    placeholder={"Nhập số tiền tối đa"}
+                    inputMode="numeric"
+                    isRequired
+                    labelClass="text-text-gray text-[12px] font-bold"
+                    inputClass="rounded-[10px]"
+                    formatter={formatCurrencyInput}
+                  />
+                </SectionComponent>
+              </SectionComponent>
+            </>
+          );
+        }}
       </Formik>
+      <SectionComponent rootClassName=" px-5 rounded-lg absolute bottom-5 w-full flex-1">
+        <Pressable
+          onPress={() => handler.handleSubmitRef.current()}
+          className="h-12 items-center justify-center rounded-lg bg-primary"
+        >
+          <Text className="text-base font-semibold text-white">
+            {BUTTON.CREATE_BUDGET}
+          </Text>
+        </Pressable>
+      </SectionComponent>
     </SafeAreaViewCustom>
   );
 }

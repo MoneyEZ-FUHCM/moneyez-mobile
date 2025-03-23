@@ -1,18 +1,30 @@
-import React from "react";
-import { View, Text, Pressable, ActivityIndicator, RefreshControl } from "react-native";
-import { SafeAreaViewCustom, SectionComponent } from "@/components";
-import { MaterialIcons } from "@expo/vector-icons";
-import useSpendingBudget from "./hooks/useSpendingBudgetList";
-import { formatCurrency } from "@/helpers/libs";
-import ProgressCircle from "@/components/ProgressCircle";
-import TEXT_TRANSLATE_SPENDING_BUDGET from "./SpendingBudgetList.translate";
+import {
+  ProgressCircleComponent,
+  SafeAreaViewCustom,
+  SectionComponent,
+  SpaceComponent,
+} from "@/components";
 import { ScrollViewCustom } from "@/components/ScrollViewCustom";
+import { Colors } from "@/helpers/constants/color";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
+import { formatCurrency } from "@/helpers/libs";
+import { Entypo, MaterialIcons } from "@expo/vector-icons";
+import React from "react";
+import {
+  ActivityIndicator,
+  Pressable,
+  RefreshControl,
+  Text,
+  View,
+} from "react-native";
+import useSpendingBudget from "./hooks/useSpendingBudgetList";
+import TEXT_TRANSLATE_SPENDING_BUDGET from "./SpendingBudgetList.translate";
 
 export default function SpendingBudget() {
   const { state, handler } = useSpendingBudget();
   const { cycleInfo, budgetSections, isLoading } = state;
-  const { handleAddBudget, handleBack, handleBudgetPress, handleRefresh } = handler;
+  const { handleAddBudget, handleBack, handleBudgetPress, handleRefresh } =
+    handler;
 
   if (isLoading) {
     return (
@@ -25,7 +37,7 @@ export default function SpendingBudget() {
             <Text className="text-lg font-bold text-[#609084]">
               {TEXT_TRANSLATE_SPENDING_BUDGET.TITLE.MAIN_TITLE}
             </Text>
-            <View style={{ width: 24 }} />
+            <SpaceComponent width={24} />
           </View>
         </SectionComponent>
         <SectionComponent rootClassName="flex-1 items-center justify-center">
@@ -49,74 +61,87 @@ export default function SpendingBudget() {
           <Text className="text-lg font-bold text-[#609084]">
             {TEXT_TRANSLATE_SPENDING_BUDGET.TITLE.MAIN_TITLE}
           </Text>
-          <View style={{ width: 24 }} />
+          <SpaceComponent width={24} />
         </View>
       </SectionComponent>
-
+      {/* Cycle Info & Add Budget */}
+      <SectionComponent rootClassName="bg-white p-4 mt-2.5">
+        <View className="mb-2">
+          <Text className="text-base font-semibold">
+            Chu kỳ {cycleInfo.cycle}
+          </Text>
+        </View>
+        <View className="flex-row items-center justify-between">
+          <Text className="text-sm text-gray-500">
+            Còn {cycleInfo.remainingDays} ngày nữa hết chu kỳ
+          </Text>
+          <Pressable
+            onPress={handleAddBudget}
+            className="flex-row items-center"
+          >
+            <Entypo
+              name="circle-with-plus"
+              size={21}
+              color={Colors.colors.primary}
+            />
+            <Text className="ml-1 text-base font-semibold text-[#609084]">
+              {TEXT_TRANSLATE_SPENDING_BUDGET.BUTTON.ADD_BUDGET}
+            </Text>
+          </Pressable>
+        </View>
+      </SectionComponent>
       <ScrollViewCustom
-        isBottomTab={true}
+        showsVerticalScrollIndicator={false}
+        isBottomTab={false}
         refreshControl={
           <RefreshControl refreshing={false} onRefresh={handleRefresh} />
         }
       >
-        {/* Cycle Info & Add Budget */}
-        <SectionComponent rootClassName="bg-white m-4 rounded-lg p-4">
-          <View className="mb-2">
-            <Text className="text-base font-semibold">
-              Chu kỳ {cycleInfo.cycle}
-            </Text>
-          </View>
-
-          <View className="flex-row items-center justify-between">
-            <Text className="text-sm text-gray-500">
-              Còn {cycleInfo.remainingDays} ngày nữa hết chu kỳ
-            </Text>
-            <Pressable onPress={handleAddBudget} className="flex-row items-center">
-              <MaterialIcons name="add" size={24} color="#609084" />
-              <Text className="ml-2 text-base font-semibold text-[#609084]">
-                {TEXT_TRANSLATE_SPENDING_BUDGET.BUTTON.ADD_BUDGET}
-              </Text>
-            </Pressable>
-          </View>
-        </SectionComponent>
-
         {/* Budget Sections */}
         <View className="m-4">
-          {budgetSections.map((section) => (
+          {budgetSections?.map((section) => (
             <SectionComponent
               key={section.id}
-              rootClassName="mb-2 bg-white rounded-lg p-2"
+              rootClassName="mb-[10px] bg-white rounded-[10px] p-[10px]"
             >
-              <Text className="text-lg font-bold text-black mb-2">
+              <Text className="mb-4 text-base font-semibold text-[#808080]">
                 {section.category}
               </Text>
               {section.items.map((item) => {
-                const progressPercent = (item.currentAmount / item.targetAmount) * 100;
+                const progressPercent = item.currentAmount / item.targetAmount;
                 return (
                   <Pressable
                     key={item.id}
                     onPress={() => handleBudgetPress(item.id)}
-                    className="flex-row items-center justify-between p-3 border border-[#609084] rounded-lg mb-3"
+                    className="mb-3 flex-row items-center justify-between rounded-[10px] border border-[#609084] p-3"
                   >
                     <View className="flex-row items-center space-x-3">
-                      <ProgressCircle progress={progressPercent} size={60} strokeWidth={4}>
-                        <MaterialIcons name={item.icon} size={30} color="#609084" />
-                      </ProgressCircle>
                       <View>
-                        <Text className="font-bold text-black">
+                        <ProgressCircleComponent
+                          value={progressPercent}
+                          size={72}
+                          thickness={9}
+                          color="#609084"
+                          iconName={item?.icon}
+                          iconSize={28}
+                          iconColor="#609084"
+                        />
+                      </View>
+                      <View className="gap-y-1">
+                        <Text className="text-base font-bold text-black">
                           {item.name}
                         </Text>
-                        <View className="flex-col gap-1">
-                          <View className="flex-row items-center">
-                            <Text className="text-sm text-[#808080] w-16">
+                        <View className="flex-col gap-0.5">
+                          <View className="flex-row items-center space-x-1">
+                            <Text className="text-sm text-[#808080]">
                               {TEXT_TRANSLATE_SPENDING_BUDGET.LABELS.REMAINING}
                             </Text>
                             <Text className="font-bold text-primary">
                               {formatCurrency(item.remaining)}
                             </Text>
                           </View>
-                          <View className="flex-row items-center">
-                            <Text className="text-sm text-text-gray w-16">
+                          <View className="flex-row items-center space-x-2">
+                            <Text className="text-sm text-text-gray">
                               {TEXT_TRANSLATE_SPENDING_BUDGET.LABELS.SPENT}
                             </Text>
                             <View className="flex-row items-center">
@@ -124,7 +149,8 @@ export default function SpendingBudget() {
                                 {formatCurrency(item.currentAmount)}
                               </Text>
                               <Text className="text-sm text-text-gray">
-                                {" / "}{formatCurrency(item.targetAmount)}
+                                {" / "}
+                                {formatCurrency(item.targetAmount)}
                               </Text>
                             </View>
                           </View>

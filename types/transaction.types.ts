@@ -36,3 +36,16 @@ export interface TransactionViewModel {
 export interface TransactionViewModelDetail extends TransactionViewModel {
   subcategoryId: string;
 }
+
+export interface TransactionPayload {
+  amount: number;
+  description: string;
+  images: string[];
+  subcategoryId: string;
+  transactionDate: string | Date;
+  type: number;
+}
+export interface TransactionPreviewPayload extends TransactionPayload {
+  subCategoryIcon: string;
+  subCategoryName: string;
+}

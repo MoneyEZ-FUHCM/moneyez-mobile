@@ -1,14 +1,17 @@
 import { TRANSACTION_TYPE } from "@/enums/globals";
 import { formatCurrency, formatDate } from "@/helpers/libs";
+import { setImageView } from "@/redux/slices/systemSlice";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
+import { useGetTransactionDetailQuery } from "@/services/transaction";
 import {
   useGetTransactionByIdQuery,
   useGetUserSpendingModelDetailQuery,
 } from "@/services/userSpendingModel";
 import { TransactionViewModelDetail } from "@/types/transaction.types";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ToastAndroid } from "react-native";
+import { Modalize } from "react-native-modalize";
 import { useDispatch } from "react-redux";
 
 export interface Transaction {
@@ -60,11 +63,15 @@ const usePeriodHistoryDetail = () => {
     TRANSACTION_TYPE.INCOME | TRANSACTION_TYPE.EXPENSE | ""
   >("");
   const [showFilters, setShowFilters] = useState(false);
-  const [isFiltering, setIsFiltering] = useState(false);
+  const [isFiltering, setIsFiltering] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [isRefetching, setIsRefetching] = useState(false);
   const [pageIndex, setPageIndex] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
+  const modalizeRef = useRef<Modalize>(null);
+  const [selectedTransactionId, setSelectedTransactionId] = useState<
+    string | null
+  >(null);
 
   const pageSize = 10;
 
@@ -83,6 +90,20 @@ const usePeriodHistoryDetail = () => {
     { id: userSpendingId as string },
     { skip: !userSpendingId },
   );
+
+  const handleNavigateTransactionDetail = useCallback(
+    (transactionId: string) => {
+      setSelectedTransactionId(transactionId);
+      modalizeRef.current?.open();
+    },
+    [],
+  );
+
+  const { data: transactionDetail, isFetching: isFetchingTransactionDetail } =
+    useGetTransactionDetailQuery(
+      { transactionId: selectedTransactionId as string },
+      { skip: !selectedTransactionId },
+    );
 
   const {
     data: transactionsData,
@@ -207,6 +228,10 @@ const usePeriodHistoryDetail = () => {
     [userSpendingModelDetail],
   );
 
+  const handleSetImageView = useCallback(() => {
+    dispatch(setImageView(true));
+  }, []);
+
   return {
     state: {
       transactions,
@@ -224,6 +249,9 @@ const usePeriodHistoryDetail = () => {
       transactionsData,
       pageSize,
       isRefetching,
+      modalizeRef,
+      transactionDetail: transactionDetail?.data,
+      isLoadingTransactionDetail: isFetchingTransactionDetail,
     },
     handler: {
       formatCurrency,
@@ -234,6 +262,8 @@ const usePeriodHistoryDetail = () => {
       handleRefetchData,
       setShowFilters,
       handleFilterPress,
+      handleNavigateTransactionDetail,
+      handleSetImageView,
     },
   };
 };

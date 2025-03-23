@@ -14,8 +14,8 @@ import {
 } from "@/components";
 import { router } from "expo-router";
 import TEXT_TRANSLATE_UPDATE_EXPENSE from "./UpdateExpense.translate";
-import { useUpdateExpense } from "./hooks/useUpdateExpense";
 import UPDATE_EXPENSE_CONSTANTS from "./UpdateExpense.const";
+import useUpdateExpense from "./hooks/useUpdateExpense";
 
 const EditBudgetScreen = () => {
   const { state, handler } = useUpdateExpense();

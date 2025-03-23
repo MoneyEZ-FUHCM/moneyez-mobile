@@ -24,7 +24,7 @@ const HOME_SCREEN_CONSTANTS = {
       icon: Coin1,
       url: HOME.SPENDING_MODEL_HISTORY,
     },
-    { label: "Ngân sách", icon: EmptyWallet, url: HOME.EXPENSES_DETAIL },
+    { label: "Tính năng 3", icon: EmptyWallet },
     { label: "Tính năng 4", icon: Alarm },
     { label: "Tính năng 5", icon: Bookmark },
     { label: "Tính năng 6", icon: Card },

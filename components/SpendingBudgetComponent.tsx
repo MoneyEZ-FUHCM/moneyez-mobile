@@ -1,16 +1,21 @@
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
+import { Colors } from "@/helpers/constants/color";
 import { formatCurrency } from "@/helpers/libs";
 import { FinancialGoal } from "@/types/financialGoal.type";
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { Pressable, Text, View } from "react-native";
+import * as Progress from "react-native-progress";
 
 type SpendingBudgetComponentProps = {
   data?: FinancialGoal[];
   onHeaderPress?: () => void;
-}
+};
 
-const SpendingBudgetComponent = ({ data, onHeaderPress }: SpendingBudgetComponentProps) => {
+const SpendingBudgetComponent = ({
+  data,
+  onHeaderPress,
+}: SpendingBudgetComponentProps) => {
   const [isVisible, setIsVisible] = useState(true);
 
   const toggleVisibility = () => {
@@ -18,15 +23,15 @@ const SpendingBudgetComponent = ({ data, onHeaderPress }: SpendingBudgetComponen
   };
 
   return (
-    <SafeAreaViewCustom rootClassName="flex-1 bg-white p-4">
+    <SafeAreaViewCustom rootClassName="p-4 bg-white mx-5 rounded-[10px]">
       {/* Header */}
-      <SectionComponent rootClassName="mb-4">
+      <SectionComponent rootClassName="mb-3.5">
         <Pressable
-          className="flex-row items-center justify-between p-2"
+          className="flex-row items-center justify-between"
           onPress={onHeaderPress}
         >
           <View className="flex-row items-center space-x-2">
-            <Text className="text-lg font-semibold text-black">
+            <Text className="text-base font-semibold text-black">
               Ngân sách chi tiêu
             </Text>
             <Pressable onPress={toggleVisibility}>
@@ -43,35 +48,39 @@ const SpendingBudgetComponent = ({ data, onHeaderPress }: SpendingBudgetComponen
 
       {/* Budget category list */}
       {data?.map((item) => {
-        const percentage = Math.min((item.currentAmount / item.targetAmount) * 100, 100);
-
+        const percentage = Math.min(item?.currentAmount / item?.targetAmount);
         return (
-          <SectionComponent key={item.id} rootClassName="mb-3">
+          <SectionComponent key={item?.id} rootClassName="mb-3">
             <Pressable
-              className="p-2 border border-[#bad8b6] rounded-lg"
-              onPress={() => { }}
+              className="rounded-lg border border-[#bad8b6] p-2"
+              onPress={() => {}}
             >
               <View className="flex-row">
-                <View className="pr-3 justify-center self-stretch">
-                  <MaterialIcons name={item.icon || "account-balance"} size={30} color="#609084" />
+                <View className="justify-center self-stretch pr-3">
+                  <MaterialIcons
+                    name={item.icon || "account-balance"}
+                    size={30}
+                    color="#609084"
+                  />
                 </View>
-
                 <View className="flex-1">
-                  <View className="flex-row items-center justify-between mb-2">
-                    <Text className="text-base font-medium text-black">
-                      {item.name}
-                    </Text>
+                  <View className="mb-2 flex-row items-center justify-between">
+                    <Text className="text-sm text-black">{item.name}</Text>
                     <Text className="text-sm text-black">
                       {isVisible ? formatCurrency(item.targetAmount) : "*****"}
                     </Text>
                   </View>
-
-                  <View className="w-full h-3 bg-[#ebefd6] rounded-full relative">
-                    <View
-                      className={`absolute left-0 top-0 h-full bg-[#609084] rounded-full`}
-                      style={{ width: `${percentage}%` }}
-                    />
-                  </View>
+                  <Progress.Bar
+                    progress={percentage}
+                    className="w-full"
+                    width={300}
+                    height={7.5}
+                    borderRadius={100}
+                    borderWidth={0}
+                    color={Colors.colors.primary}
+                    unfilledColor={Colors.colors.light}
+                    useNativeDriver={true}
+                  />
                 </View>
               </View>
             </Pressable>
