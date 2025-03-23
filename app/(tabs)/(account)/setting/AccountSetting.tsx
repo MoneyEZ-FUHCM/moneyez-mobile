@@ -3,14 +3,14 @@ import { SafeAreaViewCustom, SectionComponent } from "@/components";
 import { appInfo } from "@/helpers/constants/appInfos";
 import {
   ArrowRight2,
+  Bank,
   Bookmark2,
   LogoutCurve,
-  Setting2,
   TagUser,
 } from "iconsax-react-native";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import TEXT_TRANSLATE_ACCOUNT from "../AccountScreen.translate";
-import useAccountScreen from "../hooks/useAccountScreen";
+import useAccountScreen from "./hooks/useAccountScreen";
 
 const SETTING_OPTIONS = [
   {
@@ -21,9 +21,9 @@ const SETTING_OPTIONS = [
   },
   {
     id: 2,
-    icon: <Setting2 size="20" color="white" variant="Bold" />,
-    title: "Cài đặt",
-    description: "Tùy chỉnh giao diện, bảo mật,...",
+    icon: <Bank size="20" color="white" variant="Bold" />,
+    title: "Tài khoản ngân hàng",
+    description: "Số tài khoản, tên ngân hàng, chi nhánh,...",
   },
   {
     id: 3,

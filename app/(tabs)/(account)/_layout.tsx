@@ -15,6 +15,9 @@ export default function AccountLayout() {
       }}
     >
       <Stack.Screen name={PATH_NAME.ACCOUNT.ACCOUNT_SETTING} />
+      <Stack.Screen name={PATH_NAME.ACCOUNT.UPDATE_INFO} />
+      <Stack.Screen name={PATH_NAME.ACCOUNT.BANK_ACCOUNT} />
+      <Stack.Screen name={PATH_NAME.ACCOUNT.ADD_BANK_ACCOUNT} />
     </Stack>
   );
 }

@@ -4,6 +4,7 @@ const TEXT_TRANSLATE_ACCOUNT = {
     ENTER_ADDRESS: "Nhập địa chỉ",
     ENTER_FULLNAME: "Nhập họ và tên",
     ENTER_PHONE_NUMBER: "Nhập số điện thoại",
+    BANK_ACCOUNT: "Tài khoản ngân hàng",
   },
 
   BUTTON: {
