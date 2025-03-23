@@ -6,6 +6,7 @@ import {
   TextInput,
   ScrollView,
   FlatList,
+  Pressable,
 } from "react-native";
 import {
   FlatListCustom,
@@ -21,6 +22,8 @@ import useBankAccount from "./hooks/useBankAccount";
 import { Modalize } from "react-native-modalize";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Formik } from "formik";
+import { PATH_NAME } from "@/helpers/constants/pathname";
+import { router } from "expo-router";
 
 interface BankAccountType {
   id: number;
@@ -148,13 +151,23 @@ const BankAccount = () => {
     accountHolderName: "",
     bankShortName: "",
   });
-
+  const formikRef = useRef<any>(null);
+  const handleSubmitRef = useRef<() => void>(() => {});
+  const handleSubmit = (values: any) => {
+    // onAddAccount({
+    //   accountNumber: values.accountNumber,
+    //   bankName: values.bankName,
+    //   bankShortName: values.bankShortName,
+    //   accountHolderName: values.accountHolderName,
+    // });
+    // navigation.goBack();
+  };
   const filteredBanks = BANK_LIST.filter((bank) =>
     bank.name.toLowerCase().includes(searchText.toLowerCase()),
   );
 
   const handleAddBankAccount = () => {
-    modalizeRef.current?.open();
+    router.navigate(PATH_NAME.ACCOUNT.ADD_BANK_ACCOUNT as any);
   };
 
   const handleViewDetail = (account: BankAccountType) => {
@@ -233,7 +246,7 @@ const BankAccount = () => {
               </Text>
             </View>
             <View className="flex-1">
-              <Text className="text-lg font-bold text-gray-900">
+              <Text className="text-base font-bold text-gray-900">
                 {item.bankName}
               </Text>
               <Text className="mt-1 flex-row items-center text-sm text-gray-600">
@@ -342,7 +355,10 @@ const BankAccount = () => {
     );
   };
 
-  const BankSelectItem = ({ item, onSelect }) => {
+  const BankSelectItem: React.FC<{
+    item: BankType;
+    onSelect: (bank: BankType) => void;
+  }> = ({ item, onSelect }) => {
     return (
       <TouchableOpacity
         className="border-b border-gray-100 px-6 py-4"
@@ -410,7 +426,7 @@ const BankAccount = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaViewCustom rootClassName="flex-1 bg-gray-50">
+      <SafeAreaViewCustom rootClassName="bg-gray-50 relative">
         {/* Header */}
         <SectionComponent rootClassName="flex-row items-center justify-between h-16 px-4 bg-white border-b border-gray-200 shadow-sm">
           <TouchableOpacity
@@ -447,18 +463,6 @@ const BankAccount = () => {
           }
         />
 
-        <View className="px-6 py-6">
-          <TouchableOpacity
-            onPress={handleAddBankAccount}
-            className="flex-row items-center justify-center rounded-xl bg-[#609084] px-6 py-4 shadow"
-          >
-            <AntDesign name="plus" size={18} color="#fff" />
-            <Text className="ml-2 text-base font-semibold text-white">
-              Thêm tài khoản ngân hàng
-            </Text>
-          </TouchableOpacity>
-        </View>
-
         <ModalLizeComponent ref={modalizeRef} modalStyle={{}}>
           <View className="rounded-t-3xl bg-white p-6">
             <View className="mb-6 flex-row items-center justify-between">
@@ -483,61 +487,63 @@ const BankAccount = () => {
               validationSchema={() => {}}
               onSubmit={() => {}}
             >
-              {({ handleSubmit, setFieldValue, values }) => (
-                <SectionComponent>
-                  <InputComponent
-                    name={"accountNumber"}
-                    label={"Số tài khoản"}
-                    placeholder={"Nhập số tài khoản"}
-                    labelClass="text-text-gray text-sm"
-                    inputClass="h-11 text-text-gray bg-gray-50 px-3 py-2 border border-gray-200 rounded-lg"
-                  />
+              {({ handleSubmit }) => {
+                handleSubmitRef.current = handleSubmit;
+                return (
+                  <SectionComponent>
+                    <InputComponent
+                      name={"accountNumber"}
+                      label={"Số tài khoản"}
+                      placeholder={"Nhập số tài khoản"}
+                      labelClass="text-text-gray text-sm"
+                      inputClass="h-11 text-text-gray bg-gray-50 px-3 py-2 border border-gray-200 rounded-lg"
+                    />
 
-                  {/* Ngân hàng select */}
-                  <View className="mb-4">
-                    <Text className="mb-1 text-sm text-text-gray">
-                      Ngân hàng
-                    </Text>
-                    <TouchableOpacity
-                      className="flex-row items-center justify-between rounded-lg border border-gray-200 bg-gray-50 px-3 py-2"
-                      onPress={handleOpenBankSelect}
-                    >
-                      <Text
-                        className={
-                          selectedBank ? "text-gray-800" : "text-gray-400"
-                        }
-                      >
-                        {selectedBank ? selectedBank.name : "Chọn ngân hàng"}
+                    <View className="mb-4">
+                      <Text className="mb-1 text-sm text-text-gray">
+                        Ngân hàng
                       </Text>
-                      <Feather name="chevron-down" size={18} color="#777" />
+                      <TouchableOpacity
+                        className="flex-row items-center justify-between rounded-lg border border-gray-200 bg-gray-50 px-3 py-2"
+                        onPress={handleOpenBankSelect}
+                      >
+                        <Text
+                          className={
+                            selectedBank ? "text-gray-800" : "text-gray-400"
+                          }
+                        >
+                          {selectedBank ? selectedBank.name : "Chọn ngân hàng"}
+                        </Text>
+                        <Feather name="chevron-down" size={18} color="#777" />
+                      </TouchableOpacity>
+                    </View>
+
+                    <InputComponent
+                      name={"bankShortName"}
+                      label={"Tên ngắn"}
+                      placeholder={"Nhập tên ngắn"}
+                      labelClass="text-text-gray text-sm"
+                      inputClass="h-11 text-text-gray bg-gray-50 px-3 py-2 border border-gray-200 rounded-lg"
+                    />
+                    <InputComponent
+                      name={"accountHolderName"}
+                      label={"Tên chủ tài khoản"}
+                      placeholder={"Nhập tên chủ tài khoản"}
+                      labelClass="text-text-gray text-sm"
+                      inputClass="h-11 text-text-gray bg-gray-50 px-3 py-2 border border-gray-200 rounded-lg"
+                    />
+
+                    <TouchableOpacity
+                      className="mt-2 rounded-xl bg-[#609084] py-4 shadow-sm"
+                      onPress={handleConfirmAdd}
+                    >
+                      <Text className="text-center text-base font-bold text-white">
+                        Xác nhận
+                      </Text>
                     </TouchableOpacity>
-                  </View>
-
-                  <InputComponent
-                    name={"bankShortName"}
-                    label={"Tên ngắn"}
-                    placeholder={"Nhập tên ngắn"}
-                    labelClass="text-text-gray text-sm"
-                    inputClass="h-11 text-text-gray bg-gray-50 px-3 py-2 border border-gray-200 rounded-lg"
-                  />
-                  <InputComponent
-                    name={"accountHolderName"}
-                    label={"Tên chủ tài khoản"}
-                    placeholder={"Nhập tên chủ tài khoản"}
-                    labelClass="text-text-gray text-sm"
-                    inputClass="h-11 text-text-gray bg-gray-50 px-3 py-2 border border-gray-200 rounded-lg"
-                  />
-
-                  <TouchableOpacity
-                    className="mt-2 rounded-xl bg-[#609084] py-4 shadow-sm"
-                    onPress={handleConfirmAdd}
-                  >
-                    <Text className="text-center text-base font-bold text-white">
-                      Xác nhận
-                    </Text>
-                  </TouchableOpacity>
-                </SectionComponent>
-              )}
+                  </SectionComponent>
+                );
+              }}
             </Formik>
           </View>
         </ModalLizeComponent>
@@ -575,6 +581,18 @@ const BankAccount = () => {
         >
           {showBankSelect && <BankSelectModal />}
         </ModalLizeComponent>
+        <SectionComponent rootClassName=" px-5 rounded-lg absolute bottom-5 w-full flex-1">
+          <Pressable
+            onPress={() =>
+              router.navigate(PATH_NAME.ACCOUNT.ADD_BANK_ACCOUNT as any)
+            }
+            className="h-12 items-center justify-center rounded-lg bg-primary"
+          >
+            <Text className="text-base font-semibold text-white">
+              Thêm tài khoản ngân hàng
+            </Text>
+          </Pressable>
+        </SectionComponent>
       </SafeAreaViewCustom>
     </GestureHandlerRootView>
   );
