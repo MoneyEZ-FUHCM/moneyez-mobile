@@ -52,9 +52,9 @@ const PATH_NAME = {
 
   // Group-detail
   GROUP_HOME: {
-    GROUP_HOME_DEFAULT:
-      "group-details/group-home/group-home-default/GroupHomeDefault",
-    CREATE_FUND: "group-details/group-home/create-fund/CreateFund",
+    GROUP_HOME_DEFAULT: "group-details/group-home/group-home-default/GroupHomeDefault",
+    CREATE_FUND_REQUEST: "group-details/group-home/create-fund-request/CreateFundRequest",
+    FUND_REQUEST_INFO: "group-details/group-home/fund-request-info/FundRequestInfo",
   },
   MEMBER: {
     GROUP_MEMBER: "group-details/member/group-member/GroupMember",
