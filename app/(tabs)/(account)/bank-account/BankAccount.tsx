@@ -167,6 +167,7 @@ const BankAccount = () => {
     setSearchText("");
     setShowBankSelect(true);
     bankSelectModalRef.current?.open();
+    modalizeRef.current?.close();
   };
 
   const handleSelectBank = (bank: BankType) => {
@@ -176,6 +177,7 @@ const BankAccount = () => {
       bankName: bank.name,
       bankShortName: bank.code,
     });
+    modalizeRef.current?.open();
     bankSelectModalRef.current?.close();
   };
 
@@ -248,7 +250,6 @@ const BankAccount = () => {
                   className="ml-2 p-1"
                   onPress={(e) => {
                     e.stopPropagation();
-                    // Xử lý copy số tài khoản
                   }}
                 >
                   <Feather name="copy" size={16} color="#609084" />
@@ -364,8 +365,8 @@ const BankAccount = () => {
 
   const BankSelectModal = () => {
     return (
-      <View className="h-full pb-6">
-        <View className="border-b border-gray-200 px-6 py-4">
+      <View className="">
+        {/* <View className="border-b border-gray-200 px-6 py-4">
           <Text className="mb-2 text-lg font-bold text-gray-800">
             Chọn ngân hàng
           </Text>
@@ -383,22 +384,26 @@ const BankAccount = () => {
               </TouchableOpacity>
             ) : null}
           </View>
-        </View>
+        </View> */}
 
-        <FlatList
-          data={filteredBanks}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <BankSelectItem item={item} onSelect={handleSelectBank} />
-          )}
-          ListEmptyComponent={
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {filteredBanks.length > 0 ? (
+            filteredBanks.map((item) => (
+              <BankSelectItem
+                key={item.id.toString()} // Thêm key khi dùng map
+                item={item}
+                onSelect={handleSelectBank}
+                // setFieldValue={setFieldValue}
+              />
+            ))
+          ) : (
             <View className="items-center justify-center p-8">
               <Text className="text-center text-gray-500">
                 Không tìm thấy ngân hàng phù hợp
               </Text>
             </View>
-          }
-        />
+          )}
+        </ScrollView>
       </View>
     );
   };
@@ -509,6 +514,13 @@ const BankAccount = () => {
                   </View>
 
                   <InputComponent
+                    name={"bankShortName"}
+                    label={"Tên ngắn"}
+                    placeholder={"Nhập tên ngắn"}
+                    labelClass="text-text-gray text-sm"
+                    inputClass="h-11 text-text-gray bg-gray-50 px-3 py-2 border border-gray-200 rounded-lg"
+                  />
+                  <InputComponent
                     name={"accountHolderName"}
                     label={"Tên chủ tài khoản"}
                     placeholder={"Nhập tên chủ tài khoản"}
@@ -531,45 +543,33 @@ const BankAccount = () => {
         </ModalLizeComponent>
 
         {/* Modal Detail */}
-        <ModalLizeComponent
-          ref={detailModalRef}
-          modalStyle={{}}
-          HeaderComponent={
-            showDetail && selectedAccount ? (
-              <View className="flex-row items-center justify-between px-6 pb-2 pt-4">
-                <TouchableOpacity
-                  onPress={() => detailModalRef.current?.close()}
-                  className="h-11 w-10 items-center justify-center rounded-full"
-                >
-                  <AntDesign name="arrowleft" size={22} color="#609084" />
-                </TouchableOpacity>
-                <Text className="text-xl font-bold text-gray-800">
-                  Chi tiết tài khoản
-                </Text>
-                <View className="w-10" />
-              </View>
-            ) : null
-          }
-        >
+        <ModalLizeComponent ref={detailModalRef} modalStyle={{}}>
           {showDetail && <AccountDetail />}
         </ModalLizeComponent>
 
         {/* Bank Select Modal */}
         <ModalLizeComponent
           ref={bankSelectModalRef}
-          modalStyle={{}}
+          modalStyle={{ minHeight: 796 }}
           HeaderComponent={
-            <View className="flex-row items-center justify-between px-6 pb-2 pt-4">
-              <TouchableOpacity
-                onPress={() => bankSelectModalRef.current?.close()}
-                className="h-11 w-10 items-center justify-center rounded-full"
-              >
-                <AntDesign name="arrowleft" size={22} color="#609084" />
-              </TouchableOpacity>
-              <Text className="text-xl font-bold text-gray-800">
-                Danh sách ngân hàng
+            <View className="rounded-t-[30px] bg-white px-6 py-4">
+              <Text className="mb-2 text-lg font-bold text-gray-800">
+                Chọn ngân hàng
               </Text>
-              <View className="w-10" />
+              <View className="flex-row items-center rounded-lg bg-gray-100 px-3 py-2">
+                <Feather name="search" size={18} color="#777" />
+                <TextInput
+                  className="ml-2 flex-1 text-gray-700"
+                  placeholder="Tìm kiếm ngân hàng..."
+                  value={searchText}
+                  onChangeText={setSearchText}
+                />
+                {searchText ? (
+                  <TouchableOpacity onPress={() => setSearchText("")}>
+                    <Feather name="x" size={18} color="#777" />
+                  </TouchableOpacity>
+                ) : null}
+              </View>
             </View>
           }
         >

@@ -5,10 +5,11 @@ import { Modalize } from "react-native-modalize";
 interface CustomModalizeProps {
   children: React.ReactNode;
   modalStyle?: ViewStyle;
+  HeaderComponent?: React.ReactNode;
 }
 
 const ModalLizeComponent = forwardRef<Modalize, CustomModalizeProps>(
-  ({ children, modalStyle }, ref) => {
+  ({ children, modalStyle, HeaderComponent }, ref) => {
     return (
       <Modalize
         ref={ref}
@@ -27,6 +28,7 @@ const ModalLizeComponent = forwardRef<Modalize, CustomModalizeProps>(
           modalStyle,
         ]}
         useNativeDriver={true}
+        HeaderComponent={HeaderComponent}
       >
         {children}
       </Modalize>

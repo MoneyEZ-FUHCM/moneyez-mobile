@@ -181,25 +181,24 @@ const AddBankAccount = ({ navigation, route }: AddBankAccountProps) => {
     setFieldValue: (field: string, value: any) => void;
   }) => {
     return (
-      <FlatList
-        data={filteredBanks}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <BankSelectItem
-            item={item}
-            onSelect={handleSelectBank}
-            setFieldValue={setFieldValue}
-          />
-        )}
-        ListEmptyComponent={
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {filteredBanks.length > 0 ? (
+          filteredBanks.map((item) => (
+            <BankSelectItem
+              key={item.id.toString()}
+              item={item}
+              onSelect={handleSelectBank}
+              setFieldValue={setFieldValue}
+            />
+          ))
+        ) : (
           <View className="items-center justify-center p-8">
             <Text className="text-center text-gray-500">
               Không tìm thấy ngân hàng phù hợp
             </Text>
           </View>
-        }
-        showsVerticalScrollIndicator={false}
-      />
+        )}
+      </ScrollView>
     );
   };
 
@@ -315,8 +314,6 @@ const AddBankAccount = ({ navigation, route }: AddBankAccountProps) => {
               </View>
             </View>
           }
-          adjustToContentHeight={false}
-          height={500} // Set a fixed height for the modal
         >
           {showBankSelect && (
             <Formik
