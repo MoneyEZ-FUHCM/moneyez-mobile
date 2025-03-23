@@ -122,10 +122,10 @@ const usePeriodHistoryDetail = () => {
   );
 
   useEffect(() => {
-    if (transactionsData?.totalCount !== undefined && pageIndex === 1) {
+    if (transactionsData?.totalCount !== undefined) {
       setTotalCount(transactionsData.totalCount);
     }
-  }, [transactionsData?.totalCount, pageIndex]);
+  }, [transactionsData?.totalCount]);
 
   useEffect(() => {
     if (transactions.length > 0) {
@@ -204,11 +204,11 @@ const usePeriodHistoryDetail = () => {
     setPageIndex(1);
 
     Promise.all([refetch(), handleRefetchUserSpendingModelDetail()])
-      .then(([newData]) => {
-        if (newData?.data?.items) {
-          setTransactions(newData.data.items.map(formatTransaction as any));
-        }
-      })
+      // .then(([newData]) => {
+      //   if (newData?.data?.items) {
+      //     setTransactions(newData.data.items.map(formatTransaction as any));
+      //   }
+      // })
       .finally(() => {
         setIsRefetching(false);
         ToastAndroid.show("Danh sách đã được cập nhật", ToastAndroid.SHORT);
