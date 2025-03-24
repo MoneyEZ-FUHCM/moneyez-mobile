@@ -19,9 +19,11 @@ const TEXT_TRANSLATE_BANK_ACCOUNT = {
   },
   MESSAGE_SUCCESS: {
     DELETE_BANK_ACCOUNT: "Xóa tài khoản ngân hàng thành công",
+    COPY_ACCOUNT_NUMBER_SUCCESS: "Đã sao chép số tài khoản",
   },
   MESSAGE_ERROR: {
     BANK_ACCOUNT_NOT_FOUND: "Tài khoản ngân hàng không tồn tại",
+    COPY_ACCOUNT_NUMBER_ERROR: "Không thể sao chép số tài khoản",
   },
 };
 export default TEXT_TRANSLATE_BANK_ACCOUNT;

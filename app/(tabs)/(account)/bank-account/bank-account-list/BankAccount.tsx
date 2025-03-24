@@ -56,6 +56,7 @@ const BankAccount = () => {
                   className="ml-2 p-1"
                   onPress={(e) => {
                     e.stopPropagation();
+                    handler.handleCopyAccountNumber(item.accountNumber);
                   }}
                 >
                   <Feather name="copy" size={16} color="#609084" />
@@ -131,7 +132,14 @@ const BankAccount = () => {
                 <Text className="text-lg font-semibold text-gray-800">
                   {state.selectedAccount?.accountNumber}
                 </Text>
-                <TouchableOpacity className="ml-2 rounded-full bg-white p-1">
+                <TouchableOpacity
+                  className="ml-2 rounded-full bg-white p-1"
+                  onPress={() =>
+                    handler.handleCopyAccountNumber(
+                      state.selectedAccount?.accountNumber as string,
+                    )
+                  }
+                >
                   <Feather name="copy" size={16} color="#609084" />
                 </TouchableOpacity>
               </View>
@@ -145,7 +153,6 @@ const BankAccount = () => {
               </Text>
             </View>
           </View>
-
           <View className="mb-4">
             <Text className="mb-1 text-sm text-gray-500">
               {TEXT_TRANSLATE_BANK_ACCOUNT.TITLE.ACCOUNT_HOLDER_FULL}

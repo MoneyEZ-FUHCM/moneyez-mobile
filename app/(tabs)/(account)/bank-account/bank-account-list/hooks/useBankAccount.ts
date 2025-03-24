@@ -7,6 +7,7 @@ import {
   useGetBankAccountsQuery,
 } from "@/services/bankAccounts";
 import { BankAccountType } from "@/types/bankAccount.types";
+import * as Clipboard from "expo-clipboard";
 import { router } from "expo-router";
 import { useCallback, useRef, useState } from "react";
 import { ToastAndroid } from "react-native";
@@ -83,6 +84,21 @@ const useBankAccount = () => {
     });
   };
 
+  const handleCopyAccountNumber = useCallback(async (accountNumber: string) => {
+    try {
+      await Clipboard.setStringAsync(accountNumber);
+      ToastAndroid.show(
+        MESSAGE_SUCCESS.COPY_ACCOUNT_NUMBER_SUCCESS,
+        ToastAndroid.SHORT,
+      );
+    } catch (error) {
+      ToastAndroid.show(
+        MESSAGE_ERROR.BANK_ACCOUNT_NOT_FOUND,
+        ToastAndroid.SHORT,
+      );
+    }
+  }, []);
+
   return {
     state: {
       bankAccounts,
@@ -95,6 +111,7 @@ const useBankAccount = () => {
       handleViewDetail,
       handleDeleteAccount,
       handleEditBankAccount,
+      handleCopyAccountNumber,
     },
   };
 };
