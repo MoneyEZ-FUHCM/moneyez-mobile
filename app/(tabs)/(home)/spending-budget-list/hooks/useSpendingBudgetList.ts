@@ -41,8 +41,11 @@ const useSpendingBudget = () => {
   const currentSpendingModel = useSelector(selectCurrentUserSpendingModel);
   const { HOME } = PATH_NAME;
 
-  const { data: financialGoalsData, isLoading: isLoadingGoals, refetch: refetchGoals } =
-    useGetPersonalFinancialGoalsQuery({ PageIndex: 1, PageSize: 20 });
+  const {
+    data: financialGoalsData,
+    isLoading: isLoadingGoals,
+    refetch: refetchGoals,
+  } = useGetPersonalFinancialGoalsQuery({ PageIndex: 1, PageSize: 20 });
 
   const { data: categoriesData, isLoading: isLoadingCategories } =
     useGetCurrentCategoriesQuery({});
@@ -67,7 +70,7 @@ const useSpendingBudget = () => {
             name: subcategory.name,
             icon: subcategory.icon,
             categoryCode: category.code,
-            categoryName: category.name
+            categoryName: category.name,
           });
         });
       });
@@ -82,7 +85,7 @@ const useSpendingBudget = () => {
             sectionMap.set(categoryCode, {
               id: categoryCode,
               category: subcategory.categoryName,
-              items: []
+              items: [],
             });
           }
 
@@ -94,8 +97,10 @@ const useSpendingBudget = () => {
               remaining: goal.targetAmount - goal.currentAmount,
               currentAmount: goal.currentAmount,
               targetAmount: goal.targetAmount,
-              icon: (subcategory.icon as keyof typeof MaterialIcons.glyphMap) || "account-balance",
-              subcategoryId: goal.subcategoryId
+              icon:
+                (subcategory.icon as keyof typeof MaterialIcons.glyphMap) ||
+                "account-balance",
+              subcategoryId: goal.subcategoryId,
             });
           }
         }
@@ -107,7 +112,11 @@ const useSpendingBudget = () => {
   }, [financialGoalsData, categoriesData, isLoadingGoals, isLoadingCategories]);
 
   const cycleInfo = useMemo(() => {
-    if (!currentSpendingModel || !currentSpendingModel.startDate || !currentSpendingModel.endDate) {
+    if (
+      !currentSpendingModel ||
+      !currentSpendingModel.startDate ||
+      !currentSpendingModel.endDate
+    ) {
       return { cycle: "Không có chu kỳ", remainingDays: 0 };
     }
 
@@ -134,8 +143,10 @@ const useSpendingBudget = () => {
   }, []);
 
   const handleBudgetPress = useCallback((budgetId: string) => {
-    // TODO: Navigate to budget detail screen
-    console.log(`Budget ${budgetId} pressed`);
+    router.push({
+      pathname: PATH_NAME.HOME.EXPENSES_DETAIL as any,
+      params: { budgetId },
+    });
   }, []);
 
   const handleRefresh = useCallback(() => {
@@ -148,16 +159,16 @@ const useSpendingBudget = () => {
       () => ({
         cycleInfo,
         budgetSections,
-        isLoading
+        isLoading,
       }),
-      [cycleInfo, budgetSections, isLoading]
+      [cycleInfo, budgetSections, isLoading],
     ),
     handler: {
       handleAddBudget,
       handleBack,
       handleBudgetPress,
-      handleRefresh
-    }
+      handleRefresh,
+    },
   };
 };
 

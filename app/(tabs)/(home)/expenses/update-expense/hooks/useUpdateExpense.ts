@@ -1,7 +1,7 @@
 import { useState } from "react";
 import UPDATE_EXPENSE_CONSTANTS from "../UpdateExpense.const";
 
-export const useUpdateExpense = () => {
+const useUpdateExpense = () => {
   const [budget, setBudget] = useState(UPDATE_EXPENSE_CONSTANTS.DEFAULT_BUDGET);
 
   const handleCancel = () => {
@@ -23,3 +23,5 @@ export const useUpdateExpense = () => {
     },
   };
 };
+
+export default useUpdateExpense;

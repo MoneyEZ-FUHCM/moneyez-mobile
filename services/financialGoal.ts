@@ -15,6 +15,13 @@ const financialGoalApi = apiSlice.injectEndpoints({
         transformCommonResponse<FinancialGoal>(response),
       providesTags: ["FinancialGoal"],
     }),
+    getFinancialGoalById: builder.query({
+      query: (id) => ({
+        url: `/financial-goals/personal/${id}`,
+        method: HTTP_METHOD.GET,
+      }),
+      providesTags: ["FinancialGoal"],
+    }),
     createFinancialGoal: builder.mutation({
       query: (data) => ({
         url: `/financial-goals/personal`,
@@ -29,6 +36,7 @@ const financialGoalApi = apiSlice.injectEndpoints({
 export const {
   useGetPersonalFinancialGoalsQuery,
   useCreateFinancialGoalMutation,
+  useGetFinancialGoalByIdQuery,
 } = financialGoalApi;
 
 export default financialGoalApi;
