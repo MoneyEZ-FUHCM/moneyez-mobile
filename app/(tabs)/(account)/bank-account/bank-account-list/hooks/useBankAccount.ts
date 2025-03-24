@@ -27,7 +27,10 @@ const useBankAccount = () => {
   const { BANK_LIST, ERROR_CODE } = BANK_ACCOUNT_CONSTANT;
   const { MESSAGE_ERROR, MESSAGE_SUCCESS } = TEXT_TRANSLATE_BANK_ACCOUNT;
 
-  const { data } = useGetBankAccountsQuery({ PageIndex: 1, PageSize: 100 });
+  const { data, isLoading } = useGetBankAccountsQuery({
+    PageIndex: 1,
+    PageSize: 100,
+  });
 
   const [deleteBankAccount] = useDeleteBankAccountMutation();
 
@@ -88,6 +91,7 @@ const useBankAccount = () => {
       isShowDetail,
       detailModalRef,
       selectedAccount,
+      isLoading,
     },
     handler: {
       handleBack,

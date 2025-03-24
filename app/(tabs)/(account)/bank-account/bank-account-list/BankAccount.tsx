@@ -1,5 +1,6 @@
 import {
   FlatListCustom,
+  LoadingSectionWrapper,
   ModalLizeComponent,
   SafeAreaViewCustom,
   SectionComponent,
@@ -161,7 +162,6 @@ const BankAccount = () => {
   return (
     <GestureHandlerRootView>
       <SafeAreaViewCustom rootClassName="bg-gray-50 relative">
-        {/* Header */}
         <SectionComponent rootClassName="flex-row items-center justify-between h-16 px-4 bg-white border-b border-gray-200 shadow-sm">
           <TouchableOpacity
             onPress={handler.handleBack}
@@ -174,31 +174,33 @@ const BankAccount = () => {
           </Text>
           <View className="w-10" />
         </SectionComponent>
-        <FlatListCustom
-          showsVerticalScrollIndicator={false}
-          data={state.bankAccounts}
-          keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={{ padding: 16 }}
-          renderItem={({ item }) => (
-            <BankCard
-              item={item}
-              onPress={() => handler.handleViewDetail(item)}
-            />
-          )}
-          ListEmptyComponent={
-            <View className="mt-10 items-center justify-center p-6">
-              <View className="mb-4 h-20 w-20 items-center justify-center rounded-full bg-gray-100">
-                <Feather name="credit-card" size={32} color="#609084" />
+        <LoadingSectionWrapper isLoading={state.isLoading}>
+          <FlatListCustom
+            showsVerticalScrollIndicator={false}
+            data={state.bankAccounts}
+            keyExtractor={(item) => item.id.toString()}
+            contentContainerStyle={{ padding: 16 }}
+            renderItem={({ item }) => (
+              <BankCard
+                item={item}
+                onPress={() => handler.handleViewDetail(item)}
+              />
+            )}
+            ListEmptyComponent={
+              <View className="mt-10 items-center justify-center p-6">
+                <View className="mb-4 h-20 w-20 items-center justify-center rounded-full bg-gray-100">
+                  <Feather name="credit-card" size={32} color="#609084" />
+                </View>
+                <Text className="text-center text-lg text-gray-500">
+                  {TEXT_TRANSLATE_BANK_ACCOUNT.TITLE.NO_BANK_ACCOUNT}
+                </Text>
+                <Text className="mt-2 text-center text-gray-400">
+                  {TEXT_TRANSLATE_BANK_ACCOUNT.TITLE.CLICK_ADD_NEW_ACCOUNT}
+                </Text>
               </View>
-              <Text className="text-center text-lg text-gray-500">
-                {TEXT_TRANSLATE_BANK_ACCOUNT.TITLE.NO_BANK_ACCOUNT}
-              </Text>
-              <Text className="mt-2 text-center text-gray-400">
-                {TEXT_TRANSLATE_BANK_ACCOUNT.TITLE.CLICK_ADD_NEW_ACCOUNT}
-              </Text>
-            </View>
-          }
-        />
+            }
+          />
+        </LoadingSectionWrapper>
         <ModalLizeComponent ref={state.detailModalRef} modalStyle={{}}>
           {state.isShowDetail && <AccountDetail />}
         </ModalLizeComponent>
