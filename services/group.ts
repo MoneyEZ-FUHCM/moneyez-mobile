@@ -10,7 +10,7 @@ const groupApi = apiSlice.injectEndpoints({
         url: `/groups?PageIndex=${PageIndex}&PageSize=${PageSize}`,
         method: HTTP_METHOD.GET,
       }),
-      transformResponse: (response) => transformCommonResponse(response),
+      transformResponse: (response) => transformCommonResponse<Group>(response),
       providesTags: ["Group"],
     }),
     createGroup: builder.mutation({
@@ -36,6 +36,14 @@ const groupApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Group"],
     }),
+    requestFund: builder.mutation({
+      query: (payload) => ({
+        url: `/groups/funds/request`,
+        method: HTTP_METHOD.POST,
+        body: payload,
+      }),
+      invalidatesTags: ["Group"],
+    }),
   }),
 });
 
@@ -44,6 +52,7 @@ export const {
   useCreateGroupMutation,
   useUpdateGroupMutation,
   useDeleteGroupMutation,
+  useRequestFundMutation,
 } = groupApi;
 
 export default groupApi;

@@ -1,5 +1,6 @@
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import useHideTabbar from "@/hooks/useHideTabbar";
+import { setCurrentGroup } from "@/redux/slices/groupSlice";
 import { setGroupTabHidden, setMainTabHidden } from "@/redux/slices/tabSlice";
 import { useGetGroupsQuery } from "@/services/group";
 import { router } from "expo-router";
@@ -18,7 +19,7 @@ const useGroupList = () => {
     {},
   );
   const [pageIndex, setPageIndex] = useState(1);
-  const [groups, setGroups] = useState<any[]>([]);
+  const [groups, setGroups] = useState<Group[]>([]);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [isFetchingData, setIsFetchingData] = useState(true);
   const [isRefetching, setIsRefetching] = useState(false);
@@ -54,8 +55,9 @@ const useGroupList = () => {
     }
   }, [data?.items]);
 
-  const handleNavigateAndHideTabbar = useCallback(() => {
+  const handleNavigateAndHideTabbar = useCallback((group: Group) => () => {
     router.navigate(PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT as any);
+    dispatch(setCurrentGroup(group));
     dispatch(setMainTabHidden(true));
     dispatch(setGroupTabHidden(false));
   }, [dispatch]);

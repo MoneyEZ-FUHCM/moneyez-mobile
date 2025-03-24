@@ -19,7 +19,11 @@ export default function ConfigGroupLayout() {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name={PATH_NAME.GROUP_HOME.CREATE_FUND}
+        name={PATH_NAME.GROUP_HOME.CREATE_FUND_REQUEST}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={PATH_NAME.GROUP_HOME.FUND_REQUEST_INFO}
         options={{ headerShown: false }}
       />
     </Stack>
