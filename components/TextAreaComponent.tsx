@@ -9,10 +9,12 @@ interface TextAreaProps {
   isRequired?: boolean;
   numberOfLines?: number;
   minHeight?: number;
+  maxLength?: number;
   containerClass?: string;
   labelClass?: string;
   inputClass?: string;
   errorTextClass?: string;
+  charCountClass?: string;
 }
 
 const TextAreaComponent = ({
@@ -22,10 +24,12 @@ const TextAreaComponent = ({
   isRequired = false,
   numberOfLines = 4,
   minHeight = 100,
+  maxLength = 250,
   containerClass = "",
   labelClass = "",
   inputClass = "",
   errorTextClass = "",
+  charCountClass = "",
 }: TextAreaProps) => {
   const [field, meta, helpers] = useField(name);
 
@@ -49,12 +53,19 @@ const TextAreaComponent = ({
           numberOfLines={numberOfLines}
           textAlignVertical="top"
           value={field.value}
+          maxLength={maxLength}
           onChangeText={(text) => helpers.setValue(text)}
           onBlur={() => helpers.setTouched(true)}
           style={{
             minHeight: minHeight,
           }}
         />
+
+        <Text
+          className={`${charCountClass} absolute -bottom-5 right-0 text-right text-xs text-gray-500`}
+        >
+          {field.value?.length || 0}/{maxLength}
+        </Text>
 
         {meta.touched && meta.error && (
           <Text
