@@ -79,13 +79,10 @@ const useFunctionBankAccount = (params: any) => {
     setIsAtTop(event.nativeEvent.contentOffset.y <= 0);
   };
 
-  const handleOpenBankSelect = () => {
+  const handleOpenBankSelect = useCallback(() => {
     setSearchText("");
-    setTimeout(() => {
-      scrollRef.current?.scrollTo({ y: 0, animated: false });
-      bankSelectModalRef.current?.open();
-    }, 100);
-  };
+    bankSelectModalRef.current?.open();
+  }, []);
 
   const handleCloseModal = () => {
     if (isAtTop) {

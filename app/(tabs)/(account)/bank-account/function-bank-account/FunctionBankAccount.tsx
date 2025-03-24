@@ -207,15 +207,9 @@ const FunctionBankAccount = () => {
             </View>
           }
         >
-          <ScrollView
-            ref={state.scrollRef}
-            onScroll={handler.handleScroll}
-            scrollEventThrottle={16}
-          >
-            <BankSelectModal
-              setFieldValue={state.formikRef.current?.setFieldValue}
-            />
-          </ScrollView>
+          <BankSelectModal
+            setFieldValue={state.formikRef.current?.setFieldValue}
+          />
         </ModalLizeComponent>
         <SectionComponent rootClassName=" px-5 rounded-lg absolute bottom-5 w-full flex-1">
           <Pressable

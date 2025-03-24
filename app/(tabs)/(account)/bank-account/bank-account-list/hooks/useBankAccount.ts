@@ -21,7 +21,6 @@ const useBankAccount = () => {
 
   const [selectedAccount, setSelectedAccount] =
     useState<BankAccountType | null>(null);
-  const [isShowDetail, setIsShowDetail] = useState<boolean>(false);
   const detailModalRef = useRef<Modalize>(null);
   const { SYSTEM_ERROR } = COMMON_CONSTANT;
   const { BANK_LIST, ERROR_CODE } = BANK_ACCOUNT_CONSTANT;
@@ -50,11 +49,10 @@ const useBankAccount = () => {
     router.back();
   };
 
-  const handleViewDetail = (account: BankAccountType) => {
+  const handleViewDetail = useCallback((account: BankAccountType) => {
     setSelectedAccount(account);
-    setIsShowDetail(true);
     detailModalRef.current?.open();
-  };
+  }, []);
 
   const handleDeleteAccount = useCallback(async (bankAccountId: string) => {
     try {
@@ -88,7 +86,6 @@ const useBankAccount = () => {
   return {
     state: {
       bankAccounts,
-      isShowDetail,
       detailModalRef,
       selectedAccount,
       isLoading,

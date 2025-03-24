@@ -201,8 +201,8 @@ const BankAccount = () => {
             }
           />
         </LoadingSectionWrapper>
-        <ModalLizeComponent ref={state.detailModalRef} modalStyle={{}}>
-          {state.isShowDetail && <AccountDetail />}
+        <ModalLizeComponent ref={state.detailModalRef}>
+          <AccountDetail />
         </ModalLizeComponent>
         <SectionComponent rootClassName="absolute bottom-10 right-5">
           <TouchableOpacity
