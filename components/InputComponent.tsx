@@ -7,6 +7,7 @@ interface CommonInputProps {
   name: string;
   label: string;
   icon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
   placeholder?: string;
   isPrivate?: boolean;
   isRequired?: boolean;
@@ -22,13 +23,15 @@ interface CommonInputProps {
   labelClass?: string;
   inputClass?: string;
   errorTextClass?: string;
-  formatter?: (value: string) => string; // Hàm format dữ liệu
+  formatter?: (value: string) => string;
+  [key: string]: any;
 }
 
 const InputComponent = ({
   name,
   label,
   icon,
+  rightIcon,
   placeholder,
   isPrivate = false,
   isRequired = false,
@@ -38,18 +41,18 @@ const InputComponent = ({
   inputClass = "",
   errorTextClass = "",
   formatter,
+  ...props
 }: CommonInputProps) => {
   const [field, meta, helpers] = useField(name);
   const [isPasswordVisible, setIsPasswordVisible] = useState(!isPrivate);
 
-  // Hàm xử lý thay đổi giá trị với định dạng (nếu có)
   const handleChangeText = (text: string) => {
     const formattedText = formatter ? formatter(text) : text;
     helpers.setValue(formattedText);
   };
 
   return (
-    <View className={`${containerClass} mb-5`}>
+    <View className={`${containerClass} mb-5`} {...props}>
       <View className="mb-1 flex-row items-center">
         {isRequired && <Text className="mr-1 text-red">*</Text>}
         <Text
@@ -62,21 +65,23 @@ const InputComponent = ({
       </View>
       <View className="relative">
         <TextInput
-          className={`h-10 rounded-md border px-3 ${isPrivate && "pr-10"} ${
+          className={`h-10 rounded-md border px-3 ${
             icon ? "pl-10" : "pl-3"
-          } ${meta.touched && meta.error ? "border-red" : "border-gray-300"} ${
-            inputClass
-          }`}
+          } ${isPrivate || rightIcon ? "pr-10" : "pr-3"} ${
+            meta.touched && meta.error ? "border-red" : "border-gray-300"
+          } ${inputClass}`}
           placeholder={placeholder}
           secureTextEntry={!isPasswordVisible && isPrivate}
           inputMode={inputMode}
           value={field.value}
-          onChangeText={handleChangeText} // Sử dụng hàm mới
+          onChangeText={handleChangeText}
           onBlur={() => helpers.setTouched(true)}
+          {...props}
         />
 
         {icon && <View className="absolute left-3 top-2.5">{icon}</View>}
-        {isPrivate && (
+
+        {isPrivate ? (
           <TouchableOpacity
             className="absolute right-3 top-2.5"
             onPress={() => setIsPasswordVisible((prev) => !prev)}
@@ -87,7 +92,12 @@ const InputComponent = ({
               <EyeSlash size="18" color="#888" variant="Outline" />
             )}
           </TouchableOpacity>
+        ) : (
+          rightIcon && (
+            <View className="absolute right-3 top-3">{rightIcon}</View>
+          )
         )}
+
         {meta.touched && meta.error && (
           <Text
             className={`${errorTextClass} absolute -bottom-5 mt-2 text-[12px] text-red`}

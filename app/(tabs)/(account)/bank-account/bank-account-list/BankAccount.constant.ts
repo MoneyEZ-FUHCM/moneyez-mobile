@@ -1,4 +1,4 @@
-const BANK_ACCOUNT_CONSTANT = () => ({
+const BANK_ACCOUNT_CONSTANT = {
   BANK_LIST: [
     {
       id: 17,
@@ -884,7 +884,9 @@ const BANK_ACCOUNT_CONSTANT = () => ({
     },
   ],
 
-  ERROR_CODE: {},
-});
+  ERROR_CODE: {
+    BANK_ACCOUNT_NOT_FOUND: "BankAccountNotFound",
+  },
+};
 
 export default BANK_ACCOUNT_CONSTANT;

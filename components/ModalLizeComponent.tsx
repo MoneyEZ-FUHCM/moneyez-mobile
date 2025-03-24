@@ -1,15 +1,13 @@
 import React, { forwardRef } from "react";
 import { Easing, ViewStyle } from "react-native";
-import { Modalize } from "react-native-modalize";
+import { Modalize, ModalizeProps } from "react-native-modalize";
 
-interface CustomModalizeProps {
-  children: React.ReactNode;
+interface CustomModalizeProps extends ModalizeProps {
   modalStyle?: ViewStyle;
-  HeaderComponent?: React.ReactNode;
 }
 
 const ModalLizeComponent = forwardRef<Modalize, CustomModalizeProps>(
-  ({ children, modalStyle, HeaderComponent }, ref) => {
+  ({ modalStyle, ...props }, ref) => {
     return (
       <Modalize
         ref={ref}
@@ -27,11 +25,8 @@ const ModalLizeComponent = forwardRef<Modalize, CustomModalizeProps>(
           { borderTopLeftRadius: 30, borderTopRightRadius: 30 },
           modalStyle,
         ]}
-        useNativeDriver={true}
-        HeaderComponent={HeaderComponent}
-      >
-        {children}
-      </Modalize>
+        {...props}
+      />
     );
   },
 );
