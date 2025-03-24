@@ -48,6 +48,9 @@ const PATH_NAME = {
   ACCOUNT: {
     ACCOUNT_SETTING: "setting/AccountSetting",
     UPDATE_INFO: "update-info/UpdateUserInfo",
+    BANK_ACCOUNT: "bank-account/bank-account-list/BankAccount",
+    FUNCTION_BANK_ACCOUNT:
+      "bank-account/function-bank-account/FunctionBankAccount",
   },
 
   // Group-detail

@@ -12,13 +12,11 @@ import { Formik } from "formik";
 import { Buildings, Call, User } from "iconsax-react-native";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import TEXT_TRANSLATE_ACCOUNT from "../AccountScreen.translate";
-import useAccountScreen from "../hooks/useAccountScreen";
+import useUpdateUserInfo from "./hooks/useUpdateUserInfo";
 
 const UpdateUserInfo = () => {
-  const { state, handler } = useAccountScreen();
+  const { state, handler } = useUpdateUserInfo();
   const primary = "#609084";
-
-  handler.handleHideTabbar();
 
   return (
     <SafeAreaViewCustom rootClassName="relative">

@@ -106,6 +106,7 @@ const apiSlice = createApi({
     "Notification",
     "User",
     "FinancialGoal",
+    "bank-accounts",
   ],
 });
 
