@@ -12,6 +12,7 @@ import { Text, TouchableOpacity } from "react-native";
 import * as Yup from "yup";
 import TEXT_TRANSLATE_CREATE_FUND_REQUEST from "./WithdrawFundRequest.translate";
 import useWithdrawFundRequest from "./hooks/useWithdrawFundRequest";
+import { TextAreaComponent } from "@/components/TextAreaComponent";
 
 const { TITLE, LABELS, BUTTON, MESSAGE_VALIDATE } = TEXT_TRANSLATE_CREATE_FUND_REQUEST;
 
@@ -77,13 +78,12 @@ export default function CreateFundRequest() {
                 formatter={formatCurrencyInput}
               />
               <SpaceComponent height={10} />
-              <InputComponent
+              <TextAreaComponent
                 name="description"
                 label={LABELS.DESCRIPTION}
                 placeholder={LABELS.DESCRIPTION_PLACEHOLDER}
                 labelClass="text-text-gray text-[12px]"
                 isRequired
-                multiline={true}
                 maxLength={250}
               />
             </SectionComponent>
