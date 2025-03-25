@@ -51,11 +51,6 @@ const useSpendingBudget = () => {
     isLoading: isLoadingGoals,
     refetch: refetchGoals,
   } = useGetPersonalFinancialGoalsQuery({ PageIndex: 1, PageSize: 20 });
-  const {
-    data: financialGoalsData,
-    isLoading: isLoadingGoals,
-    refetch: refetchGoals,
-  } = useGetPersonalFinancialGoalsQuery({ PageIndex: 1, PageSize: 20 });
 
   const { data: categoriesData, isLoading: isLoadingCategories } =
     useGetCurrentCategoriesQuery({});
@@ -81,7 +76,6 @@ const useSpendingBudget = () => {
             icon: subcategory.icon,
             categoryCode: category.code,
             categoryName: category.name,
-            categoryName: category.name,
           });
         });
       });
@@ -96,7 +90,6 @@ const useSpendingBudget = () => {
             sectionMap.set(categoryCode, {
               id: categoryCode,
               category: subcategory.categoryName,
-              items: [],
               items: [],
             });
           }
@@ -113,10 +106,6 @@ const useSpendingBudget = () => {
                 (subcategory.icon as keyof typeof MaterialIcons.glyphMap) ||
                 "account-balance",
               subcategoryId: goal.subcategoryId,
-              icon:
-                (subcategory.icon as keyof typeof MaterialIcons.glyphMap) ||
-                "account-balance",
-              subcategoryId: goal.subcategoryId,
             });
           }
         }
@@ -128,11 +117,6 @@ const useSpendingBudget = () => {
   }, [financialGoalsData, categoriesData, isLoadingGoals, isLoadingCategories]);
 
   const cycleInfo = useMemo(() => {
-    if (
-      !currentSpendingModel ||
-      !currentSpendingModel.startDate ||
-      !currentSpendingModel.endDate
-    ) {
     if (
       !currentSpendingModel ||
       !currentSpendingModel.startDate ||
@@ -171,9 +155,9 @@ const useSpendingBudget = () => {
   );
 
   const handleBudgetPress = useCallback((budgetId: string) => {
-    router.push({
+    router.navigate({
       pathname: PATH_NAME.HOME.EXPENSES_DETAIL as any,
-      params: { budgetId },
+      params: { budgetId: budgetId },
     });
   }, []);
 
@@ -188,9 +172,7 @@ const useSpendingBudget = () => {
         cycleInfo,
         budgetSections,
         isLoading,
-        isLoading,
       }),
-      [cycleInfo, budgetSections, isLoading],
       [cycleInfo, budgetSections, isLoading],
     ),
     handler: {
@@ -199,10 +181,7 @@ const useSpendingBudget = () => {
       handleBudgetPress,
       handleRefresh,
     },
-      handleRefresh,
-    },
   };
 };
 
 export default useSpendingBudget;
-

@@ -19,12 +19,12 @@ const PATH_NAME = {
   GROUP: {
     GROUP_NAVIGATOR: "(group)",
     GROUP_LIST: "Group",
-    GROUP_FUND: "group-fund/GroupFund",
+
     GROUP_DETAIL: ":id",
     STATISTICS: "dashboard-group/GroupManangement",
     CREATE_GROUP_STEP_1: "create-group/CreateGroup",
     CREATE_FUND_CONTRIBUTION_REQUEST:
-      "fund-contribution-request/FundContributionRequest",
+      "group-details/group-home/fund-contribution-request/FundContributionRequest",
   },
   BOT: {
     CHATBOT: "chatbot/ChatBot",
@@ -58,6 +58,7 @@ const PATH_NAME = {
   },
   MEMBER: {
     GROUP_MEMBER: "group-details/member/group-member/GroupMember",
+    GROUP_FUND: "group-details/member/group-member/group-fund/GroupFund",
     INVITE_MEMBER: "group-details/member/inivite-member/InviteMember",
     INVITE_MEMBER_BY_EMAIL:
       "group-details/member/inivite-member/invite-member-by-email/InviteMemberbyEmail",

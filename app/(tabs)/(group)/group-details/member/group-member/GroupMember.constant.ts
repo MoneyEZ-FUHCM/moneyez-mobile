@@ -24,7 +24,6 @@ const GROUP_MEMBER_CONSTANT = {
   ],
   CONTACT_LIST: ["Peter", "Rodney", "Victoria"],
   ADD_MEMBER_BUTTON: "Thêm thành viên",
-  GROUP_FUND_ROUTE: "group-fund/GroupFund",
 };
 
 export default GROUP_MEMBER_CONSTANT;

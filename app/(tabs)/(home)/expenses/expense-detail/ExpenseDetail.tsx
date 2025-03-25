@@ -18,8 +18,6 @@ import {
 } from "@/components";
 import NoData from "@/assets/images/InviteMemberAssets/not-found-result.png";
 import TEXT_TRANSLATE_EXPENSE_DETAIL from "./ExpenseDetail.translate";
-
-import { BarChartCustom } from "@/components/ExpenseDetailCustom/BarChartCustom";
 import useExpenseDetail from "./hooks/useExpenseDetail";
 import { formatCurrency } from "@/helpers/libs";
 

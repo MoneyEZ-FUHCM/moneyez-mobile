@@ -130,7 +130,7 @@ const GroupMember = () => {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => router.navigate(PATH_NAME.GROUP.GROUP_FUND as any)}
+            onPress={() => router.navigate(PATH_NAME.MEMBER.GROUP_FUND as any)}
             className="mt-2 flex-row items-center justify-between rounded-lg bg-white px-2 py-3"
           >
             <View className="flex-row items-center">
