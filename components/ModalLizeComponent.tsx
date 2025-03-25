@@ -1,35 +1,32 @@
 import React, { forwardRef } from "react";
 import { Easing, ViewStyle } from "react-native";
-import { Modalize } from "react-native-modalize";
+import { Modalize, ModalizeProps } from "react-native-modalize";
 
-interface CustomModalizeProps {
-  children: React.ReactNode;
+interface CustomModalizeProps extends ModalizeProps {
   modalStyle?: ViewStyle;
 }
 
 const ModalLizeComponent = forwardRef<Modalize, CustomModalizeProps>(
-  ({ children, modalStyle }, ref) => {
+  ({ modalStyle, ...props }, ref) => {
     return (
       <Modalize
         ref={ref}
         adjustToContentHeight
         disableScrollIfPossible={false}
-        openAnimationConfig={{
-          timing: { duration: 300, easing: Easing.ease },
-          spring: { stiffness: 150, damping: 80, mass: 1 },
-        }}
-        closeAnimationConfig={{
-          timing: { duration: 300, easing: Easing.ease },
-          spring: { stiffness: 150, damping: 80, mass: 1 },
-        }}
         modalStyle={[
           { borderTopLeftRadius: 30, borderTopRightRadius: 30 },
           modalStyle,
         ]}
-        useNativeDriver={true}
-      >
-        {children}
-      </Modalize>
+        openAnimationConfig={{
+          timing: { duration: 500, easing: Easing.out(Easing.exp) },
+          spring: { stiffness: 120, damping: 20, mass: 1 },
+        }}
+        closeAnimationConfig={{
+          timing: { duration: 400, easing: Easing.inOut(Easing.ease) },
+          spring: { stiffness: 120, damping: 25, mass: 1 },
+        }}
+        {...props}
+      />
     );
   },
 );

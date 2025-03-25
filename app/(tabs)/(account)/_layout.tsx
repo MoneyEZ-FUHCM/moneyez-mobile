@@ -11,10 +11,13 @@ export default function AccountLayout() {
       screenOptions={{
         headerStyle: { backgroundColor: "var(--color-primary)" },
         headerShown: CONDITION.FALSE,
-        animation: ANIMATION_NAVIGATE_STACK.SLIDE_FROM_BOTTOM,
+        animation: ANIMATION_NAVIGATE_STACK.SLIDE_FROM_RIGHT,
       }}
     >
       <Stack.Screen name={PATH_NAME.ACCOUNT.ACCOUNT_SETTING} />
+      <Stack.Screen name={PATH_NAME.ACCOUNT.UPDATE_INFO} />
+      <Stack.Screen name={PATH_NAME.ACCOUNT.BANK_ACCOUNT} />
+      <Stack.Screen name={PATH_NAME.ACCOUNT.FUNCTION_BANK_ACCOUNT} />
     </Stack>
   );
 }

@@ -1,22 +1,19 @@
-import { COMMON_CONSTANT } from "@/helpers/constants/common";
-import { PATH_NAME } from "@/helpers/constants/pathname";
-import useHideTabbar from "@/hooks/useHideTabbar";
 import useLogout from "@/hooks/useLogout";
 import useUploadImage from "@/hooks/useUploadImage";
-import { setLoading } from "@/redux/slices/loadingSlice";
-import { setMainTabHidden } from "@/redux/slices/tabSlice";
+import ACCOUNT_SCREEN_CONSTANT from "../../AccountScreen.constant";
+import { COMMON_CONSTANT } from "@/helpers/constants/common";
+import TEXT_TRANSLATE_ACCOUNT from "../../AccountScreen.translate";
+import { useDispatch, useSelector } from "react-redux";
 import { selectUserInfo, setUserInfo } from "@/redux/slices/userSlice";
 import { useUpdateInfoMutation } from "@/services/user";
-import { router } from "expo-router";
-import { useCallback } from "react";
-import { ToastAndroid } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
-import ACCOUNT_SCREEN_CONSTANT from "../AccountScreen.constant";
-import TEXT_TRANSLATE_ACCOUNT from "../AccountScreen.translate";
+import { setMainTabHidden } from "@/redux/slices/tabSlice";
+import { router } from "expo-router";
+import { setLoading } from "@/redux/slices/loadingSlice";
+import { ToastAndroid } from "react-native";
+import useHideTabbar from "@/hooks/useHideTabbar";
 
-const useAccountScreen = () => {
-  const { handleLogout } = useLogout();
+const useUpdateUserInfo = () => {
   const { imageUrl, pickAndUploadImage } = useUploadImage();
   const { FORM_NAME, ERROR_CODE } = ACCOUNT_SCREEN_CONSTANT;
   const { SYSTEM_ERROR, HTTP_STATUS } = COMMON_CONSTANT;
@@ -26,23 +23,6 @@ const useAccountScreen = () => {
   const dispatch = useDispatch();
   const userInfo = useSelector(selectUserInfo);
   const [updateInfoUser] = useUpdateInfoMutation();
-
-  const handleNavigateAccountOptions = useCallback((id: number) => {
-    switch (id) {
-      case 1:
-        router.navigate(PATH_NAME.ACCOUNT.UPDATE_INFO as any);
-        break;
-      case 2:
-        //
-        break;
-      case 3:
-        //
-        break;
-      default:
-      //
-    }
-  }, []);
-
   // validation
   const updateValidationSchema = Yup.object({
     fullName: Yup.string().trim().required(MESSAGE_VALIDATE.FULLNAME_REQUIRED),
@@ -53,7 +33,7 @@ const useAccountScreen = () => {
     dob: Yup.string().trim().required(MESSAGE_VALIDATE.DOB_REQUIRED),
     gender: Yup.string().trim().required(MESSAGE_VALIDATE.GENDER_REQUIRED),
   });
-
+  useHideTabbar();
   const handleBack = () => {
     dispatch(setMainTabHidden(false));
     router.back();
@@ -99,9 +79,6 @@ const useAccountScreen = () => {
       FORM_NAME,
     },
     handler: {
-      handleLogout,
-      handleNavigateAccountOptions,
-      handleHideTabbar: useHideTabbar,
       handleBack,
       pickAndUploadImage,
       handleUpdateInfo,
@@ -110,4 +87,4 @@ const useAccountScreen = () => {
   };
 };
 
-export default useAccountScreen;
+export default useUpdateUserInfo;

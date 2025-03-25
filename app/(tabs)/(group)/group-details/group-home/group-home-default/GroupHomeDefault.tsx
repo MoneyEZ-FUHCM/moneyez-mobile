@@ -1,22 +1,23 @@
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
-import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
 import {
-  View,
-  Text,
-  TouchableOpacity,
+  Image,
   ImageBackground,
   ScrollView,
-  Image,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import TEXT_TRANSLATE_GROUP_HOME_DEFAULT from "./GroupHomeDefault.translate";
 import RECENT_ACTIVITIES from "./GroupHomeDefault.constant";
-import { PATH_NAME } from "@/helpers/constants/pathname";
+import TEXT_TRANSLATE_GROUP_HOME_DEFAULT from "./GroupHomeDefault.translate";
+import useGroupHomeDefault from "./hooks/useGroupHomeDefault";
 
 const GroupHomeDefault = () => {
   const { TITLE, BUTTON, TEXT } = TEXT_TRANSLATE_GROUP_HOME_DEFAULT;
   const recentActivities = RECENT_ACTIVITIES;
+  const { state, handler } = useGroupHomeDefault();
 
   return (
     <SafeAreaViewCustom>
@@ -48,13 +49,18 @@ const GroupHomeDefault = () => {
           </Text>
           <Text className="text-gray-500">{TEXT.FUND_GOAL}</Text>
           <View className="mt-4 flex-row justify-between">
-            <TouchableOpacity className="mx-1 flex-1 flex-row items-center justify-center rounded-full bg-thirdly/70 px-4 py-2">
+            <TouchableOpacity
+              className="mx-1 flex-1 flex-row items-center justify-center rounded-full bg-thirdly/70 px-4 py-2 "
+              onPress={handler.handleCreateFundRequest}
+            >
               <AntDesign name="plus" size={16} color="#609084" />
               <Text className="ml-2 text-base font-bold text-[#609084]">
                 {BUTTON.CONTRIBUTE}
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity className="mx-1 flex-1 flex-row items-center justify-center rounded-full bg-thirdly/70 px-4 py-2">
+            <TouchableOpacity
+              className="mx-1 flex-1 flex-row items-center justify-center rounded-full bg-thirdly/70 px-4 py-2"
+            >
               <AntDesign name="swap" size={16} color="#609084" />
               <Text className="ml-2 text-base font-bold text-[#609084]">
                 {BUTTON.WITHDRAW}

@@ -48,13 +48,16 @@ const PATH_NAME = {
   ACCOUNT: {
     ACCOUNT_SETTING: "setting/AccountSetting",
     UPDATE_INFO: "update-info/UpdateUserInfo",
+    BANK_ACCOUNT: "bank-account/bank-account-list/BankAccount",
+    FUNCTION_BANK_ACCOUNT:
+      "bank-account/function-bank-account/FunctionBankAccount",
   },
 
   // Group-detail
   GROUP_HOME: {
-    GROUP_HOME_DEFAULT:
-      "group-details/group-home/group-home-default/GroupHomeDefault",
-    CREATE_FUND: "group-details/group-home/create-fund/CreateFund",
+    GROUP_HOME_DEFAULT: "group-details/group-home/group-home-default/GroupHomeDefault",
+    CREATE_FUND_REQUEST: "group-details/group-home/create-fund-request/CreateFundRequest",
+    FUND_REQUEST_INFO: "group-details/group-home/fund-request-info/FundRequestInfo",
   },
   MEMBER: {
     GROUP_MEMBER: "group-details/member/group-member/GroupMember",
