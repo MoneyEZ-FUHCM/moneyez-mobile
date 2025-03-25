@@ -58,6 +58,7 @@ const PATH_NAME = {
     GROUP_HOME_DEFAULT: "group-details/group-home/group-home-default/GroupHomeDefault",
     CREATE_FUND_REQUEST: "group-details/group-home/create-fund-request/CreateFundRequest",
     FUND_REQUEST_INFO: "group-details/group-home/fund-request-info/FundRequestInfo",
+    GROUP_FUND_REMIND: "group-details/group-home/group-fund-remind/GroupFundRemind",
   },
   MEMBER: {
     GROUP_MEMBER: "group-details/member/group-member/GroupMember",
@@ -70,3 +71,4 @@ const PATH_NAME = {
 };
 
 export { PATH_NAME };
+

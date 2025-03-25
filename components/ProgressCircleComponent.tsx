@@ -1,7 +1,7 @@
 import { Colors } from "@/helpers/constants/color";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { View } from "react-native";
+import { Text, View } from "react-native";
 import * as Progress from "react-native-progress";
 
 const ProgressCircleComponent = ({
@@ -12,6 +12,8 @@ const ProgressCircleComponent = ({
   iconSize = 30,
   iconColor = Colors.colors.primary,
   thickness = 4,
+  showPercentage = false,
+  percentageTextStyle = {},
 }: {
   value: number;
   size?: number;
@@ -20,6 +22,8 @@ const ProgressCircleComponent = ({
   iconSize?: number;
   iconColor?: string;
   thickness?: number;
+  showPercentage?: boolean;
+  percentageTextStyle?: object;
 }) => {
   const [progress, setProgress] = useState(0);
 
@@ -52,15 +56,32 @@ const ProgressCircleComponent = ({
           unfilledColor="#eee"
           animated={true}
         />
-        <MaterialIcons
-          name={iconName}
-          size={iconSize}
-          color={iconColor}
-          style={{ position: "absolute" }}
-        />
+        {showPercentage ? (
+          <Text
+            style={[
+              {
+                position: "absolute",
+                fontSize: size * 0.3,
+                fontWeight: "bold",
+                color: iconColor,
+              },
+              percentageTextStyle,
+            ]}
+          >
+            {Math.round(progress * 100)}%
+          </Text>
+        ) : (
+          <MaterialIcons
+            name={iconName}
+            size={iconSize}
+            color={iconColor}
+            style={{ position: "absolute" }}
+          />
+        )}
       </View>
     </View>
   );
 };
 
 export { ProgressCircleComponent };
+

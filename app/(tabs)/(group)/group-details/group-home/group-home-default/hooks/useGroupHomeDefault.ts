@@ -13,6 +13,16 @@ const useGroupHomeDefault = () => {
     });
   }
 
+  const handleFundRemind = () => {
+    dispatch(setGroupTabHidden(true));
+    router.push({
+      pathname: PATH_NAME.GROUP_HOME.GROUP_FUND_REMIND as any,
+    });
+  }
+
+  const handleStatistic = () => {
+    
+  }
 
   return {
     state: {
@@ -20,6 +30,8 @@ const useGroupHomeDefault = () => {
     },
     handler: {
       handleCreateFundRequest,
+      handleFundRemind,
+      handleStatistic,
     },
   };
 }
