@@ -11,10 +11,12 @@ import {
 } from "@/components";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-import { Image, Pressable, Text, View } from "react-native";
+import { Image, Pressable, Text, View, TouchableOpacity } from "react-native";
 import TEXT_TRANSLATE_INDIVIDUAL_HOME from "./IndividualHome.translate";
 import useIndividualHome from "./hooks/useIndividualHome";
 import SpendingBudgetComponent from "@/components/SpendingBudgetComponent";
+import { PATH_NAME } from "@/helpers/constants/pathname";
+import { router } from "expo-router";
 
 export default function IndividualHome() {
   const { state, handler } = useIndividualHome();
@@ -112,8 +114,44 @@ export default function IndividualHome() {
               <SpaceComponent height={22} />
             </>
           ) : (
-            <View />
+            <View className="mx-5 rounded-xl bg-white shadow-sm">
+              <View className="px-4 pt-4">
+                <Text className="text-base font-bold text-gray-900">
+                  Ngân sách chi tiêu
+                </Text>
+              </View>
+
+              <View className="items-center justify-center px-4 py-5">
+                <View className="h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+                  <MaterialIcons
+                    name="account-balance-wallet"
+                    size={32}
+                    color="#609084"
+                  />
+                </View>
+                <Text className="mt-4 text-base font-medium text-gray-900">
+                  Chưa có ngân sách nào
+                </Text>
+                <Text className="mx-5 mt-1 text-center text-sm text-gray-500">
+                  Thêm ngân sách để theo dõi và kiểm soát chi tiêu của bạn
+                </Text>
+                <TouchableOpacity
+                  onPress={() =>
+                    router.push(
+                      PATH_NAME.HOME.ADD_SPENDING_BUDGET_STEP_1 as any,
+                    )
+                  }
+                  className="mt-5 flex-row items-center justify-center rounded-lg bg-primary px-6 py-2.5 shadow-sm"
+                >
+                  <MaterialIcons name="add" size={20} color="white" />
+                  <Text className="ml-1 font-medium text-white">
+                    Thêm ngân sách
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           )}
+          <SpaceComponent height={22} />
           <SectionComponent rootClassName="mx-5 ">
             <BudgetSummaryComponent
               button1Text={TEXT_TRANSLATE_INDIVIDUAL_HOME.BUTTON.AI_BUTTON_1}

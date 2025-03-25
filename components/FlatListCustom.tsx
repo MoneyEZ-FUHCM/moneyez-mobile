@@ -36,11 +36,12 @@ export function FlatListCustom<T>({
   return (
     <FlatList
       {...props}
-      removeClippedSubviews={false}
+      removeClippedSubviews={true}
       onEndReached={handleEndReached}
-      onEndReachedThreshold={0.3}
+      onEndReachedThreshold={0.1}
       contentContainerStyle={[
         { paddingBottom: isBottomTab ? 80 : 0 },
+
         contentContainerStyle,
       ]}
       ListFooterComponent={
