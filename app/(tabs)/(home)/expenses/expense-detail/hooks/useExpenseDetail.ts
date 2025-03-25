@@ -55,7 +55,7 @@ const useExpenseDetail = () => {
 
   const handleGoBack = useCallback(() => {
     router.back();
-    dispatch(setMainTabHidden(false));
+    dispatch(setMainTabHidden(true));
   }, [dispatch]);
 
   return {

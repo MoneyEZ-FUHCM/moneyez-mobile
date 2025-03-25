@@ -1,5 +1,9 @@
 import { PATH_NAME } from "@/helpers/constants/pathname";
-import { formatDate } from "@/helpers/libs";
+import {
+  calculateRemainingDays,
+  formatDateMonth,
+  formatDateMonthYear,
+} from "@/helpers/libs";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { selectCurrentUserSpendingModel } from "@/redux/slices/userSpendingModelSlice";
 import { useGetPersonalFinancialGoalsQuery } from "@/services/financialGoal";
@@ -8,8 +12,9 @@ import { Category } from "@/types/category.types";
 import { FinancialGoal } from "@/types/financialGoal.type";
 import { Subcategory } from "@/types/subCategory";
 import { MaterialIcons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { BackHandler } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 interface BudgetItem {
@@ -46,6 +51,11 @@ const useSpendingBudget = () => {
     isLoading: isLoadingGoals,
     refetch: refetchGoals,
   } = useGetPersonalFinancialGoalsQuery({ PageIndex: 1, PageSize: 20 });
+  const {
+    data: financialGoalsData,
+    isLoading: isLoadingGoals,
+    refetch: refetchGoals,
+  } = useGetPersonalFinancialGoalsQuery({ PageIndex: 1, PageSize: 20 });
 
   const { data: categoriesData, isLoading: isLoadingCategories } =
     useGetCurrentCategoriesQuery({});
@@ -71,6 +81,7 @@ const useSpendingBudget = () => {
             icon: subcategory.icon,
             categoryCode: category.code,
             categoryName: category.name,
+            categoryName: category.name,
           });
         });
       });
@@ -86,6 +97,7 @@ const useSpendingBudget = () => {
               id: categoryCode,
               category: subcategory.categoryName,
               items: [],
+              items: [],
             });
           }
 
@@ -97,6 +109,10 @@ const useSpendingBudget = () => {
               remaining: goal.targetAmount - goal.currentAmount,
               currentAmount: goal.currentAmount,
               targetAmount: goal.targetAmount,
+              icon:
+                (subcategory.icon as keyof typeof MaterialIcons.glyphMap) ||
+                "account-balance",
+              subcategoryId: goal.subcategoryId,
               icon:
                 (subcategory.icon as keyof typeof MaterialIcons.glyphMap) ||
                 "account-balance",
@@ -117,19 +133,17 @@ const useSpendingBudget = () => {
       !currentSpendingModel.startDate ||
       !currentSpendingModel.endDate
     ) {
+    if (
+      !currentSpendingModel ||
+      !currentSpendingModel.startDate ||
+      !currentSpendingModel.endDate
+    ) {
       return { cycle: "Không có chu kỳ", remainingDays: 0 };
     }
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const endDate = new Date(currentSpendingModel.endDate);
-    endDate.setHours(0, 0, 0, 0);
-    const diffTime = endDate.getTime() - today.getTime();
-    const remainingDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
     return {
-      cycle: `${formatDate(currentSpendingModel.startDate)} đến ${formatDate(currentSpendingModel.endDate)}`,
-      remainingDays: remainingDays > 0 ? remainingDays : 0,
+      cycle: `${formatDateMonth(currentSpendingModel.startDate)} đến ${formatDateMonthYear(currentSpendingModel.endDate)}`,
+      remainingDays: calculateRemainingDays(currentSpendingModel.endDate),
     };
   }, [currentSpendingModel]);
 
@@ -139,8 +153,22 @@ const useSpendingBudget = () => {
   }, [dispatch, HOME.ADD_SPENDING_BUDGET_STEP_1]);
 
   const handleBack = useCallback(() => {
+    dispatch(setMainTabHidden(false));
     router.back();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        handleBack();
+        return true;
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [handleBack]),
+  );
 
   const handleBudgetPress = useCallback((budgetId: string) => {
     router.push({
@@ -160,7 +188,9 @@ const useSpendingBudget = () => {
         cycleInfo,
         budgetSections,
         isLoading,
+        isLoading,
       }),
+      [cycleInfo, budgetSections, isLoading],
       [cycleInfo, budgetSections, isLoading],
     ),
     handler: {
@@ -169,7 +199,10 @@ const useSpendingBudget = () => {
       handleBudgetPress,
       handleRefresh,
     },
+      handleRefresh,
+    },
   };
 };
 
 export default useSpendingBudget;
+

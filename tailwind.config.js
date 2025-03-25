@@ -11,7 +11,7 @@ module.exports = {
         red: "#CC0000",
         green: "#00A010",
         superlight: "#F6F9F4",
-        "text-gray": "#7D7D91",
+        "text-gray": "#808080",
         "background-gray": "#F5F6F9",
         stroke: "#ccc",
       },

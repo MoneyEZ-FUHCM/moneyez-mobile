@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import {
+  BarChartExpenseCustom,
   FlatListCustom,
   LoadingSectionWrapper,
   ProgressCircleComponent,
@@ -121,9 +122,9 @@ export default function ExpenseDetail() {
         <Text className="pb-2 text-lg font-bold text-black">
           {TEXT_TRANSLATE_EXPENSE_DETAIL.SPENDING_TREND}
         </Text>
-        <BarChartCustom
+        <BarChartExpenseCustom
           data={CHART_DATA}
-          categories={["Theo Tuần", "Theo Tháng"]}
+          categories={["Tuần", "Tháng"]}
           screenWidth={Dimensions.get("window").width}
         />
       </SectionComponent>
@@ -145,7 +146,7 @@ export default function ExpenseDetail() {
           onPress={handleGoBack}
           className="absolute left-3 rounded-full p-2"
         >
-          <AntDesign name="close" size={24} color={PRIMARY_COLOR} />
+          <MaterialIcons name="arrow-back" size={24} color={PRIMARY_COLOR} />
         </TouchableOpacity>
         <Text className="text-lg font-bold text-primary">
           {TEXT_TRANSLATE_EXPENSE_DETAIL.HEADER_TITLE}

@@ -26,12 +26,24 @@ const DatePickerTransactionComponent: React.FC<
   endDate,
 }) => {
   const [showPicker, setShowPicker] = useState(false);
+  const [mode, setMode] = useState<"date" | "time">("date");
   const [field, meta, helpers] = useField(name);
 
   const handleChange = (event: DateTimePickerEvent, date?: Date) => {
-    setShowPicker(false);
+    if (event.type === "dismissed") {
+      setShowPicker(false);
+      return;
+    }
+
     if (date) {
-      helpers.setValue(date);
+      if (mode === "date") {
+        setMode("time");
+        setShowPicker(true);
+        helpers.setValue(date);
+      } else {
+        setShowPicker(false);
+        helpers.setValue(date);
+      }
     }
   };
 
@@ -55,13 +67,16 @@ const DatePickerTransactionComponent: React.FC<
           className={`h-10 flex-row items-center rounded-md border px-3 ${
             meta.touched && meta.error ? "border-red" : "border-gray-300"
           }`}
-          onPress={() => setShowPicker(true)}
+          onPress={() => {
+            setMode("date");
+            setShowPicker(true);
+          }}
         >
           <Calendar size="20" color="#609084" />
           <Text className="ml-2 text-[13px] text-black">
             {field.value
-              ? new Date(field.value).toLocaleDateString("vi-VN")
-              : "Chọn ngày"}
+              ? new Date(field.value).toLocaleString("vi-VN")
+              : "Chọn ngày giờ"}
           </Text>
         </TouchableOpacity>
       </View>
@@ -70,7 +85,7 @@ const DatePickerTransactionComponent: React.FC<
         <DateTimePicker
           testID="dateTimePicker"
           value={field.value ? new Date(field.value) : minDate}
-          mode="date"
+          mode={mode}
           is24Hour={true}
           display="default"
           minimumDate={minDate}
