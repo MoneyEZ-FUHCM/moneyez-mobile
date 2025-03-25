@@ -59,6 +59,10 @@ const PATH_NAME = {
     CREATE_FUND_REQUEST: "group-details/group-home/create-fund-request/CreateFundRequest",
     FUND_REQUEST_INFO: "group-details/group-home/fund-request-info/FundRequestInfo",
   },
+  GROUP_SETTING: {
+    GROUP_SETTING_DEFAULT: "group-details/group-setting/group-setting-default/GroupSettingDefault",
+    GROUP_RATIO_MEMBER: "group-details/group-setting/group-ratio-member/GroupRatioMember",
+  },
   MEMBER: {
     GROUP_MEMBER: "group-details/member/group-member/GroupMember",
     INVITE_MEMBER: "group-details/member/inivite-member/InviteMember",
