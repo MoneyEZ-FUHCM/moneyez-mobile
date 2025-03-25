@@ -1,6 +1,9 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import apiSlice from "@/redux/slices/apiSlice";
-import { FinancialGoal } from "@/types/financialGoal.type";
+import {
+  FinancialGoal,
+  PersonalTransactionFinancialGoals,
+} from "@/types/financialGoal.type";
 import { transformCommonResponse } from "@/types/system.types";
 
 const { HTTP_METHOD } = COMMON_CONSTANT;
@@ -23,12 +26,28 @@ const financialGoalApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["FinancialGoal"],
     }),
+    getFinancialGoalById: builder.query({
+      query: ({ id }) => ({
+        url: `/financial-goals/personal/${id}`,
+        method: HTTP_METHOD.GET,
+      }),
+    }),
+    getPersonalTransactionFinancialGoals: builder.query({
+      query: ({ id, PageIndex, PageSize }) => ({
+        url: `/financial-goals/personal/transaction/${id}?PageIndex=${PageIndex}&PageSize=${PageSize}`,
+        method: HTTP_METHOD.GET,
+      }),
+      transformResponse: (response) =>
+        transformCommonResponse<PersonalTransactionFinancialGoals>(response),
+    }),
   }),
 });
 
 export const {
   useGetPersonalFinancialGoalsQuery,
   useCreateFinancialGoalMutation,
+  useGetFinancialGoalByIdQuery,
+  useGetPersonalTransactionFinancialGoalsQuery,
 } = financialGoalApi;
 
 export default financialGoalApi;

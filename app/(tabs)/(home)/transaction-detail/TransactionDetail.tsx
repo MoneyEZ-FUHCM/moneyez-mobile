@@ -24,9 +24,9 @@ const TransactionDetail = () => {
       <SectionComponent rootClassName="h-14 bg-white justify-center">
         <View className="flex-row items-center justify-between px-5">
           <Pressable onPress={() => router.back()}>
-            <MaterialIcons name="arrow-back" size={24} color={PRIMARY_COLOR} />
+            <MaterialIcons name="arrow-back" size={24} />
           </Pressable>
-          <Text className="text-lg font-bold text-primary">
+          <Text className="text-lg font-bold">
             {TEXT_TRANSLATE_TRANSACTION_DETAIL.TITLE.TITLE_DETAIL}
           </Text>
           <SpaceComponent width={24}></SpaceComponent>

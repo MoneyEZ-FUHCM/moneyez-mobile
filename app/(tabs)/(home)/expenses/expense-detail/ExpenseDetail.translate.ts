@@ -3,7 +3,7 @@ const TEXT_TRANSLATE_EXPENSE_DETAIL = {
   BUDGET_TITLE: "Ăn uống",
   BUDGET_SUBTITLE: "Chi tiêu cho 23 ngày nữa",
   BUDGET_REMAINING: "Còn lại",
-  BUDGET_SPENT: "Chi",
+  BUDGET_SPENT: "Thực tế",
   WEEKLY: "Theo tuần",
   MONTHLY: "Theo tháng",
   SPENDING_TREND: "Xu hướng chi tiêu",

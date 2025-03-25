@@ -4,6 +4,7 @@ import { setLoading } from "@/redux/slices/loadingSlice";
 import { selectCurrentUserSpendingModel } from "@/redux/slices/userSpendingModelSlice";
 import { useCreateFinancialGoalMutation } from "@/services/financialGoal";
 import { MaterialIcons } from "@expo/vector-icons";
+import { CommonActions, useNavigation } from "@react-navigation/native";
 import { router, useLocalSearchParams } from "expo-router";
 import { useCallback, useMemo, useRef } from "react";
 import { ToastAndroid } from "react-native";
@@ -23,6 +24,7 @@ const useCreateSpendingBudgetStep2 = () => {
   const handleSubmitRef = useRef<() => void>(() => {});
   const [createFinancialGoal] = useCreateFinancialGoalMutation();
   const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   const handleBack = useCallback(() => {
     router.back();
@@ -48,7 +50,17 @@ const useCreateSpendingBudgetStep2 = () => {
 
         if (response && response.status === HTTP_STATUS.SUCCESS.CREATED) {
           ToastAndroid.show(MESSAGE_SUCCESS.CREATE_SUCCESS, ToastAndroid.SHORT);
-          router.replace(HOME.SPENDING_BUDGET_LIST as any);
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 1,
+              routes: [
+                { name: PATH_NAME.HOME.HOME_DEFAULT },
+                {
+                  name: PATH_NAME.HOME.SPENDING_BUDGET_LIST,
+                },
+              ],
+            }),
+          );
         } else {
           ToastAndroid.show(
             response.message || MESSAGE_ERROR.SOMETHING_WRONG,

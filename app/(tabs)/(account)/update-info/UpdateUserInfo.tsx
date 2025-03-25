@@ -25,18 +25,9 @@ const UpdateUserInfo = () => {
           onPress={handler.handleBack}
           className="absolute bottom-[17px] left-4"
         >
-          <AntDesign
-            name="close"
-            size={24}
-            color="#609084"
-            style={{
-              textShadowColor: "#609084",
-              textShadowRadius: 2,
-              textShadowOffset: { width: 1, height: 1 },
-            }}
-          />
+          <AntDesign name="close" size={24} />
         </TouchableOpacity>
-        <Text className="text-lg font-bold text-primary">
+        <Text className="text-lg font-bold">
           {TEXT_TRANSLATE_ACCOUNT.TITLE.ACCOUNT}
         </Text>
         <Text></Text>

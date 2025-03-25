@@ -27,9 +27,9 @@ export default function IndividualHome() {
       <SectionComponent rootClassName="h-14 bg-white justify-center">
         <View className="flex-row items-center justify-between px-5">
           <Pressable onPress={handler.handleGoBack}>
-            <MaterialIcons name="arrow-back" size={24} color="#609084" />
+            <MaterialIcons name="arrow-back" size={24} />
           </Pressable>
-          <Text className="text-lg font-bold text-primary">
+          <Text className="text-lg font-bold">
             {TEXT_TRANSLATE_INDIVIDUAL_HOME.TITLE.PERSONAL_EXPENSES}
           </Text>
           <Text></Text>
@@ -149,9 +149,9 @@ export default function IndividualHome() {
                   </Text>
                 </TouchableOpacity>
               </View>
+              <SpaceComponent height={22} />
             </View>
           )}
-          <SpaceComponent height={22} />
           <SectionComponent rootClassName="mx-5 ">
             <BudgetSummaryComponent
               button1Text={TEXT_TRANSLATE_INDIVIDUAL_HOME.BUTTON.AI_BUTTON_1}

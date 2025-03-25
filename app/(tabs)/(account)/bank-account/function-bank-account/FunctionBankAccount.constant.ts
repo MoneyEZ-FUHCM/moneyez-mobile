@@ -1,6 +1,16 @@
 const FUNCTION_BANK_ACCOUNT_CONSTANT = {
   BANK_LIST: [
     {
+      id: 1,
+      name: "MoneyEz Bank Sandbox",
+      code: "EZB",
+      bin: "123456",
+      shortName: "EZB",
+      logo: "https://firebasestorage.googleapis.com/v0/b/exe201-9459a.appspot.com/o/EzMoney%2Flogo-org.png?alt=media&token=7622aeca-19b2-4632-b5b4-81c9a33bb19f",
+      transferSupported: 1,
+      lookupSupported: 1,
+    },
+    {
       id: 17,
       name: "Ngân hàng TMCP Công thương Việt Nam",
       code: "ICB",
@@ -407,7 +417,7 @@ const FUNCTION_BANK_ACCOUNT_CONSTANT = {
       swift_code: "SHBKVNVX",
     },
     {
-      id: 1,
+      id: 100,
       name: "Ngân hàng TMCP An Bình",
       code: "ABB",
       bin: "970425",

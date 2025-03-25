@@ -58,7 +58,7 @@ const SpendingBudgetComponent = ({
               <View className="flex-row">
                 <View className="justify-center self-stretch pr-3">
                   <MaterialIcons
-                    name={item.icon || "account-balance"}
+                    name={(item.subcategoryIcon as any) || "account-balance"}
                     size={30}
                     color="#609084"
                   />

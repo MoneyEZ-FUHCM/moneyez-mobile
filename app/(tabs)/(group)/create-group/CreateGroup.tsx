@@ -60,11 +60,9 @@ const CreateGroup = () => {
           onPress={router.back}
           className="absolute left-2 rounded-full p-2 active:opacity-75"
         >
-          <AntDesign name="arrowleft" size={24} color="#609084" />
+          <AntDesign name="arrowleft" size={24} />
         </TouchableOpacity>
-        <Text className="text-lg font-bold text-primary">
-          {TITLE.CREATE_NEW_GROUP}
-        </Text>
+        <Text className="text-lg font-bold">{TITLE.CREATE_NEW_GROUP}</Text>
       </SectionComponent>
 
       <Formik
