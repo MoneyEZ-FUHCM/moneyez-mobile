@@ -35,12 +35,6 @@ export default function GroupDetailTabLayout() {
         }}
       />
       <Tabs.Screen
-        name={BOTTOM_TAB_NAME.TRANSACTION}
-        options={{
-          title: BOTTOM_TAB_TRANSLATE.TRANSACTION,
-        }}
-      />
-      <Tabs.Screen
         name={BOTTOM_TAB_NAME.MEMBER}
         options={{
           title: BOTTOM_TAB_TRANSLATE.MEMBER,
