@@ -22,7 +22,6 @@ interface TimeOption {
 }
 
 const usePersonalExpensesModel = () => {
-  // const CUSTOM_MODEL = "Tùy chọn";
   const [customModel, setCustomModel] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [step, setStep] = useState(1);
@@ -40,9 +39,6 @@ const usePersonalExpensesModel = () => {
 
   const { MESSAGE_ERROR } = TEXT_TRANSLATE_PERSONAL_EXPENSES;
   const { ERROR_CODE } = PERSONAL_EXPENSES_MODEL_CONSTANTS;
-
-  // const customOption = { id: "custom", name: CUSTOM_MODEL };
-  // spendingModels = [...spendingModels, customOption as any];
 
   useHideTabbar();
   const [selectedTime, setSelectedTime] = useState<TimeOption>(TIME_OPTIONS[1]);

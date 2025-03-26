@@ -2,7 +2,7 @@ import {
   InputComponent,
   SafeAreaViewCustom,
   SectionComponent,
-  SpaceComponent
+  SpaceComponent,
 } from "@/components";
 import { formatCurrency, formatCurrencyInput } from "@/helpers/libs";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -14,7 +14,8 @@ import useCreateFundRequest from "./hooks/useCreateFundRequest";
 import TEXT_TRANSLATE_CREATE_FUND_REQUEST from "./CreateFundRequest.translate";
 import { TextAreaComponent } from "@/components/TextAreaComponent";
 
-const { TITLE, LABELS, BUTTON, MESSAGE_VALIDATE } = TEXT_TRANSLATE_CREATE_FUND_REQUEST;
+const { TITLE, LABELS, BUTTON, MESSAGE_VALIDATE } =
+  TEXT_TRANSLATE_CREATE_FUND_REQUEST;
 
 export default function CreateFundRequest() {
   const { state, handler } = useCreateFundRequest();
@@ -34,7 +35,7 @@ export default function CreateFundRequest() {
       ),
     description: Yup.string()
       .required(MESSAGE_VALIDATE.DESCRIPTION_REQUIRED)
-      .min(5, MESSAGE_VALIDATE.DESCRIPTION_MIN_LENGTH)
+      .min(5, MESSAGE_VALIDATE.DESCRIPTION_MIN_LENGTH),
   });
 
   return (
@@ -44,23 +45,23 @@ export default function CreateFundRequest() {
           onPress={handleBack}
           className="absolute bottom-[17px] left-4"
         >
-          <MaterialIcons name="arrow-back" size={24} color="#609084" />
+          <MaterialIcons name="arrow-back" size={24} />
         </TouchableOpacity>
-        <Text className="text-lg font-bold text-primary">
-          {TITLE.MAIN_TITLE}
-        </Text>
+        <Text className="text-lg font-bold">{TITLE.MAIN_TITLE}</Text>
         <SpaceComponent width={24} />
       </SectionComponent>
 
       <SectionComponent rootClassName="bg-white my-2 rounded-lg p-4 mx-5">
         <Text className="text-sm text-gray-500">{TITLE.FUND_BALANCE}</Text>
-        <Text className="font-bold text-black text-xl">{formatCurrency(fundBalance)}</Text>
+        <Text className="text-xl font-bold text-black">
+          {formatCurrency(fundBalance)}
+        </Text>
       </SectionComponent>
 
       <Formik
         initialValues={{
           amount: "",
-          description: ""
+          description: "",
         }}
         validationSchema={FundRequestSchema}
         onSubmit={handleCreateFundRequest}

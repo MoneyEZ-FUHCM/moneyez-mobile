@@ -1,4 +1,8 @@
-import { SafeAreaViewCustom, SectionComponent, SpaceComponent } from "@/components";
+import {
+  SafeAreaViewCustom,
+  SectionComponent,
+  SpaceComponent,
+} from "@/components";
 import { formatDate } from "@/helpers/libs";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
@@ -15,8 +19,11 @@ export default function FundRequestInfoPage() {
       {/* Header */}
       <SectionComponent rootClassName="h-14 bg-white justify-center">
         <View className="flex-row items-center justify-between px-5">
-          <TouchableOpacity onPress={() => { /* Implement back navigation */ }}>
-            <MaterialIcons name="arrow-back" size={24} color="#609084" />
+          <TouchableOpacity
+          // onPress={() => {
+          // }}
+          >
+            <MaterialIcons name="arrow-back" size={24} />
           </TouchableOpacity>
           <Text className="text-lg font-bold text-black">
             {TITLE.MAIN_TITLE}
@@ -31,50 +38,78 @@ export default function FundRequestInfoPage() {
       </SectionComponent>
 
       <SectionComponent rootClassName="mx-5 mt-4 rounded-[10px] bg-white p-4 shadow-sm">
-        <Text className="text-base font-semibold text-black mb-3">
+        <Text className="mb-3 text-base font-semibold text-black">
           {TITLE.INFO_TITLE}
         </Text>
 
-        <View className="flex-row justify-between items-center py-2 border-b border-gray-100">
-          <Text className="text-sm font-bold text-gray-700">{LABELS.AMOUNT}</Text>
+        <View className="flex-row items-center justify-between border-b border-gray-100 py-2">
+          <Text className="text-sm font-bold text-gray-700">
+            {LABELS.AMOUNT}
+          </Text>
           <Text className="text-sm text-black">{state.fundRequest.amount}</Text>
         </View>
 
-        <View className="flex-row justify-between items-center py-2 border-b border-gray-100">
-          <Text className="text-sm font-bold text-gray-700">{LABELS.CREATED_DATE}</Text>
+        <View className="flex-row items-center justify-between border-b border-gray-100 py-2">
+          <Text className="text-sm font-bold text-gray-700">
+            {LABELS.CREATED_DATE}
+          </Text>
           <Text className="text-sm text-black">
             {formatDate(state.fundRequest.createdDate, "DD/MM/YYYY - HH:mm:ss")}
           </Text>
         </View>
 
-        <View className="flex-row justify-between items-center py-2 border-b border-gray-100">
-          <Text className="text-sm font-bold text-gray-700">{LABELS.TRANSFER_CONTENT}</Text>
+        <View className="flex-row items-center justify-between border-b border-gray-100 py-2">
+          <Text className="text-sm font-bold text-gray-700">
+            {LABELS.TRANSFER_CONTENT}
+          </Text>
           <View className="flex-row items-center">
-            <Text className="text-sm text-black mr-2">{state.fundRequest.transferContent}</Text>
-            <TouchableOpacity onPress={() => handler.copyToClipboard(state.fundRequest.transferContent)}>
+            <Text className="mr-2 text-sm text-black">
+              {state.fundRequest.transferContent}
+            </Text>
+            <TouchableOpacity
+              onPress={() =>
+                handler.copyToClipboard(state.fundRequest.transferContent)
+              }
+            >
               <MaterialIcons name="content-copy" size={20} color="#609084" />
             </TouchableOpacity>
           </View>
         </View>
 
-        <View className="flex-row justify-between items-center py-2 border-b border-gray-100">
-          <Text className="text-sm font-bold text-gray-700">{LABELS.RECIPIENT_ACCOUNT}</Text>
+        <View className="flex-row items-center justify-between border-b border-gray-100 py-2">
+          <Text className="text-sm font-bold text-gray-700">
+            {LABELS.RECIPIENT_ACCOUNT}
+          </Text>
           <View className="flex-row items-center">
-            <Text className="text-sm text-black mr-2">{state.fundRequest.recipientAccount}</Text>
-            <TouchableOpacity onPress={() => handler.copyToClipboard(state.fundRequest.recipientAccount)}>
+            <Text className="mr-2 text-sm text-black">
+              {state.fundRequest.recipientAccount}
+            </Text>
+            <TouchableOpacity
+              onPress={() =>
+                handler.copyToClipboard(state.fundRequest.recipientAccount)
+              }
+            >
               <MaterialIcons name="content-copy" size={20} color="#609084" />
             </TouchableOpacity>
           </View>
         </View>
 
-        <View className="flex-row justify-between items-center py-2 border-b border-gray-100">
-          <Text className="text-sm font-bold text-gray-700">{LABELS.RECIPIENT_BANK}</Text>
-          <Text className="text-sm text-black">{state.fundRequest.bankName}</Text>
+        <View className="flex-row items-center justify-between border-b border-gray-100 py-2">
+          <Text className="text-sm font-bold text-gray-700">
+            {LABELS.RECIPIENT_BANK}
+          </Text>
+          <Text className="text-sm text-black">
+            {state.fundRequest.bankName}
+          </Text>
         </View>
 
-        <View className="flex-row justify-between items-center py-2">
-          <Text className="text-sm font-bold text-gray-700">{LABELS.ACCOUNT_HOLDER}</Text>
-          <Text className="text-sm text-black">{state.fundRequest.accountHolder}</Text>
+        <View className="flex-row items-center justify-between py-2">
+          <Text className="text-sm font-bold text-gray-700">
+            {LABELS.ACCOUNT_HOLDER}
+          </Text>
+          <Text className="text-sm text-black">
+            {state.fundRequest.accountHolder}
+          </Text>
         </View>
       </SectionComponent>
       <SpaceComponent height={22} />
@@ -83,7 +118,7 @@ export default function FundRequestInfoPage() {
       <SectionComponent rootClassName="absolute bottom-0 left-0 right-0 p-5 bg-white">
         <TouchableOpacity
           onPress={handler.handleConfirm}
-          className="bg-[#609084] rounded-xl py-3"
+          className="rounded-xl bg-[#609084] py-3"
         >
           <Text className="text-center text-lg font-medium text-white">
             {BUTTON.CONFIRM}

@@ -169,17 +169,16 @@ const BankAccount = () => {
   return (
     <GestureHandlerRootView>
       <SafeAreaViewCustom rootClassName="bg-gray-50 relative">
-        <SectionComponent rootClassName="flex-row items-center justify-between h-16 px-4 bg-white border-b border-gray-200 shadow-sm">
+        <SectionComponent rootClassName="flex-row relative justify-center items-center h-14 px-4">
           <TouchableOpacity
             onPress={handler.handleBack}
-            className="h-11 w-10 items-center justify-center rounded-full"
+            className="absolute bottom-[17px] left-4"
           >
-            <AntDesign name="arrowleft" size={22} color="black" />
+            <AntDesign name="close" size={24} />
           </TouchableOpacity>
           <Text className="text-lg font-bold">
             {TEXT_TRANSLATE_ACCOUNT.TITLE.BANK_ACCOUNT}
           </Text>
-          <View className="w-10" />
         </SectionComponent>
         <LoadingSectionWrapper isLoading={state.isLoading}>
           <FlatListCustom

@@ -38,9 +38,10 @@ export function FlatListCustom<T>({
       {...props}
       removeClippedSubviews={false}
       onEndReached={handleEndReached}
-      onEndReachedThreshold={0.3}
+      onEndReachedThreshold={0.1}
       contentContainerStyle={[
         { paddingBottom: isBottomTab ? 80 : 0 },
+
         contentContainerStyle,
       ]}
       ListFooterComponent={
@@ -48,7 +49,7 @@ export function FlatListCustom<T>({
           <View className="my-5 items-center">
             <ActivityIndicator size="small" color={PRIMARY_COLOR} />
           </View>
-        ) : !hasMore ? (
+        ) : !hasMore && (props.data?.length ?? 0) > 0 ? (
           <View className="my-3 items-center">
             <Text className="text-primary">
               ---------- Đã tải xong ----------

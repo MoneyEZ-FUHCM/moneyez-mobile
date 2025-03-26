@@ -36,10 +36,13 @@ const FunctionBankAccount = () => {
           state.filteredBanks.map((item) => (
             <TouchableOpacity
               key={item.id.toString()}
-              className="border-b border-gray-100 px-6 py-4"
+              className={`border-b border-gray-100 px-6 py-4 ${
+                item.code !== "EZB" ? "opacity-20" : ""
+              }`}
               onPress={() =>
                 handler.handleSelectBank(item as any, setFieldValue)
               }
+              disabled={item.code !== "EZB"}
             >
               <View className="flex-row items-center">
                 <View className="h-10 w-10 items-center justify-center rounded-full bg-gray-50">
@@ -72,19 +75,18 @@ const FunctionBankAccount = () => {
   return (
     <GestureHandlerRootView>
       <SafeAreaViewCustom rootClassName="flex-1 bg-gray-50">
-        <SectionComponent rootClassName="flex-row items-center justify-between h-16 px-4 bg-white border-b border-gray-200 shadow-sm">
+        <SectionComponent rootClassName="flex-row relative justify-center items-center h-14 px-4">
           <TouchableOpacity
             onPress={() => router.back()}
-            className="h-11 w-10 items-center justify-center rounded-full"
+            className="absolute bottom-[17px] left-4"
           >
-            <AntDesign name="arrowleft" size={22} color="black" />
+            <AntDesign name="close" size={24} />
           </TouchableOpacity>
           <Text className="text-lg font-bold">
             {state.editMode
               ? "Chỉnh sửa tài khoản ngân hàng"
               : "Thêm tài khoản ngân hàng"}
           </Text>
-          <View className="w-10" />
         </SectionComponent>
         <SectionComponent rootClassName="flex-1 p-6">
           <Formik

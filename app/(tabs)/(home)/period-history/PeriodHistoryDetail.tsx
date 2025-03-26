@@ -268,13 +268,9 @@ export default function PeriodHistoryDetail() {
                 onPress={handler.handleBack}
                 className="absolute left-3 rounded-full p-2"
               >
-                <AntDesign
-                  name="close"
-                  size={24}
-                  color={Colors.colors.primary}
-                />
+                <AntDesign name="close" size={24} />
               </TouchableOpacity>
-              <Text className="text-lg font-bold text-primary">
+              <Text className="text-lg font-bold">
                 {state.modelDetails?.startDate} - {state.modelDetails?.endDate}
               </Text>
               <TouchableOpacity
@@ -302,24 +298,16 @@ export default function PeriodHistoryDetail() {
                 onPress={handler.handleBack}
                 className="absolute left-3 rounded-full p-2"
               >
-                <AntDesign
-                  name="close"
-                  size={24}
-                  color={Colors.colors.primary}
-                />
+                <AntDesign name="close" size={24} />
               </TouchableOpacity>
-              <Text className="text-lg font-bold text-primary">
+              <Text className="text-lg font-bold">
                 {state.modelDetails?.startDate} - {state.modelDetails?.endDate}
               </Text>
               <TouchableOpacity
                 onPress={handler.handleRefetchData}
                 className="absolute right-3 rounded-full p-2"
               >
-                <AntDesign
-                  name="reload1"
-                  size={24}
-                  color={Colors.colors.primary}
-                />
+                <AntDesign name="reload1" size={24} />
               </TouchableOpacity>
             </SectionComponent>
             <LoadingSectionWrapper isLoading={state.isRefetching}>

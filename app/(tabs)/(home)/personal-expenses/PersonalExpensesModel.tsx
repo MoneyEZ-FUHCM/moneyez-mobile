@@ -198,16 +198,16 @@ const PersonalExpensesModel = () => {
       ) : null}
 
       <CustomModal
+        isFormatted={true}
         visible={state.isModalVisible}
-        title={TEXT_TRANSLATE_PERSONAL_EXPENSES.MODAL_TITLE(
-          state.selectedModel,
-        )}
+        title={state.selectedModelName}
         content={
-          MODELS.find((model) => model.name === state.selectedModel)
+          state.spendingModels.find((model) => model.id === state.selectedModel)
             ?.description || ""
         }
         onClose={() => handler.setIsModalVisible(false)}
       />
+
       {/* Next Button */}
       <SectionComponent rootClassName="flex-row flex-1 absolute bottom-5 mx-4">
         <SpaceComponent width={15} />

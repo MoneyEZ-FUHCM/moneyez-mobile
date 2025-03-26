@@ -1,20 +1,10 @@
-import React from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Pressable,
-} from "react-native";
+import { SafeAreaViewCustom, SectionComponent } from "@/components";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import {
-  SafeAreaViewCustom,
-  SectionComponent,
-  SpaceComponent,
-} from "@/components";
 import { router } from "expo-router";
-import TEXT_TRANSLATE_UPDATE_EXPENSE from "./UpdateExpense.translate";
+import React from "react";
+import { Pressable, Text, TextInput, View } from "react-native";
 import UPDATE_EXPENSE_CONSTANTS from "./UpdateExpense.const";
+import TEXT_TRANSLATE_UPDATE_EXPENSE from "./UpdateExpense.translate";
 import useUpdateExpense from "./hooks/useUpdateExpense";
 
 const EditBudgetScreen = () => {
@@ -28,7 +18,7 @@ const EditBudgetScreen = () => {
       <SectionComponent rootClassName="h-14 bg-white justify-center mb-2">
         <View className="flex-row items-center justify-between px-5">
           <Pressable onPress={router.back}>
-            <MaterialIcons name="arrow-back" size={24} color="#609084" />
+            <MaterialIcons name="arrow-back" size={24} />
           </Pressable>
           <Text className="text-lg font-bold text-black">
             {TEXT_TRANSLATE_UPDATE_EXPENSE.HEADER_TITLE}
@@ -37,7 +27,7 @@ const EditBudgetScreen = () => {
         </View>
       </SectionComponent>
 
-      <View className="mb-2 rounded-xl bg-white px-5 pt-2">
+      <View className="mb-2 bg-white px-5 pt-2">
         {/* Thiết lập hạn mức */}
         <View className="mb-4">
           <Text className="text-lg font-semibold">
@@ -49,7 +39,7 @@ const EditBudgetScreen = () => {
         </View>
       </View>
       {/* Danh mục ngân sách */}
-      <View className="mx-2 rounded-lg bg-white p-4">
+      <View className="mx-3 rounded-lg bg-white p-4">
         <View className="mb-2 flex-row items-center">
           <View className="rounded-lg bg-superlight p-2">
             <Ionicons name="car-outline" size={24} color="#4F8C8C" />
@@ -80,17 +70,15 @@ const EditBudgetScreen = () => {
         />
       </View>
 
-      <SectionComponent rootClassName="flex-row flex-1 absolute bottom-5 mx-4">
-        <SpaceComponent width={15} />
-
-        <TouchableOpacity
-          className="mt-10 w-1/2 flex-1 items-center rounded-lg bg-primary p-3"
+      <SectionComponent rootClassName="px-5 rounded-lg absolute bottom-5 w-full flex-1">
+        <Pressable
           onPress={handleEdit}
+          className="h-12 items-center justify-center rounded-lg bg-primary"
         >
           <Text className="text-base font-semibold text-white">
             {TEXT_TRANSLATE_UPDATE_EXPENSE.EDIT}
           </Text>
-        </TouchableOpacity>
+        </Pressable>
       </SectionComponent>
     </SafeAreaViewCustom>
   );

@@ -143,6 +143,7 @@ const useSpendingBudget = () => {
 
   useFocusEffect(
     useCallback(() => {
+      refetchGoals();
       const onBackPress = () => {
         handleBack();
         return true;

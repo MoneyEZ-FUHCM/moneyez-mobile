@@ -102,13 +102,14 @@ const useHomeScreen = () => {
     const fetchData = async () => {
       try {
         const fcmToken = await AsyncStorage.getItem("fcmToken");
+        console.log("check fcmToken", fcmToken);
         if (fcmToken) {
           const formValues = JSON.stringify(fcmToken);
           await updateFcmToken(formValues).unwrap();
         }
       } catch (err) {}
-      fetchData();
     };
+    fetchData();
   }, []);
 
   return {

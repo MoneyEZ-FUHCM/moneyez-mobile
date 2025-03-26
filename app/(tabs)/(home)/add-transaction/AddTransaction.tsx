@@ -101,12 +101,12 @@ export default function AddTransaction() {
       <SectionComponent rootClassName="h-14 bg-white justify-center">
         <View className="flex-row items-center justify-between px-5">
           <Pressable onPress={handler.handleBack}>
-            <MaterialIcons name="arrow-back" size={24} color={PRIMARY_COLOR} />
+            <MaterialIcons name="arrow-back" size={24} />
           </Pressable>
-          <Text className="text-lg font-bold text-primary">
+          <Text className="text-lg font-bold">
             {TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.ADD_EXPENSE_INCOME}
           </Text>
-          <MaterialIcons name="camera-alt" size={24} color={PRIMARY_COLOR} />
+          <MaterialIcons name="camera-alt" size={24} />
         </View>
       </SectionComponent>
       <Formik
@@ -225,7 +225,6 @@ export default function AddTransaction() {
                   name="dob"
                   labelClass="text-text-gray text-[12px] font-bold"
                   createdDate={state.currentUserSpendingModel?.startDate}
-                  endDate={state.currentUserSpendingModel?.endDate}
                 />
                 <SpaceComponent height={10} />
                 <TextAreaComponent

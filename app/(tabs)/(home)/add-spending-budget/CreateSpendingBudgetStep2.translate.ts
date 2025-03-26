@@ -3,7 +3,8 @@ const TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP2 = {
   TITLE: {
     MAIN_TITLE: "Tạo ngân sách",
     SETUP_LIMIT: "Thiết lập hạn mức",
-    SETUP_DESCRIPTION: "Dựa theo mô hình sử dụng bạn đang chọn, MoneyEz sẽ đưa ra mức ngân sách tối đa khác nhau.",
+    SETUP_DESCRIPTION:
+      "Dựa theo mô hình sử dụng bạn đang chọn, MoneyEz sẽ đưa ra mức ngân sách tối đa khác nhau.",
   },
 
   // Button
@@ -17,11 +18,12 @@ const TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP2 = {
     SUBCATEGORY: "Danh mục",
     MAX_AMOUNT: "Số tiền tối đa:",
     CURRENT_AMOUNT: "Số tiền hiện tại của bạn:",
-    PROCESSING: "Đang xử lý..."
+    PROCESSING: "Đang xử lý...",
   },
 
   MESSAGE_ERROR: {
     SOMETHING_WRONG: "Có lỗi xảy ra khi tạo ngân sách",
+    INVALID_TARGET_AMOUNT: "Số tiền không hợp lệ. Vui lòng nhập lại",
   },
 
   MESSAGE_SUCCESS: {

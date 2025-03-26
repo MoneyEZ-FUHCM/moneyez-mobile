@@ -96,7 +96,7 @@ export default function NotificationList() {
             onPress={handleGoBack}
             className="absolute left-3 rounded-full p-2"
           >
-            <MaterialIcons name="arrow-back" size={24} color={PRIMARY_COLOR} />
+            <MaterialIcons name="arrow-back" size={24} />
           </Pressable>
           <Text className="text-xl font-semibold text-black">Thông báo</Text>
           <TouchableOpacity
