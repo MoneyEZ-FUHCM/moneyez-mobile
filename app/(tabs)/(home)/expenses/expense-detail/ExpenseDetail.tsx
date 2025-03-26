@@ -15,7 +15,7 @@ import {
   formatDate,
   formatTime,
 } from "@/helpers/libs";
-import { AntDesign, FontAwesome6, MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
 import { Dimensions, Image, Text, TouchableOpacity, View } from "react-native";
@@ -25,8 +25,6 @@ import useExpenseDetail from "./hooks/useExpenseDetail";
 export default function ExpenseDetail() {
   const { state, handler } = useExpenseDetail();
   const { personalTransactionFinancialGoals, CHART_DATA, isLoading } = state;
-
-  const PRIMARY_COLOR = "#609084";
 
   const renderTransactionItem = ({ item }: { item: any }) => (
     <TouchableOpacity className="mx-4 flex-row items-center justify-between border-b border-[#f0f0f0] bg-white px-2 py-3">

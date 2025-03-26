@@ -5,7 +5,7 @@ import {
   SpaceComponent,
 } from "@/components";
 import { Colors } from "@/helpers/constants/color";
-import { formatCurrencyInput } from "@/helpers/libs";
+import { formatCurrency, formatCurrencyInput } from "@/helpers/libs";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Formik } from "formik";
 import React from "react";
@@ -31,7 +31,7 @@ const BudgetSchema = Yup.object().shape({
 
 export default function CreateSpendingBudgetStep2() {
   const { state, handler, refState } = useCreateSpendingBudgetStep2();
-  const { selectedCategory } = state;
+  const { selectedCategory, personalLimitBudgetSubcate } = state;
   const { handleBack, handleCreateBudget } = handler;
 
   const initialValues = {
@@ -94,7 +94,9 @@ export default function CreateSpendingBudgetStep2() {
                 <View className="mx-4">
                   <Text className="text-sm text-text-gray">
                     Số tiền tối đa bạn có thể đặt mục tiêu cho danh mục này là{" "}
-                    <Text className="font-bold text-primary">500.000đ</Text>
+                    <Text className="font-bold text-primary">
+                      {formatCurrency(personalLimitBudgetSubcate?.limitBudget)}
+                    </Text>
                   </Text>
                 </View>
                 <SectionComponent rootClassName="bg-white rounded-lg p-4">

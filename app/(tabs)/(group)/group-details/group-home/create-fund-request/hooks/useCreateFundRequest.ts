@@ -18,7 +18,7 @@ const useCreateFundRequest = () => {
   const { GROUP_HOME } = PATH_NAME;
   const { HTTP_STATUS } = COMMON_CONSTANT;
 
-  const currentGroup = useSelector(selectCurrentGroup)
+  const currentGroup = useSelector(selectCurrentGroup);
   const fundBalance = currentGroup?.currentBalance || 0;
   // Navigate back
   const handleBack = useCallback(() => {
@@ -26,57 +26,58 @@ const useCreateFundRequest = () => {
   }, []);
 
   // Handle form submission
-  const handleCreateFundRequest = useCallback(async (values: FundRequestForm) => {
-    try {
-      setIsSubmitting(true);
-      const numericAmount = parseInt(values.amount.replace(/\D/g, ""));
+  const handleCreateFundRequest = useCallback(
+    async (values: FundRequestForm) => {
+      try {
+        setIsSubmitting(true);
+        const numericAmount = parseInt(values.amount.replace(/\D/g, ""));
 
-      const response = await requestFund({
-        groupId: currentGroup?.id,
-        amount: numericAmount,
-        description: values.description
-      }).unwrap();
+        const response = await requestFund({
+          groupId: currentGroup?.id,
+          amount: numericAmount,
+          description: values.description,
+        }).unwrap();
 
-      console.log(response)
-
-      if (response && response.status === HTTP_STATUS.SUCCESS.OK) {
-        router.push({
-          pathname: GROUP_HOME.FUND_REQUEST_INFO as any,
-          params: { 
-            amount: response.data.amount,
-            createdDate: response.data.createdDate,
-            requestCode: response.data.requestCode,
-            accountNumber: response.data.bankAccount.accountNumber,
-            bankName: response.data.bankAccount.bankName,
-            accountHolderName: response.data.bankAccount.accountHolderName,
-          }
-        });
+        if (response && response.status === HTTP_STATUS.SUCCESS.OK) {
+          router.push({
+            pathname: GROUP_HOME.FUND_REQUEST_INFO as any,
+            params: {
+              amount: response.data.amount,
+              createdDate: response.data.createdDate,
+              requestCode: response.data.requestCode,
+              accountNumber: response.data.bankAccount.accountNumber,
+              bankName: response.data.bankAccount.bankName,
+              accountHolderName: response.data.bankAccount.accountHolderName,
+            },
+          });
+        }
+      } catch (err: any) {
+        const error = err.data;
+        // if (error.errorCode === "") {
+        ToastAndroid.show(error.errorCode, ToastAndroid.SHORT);
+        return;
+        // }
+        // ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
+      } finally {
+        setIsSubmitting(false);
       }
-    } catch (err: any) {
-      const error = err.data;
-      // if (error.errorCode === "") {
-      ToastAndroid.show(
-        error.errorCode,
-        ToastAndroid.SHORT,
-      );
-      return;
-      // }
-      // ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
-    } finally {
-      setIsSubmitting(false);
-    }
-  }, [requestFund]);
+    },
+    [requestFund],
+  );
 
   return {
-    state: useMemo(() => ({
-      fundBalance,
-      isSubmitting
-    }), [fundBalance, isSubmitting]),
+    state: useMemo(
+      () => ({
+        fundBalance,
+        isSubmitting,
+      }),
+      [fundBalance, isSubmitting],
+    ),
 
     handler: {
       handleBack,
-      handleCreateFundRequest
-    }
+      handleCreateFundRequest,
+    },
   };
 };
 

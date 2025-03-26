@@ -27,7 +27,7 @@ const useIndividualHome = () => {
   const {
     data: personalFinancialGoals,
     refetch: refetchPersonalFinancialGoals,
-  } = useGetPersonalFinancialGoalsQuery({ PageIndex: 1, PageSize: 3 });
+  } = useGetPersonalFinancialGoalsQuery({ PageIndex: 1, PageSize: 100 });
 
   useFocusEffect(
     useCallback(() => {

@@ -36,3 +36,9 @@ export interface PersonalTransactionFinancialGoals {
 
 export type PersonalTransactionFinancialGoalsList =
   PersonalTransactionFinancialGoals[];
+
+export interface PersonalLimitBudgetSubcate {
+  limitBudget: number;
+  subcategoryId: string;
+  subcategoryName: string;
+}

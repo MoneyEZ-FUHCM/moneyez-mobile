@@ -40,6 +40,12 @@ const financialGoalApi = apiSlice.injectEndpoints({
       transformResponse: (response) =>
         transformCommonResponse<PersonalTransactionFinancialGoals>(response),
     }),
+    getPersonalLimitBudgetSubcategory: builder.query({
+      query: ({ id }) => ({
+        url: `/financial-goals/personal/limit-budget/subcategory/${id}`,
+        method: HTTP_METHOD.GET,
+      }),
+    }),
   }),
 });
 
@@ -48,6 +54,7 @@ export const {
   useCreateFinancialGoalMutation,
   useGetFinancialGoalByIdQuery,
   useGetPersonalTransactionFinancialGoalsQuery,
+  useGetPersonalLimitBudgetSubcategoryQuery,
 } = financialGoalApi;
 
 export default financialGoalApi;
