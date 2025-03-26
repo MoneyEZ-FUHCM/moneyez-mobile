@@ -210,16 +210,22 @@ const BankAccount = () => {
         <ModalLizeComponent ref={state.detailModalRef}>
           <AccountDetail />
         </ModalLizeComponent>
-        <SectionComponent rootClassName="absolute bottom-10 right-5">
-          <TouchableOpacity
-            className="h-14 w-14 items-center justify-center rounded-full bg-primary shadow-lg shadow-gray-400"
-            onPress={() =>
-              router.navigate(PATH_NAME.ACCOUNT.FUNCTION_BANK_ACCOUNT as any)
-            }
-          >
-            <MaterialCommunityIcons name="bank-plus" size={24} color="white" />
-          </TouchableOpacity>
-        </SectionComponent>
+        {state.bankAccounts && state.bankAccounts?.length < 2 && (
+          <SectionComponent rootClassName="absolute bottom-10 right-5">
+            <TouchableOpacity
+              className="h-14 w-14 items-center justify-center rounded-full bg-primary shadow-lg shadow-gray-400"
+              onPress={() =>
+                router.navigate(PATH_NAME.ACCOUNT.FUNCTION_BANK_ACCOUNT as any)
+              }
+            >
+              <MaterialCommunityIcons
+                name="bank-plus"
+                size={24}
+                color="white"
+              />
+            </TouchableOpacity>
+          </SectionComponent>
+        )}
       </SafeAreaViewCustom>
     </GestureHandlerRootView>
   );
