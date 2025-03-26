@@ -225,7 +225,6 @@ export default function AddTransaction() {
                   name="dob"
                   labelClass="text-text-gray text-[12px] font-bold"
                   createdDate={state.currentUserSpendingModel?.startDate}
-                  endDate={state.currentUserSpendingModel?.endDate}
                 />
                 <SpaceComponent height={10} />
                 <TextAreaComponent

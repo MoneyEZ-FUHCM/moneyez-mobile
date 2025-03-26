@@ -84,12 +84,12 @@ const DatePickerTransactionComponent: React.FC<
       {showPicker && (
         <DateTimePicker
           testID="dateTimePicker"
-          value={field.value ? new Date(field.value) : minDate}
+          value={field.value ? new Date(field.value) : new Date()}
           mode={mode}
           is24Hour={true}
           display="default"
           minimumDate={minDate}
-          maximumDate={maxDate}
+          maximumDate={new Date()}
           onChange={handleChange}
         />
       )}

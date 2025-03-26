@@ -1,6 +1,5 @@
 import React from "react";
 import { View, Text, TouchableOpacity, ScrollView, Image } from "react-native";
-import { BarChart } from "react-native-chart-kit";
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
 import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -43,7 +42,7 @@ const GroupFund = () => {
         {/* Statistics Section */}
         <View className="mt-4 rounded-xl bg-white p-4">
           <Text className="text-base font-bold text-primary">{STATISTICS}</Text>
-          <BarChart
+          {/* <BarChart
             data={CHART_DATA}
             width={360} // Adjusted width to account for padding
             height={250}
@@ -59,7 +58,7 @@ const GroupFund = () => {
               },
             }}
             style={{ borderRadius: 12, marginLeft: 10, marginRight: 10 }}
-          />
+          /> */}
         </View>
         {/* MewMo Reminder Section */}
         <View className="mt-2 rounded-xl border border-primary bg-superlight p-4">

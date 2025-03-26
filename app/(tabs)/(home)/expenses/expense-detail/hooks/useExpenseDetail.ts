@@ -40,6 +40,7 @@ const useExpenseDetail = () => {
       skip: !budgetId,
     },
   );
+
   const {
     data: getPersonalTransactionFinancialGoals,
     refetch: refetchPersonalTransactionFinancialGoals,
@@ -54,6 +55,11 @@ const useExpenseDetail = () => {
       skip: !budgetId,
     },
   );
+
+  useEffect(() => {
+    refetchGoalsById();
+    refetchPersonalTransactionFinancialGoals();
+  }, []);
 
   const handleLoadMore = useCallback(() => {
     if (

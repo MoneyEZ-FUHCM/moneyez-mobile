@@ -8,7 +8,7 @@ const notificationApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getNotification: builder.query({
       query: ({ PageIndex, PageSize, type }) => {
-        const url = `/notifications/user?PageIndex=${PageIndex}&PageSize=${PageSize}`;
+        const url = `/notifications/user?PageIndex=${PageIndex}&PageSize=${PageSize}&sort_by=date&dir=desc`;
         return {
           url: type ? `${url}&type=${type}` : url,
           method: HTTP_METHOD.GET,

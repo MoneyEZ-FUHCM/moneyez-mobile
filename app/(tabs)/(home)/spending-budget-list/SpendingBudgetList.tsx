@@ -32,9 +32,9 @@ export default function SpendingBudget() {
         <SectionComponent rootClassName="h-14 bg-white justify-center">
           <View className="flex-row items-center justify-between px-5">
             <Pressable onPress={handleBack}>
-              <MaterialIcons name="arrow-back" size={24} color="#609084" />
+              <MaterialIcons name="arrow-back" size={24} />
             </Pressable>
-            <Text className="text-lg font-bold text-[#609084]">
+            <Text className="text-lg font-bold">
               {TEXT_TRANSLATE_SPENDING_BUDGET.TITLE.MAIN_TITLE}
             </Text>
             <SpaceComponent width={24} />

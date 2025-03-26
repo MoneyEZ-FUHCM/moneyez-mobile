@@ -1,4 +1,3 @@
-import NoData from "@/assets/images/InviteMemberAssets/not-found-result.png";
 import {
   BarChartExpenseCustom,
   FlatListCustom,
@@ -15,10 +14,10 @@ import {
   formatDate,
   formatTime,
 } from "@/helpers/libs";
-import { FontAwesome6, MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
-import { Dimensions, Image, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, Text, TouchableOpacity, View } from "react-native";
 import TEXT_TRANSLATE_EXPENSE_DETAIL from "./ExpenseDetail.translate";
 import useExpenseDetail from "./hooks/useExpenseDetail";
 
@@ -171,8 +170,7 @@ export default function ExpenseDetail() {
       {/* Danh sách giao dịch */}
       <LoadingSectionWrapper isLoading={isLoading || state.isFetchingRefresh}>
         <SectionComponent rootClassName="bg-[#fafafa] rounded-lg">
-          {personalTransactionFinancialGoals &&
-          personalTransactionFinancialGoals.length > 0 ? (
+          {state.financialGoalDetail && (
             <FlatListCustom
               showsVerticalScrollIndicator={false}
               data={personalTransactionFinancialGoals ?? []}
@@ -188,15 +186,19 @@ export default function ExpenseDetail() {
               onLoadMore={handler.handleLoadMore}
               refreshing={state.isFetchingRefresh}
               onRefresh={handler.handleRefresh}
+              ListEmptyComponent={
+                <View className="flex-1 items-center justify-center p-6">
+                  <View className="mb-4 h-20 w-20 items-center justify-center rounded-full bg-gray-100">
+                    <AntDesign
+                      name="file1"
+                      size={32}
+                      color={Colors.colors.primary}
+                    />
+                  </View>
+                  <Text>Không có dữ liệu</Text>
+                </View>
+              }
             />
-          ) : (
-            <View className="mt-36 items-center justify-center px-5">
-              <Image
-                source={NoData}
-                className="h-[400px] w-full"
-                resizeMode="contain"
-              />
-            </View>
           )}
         </SectionComponent>
       </LoadingSectionWrapper>
