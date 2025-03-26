@@ -60,6 +60,7 @@ const GroupHomeDefault = () => {
             </TouchableOpacity>
             <TouchableOpacity
               className="mx-1 flex-1 flex-row items-center justify-center rounded-full bg-thirdly/70 px-4 py-2"
+              onPress={handler.handleCreateWithdrawRequest}
             >
               <AntDesign name="swap" size={16} color="#609084" />
               <Text className="ml-2 text-base font-bold text-[#609084]">
