@@ -99,7 +99,10 @@ const useSpendingBudget = () => {
             section.items.push({
               id: goal.id,
               name: goal.name,
-              remaining: goal.targetAmount - goal.currentAmount,
+              remaining:
+                goal.targetAmount - goal.currentAmount < 0
+                  ? 0
+                  : goal.targetAmount - goal.currentAmount,
               currentAmount: goal.currentAmount,
               targetAmount: goal.targetAmount,
               icon:
