@@ -1,6 +1,6 @@
 import { Colors } from "@/helpers/constants/color";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { Text, View } from "react-native";
 import * as Progress from "react-native-progress";
 
@@ -27,16 +27,16 @@ const ProgressCircleComponent = ({
 }) => {
   const [progress, setProgress] = useState(0);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     let interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= value) {
           clearInterval(interval);
           return value;
         }
-        return prev + 0.07;
+        return prev + 0.65;
       });
-    }, 50);
+    }, 150);
 
     return () => clearInterval(interval);
   }, [value]);
@@ -49,6 +49,7 @@ const ProgressCircleComponent = ({
       >
         <Progress.Circle
           size={size}
+          indeterminateAnimationDuration={0}
           progress={progress}
           thickness={thickness}
           color={color}
@@ -84,4 +85,3 @@ const ProgressCircleComponent = ({
 };
 
 export { ProgressCircleComponent };
-

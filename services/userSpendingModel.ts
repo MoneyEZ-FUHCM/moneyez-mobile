@@ -41,7 +41,7 @@ const userSpendingModelApi = apiSlice.injectEndpoints({
     }),
     getTransactionById: builder.query({
       query: ({ id, PageIndex, PageSize, type }) => ({
-        url: `/user-spending-models/transactions/${id}?PageIndex=${PageIndex}&PageSize=${PageSize}${type !== "" ? `&type=${type}` : ""}&is_deleted=false&sort_by=date`,
+        url: `/user-spending-models/transactions/${id}?PageIndex=${PageIndex}&PageSize=${PageSize}${type !== "" ? `&type=${type}` : ""}&is_deleted=false&sort_by=date&dir=desc`,
         method: HTTP_METHOD.GET,
       }),
       transformResponse: (response) =>
