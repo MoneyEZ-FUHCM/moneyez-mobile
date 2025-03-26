@@ -1,5 +1,6 @@
 import {
   BarChartExpenseCustom,
+  BudgetSummaryComponent,
   FlatListCustom,
   LoadingSectionWrapper,
   ProgressCircleComponent,
@@ -17,9 +18,11 @@ import {
 import { AntDesign, FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
-import { Dimensions, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, Image, Text, TouchableOpacity, View } from "react-native";
 import TEXT_TRANSLATE_EXPENSE_DETAIL from "./ExpenseDetail.translate";
 import useExpenseDetail from "./hooks/useExpenseDetail";
+import Admin from "@/assets/images/logo/avatar_admin.jpg";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function ExpenseDetail() {
   const { state, handler } = useExpenseDetail();
@@ -141,7 +144,108 @@ export default function ExpenseDetail() {
           screenWidth={Dimensions.get("window").width}
         />
       </SectionComponent>
-      <SectionComponent rootClassName="bg-white mx-4 pt-5 px-2 rounded-t-lg">
+      {/* AI NOTICE */}
+      <LinearGradient
+        colors={
+          state.financialGoalDetail.prediction.isOnTrack
+            ? [Colors.colors.secondary, Colors.colors.thirdly]
+            : ["#fa3916df", "#fdd1d1d5"]
+        }
+        className="m-4 overflow-hidden rounded-3xl shadow-2xl"
+      >
+        <View className="flex-row items-center justify-between">
+          <View className="flex-row items-center space-x-2 p-4">
+            <View className="rounded-full bg-white/20 p-1">
+              <Image
+                source={Admin}
+                className="h-12 w-12 rounded-full border-2 border-white/30"
+                resizeMode="cover"
+              />
+            </View>
+            <Text className="text-lg font-bold drop-shadow-md">MewMo</Text>
+          </View>
+          <View className="rounded-l-2xl bg-white/80 p-2">
+            <Text className="">
+              {state.financialGoalDetail.prediction.isOnTrack
+                ? "Đúng Tiến Độ"
+                : "Sai Tiến Độ"}
+            </Text>
+          </View>
+        </View>
+
+        {/* Content Container */}
+        <View className="px-4">
+          {/* Title */}
+          <Text className="mb-4 text-center text-xl font-bold text-[#2c4a42]">
+            Dự Báo Tiết Kiệm
+          </Text>
+
+          {/* Progress Overview */}
+          <View className="mb-4 flex-row justify-between rounded-2xl bg-white/80 p-4 shadow-md">
+            <View className="flex-1 items-center border-r border-[#bad8b6] pr-2">
+              <Text className="mb-1 text-xs uppercase tracking-wider text-[#609084]">
+                Tiến Độ Hiện Tại
+              </Text>
+              <Text className="text-xl font-bold text-[#2c4a42]">
+                {state.financialGoalDetail.prediction.totalProgress}%
+              </Text>
+            </View>
+
+            <View className="flex-1 items-center pl-2">
+              <Text className="mb-1 text-xs uppercase tracking-wider text-[#609084]">
+                Ngày Còn Lại
+              </Text>
+              <Text className="text-xl font-bold text-[#2c4a42]">
+                {state.financialGoalDetail.prediction.remainingDays} ngày
+              </Text>
+            </View>
+          </View>
+          <View className="mb-4 rounded-2xl bg-white/90 p-4 shadow-md">
+            <Text className="mb-4 text-center text-sm italic text-[#609084]">
+              {state.financialGoalDetail.prediction.trendDescription}
+            </Text>
+            <View className="space-y-3">
+              {[
+                {
+                  label: "Mức Tiết Kiệm Trung Bình:",
+                  value:
+                    formatCurrency(
+                      state.financialGoalDetail.prediction.averageChangePerDay,
+                    ) + "/ngày",
+                },
+                {
+                  label: "Mục Tiêu Hằng Ngày:",
+                  value:
+                    formatCurrency(
+                      state.financialGoalDetail.prediction.requiredDailyChange,
+                    ) + "/ngày",
+                },
+                {
+                  label: "Ngày Dự Kiến Hoàn Thành:",
+                  value: formatDate(
+                    state.financialGoalDetail.prediction
+                      .predictedCompletionDate,
+                  ),
+                },
+              ]?.map((item, index) => (
+                <View
+                  key={index}
+                  className={`flex-row items-center justify-between pb-3 ${
+                    index < 2 ? "border-b border-[#bad8b6]" : ""
+                  }`}
+                >
+                  <Text className="text-sm text-[#2c4a42]">{item.label}</Text>
+                  <Text className="text-sm font-bold text-[#609084]">
+                    {item.value}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        </View>
+      </LinearGradient>
+
+      <SectionComponent rootClassName="bg-white pt-4 mx-4 px-2 rounded-t-lg">
         <View className="flex-row items-center justify-between">
           <Text className="text-lg font-bold text-black">
             {TEXT_TRANSLATE_EXPENSE_DETAIL.TRANSACTION_LIST_TITLE}

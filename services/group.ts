@@ -1,5 +1,6 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import apiSlice from "@/redux/slices/apiSlice";
+import { GroupDetail } from "@/types/group.type";
 import { transformCommonResponse } from "@/types/system.types";
 
 const { HTTP_METHOD } = COMMON_CONSTANT;
@@ -10,7 +11,8 @@ const groupApi = apiSlice.injectEndpoints({
         url: `/groups?PageIndex=${PageIndex}&PageSize=${PageSize}`,
         method: HTTP_METHOD.GET,
       }),
-      transformResponse: (response) => transformCommonResponse<Group>(response),
+      transformResponse: (response) =>
+        transformCommonResponse<GroupDetail>(response),
       providesTags: ["Group"],
     }),
     createGroup: builder.mutation({
@@ -44,6 +46,24 @@ const groupApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Group"],
     }),
+    getGroupDetail: builder.query({
+      query: ({ id }) => ({
+        url: `/groups/${id}`,
+        method: HTTP_METHOD.GET,
+      }),
+    }),
+    getGroupLogs: builder.query({
+      query: () => ({
+        url: `/groups/group-logs`,
+        method: HTTP_METHOD.GET,
+      }),
+    }),
+    getMemberLogs: builder.query({
+      query: () => ({
+        url: `/groups/member-logs`,
+        method: HTTP_METHOD.GET,
+      }),
+    }),
   }),
 });
 
@@ -53,6 +73,9 @@ export const {
   useUpdateGroupMutation,
   useDeleteGroupMutation,
   useRequestFundMutation,
+  useGetGroupDetailQuery,
+  useGetGroupLogsQuery,
+  useGetMemberLogsQuery,
 } = groupApi;
 
 export default groupApi;

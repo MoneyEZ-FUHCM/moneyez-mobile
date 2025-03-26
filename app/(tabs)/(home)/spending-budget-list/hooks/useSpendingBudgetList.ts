@@ -25,6 +25,7 @@ interface BudgetItem {
   targetAmount: number;
   icon: keyof typeof MaterialIcons.glyphMap;
   subcategoryId: string;
+  isSaving: boolean;
 }
 
 interface BudgetSection {
@@ -105,6 +106,7 @@ const useSpendingBudget = () => {
                   : goal.targetAmount - goal.currentAmount,
               currentAmount: goal.currentAmount,
               targetAmount: goal.targetAmount,
+              isSaving: goal.isSaving,
               icon:
                 (subcategory.icon as keyof typeof MaterialIcons.glyphMap) ||
                 "account-balance",

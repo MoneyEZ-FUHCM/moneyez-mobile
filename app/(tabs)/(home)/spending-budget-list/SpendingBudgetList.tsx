@@ -121,10 +121,9 @@ export default function SpendingBudget() {
                           value={progressPercent}
                           size={72}
                           thickness={9}
-                          color="#609084"
+                          isSaving={item.isSaving}
                           iconName={item?.icon}
                           iconSize={28}
-                          iconColor="#609084"
                         />
                       </View>
                       <View className="gap-y-1">

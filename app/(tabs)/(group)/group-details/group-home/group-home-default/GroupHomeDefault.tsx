@@ -13,6 +13,8 @@ import {
 import RECENT_ACTIVITIES from "./GroupHomeDefault.constant";
 import TEXT_TRANSLATE_GROUP_HOME_DEFAULT from "./GroupHomeDefault.translate";
 import useGroupHomeDefault from "./hooks/useGroupHomeDefault";
+import { formatCurrency } from "@/helpers/libs";
+import { Colors } from "@/helpers/constants/color";
 
 const GroupHomeDefault = () => {
   const { TITLE, BUTTON, TEXT } = TEXT_TRANSLATE_GROUP_HOME_DEFAULT;
@@ -36,24 +38,29 @@ const GroupHomeDefault = () => {
         {/* Header */}
         <ImageBackground
           source={{
-            uri: "https://static.tnex.com.vn/uploads/2022/12/word-image-11078-6.jpeg",
+            uri: state.groupDetail?.imageUrl,
           }}
           className="relative h-52 w-full"
-        ></ImageBackground>
+          resizeMode="stretch"
+        />
 
         {/* Fund Overview Card */}
         <View className="mx-4 mt-8 rounded-2xl bg-white p-4 shadow-md">
-          <Text className="text-lg font-bold">{TEXT.FUND_OVERVIEW}</Text>
-          <Text className="text-2xl font-bold text-gray-800">
-            {TEXT.FUND_AMOUNT}
+          <Text className="text-lg font-bold">
+            💰 {state.groupDetail?.name}
           </Text>
-          <Text className="text-gray-500">{TEXT.FUND_GOAL}</Text>
+          <Text className="text-2xl font-bold text-gray-800">
+            {formatCurrency(state.groupDetail?.currentBalance as number)}
+          </Text>
+          <Text className="mt-1 text-gray-500">
+            {state.groupDetail?.description}
+          </Text>
           <View className="mt-4 flex-row justify-between">
             <TouchableOpacity
-              className="mx-1 flex-1 flex-row items-center justify-center rounded-full bg-thirdly/70 px-4 py-2 "
+              className="mx-1 flex-1 flex-row items-center justify-center rounded-full bg-thirdly/70 px-4 py-2"
               onPress={handler.handleCreateFundRequest}
             >
-              <AntDesign name="plus" size={16} color="#609084" />
+              <AntDesign name="plus" size={16} color={Colors.colors.primary} />
               <Text className="ml-2 text-base font-bold text-[#609084]">
                 {BUTTON.CONTRIBUTE}
               </Text>
@@ -62,7 +69,7 @@ const GroupHomeDefault = () => {
               className="mx-1 flex-1 flex-row items-center justify-center rounded-full bg-thirdly/70 px-4 py-2"
               onPress={handler.handleCreateWithdrawRequest}
             >
-              <AntDesign name="swap" size={16} color="#609084" />
+              <AntDesign name="swap" size={16} color={Colors.colors.primary} />
               <Text className="ml-2 text-base font-bold text-[#609084]">
                 {BUTTON.WITHDRAW}
               </Text>
@@ -71,21 +78,33 @@ const GroupHomeDefault = () => {
         </View>
 
         {/* Quick Actions */}
-        <SectionComponent rootClassName="mt-4 rounded-xl bg-white p-4 shadow-sm">
-          <View className="flex-row w-full">
+        <SectionComponent rootClassName="mt-4 bg-white p-4 shadow-sm">
+          <View className="w-full flex-row">
             <TouchableOpacity
               className="flex-1 items-center justify-center"
               onPress={handler.handleFundRemind}
             >
-              <MaterialIcons name="trending-up" size={32} color="#609084" />
-              <Text className="text-[#609084] text-base font-bold mt-2">{TEXT.REMIND_CONTRIBUTE}</Text>
+              <MaterialIcons
+                name="trending-up"
+                size={32}
+                color={Colors.colors.primary}
+              />
+              <Text className="mt-2 text-base font-bold text-primary">
+                {TEXT.REMIND_CONTRIBUTE}
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               className="flex-1 items-center justify-center"
               onPress={handler.handleStatistic}
             >
-              <MaterialIcons name="bar-chart" size={32} color="#609084" />
-              <Text className="text-[#609084] text-base font-bold mt-2">{TEXT.STATISTICS}</Text>
+              <MaterialIcons
+                name="bar-chart"
+                size={32}
+                color={Colors.colors.primary}
+              />
+              <Text className="mt-2 text-base font-bold text-primary">
+                {TEXT.STATISTICS}
+              </Text>
             </TouchableOpacity>
           </View>
         </SectionComponent>
@@ -122,7 +141,7 @@ const GroupHomeDefault = () => {
               <Text className="pr-3 text-center font-bold text-[#609084]">
                 {BUTTON.VIEW_ALL}
               </Text>
-              <AntDesign name="right" size={16} color="#609084" />
+              <AntDesign name="right" size={16} color={Colors.colors.primary} />
             </TouchableOpacity>
           </View>
           {/* Recent Activities */}
@@ -153,7 +172,7 @@ const GroupHomeDefault = () => {
               <Text className="pr-3 text-center font-bold text-[#609084]">
                 {BUTTON.VIEW_ALL}
               </Text>
-              <AntDesign name="right" size={16} color="#609084" />
+              <AntDesign name="right" size={16} color={Colors.colors.primary} />
             </TouchableOpacity>
           </View>
         </SectionComponent>
