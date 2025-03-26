@@ -3,7 +3,6 @@ import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { Tabs, useFocusEffect } from "expo-router";
 import React, { useCallback } from "react";
-import { LogBox } from "react-native";
 import { useDispatch } from "react-redux";
 
 export default function GroupDetailTabLayout() {
@@ -33,12 +32,6 @@ export default function GroupDetailTabLayout() {
         name={BOTTOM_TAB_NAME.GROUP_HOME}
         options={{
           title: BOTTOM_TAB_TRANSLATE.GROUP_HOME,
-        }}
-      />
-      <Tabs.Screen
-        name={BOTTOM_TAB_NAME.TRANSACTION}
-        options={{
-          title: BOTTOM_TAB_TRANSLATE.TRANSACTION,
         }}
       />
       <Tabs.Screen

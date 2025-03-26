@@ -21,9 +21,6 @@ export const icons = {
   "group-home": (props: { color: string; size: number }) => (
     <AntDesign name="home" {...props} />
   ),
-  transaction: (props: { color: string; size: number }) => (
-    <FontAwesome6 name="money-bill-transfer" {...props} />
-  ),
   member: (props: { color: string; size: number }) => (
     <Feather name="users" {...props} />
   ),
