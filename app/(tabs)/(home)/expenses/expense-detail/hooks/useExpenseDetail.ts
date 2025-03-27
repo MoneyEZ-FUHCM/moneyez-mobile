@@ -56,7 +56,6 @@ const useExpenseDetail = () => {
     },
   );
 
-  console.log("cjeck budgetId", budgetId);
   useEffect(() => {
     refetchGoalsById();
     refetchPersonalTransactionFinancialGoals();

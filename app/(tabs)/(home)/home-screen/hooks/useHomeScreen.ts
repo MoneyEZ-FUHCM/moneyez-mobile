@@ -12,6 +12,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { FlatList } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import HOME_SCREEN_CONSTANTS from "../../HomeScreen.const";
+import { GroupDetail } from "@/types/group.type";
 
 interface ItemType {
   id: string;
@@ -46,11 +47,11 @@ const useHomeScreen = () => {
     isLoading: isGroupLoading,
     refetch: refetchGroups,
   } = useGetGroupsQuery({ PageIndex: 1, PageSize: 10 });
-  const [groupData, setGroupData] = useState<Group[]>([]);
+  const [groupData, setGroupData] = useState<GroupDetail[]>([]);
 
   useEffect(() => {
     if (data?.items) {
-      setGroupData(data.items as Group[]);
+      setGroupData(data.items as GroupDetail[]);
     }
   }, [data]);
 

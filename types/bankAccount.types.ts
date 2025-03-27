@@ -8,6 +8,7 @@ export interface BankAccount {
   createdDate: string;
   isDeleted: boolean;
   status?: string | null;
+  isLinked: boolean;
 }
 
 export interface BankAccountType {
@@ -18,6 +19,7 @@ export interface BankAccountType {
   bankName: string;
   bankShortName: string;
   accountHolderName: string;
+  isLinked: boolean;
 }
 
 export interface BankType {

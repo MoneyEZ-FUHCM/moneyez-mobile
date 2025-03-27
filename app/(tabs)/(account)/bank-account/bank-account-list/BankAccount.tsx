@@ -22,12 +22,8 @@ const BankAccount = () => {
 
   const BankCard = ({ item, onPress }: BankCardProps) => {
     return (
-      <TouchableOpacity
-        className="mb-4 overflow-hidden rounded-xl bg-white shadow"
-        onPress={onPress}
-        activeOpacity={0.7}
-      >
-        <View className="px-2 py-4">
+      <View className="mb-4 overflow-hidden rounded-xl bg-white shadow">
+        <TouchableOpacity className="px-2 py-4" onPress={onPress}>
           <View className="flex-row items-center gap-x-3">
             <View className="rounded-[100%]">
               <Image
@@ -37,9 +33,19 @@ const BankAccount = () => {
               />
             </View>
             <View className="flex-1">
-              <Text className="text-base font-bold text-gray-900">
-                {item.bankName}
-              </Text>
+              <View className="flex-row items-center gap-x-2">
+                <Text className="text-base font-bold text-gray-900">
+                  {item?.bankName}
+                </Text>
+                {item?.isLinked && (
+                  <View className="flex-row items-center rounded-full bg-primary/10 px-2 py-1">
+                    <View className="mr-1 h-1.5 w-1.5 rounded-full bg-primary" />
+                    <Text className="text-xs font-medium text-primary">
+                      Đã liên kết
+                    </Text>
+                  </View>
+                )}
+              </View>
               <Text className="mt-1 flex-row items-center text-sm text-gray-600">
                 <Text className="mr-1 text-gray-400">
                   {TEXT_TRANSLATE_BANK_ACCOUNT.TITLE.ACCOUNT_HOLDER}
@@ -73,7 +79,7 @@ const BankAccount = () => {
               <Feather name="more-vertical" size={20} color="#777" />
             </TouchableOpacity>
           </View>
-        </View>
+        </TouchableOpacity>
         <View className="flex-row border-t border-gray-100">
           <TouchableOpacity
             className="flex-1 flex-row items-center justify-center py-3"
@@ -88,19 +94,51 @@ const BankAccount = () => {
             </Text>
           </TouchableOpacity>
           <View className="w-px bg-gray-100" />
-          <TouchableOpacity
-            className="flex-1 flex-row items-center justify-center py-3"
-            onPress={(e) => {
-              handler.handleDeleteAccount(item?.id as string);
-            }}
-          >
-            <Feather name="trash-2" size={16} color="#FF6B6B" />
-            <Text className="ml-2 text-sm font-medium text-gray-700">
-              {TEXT_TRANSLATE_BANK_ACCOUNT.BUTTON.DELETE}
-            </Text>
-          </TouchableOpacity>
+          {!item?.isLinked ? (
+            <TouchableOpacity
+              className="flex-1 flex-row items-center justify-center py-3"
+              onPress={(e) => {
+                e.stopPropagation();
+                handler.handleLinkAccount(item?.id as string);
+              }}
+            >
+              <Feather name="link" size={16} color="#FF9900" />
+              <Text className="ml-2 text-sm font-medium text-gray-700">
+                Liên kết
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              className="flex-1 flex-row items-center justify-center py-3"
+              onPress={(e) => {
+                e.stopPropagation();
+                // handler.handleLinkAccount(item?.id as string);
+              }}
+            >
+              <AntDesign name="disconnect" size={16} color="#FF9900" />
+              <Text className="ml-2 text-sm font-medium text-gray-700">
+                Hủy Liên kết
+              </Text>
+            </TouchableOpacity>
+          )}
+          {item?.isLinked && (
+            <>
+              <View className="w-px bg-gray-100" />
+              <TouchableOpacity
+                className="flex-1 flex-row items-center justify-center py-3"
+                onPress={(e) => {
+                  handler.handleDeleteAccount(item?.id as string);
+                }}
+              >
+                <Feather name="trash-2" size={16} color="#FF6B6B" />
+                <Text className="ml-2 text-sm font-medium text-gray-700">
+                  {TEXT_TRANSLATE_BANK_ACCOUNT.BUTTON.DELETE}
+                </Text>
+              </TouchableOpacity>
+            </>
+          )}
         </View>
-      </TouchableOpacity>
+      </View>
     );
   };
 
@@ -110,7 +148,7 @@ const BankAccount = () => {
     return (
       <ScrollView className="p-6">
         <View className="mb-5 items-center">
-          <View className="">
+          <View className="mb-3">
             <Image
               source={{ uri: state.selectedAccount?.bankLogo }}
               className="h-[50px] min-w-[100px]"
@@ -120,6 +158,14 @@ const BankAccount = () => {
           <Text className="text-center text-xl font-bold text-gray-900">
             {state.selectedAccount?.bankName}
           </Text>
+          {state.selectedAccount?.isLinked && (
+            <View className="mt-2 flex-row items-center rounded-full bg-primary/10 px-3 py-1.5">
+              <View className="mr-1.5 h-2 w-2 rounded-full bg-primary" />
+              <Text className="text-sm font-medium text-primary">
+                Đã liên kết
+              </Text>
+            </View>
+          )}
         </View>
 
         <View className="mb-6 rounded-xl bg-gray-50 p-5">

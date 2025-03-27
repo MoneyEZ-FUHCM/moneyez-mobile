@@ -1,7 +1,12 @@
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";
-import { useGetGroupDetailQuery } from "@/services/group";
+import {
+  useGetGroupDetailQuery,
+  useGetGroupLogsQuery,
+  useGetMemberLogsQuery,
+} from "@/services/group";
+import { useGetGroupTransactionQuery } from "@/services/transaction";
 import { router, useLocalSearchParams } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -10,6 +15,20 @@ const useGroupHomeDefault = () => {
   const { id } = useLocalSearchParams();
   useGetGroupDetailQuery({ id }, { skip: !id });
   const groupDetail = useSelector(selectCurrentGroup);
+
+  const { data: groupLogs } = useGetGroupLogsQuery(
+    { groupId: id, PageIndex: 1, PageSize: 100 },
+    { skip: !id, refetchOnMountOrArgChange: true },
+  );
+  const { data: groupTransaction } = useGetGroupTransactionQuery(
+    { id: id, PageIndex: 1, PageSize: 100 },
+    { skip: !id, refetchOnMountOrArgChange: true },
+  );
+
+  // const { data: memberLogs } = useGetMemberLogsQuery(
+  //   { groupId: id, PageIndex: 1, PageSize: 100 },
+  //   { skip: !id },
+  // );
 
   const handleCreateFundRequest = () => {
     dispatch(setGroupTabHidden(true));
@@ -37,6 +56,8 @@ const useGroupHomeDefault = () => {
   return {
     state: {
       groupDetail,
+      groupLogs: groupLogs?.items,
+      groupTransaction: groupTransaction?.items,
     },
     handler: {
       handleCreateFundRequest,

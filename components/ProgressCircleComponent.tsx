@@ -1,18 +1,23 @@
-import { Colors } from "@/helpers/constants/color";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useLayoutEffect, useMemo, useState } from "react";
 import { Text, View } from "react-native";
 import * as Progress from "react-native-progress";
 
-const interpolateColor = (value: number) => {
-  const startColor = [255, 215, 0];
-  const endColor = [255, 0, 0];
+const interpolateColor = (value: number, isSaving: boolean) => {
+  if (isSaving) {
+    const startColor = [144, 238, 144];
+    const endColor = [96, 144, 132];
 
-  const r = Math.round(startColor[0] + (endColor[0] - startColor[0]) * value);
-  const g = Math.round(startColor[1] + (endColor[1] - startColor[1]) * value);
-  const b = Math.round(startColor[2] + (endColor[2] - startColor[2]) * value);
+    const r = Math.round(startColor[0] + (endColor[0] - startColor[0]) * value);
+    const g = Math.round(startColor[1] + (endColor[1] - startColor[1]) * value);
+    const b = Math.round(startColor[2] + (endColor[2] - startColor[2]) * value);
 
-  return `rgb(${r}, ${g}, ${b})`;
+    return `rgb(${r}, ${g}, ${b})`;
+  } else {
+    if (value <= 0.5) return "green";
+    if (value <= 0.75) return "#FFCC00";
+    return "red";
+  }
 };
 
 const ProgressCircleComponent = ({
@@ -21,7 +26,6 @@ const ProgressCircleComponent = ({
   isSaving = true,
   iconName = "question-mark",
   iconSize = 30,
-  iconColor = Colors.colors.primary,
   thickness = 4,
   showPercentage = false,
   percentageTextStyle = {},
@@ -31,7 +35,6 @@ const ProgressCircleComponent = ({
   isSaving?: boolean;
   iconName?: keyof typeof MaterialIcons.glyphMap;
   iconSize?: number;
-  iconColor?: string;
   thickness?: number;
   showPercentage?: boolean;
   percentageTextStyle?: object;
@@ -45,7 +48,7 @@ const ProgressCircleComponent = ({
           clearInterval(interval);
           return value;
         }
-        return prev + 0.01;
+        return prev + 0.02;
       });
     }, 10);
 
@@ -53,12 +56,13 @@ const ProgressCircleComponent = ({
   }, [value]);
 
   const animatedColor = useMemo(() => {
-    return isSaving ? Colors.colors.primary : interpolateColor(progress);
+    return interpolateColor(progress, isSaving);
   }, [progress, isSaving]);
 
   const animatedIconColor = useMemo(() => {
-    return isSaving ? iconColor : interpolateColor(progress);
-  }, [progress, isSaving, iconColor]);
+    if (progress === 0) return "#d6d6d6";
+    return interpolateColor(progress, isSaving);
+  }, [progress, isSaving]);
 
   return (
     <View className="flex-1 items-center justify-center">

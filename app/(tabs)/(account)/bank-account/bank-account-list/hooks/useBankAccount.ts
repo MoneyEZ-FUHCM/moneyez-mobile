@@ -5,6 +5,7 @@ import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import {
   useDeleteBankAccountMutation,
   useGetBankAccountsQuery,
+  useRegisterWebHookMutation,
 } from "@/services/bankAccounts";
 import { BankAccountType } from "@/types/bankAccount.types";
 import * as Clipboard from "expo-clipboard";
@@ -33,6 +34,7 @@ const useBankAccount = () => {
   });
 
   const [deleteBankAccount] = useDeleteBankAccountMutation();
+  const [registerWebHook] = useRegisterWebHookMutation();
 
   const bankAccounts =
     data?.items.map((account) => {
@@ -99,6 +101,22 @@ const useBankAccount = () => {
     }
   }, []);
 
+  const handleLinkAccount = useCallback(async (accountBankId: string) => {
+    try {
+      await registerWebHook(accountBankId).unwrap();
+      ToastAndroid.show("Liên kết ngân hàng thành công", ToastAndroid.SHORT);
+    } catch (err: any) {
+      const error = err?.data;
+      if (error?.errorCode === ERROR_CODE.BANK_ACCOUNT_NOT_FOUND) {
+        ToastAndroid.show(
+          TEXT_TRANSLATE_BANK_ACCOUNT.MESSAGE_ERROR.BANK_ACCOUNT_NOT_FOUND,
+          ToastAndroid.SHORT,
+        );
+      }
+      ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
+    }
+  }, []);
+
   return {
     state: {
       bankAccounts,
@@ -112,6 +130,7 @@ const useBankAccount = () => {
       handleDeleteAccount,
       handleEditBankAccount,
       handleCopyAccountNumber,
+      handleLinkAccount,
     },
   };
 };

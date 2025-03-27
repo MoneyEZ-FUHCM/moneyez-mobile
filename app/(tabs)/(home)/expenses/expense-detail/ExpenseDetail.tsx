@@ -1,6 +1,6 @@
+import Admin from "@/assets/images/logo/avatar_admin.jpg";
 import {
   BarChartExpenseCustom,
-  BudgetSummaryComponent,
   FlatListCustom,
   LoadingSectionWrapper,
   ProgressCircleComponent,
@@ -16,13 +16,12 @@ import {
   formatTime,
 } from "@/helpers/libs";
 import { AntDesign, FontAwesome6, MaterialIcons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import React from "react";
 import { Dimensions, Image, Text, TouchableOpacity, View } from "react-native";
 import TEXT_TRANSLATE_EXPENSE_DETAIL from "./ExpenseDetail.translate";
 import useExpenseDetail from "./hooks/useExpenseDetail";
-import Admin from "@/assets/images/logo/avatar_admin.jpg";
-import { LinearGradient } from "expo-linear-gradient";
 
 export default function ExpenseDetail() {
   const { state, handler } = useExpenseDetail();
@@ -76,10 +75,10 @@ export default function ExpenseDetail() {
                 }
                 size={80}
                 thickness={11}
-                color="#609084"
                 iconName="fastfood"
                 iconSize={30}
                 iconColor="#609084"
+                isSaving={state.financialGoalDetail.isSaving}
               />
             </View>
             <View className="w-full flex-1">
@@ -165,7 +164,7 @@ export default function ExpenseDetail() {
             <Text className="text-lg font-bold drop-shadow-md">MewMo</Text>
           </View>
           <View className="rounded-l-2xl bg-white/80 p-2">
-            <Text className="">
+            <Text className="font-semibold">
               {state.financialGoalDetail.prediction.isOnTrack
                 ? "Đúng Tiến Độ"
                 : "Sai Tiến Độ"}
@@ -177,7 +176,8 @@ export default function ExpenseDetail() {
         <View className="px-4">
           {/* Title */}
           <Text className="mb-4 text-center text-xl font-bold text-[#2c4a42]">
-            Dự Báo Tiết Kiệm
+            Dự Báo{" "}
+            {state.financialGoalDetail?.isSaving ? "Tiết Kiệm" : "Chi tiêu"}
           </Text>
 
           {/* Progress Overview */}
@@ -207,7 +207,7 @@ export default function ExpenseDetail() {
             <View className="space-y-3">
               {[
                 {
-                  label: "Mức Tiết Kiệm Trung Bình:",
+                  label: `Mức ${state.financialGoalDetail.isSaving ? "Tiết kiệm" : "Chi tiêu"} Trung Bình:`,
                   value:
                     formatCurrency(
                       state.financialGoalDetail.prediction.averageChangePerDay,
@@ -221,7 +221,7 @@ export default function ExpenseDetail() {
                     ) + "/ngày",
                 },
                 {
-                  label: "Ngày Dự Kiến Hoàn Thành:",
+                  label: `Ngày Dự Kiến ${state.financialGoalDetail?.isSaving ? "Hoàn Thành" : "Kết Thúc Chi Tiêu"}:`,
                   value: formatDate(
                     state.financialGoalDetail.prediction
                       .predictedCompletionDate,

@@ -1,6 +1,7 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import apiSlice from "@/redux/slices/apiSlice";
 import { transformCommonResponse } from "@/types/system.types";
+import { GroupTransaction } from "@/types/transaction.types";
 
 const { HTTP_METHOD } = COMMON_CONSTANT;
 const transactionApi = apiSlice.injectEndpoints({
@@ -35,6 +36,14 @@ const transactionApi = apiSlice.injectEndpoints({
         method: HTTP_METHOD.GET,
       }),
     }),
+    getGroupTransaction: builder.query({
+      query: ({ id, PageIndex, PageSize }) => ({
+        url: `/transactions/groups?groupId=${id}&PageIndex=${PageIndex}&PageSize=${PageSize}`,
+        method: HTTP_METHOD.GET,
+      }),
+      transformResponse: (response) =>
+        transformCommonResponse<GroupTransaction>(response),
+    }),
   }),
 });
 
@@ -44,6 +53,7 @@ export const {
   useGetTransactionByModelQuery,
   useLazyGetTransactionDetailQuery,
   useGetTransactionDetailQuery,
+  useGetGroupTransactionQuery,
 } = transactionApi;
 
 export default transactionApi;

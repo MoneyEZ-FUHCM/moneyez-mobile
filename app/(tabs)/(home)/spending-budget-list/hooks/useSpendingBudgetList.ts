@@ -32,6 +32,7 @@ interface BudgetSection {
   id: string;
   category: string;
   items: BudgetItem[];
+  isSaving: boolean;
 }
 
 interface SubcategoryMapItem {
@@ -70,8 +71,8 @@ const useSpendingBudget = () => {
       const sectionMap = new Map<string, BudgetSection>();
 
       categoriesData.data.forEach((category: Category) => {
-        category.subcategories.forEach((subcategory: Subcategory) => {
-          subcategoryMap.set(subcategory.id, {
+        category?.subcategories?.forEach((subcategory: Subcategory) => {
+          subcategoryMap?.set(subcategory.id, {
             id: subcategory.id,
             name: subcategory.name,
             icon: subcategory.icon,
@@ -92,6 +93,7 @@ const useSpendingBudget = () => {
               id: categoryCode,
               category: subcategory.categoryName,
               items: [],
+              isSaving: goal.isSaving,
             });
           }
 

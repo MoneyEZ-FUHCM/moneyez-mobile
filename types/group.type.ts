@@ -34,3 +34,33 @@ export interface GroupDetail {
   imageUrl: string;
   groupMembers: any[];
 }
+
+export interface GroupLogs {
+  groupId: string;
+  changedBy: string;
+  changeDescription: string;
+  action: "CREATED" | "UPDATED" | "DELETED";
+  imageUrl: string;
+  id: string;
+  createdDate: string;
+  createdBy: string;
+  updatedDate: string | null;
+  updatedBy: string | null;
+  isDeleted: boolean;
+}
+
+export type GroupLogsList = GroupLogs[];
+
+export interface MemberLogs {
+  groupId: string;
+  changeDescription: string;
+  action: "CREATED" | "UPDATED" | "DELETED";
+  id: string;
+  createdDate: string;
+  createdBy: string;
+  updatedDate?: string | null;
+  updatedBy?: string | null;
+  isDeleted: boolean;
+}
+
+export type MemberLogsList = MemberLogs[];

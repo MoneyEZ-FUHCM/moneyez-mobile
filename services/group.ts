@@ -1,7 +1,8 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import apiSlice from "@/redux/slices/apiSlice";
-import { GroupDetail } from "@/types/group.type";
+import { GroupDetail, GroupLogs, MemberLogs } from "@/types/group.type";
 import { transformCommonResponse } from "@/types/system.types";
+import { GroupTransaction } from "@/types/transaction.types";
 
 const { HTTP_METHOD } = COMMON_CONSTANT;
 const groupApi = apiSlice.injectEndpoints({
@@ -53,16 +54,19 @@ const groupApi = apiSlice.injectEndpoints({
       }),
     }),
     getGroupLogs: builder.query({
-      query: () => ({
-        url: `/groups/group-logs`,
+      query: ({ groupId, PageIndex, PageSize }) => ({
+        url: `/groups/logs/${groupId}?PageIndex=${PageIndex}&PageSize=${PageSize}`,
         method: HTTP_METHOD.GET,
       }),
+      transformResponse: (response) =>
+        transformCommonResponse<GroupLogs>(response),
     }),
     getMemberLogs: builder.query({
-      query: () => ({
-        url: `/groups/member-logs`,
+      query: ({ groupId, PageIndex, PageSize }) => ({
+        url: `/groups/member-logs?PageIndex=${PageIndex}&PageSize=${PageSize}&GroupId=${groupId}`,
         method: HTTP_METHOD.GET,
       }),
+      transformResponse: (response) => transformCommonResponse(response),
     }),
   }),
 });
