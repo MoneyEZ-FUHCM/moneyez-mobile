@@ -4,13 +4,31 @@ export interface FinancialGoal {
   id: string;
   userId: string;
   subcategoryId: string;
-  icon: keyof typeof MaterialIcons.glyphMap;
+  subcategoryName: string;
+  subcategoryIcon: keyof typeof MaterialIcons.glyphMap;
   name: string;
   targetAmount: number;
   currentAmount: number;
-  status: number;
+  status: "ACTIVE" | "INACTIVE" | "COMPLETED";
+  isSaving: boolean;
+  startDate: string;
   deadline: string;
-  subcategoryIcon: string;
+  createdDate: string;
+  createdBy: string;
+  updatedDate?: string | null;
+  updatedBy?: string | null;
+  isDeleted: boolean;
+  prediction: {
+    averageChangePerDay: number;
+    projectedDaysToCompletion: number;
+    predictedCompletionDate: string;
+    currentTrend: number;
+    isOnTrack: boolean;
+    trendDescription: string;
+    requiredDailyChange: number;
+    totalProgress: number;
+    remainingDays: number;
+  };
 }
 
 export interface PersonalTransactionFinancialGoals {

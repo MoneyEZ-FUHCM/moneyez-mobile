@@ -49,3 +49,26 @@ export interface TransactionPreviewPayload extends TransactionPayload {
   subCategoryIcon: string;
   subCategoryName: string;
 }
+
+export interface GroupTransaction {
+  groupId: string;
+  userId: string;
+  amount: number;
+  type: number;
+  transactionDate: string;
+  description: string;
+  images: string[];
+  status: "PENDING" | "APPROVED" | "REJECTED";
+  approvalRequired: boolean;
+  requestCode: string | null;
+  insertType: "MANUAL" | "AUTO";
+  avatarUrl: string;
+  id: string;
+  createdDate: string;
+  createdBy: string;
+  updatedDate: string | null;
+  updatedBy: string | null;
+  isDeleted: boolean;
+}
+
+export type GroupTransactionList = GroupTransaction[];

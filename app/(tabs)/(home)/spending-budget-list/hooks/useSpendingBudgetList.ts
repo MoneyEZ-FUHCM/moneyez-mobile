@@ -25,12 +25,14 @@ interface BudgetItem {
   targetAmount: number;
   icon: keyof typeof MaterialIcons.glyphMap;
   subcategoryId: string;
+  isSaving: boolean;
 }
 
 interface BudgetSection {
   id: string;
   category: string;
   items: BudgetItem[];
+  isSaving: boolean;
 }
 
 interface SubcategoryMapItem {
@@ -69,8 +71,8 @@ const useSpendingBudget = () => {
       const sectionMap = new Map<string, BudgetSection>();
 
       categoriesData.data.forEach((category: Category) => {
-        category.subcategories.forEach((subcategory: Subcategory) => {
-          subcategoryMap.set(subcategory.id, {
+        category?.subcategories?.forEach((subcategory: Subcategory) => {
+          subcategoryMap?.set(subcategory.id, {
             id: subcategory.id,
             name: subcategory.name,
             icon: subcategory.icon,
@@ -91,6 +93,7 @@ const useSpendingBudget = () => {
               id: categoryCode,
               category: subcategory.categoryName,
               items: [],
+              isSaving: goal.isSaving,
             });
           }
 
@@ -105,6 +108,7 @@ const useSpendingBudget = () => {
                   : goal.targetAmount - goal.currentAmount,
               currentAmount: goal.currentAmount,
               targetAmount: goal.targetAmount,
+              isSaving: goal.isSaving,
               icon:
                 (subcategory.icon as keyof typeof MaterialIcons.glyphMap) ||
                 "account-balance",

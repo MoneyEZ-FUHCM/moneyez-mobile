@@ -1,13 +1,15 @@
 import { PATH_NAME } from "@/helpers/constants/pathname";
+import { setGroupTabHidden } from "@/redux/slices/tabSlice";
 import { router } from "expo-router";
 import { useCallback, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 
 export default function useGroupRemind() {
   const [selectedTab, setSelectedTab] = useState<"add" | "history">("add");
   const formikRef = useRef<any>(null);
-  const handleSubmitRef = useRef<() => void>(() => { });
-  const { GROUP_HOME } = PATH_NAME
-
+  const handleSubmitRef = useRef<() => void>(() => {});
+  const { GROUP_HOME } = PATH_NAME;
+  const dispatch = useDispatch();
   // MOCK DATA
   const groupGoal = 3000000;
   const groupCurrent = 2500000;
@@ -54,7 +56,7 @@ export default function useGroupRemind() {
 
   const handleToggleMember = useCallback((id: number) => {
     setMembers((prev) =>
-      prev.map((m) => (m.id === id ? { ...m, checked: !m.checked } : m))
+      prev.map((m) => (m.id === id ? { ...m, checked: !m.checked } : m)),
     );
   }, []);
 
@@ -70,6 +72,7 @@ export default function useGroupRemind() {
 
   const handleGoBack = useCallback(() => {
     router.back();
+    dispatch(setGroupTabHidden(false));
   }, []);
 
   return {

@@ -64,7 +64,6 @@ export default function SpendingBudget() {
           <SpaceComponent width={24} />
         </View>
       </SectionComponent>
-      {/* Cycle Info & Add Budget */}
       <SectionComponent rootClassName="bg-white p-4 mt-2.5">
         <View className="mb-2">
           <Text className="text-base font-semibold">
@@ -101,18 +100,34 @@ export default function SpendingBudget() {
         <View className="m-4">
           {budgetSections?.map((section) => (
             <SectionComponent
-              key={section.id}
+              key={section?.id}
               rootClassName="mb-[10px] bg-white rounded-[10px] p-[10px]"
             >
-              <Text className="mb-4 text-base font-semibold text-[#808080]">
-                {section.category}
-              </Text>
-              {section.items.map((item) => {
-                const progressPercent = item.currentAmount / item.targetAmount;
+              <View className="mb-4 w-full flex-row items-center justify-between">
+                <Text className="text-base font-semibold text-[#808080]">
+                  {section?.category}
+                </Text>
+                <View
+                  className={`ml-2 rounded-sm px-2 py-0.5 ${
+                    section?.isSaving ? "bg-[#E8F0EE]" : "bg-[#FFF3E0]"
+                  }`}
+                >
+                  <Text
+                    className={`text-xs font-medium ${
+                      section?.isSaving ? "text-blue-400" : "text-[#FF9800]"
+                    }`}
+                  >
+                    {section?.isSaving ? "Tiết kiệm" : "Khoản chi"}
+                  </Text>
+                </View>
+              </View>
+              {section?.items?.map((item) => {
+                const progressPercent =
+                  item?.currentAmount / item?.targetAmount;
                 return (
                   <Pressable
-                    key={item.id}
-                    onPress={() => handleBudgetPress(item.id)}
+                    key={item?.id}
+                    onPress={() => handleBudgetPress(item?.id)}
                     className="mb-3 flex-row items-center justify-between rounded-[10px] border border-[#609084] p-3"
                   >
                     <View className="flex-row items-center space-x-3">
@@ -121,10 +136,9 @@ export default function SpendingBudget() {
                           value={progressPercent}
                           size={72}
                           thickness={9}
-                          color="#609084"
+                          isSaving={item?.isSaving}
                           iconName={item?.icon}
                           iconSize={28}
-                          iconColor="#609084"
                         />
                       </View>
                       <View className="gap-y-1">
@@ -137,7 +151,7 @@ export default function SpendingBudget() {
                               {TEXT_TRANSLATE_SPENDING_BUDGET.LABELS.REMAINING}
                             </Text>
                             <Text className="font-bold text-primary">
-                              {formatCurrency(item.remaining)}
+                              {formatCurrency(item?.remaining)}
                             </Text>
                           </View>
                           <View className="flex-row items-center space-x-2">
@@ -146,11 +160,11 @@ export default function SpendingBudget() {
                             </Text>
                             <View className="flex-row items-center">
                               <Text className="font-bold text-black">
-                                {formatCurrency(item.currentAmount)}
+                                {formatCurrency(item?.currentAmount)}
                               </Text>
                               <Text className="text-sm text-text-gray">
                                 {" / "}
-                                {formatCurrency(item.targetAmount)}
+                                {formatCurrency(item?.targetAmount)}
                               </Text>
                             </View>
                           </View>

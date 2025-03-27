@@ -38,6 +38,14 @@ const bankAccountsApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["bank-accounts"],
     }),
+    registerWebHook: builder.mutation({
+      query: (payload) => ({
+        url: `/bank-accounts/register-webhook`,
+        method: HTTP_METHOD.POST,
+        body: payload,
+      }),
+      invalidatesTags: ["bank-accounts"],
+    }),
   }),
 });
 
@@ -46,6 +54,7 @@ export const {
   useGetBankAccountsQuery,
   useDeleteBankAccountMutation,
   useUpdateBankAccountMutation,
+  useRegisterWebHookMutation,
 } = bankAccountsApi;
 
 export default bankAccountsApi;
