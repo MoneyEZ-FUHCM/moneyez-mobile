@@ -23,21 +23,22 @@ import TEXT_TRANSLATE_GROUP_HOME_DEFAULT from "./GroupHomeDefault.translate";
 import useGroupHomeDefault from "./hooks/useGroupHomeDefault";
 
 const GroupHomeDefault = () => {
-  const { TITLE, BUTTON, TEXT } = TEXT_TRANSLATE_GROUP_HOME_DEFAULT;
+  const { BUTTON, TEXT } = TEXT_TRANSLATE_GROUP_HOME_DEFAULT;
   const { state, handler } = useGroupHomeDefault();
 
   return (
     <SafeAreaViewCustom>
-      <SectionComponent rootClassName="flex-row bg-white justify-between items-center h-14 px-4">
-        <TouchableOpacity onPress={router.back}>
+      <SectionComponent rootClassName="h-14 bg-white justify-center items-center relative">
+        <TouchableOpacity
+          onPress={() => router.back()}
+          className="absolute left-4"
+        >
           <AntDesign name="arrowleft" size={24} color="#000000" />
         </TouchableOpacity>
-        <View className="flex-row items-center gap-1">
-          <Text className="text-lg font-bold text-black">
-            {state.groupDetail?.name}
-          </Text>
-        </View>
-        <TouchableOpacity></TouchableOpacity>
+        <Text className="text-center text-lg font-bold">
+          {state.groupDetail?.name}
+        </Text>
+        <View className="w-8" />
       </SectionComponent>
       <ScrollView
         className="flex-1 bg-gray-100"

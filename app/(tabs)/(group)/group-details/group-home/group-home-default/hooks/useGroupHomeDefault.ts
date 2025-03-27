@@ -1,11 +1,7 @@
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";
-import {
-  useGetGroupDetailQuery,
-  useGetGroupLogsQuery,
-  useGetMemberLogsQuery,
-} from "@/services/group";
+import { useGetGroupDetailQuery, useGetGroupLogsQuery } from "@/services/group";
 import { useGetGroupTransactionQuery } from "@/services/transaction";
 import { router, useLocalSearchParams } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 const useGroupHomeDefault = () => {
   const dispatch = useDispatch();
   const { id } = useLocalSearchParams();
-  useGetGroupDetailQuery({ id }, { skip: !id });
+  useGetGroupDetailQuery({ id });
   const groupDetail = useSelector(selectCurrentGroup);
 
   const { data: groupLogs } = useGetGroupLogsQuery(

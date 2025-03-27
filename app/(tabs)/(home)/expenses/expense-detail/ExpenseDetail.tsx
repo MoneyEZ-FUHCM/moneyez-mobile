@@ -75,9 +75,8 @@ export default function ExpenseDetail() {
                 }
                 size={80}
                 thickness={11}
-                iconName="fastfood"
+                iconName={state.financialGoalDetail?.subcategoryIcon}
                 iconSize={30}
-                iconColor="#609084"
                 isSaving={state.financialGoalDetail.isSaving}
               />
             </View>

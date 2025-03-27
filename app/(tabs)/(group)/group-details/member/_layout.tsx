@@ -14,10 +14,7 @@ export default function MemberLayout() {
         animation: ANIMATION_NAVIGATE_STACK.SLIDE_FROM_RIGHT,
       }}
     >
-      <Stack.Screen
-        name={PATH_NAME.MEMBER.GROUP_MEMBER}
-        options={{ headerShown: false }}
-      />
+      <Stack.Screen name={PATH_NAME.MEMBER.INVITE_MEMBER} />
     </Stack>
   );
 }

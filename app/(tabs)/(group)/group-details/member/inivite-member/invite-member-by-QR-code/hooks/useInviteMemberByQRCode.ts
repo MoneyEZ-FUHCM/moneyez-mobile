@@ -4,13 +4,10 @@ import { GroupMember } from "@/types/group.type";
 import { router } from "expo-router";
 import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import INVITE_MEMBER_CONSTANTS from "../InviteMember.constant";
 
-const useInviteMember = () => {
+const useInviteMemberByQRCode = () => {
   const dispatch = useDispatch();
-  const [members, setMembers] = useState(INVITE_MEMBER_CONSTANTS.MEMBERS);
   const groupDetail = useSelector(selectCurrentGroup);
-  const groupMembers: GroupMember[] = groupDetail?.groupMembers || [];
   const handleBack = useCallback(() => {
     router.back();
     dispatch(setGroupTabHidden(false));
@@ -23,16 +20,10 @@ const useInviteMember = () => {
 
   return {
     state: {
-      members,
       groupDetail,
-      groupMembers,
     },
-    handler: {
-      setMembers,
-      handleBack,
-      handleBackInviteByEmail,
-    },
+    handler: {},
   };
 };
 
-export default useInviteMember;
+export default useInviteMemberByQRCode;

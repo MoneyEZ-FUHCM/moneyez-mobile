@@ -13,6 +13,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Animated, FlatList } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import BOT_SCREEN_CONSTANTS from "../BotScreen.const";
+import { selectUserInfo } from "@/redux/slices/userSlice";
 
 export interface Message {
   id: string;
@@ -39,6 +40,7 @@ const useChatBotScreen = () => {
   const connectionStatus = useSelector(
     (state: RootState) => state.system.status,
   );
+  const userInfo = useSelector(selectUserInfo);
 
   const lastOffsetY = useRef(0);
   const dispatch = useDispatch();
@@ -90,11 +92,7 @@ const useChatBotScreen = () => {
       isSending: true,
     }));
     try {
-      await sendMessage(
-        "SendMessage",
-        process.env.EXPO_PUBLIC_SIGNALR_ID as string,
-        inputText,
-      );
+      await sendMessage("SendMessage", userInfo?.id as string, inputText);
     } catch {
       setState((prev) => ({ ...prev, isBotTyping: false }));
     } finally {

@@ -1,121 +1,185 @@
-import NoData from "@/assets/images/InviteMemberAssets/not-found-result.png";
-import {
-  FlatListCustom,
-  SafeAreaViewCustom,
-  SectionComponent,
-} from "@/components";
+import { FlatListCustom, SafeAreaViewCustom } from "@/components";
 import useHideGroupTabbar from "@/hooks/useHideGroupTabbar";
+import { selectUserInfo } from "@/redux/slices/userSlice";
 import AntDesign from "@expo/vector-icons/build/AntDesign";
+import Feather from "@expo/vector-icons/build/Feather";
 import React from "react";
-import {
-  ActivityIndicator,
-  Image,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import INVITE_MEMBER_CONSTANTS from "../InviteMember.constant";
-import INVITE_MEMBER_TEXT_TRANSLATE from "../InviteMember.translate";
-import useInviteMember from "../hooks/useInviteMember";
+import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { useSelector } from "react-redux";
+import useInviteMemberByEmail from "./hooks/useInviteMemberByEmail";
 
-const InviteMemberByEmail = () => {
-  const PRIMARY_COLOR = "#609084";
-  const { state, handler } = useInviteMember();
-  const { search, filteredUsers, isLoading } = state;
-  const { handleSearch } = handler;
+const COLORS = {
+  PRIMARY: "#609084",
+  BACKGROUND: "#F5F5F5",
+  WHITE: "#FFFFFF",
+  TEXT_DARK: "#333333",
+  TEXT_LIGHT: "#666666",
+  BORDER: "#E0E0E0",
+};
+
+const InviteMemberByEmail: React.FC = () => {
+  const { handler, state } = useInviteMemberByEmail();
+  const userInfo = useSelector(selectUserInfo);
 
   useHideGroupTabbar();
 
-  return (
-    <SafeAreaViewCustom>
-      <SectionComponent rootClassName="flex-row justify-between items-center h-14 px-4">
-        <TouchableOpacity onPress={handler.handleBackInviteByEmail}>
-          <AntDesign name="arrowleft" size={24} color="#000000" />
-        </TouchableOpacity>
-        <View className="flex-row items-center gap-1">
-          <Text className="text-lg font-bold text-black">
-            {INVITE_MEMBER_TEXT_TRANSLATE.INVITE_MEMBER_BY_EMAIL.HEADER}
-          </Text>
-        </View>
-        <TouchableOpacity></TouchableOpacity>
-      </SectionComponent>
+  const ToneButton = ({
+    tone,
+    isSelected,
+    onPress,
+  }: {
+    tone: (typeof state.inviteSuggestions)[0];
+    isSelected: boolean;
+    onPress: () => void;
+  }) => (
+    <TouchableOpacity
+      key={tone.id}
+      onPress={onPress}
+      className={`mr-2 rounded-full px-3 py-1.5 ${
+        isSelected ? "bg-primary" : "bg-gray-200"
+      }`}
+    >
+      <Text className={`text-sm ${isSelected ? "text-white" : "text-black"}`}>
+        {tone.label}
+      </Text>
+    </TouchableOpacity>
+  );
 
-      {/* Search Box */}
-      <View className="mx-4 mt-3 flex-row items-center rounded-lg bg-white p-3">
-        <AntDesign name="search1" size={20} color="gray" />
+  const renderHeader = () => (
+    <View className="h-14 flex-row items-center justify-between bg-white px-4 shadow-sm">
+      <TouchableOpacity onPress={() => {}} className="p-2">
+        <AntDesign name="arrowleft" size={24} color={COLORS.TEXT_DARK} />
+      </TouchableOpacity>
+      <Text className="text-lg font-bold text-black">Mời thành viên</Text>
+      <View className="w-8" />
+    </View>
+  );
+
+  const renderSearchBox = () => (
+    <View className="mx-4 mt-3">
+      <View className="flex-row items-center rounded-xl border border-[#E0E0E0] bg-white px-4 py-3 shadow-sm">
+        <AntDesign name="search1" size={20} color={COLORS.TEXT_LIGHT} />
         <TextInput
-          className="ml-2 h-6 flex-1 text-base"
-          placeholder={
-            INVITE_MEMBER_TEXT_TRANSLATE.INVITE_MEMBER_BY_EMAIL
-              .SEARCH_PLACEHOLDER
-          }
-          value={search}
-          onChangeText={handleSearch}
+          className="ml-3 h-8 flex-1 text-base text-black"
+          placeholderTextColor={COLORS.TEXT_LIGHT}
+          placeholder="Tìm kiếm theo tên hoặc email"
+          onChangeText={handler.handleSearch}
+          value={state.searchUserQuery}
         />
-        {search.length > 0 && (
-          <TouchableOpacity onPress={() => handleSearch("")}>
-            <AntDesign name="close" size={20} color="gray" />
+        {state.searchUserQuery.length > 0 && (
+          <TouchableOpacity
+            onPress={() => handler.handleSearch("")}
+            className="p-1"
+          >
+            <AntDesign name="close" size={20} color={COLORS.TEXT_LIGHT} />
           </TouchableOpacity>
         )}
       </View>
+    </View>
+  );
 
-      {/* Invite Messages */}
-      <View className="mx-4 mt-3 rounded-lg bg-white p-3">
-        <Text className="mb-2 text-sm font-semibold">
-          {
-            INVITE_MEMBER_TEXT_TRANSLATE.INVITE_MEMBER_BY_EMAIL
-              .INVITE_MESSAGE_TITLE
-          }
-        </Text>
-        <View className="flex-row flex-wrap">
-          {INVITE_MEMBER_CONSTANTS.INVITE_MESSAGES.map((msg, index) => (
-            <TouchableOpacity
-              key={index}
-              className="mb-2 mr-2 rounded-full bg-thirdly px-3 py-1"
-            >
-              <Text className="font-semibold text-primary">{msg}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-        <Text className="mt-2 text-sm text-gray-600">
-          {
-            INVITE_MEMBER_TEXT_TRANSLATE.INVITE_MEMBER_BY_EMAIL
-              .INVITE_MESSAGE_NOTE
-          }
+  const renderToneButtons = () => (
+    <View className="mx-4 mt-3 bg-white p-3">
+      <Text className="mb-2 text-base font-bold">Chọn lời mời vào nhóm</Text>
+      <View className="flex-row">
+        {state.inviteSuggestions.map((tone) => (
+          <ToneButton
+            key={tone.id}
+            tone={tone}
+            isSelected={state.selectedTone.id === tone.id}
+            onPress={() => handler.setSelectedTone(tone)}
+          />
+        ))}
+      </View>
+
+      <View className="mt-3 rounded-xl bg-thirdly p-3">
+        <Text className="text-base text-gray-700">
+          {state.selectedTone.text(userInfo?.fullName || "Bạn")}
         </Text>
       </View>
-      {isLoading ? (
-        <View className="mb-24 flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color={PRIMARY_COLOR} />
-        </View>
-      ) : filteredUsers.length > 0 ? (
+    </View>
+  );
+
+  const renderSearchResults = () => (
+    <View className="mx-4 flex-1">
+      <Text className="mt-3 pb-2 text-base font-semibold text-black">
+        Kết quả tìm kiếm
+      </Text>
+      {state.userInfo &&
+      state.userInfo.length > 0 &&
+      state.searchUserQuery.length > 0 ? (
         <FlatListCustom
-          data={filteredUsers}
-          keyExtractor={(item) => item.id.toString()}
+          isBottomTab={state.selectedForInvite.length !== 0}
+          data={state.userInfo}
+          keyExtractor={(item) => item.id}
+          showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
-            <View className="flex-row items-center p-3">
-              <Image
-                source={{ uri: item.avatar }}
-                className="h-12 w-12 rounded-full"
-              />
-              <Text className="ml-3 text-base">{item.name}</Text>
+            <View className="flex-row items-center justify-between border-t border-[#F0F0F0] bg-white px-4 py-3">
+              <View className="flex-row items-center">
+                <Image
+                  source={{ uri: item.avatarUrl as string }}
+                  className="mr-3 h-10 w-10 rounded-full"
+                />
+                <View>
+                  <Text className="text-base font-medium text-black">
+                    {item.fullName}
+                  </Text>
+                  <Text className="text-sm text-gray-500">{item.email}</Text>
+                </View>
+              </View>
+              <TouchableOpacity
+                onPress={() => handler.toggleInvite(item)}
+                className={`rounded-full p-2 ${
+                  state.selectedForInvite.includes(item.email)
+                    ? "bg-[#E6F3F0]"
+                    : "bg-[#F0F0F0]"
+                }`}
+              >
+                {state.selectedForInvite.includes(item.email) ? (
+                  <Feather name="check" size={20} color={COLORS.PRIMARY} />
+                ) : (
+                  <Text className="text-sm text-[#609084]">Mời</Text>
+                )}
+              </TouchableOpacity>
             </View>
           )}
         />
       ) : (
-        search.length > 0 &&
-        filteredUsers.length === 0 &&
-        !isLoading && (
-          <View className="mb-24 flex-1 items-center justify-center">
-            <Image
-              source={NoData}
-              className="h-[75%] w-[75%] rounded-full"
-              resizeMode="contain"
-            />
+        <View className="items-center justify-center border-t border-[#F0F0F0] bg-white px-4 py-14">
+          <View className="mb-2 h-20 w-20 items-center justify-center rounded-full bg-gray-50">
+            <Feather name="user" size={32} color="#609084" />
           </View>
-        )
+          <Text className="text-center text-base text-gray-500">
+            Không tìm thấy kết quả
+          </Text>
+        </View>
       )}
+    </View>
+  );
+
+  const renderActionButton = () =>
+    state.selectedForInvite.length > 0 && (
+      <TouchableOpacity
+        onPress={handler.handleSentInvite}
+        className="mx-4 mt-2.5 items-center rounded-xl bg-[#609084] py-[14px]"
+      >
+        <Text className="text-base font-semibold text-white">
+          Mời {state.selectedForInvite.length} thành viên
+        </Text>
+      </TouchableOpacity>
+    );
+
+  return (
+    <SafeAreaViewCustom rootClassName="bg-gray-50 relative">
+      {renderHeader()}
+      <View className="flex-1">
+        {renderSearchBox()}
+        {renderToneButtons()}
+        {renderSearchResults()}
+      </View>
+      <View className="absolute bottom-0 w-full bg-[#F5F5F5] pb-4">
+        {renderActionButton()}
+      </View>
     </SafeAreaViewCustom>
   );
 };
