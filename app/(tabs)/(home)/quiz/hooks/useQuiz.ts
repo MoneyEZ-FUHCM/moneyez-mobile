@@ -1,95 +1,54 @@
+import { SpendingModel, spendingModels } from "@/helpers/constants/spendingModels";
+import { useGetActiveQuizQuery, useSubmitQuizMutation } from "@/services/quiz";
+import { Quiz, QuizAnswerOption, QuizSubmitRequest, QuizSubmitResponse } from "@/types/quiz.types";
 import { useState } from "react";
-import { spendingModels, SpendingModel } from "@/helpers/constants/spendingModels";
-
-interface AnswerOption {
-  id: string;
-  content: string;
-}
-
-interface Question {
-  id: string;
-  content: string;
-  answerOptions: AnswerOption[];
-}
-
-interface Quiz {
-  id: string;
-  title: string;
-  description: string;
-  questions: Question[];
-}
+import { ToastAndroid } from "react-native";
 
 interface AnswersState {
-  [questionId: string]: AnswerOption;
+  [questionId: string]: QuizAnswerOption;
 }
 
-interface QuizSubmissionPayload {
-  quizId: string;
-  answers: Array<{
-    questionId: string;
-    answerOptionId: string | null;
-    answerContent: string;
-  }>;
-  suggestedModel: SpendingModel | null;
-}
-
-const constantQuiz: Quiz = {
-  id: "250b830f-55a0-4041-d6d5-08dd6c7a2e2a",
-  title: "General Knowledge Quiz",
-  description: "A quiz about general knowledge.",
-  questions: [
-    {
-      id: "68b134ab-0aa5-4eec-dc4f-08dd6c7a2e34",
-      content: "What is the largest planet in our solar system?",
-      answerOptions: [
-        { id: "cee9e4b5-5598-46a1-6ffc-08dd6c7a2e3b", content: "Earth" },
-        { id: "938bb39a-d912-4b6c-6ffd-08dd6c7a2e3b", content: "Jupiter" },
-        { id: "0371808e-b1dd-49b1-6ffe-08dd6c7a2e3b", content: "Mars" },
-      ],
-    },
-    {
-      id: "84d30e7b-3f7d-4bb3-dc50-08dd6c7a2e34",
-      content: "Who wrote 'Hamlet'?",
-      answerOptions: [
-        { id: "e693637f-9fd3-4621-6fff-08dd6c7a2e3b", content: "Charles Dickens" },
-        { id: "95fb0902-eba1-4bb0-7000-08dd6c7a2e3b", content: "William Shakespeare" },
-      ],
-    },
-  ],
+const calculateTotalSteps = (quiz: Quiz | null) => {
+  if (!quiz) return 2; // Just the review and suggestion page as placeholders
+  return 1 + quiz.questions.length + 1;
 };
-
-// Total steps: 1 review + quiz questions + 1 suggestion page
-const totalSteps = 1 + constantQuiz.questions.length + 1;
 
 const useQuiz = () => {
   const [currentStep, setCurrentStep] = useState<number>(0);
-  // answers: { [questionId]: answerOption }
   const [answers, setAnswers] = useState<AnswersState>({});
   const [suggestedModel, setSuggestedModel] = useState<SpendingModel | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [quizSubmitResponse, setQuizSubmitResponse] = useState<QuizSubmitResponse | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  
+  const { data: quizData, isLoading, refetch: refetchQuiz } = useGetActiveQuizQuery({});
+  const [submitQuizMutation, { isLoading: isSubmitting }] = useSubmitQuizMutation();
+  
+  const quiz = quizData?.items[0] || null;
+  
+  const totalSteps = calculateTotalSteps(quiz);
 
-  // Simulate suggestion based on quiz answers - randomly select a model for demonstration
-  const computeSuggestion = (): SpendingModel => {
-    // Simulate a loading effect
-    setIsLoading(true);
-    
-    // Random index between 0 and spendingModels.length - 1
-    const randomIndex = Math.floor(Math.random() * spendingModels.length);
-    return spendingModels[randomIndex];
+  const fetchActiveQuiz = () => {
+    setError(null);
+    refetchQuiz()
+      .unwrap()
+      .then(() => {
+        // Success is already handled by the RTK Query hook
+      })
+      .catch((err) => {
+        console.log(err);
+        ToastAndroid.show("Có lỗi khi load quiz", ToastAndroid.SHORT);
+        setError("Có lỗi khi load quiz");
+      });
+  };
+  
+  const getSpendingModelFromRecommendation = (modelId: string): SpendingModel | null => {
+    const model = spendingModels.find(m => m.id === modelId);
+    return model || null;
   };
 
   const nextStep = (): void => {
-    // When moving from last quiz question to suggestion page, compute suggestion.
-    if (currentStep === totalSteps - 2) {
-      setIsLoading(true);
-      
-      // Simulate network delay for more realistic feel
-      setTimeout(() => {
-        const suggestion = computeSuggestion();
-        setSuggestedModel(suggestion);
-        setIsLoading(false);
-        setCurrentStep(currentStep + 1);
-      }, 1500);
+    if (quiz && currentStep === totalSteps - 2) {
+      handleQuizSubmission();
     } else if (currentStep < totalSteps - 1) {
       setCurrentStep(currentStep + 1);
     }
@@ -101,43 +60,66 @@ const useQuiz = () => {
     }
   };
 
-  const selectAnswer = (questionId: string, answerOption: AnswerOption): void => {
+  const selectAnswer = (questionId: string, answerOption: QuizAnswerOption): void => {
     setAnswers({
       ...answers,
       [questionId]: answerOption,
     });
   };
 
-  const handleSubmit = (): void => {
+  const handleQuizSubmission = async (): Promise<void> => {
+    if (!quiz) return;
+    
     // Prepare submission payload
-    const payload: QuizSubmissionPayload = {
-      quizId: constantQuiz.id,
-      answers: constantQuiz.questions.map((q) => ({
-        questionId: q.id,
-        answerOptionId: answers[q.id]?.id || null,
-        answerContent: answers[q.id]?.content || "",
+    const payload: QuizSubmitRequest = {
+      quizId: quiz.id,
+      answers: Object.keys(answers).map((questionId) => ({
+        answerOptionId: answers[questionId].id,
+        answerContent: answers[questionId].content,
       })),
-      suggestedModel,
     };
-    console.log("Submitting Quiz", payload);
-    alert("Quiz submitted successfully!");
+    
+    try {
+      const response = await submitQuizMutation(payload).unwrap();
+      if (response.status === 200 && response.data) {
+        setQuizSubmitResponse(response.data);
+        
+        // Get the suggested model based on the recommendation
+        const model = getSpendingModelFromRecommendation(response.data.recommendedModel);
+        setSuggestedModel(model);
+        
+        // Move to the suggestion page
+        setCurrentStep(totalSteps - 1);
+        ToastAndroid.show("Đã hoàn thành quiz thành công", ToastAndroid.SHORT);
+      } else {
+        ToastAndroid.show("Lỗi khi submit quiz", ToastAndroid.SHORT);
+        console.log(response.message);
+      }
+    } catch (err) {
+      ToastAndroid.show("Lỗi khi submit quiz", ToastAndroid.SHORT);
+      console.log(err);
+    }
   };
 
   return {
     state: {
       currentStep,
       totalSteps,
-      quiz: constantQuiz,
+      quiz,
       spendingModels,
       answers,
       suggestedModel,
       isLoading,
+      isSubmitting,
+      error,
+      quizSubmitResponse,
     },
     handler: {
       nextStep,
       previousStep,
       selectAnswer,
-      handleSubmit,
+      handleQuizSubmission,
+      fetchActiveQuiz,
     },
   };
 };

@@ -5,10 +5,12 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { PieChart } from "react-native-gifted-charts";
 import TEXT_TRANSLATE_QUIZ from "../Quiz.translate";
 import { SpendingModel, chartData, examples, modelIcons } from "@/helpers/constants/spendingModels";
+import { QuizSubmitResponse } from "@/types/quiz.types";
 
 interface SuggestionPageProps {
   suggestedModel: SpendingModel | null;
-  onSubmit: () => void;
+  quizSubmitResponse?: QuizSubmitResponse | null;
+  onSubmit?: () => void;
   onNavigateModel: () => void;
   isButtonBelow?: boolean;
 }
@@ -66,6 +68,7 @@ const ModelInfo = memo(({ model }: { model: SpendingModel }) => {
 
 const SuggestionPage = memo(({ 
   suggestedModel, 
+  quizSubmitResponse,
   onNavigateModel,
   isButtonBelow = false
 }: SuggestionPageProps) => {

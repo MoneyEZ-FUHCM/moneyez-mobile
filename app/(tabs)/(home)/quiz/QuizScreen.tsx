@@ -15,6 +15,15 @@ const LoadingState = memo(() => (
   <View className="bg-white rounded-2xl p-8 shadow-md items-center justify-center">
     <ActivityIndicator size="large" color="#609084" />
     <Text className="mt-4 text-base text-gray-700">
+      Đang tải...
+    </Text>
+  </View>
+));
+
+const SubmittingState = memo(() => (
+  <View className="bg-white rounded-2xl p-8 shadow-md items-center justify-center">
+    <ActivityIndicator size="large" color="#609084" />
+    <Text className="mt-4 text-base text-gray-700">
       Phân tích câu trả lời của bạn...
     </Text>
   </View>
@@ -43,13 +52,14 @@ const BottomButtons = memo(
     onPrevious, 
     onNext, 
     showPrevious, 
-    buttonText 
+    buttonText,
+    isDisabled
   }: { 
     onPrevious?: () => void; 
     onNext: () => void;
-    currentStep: number;
     showPrevious: boolean;
     buttonText: string;
+    isDisabled?: boolean;
   }) => (
     <View className="absolute bottom-0 left-0 right-0 border-t border-gray-200 bg-white px-6 py-4 shadow-lg">
       <View className={`flex-row ${showPrevious ? "justify-between" : "justify-center"}`}>
@@ -66,7 +76,8 @@ const BottomButtons = memo(
         
         <TouchableOpacity
           onPress={onNext}
-          className="px-6 py-4 rounded-lg bg-[#609084] items-center"
+          disabled={isDisabled}
+          className={`px-6 py-4 rounded-lg ${isDisabled ? "bg-gray-300" : "bg-[#609084]"} items-center`}
         >
           <Text className="text-base font-semibold text-white">
             {buttonText}
@@ -97,18 +108,50 @@ const SuggestionButton = memo(({ onNavigateModel }: { onNavigateModel: () => voi
 // Main component 
 const QuizScreen = memo(() => {
   const { state, handler } = useQuiz();
-  const { currentStep, totalSteps, quiz, spendingModels, answers, suggestedModel, isLoading } = state;
+  
+  const { 
+    currentStep, 
+    totalSteps, 
+    quiz, 
+    spendingModels, 
+    answers, 
+    suggestedModel, 
+    isLoading, 
+    isSubmitting,
+    quizSubmitResponse 
+  } = state;
 
   const quizStepIndex = currentStep - 1;
+  
+  // Determine if the next button should be disabled (no answer selected for current question)
+  const isNextButtonDisabled = () => {
+    if (currentStep === 0) return false; // Review page
+    if (currentStep >= totalSteps - 1) return false; // Suggestion page
+    
+    // For question pages, check if the current question has an answer
+    const currentQuestion = quiz?.questions[quizStepIndex];
+    return currentQuestion ? !answers[currentQuestion.id] : false;
+  };
+  
+  // Determine which button text to show
+  const getButtonText = () => {
+    if (currentStep === 0) return TEXT_TRANSLATE_QUIZ.BUTTON_CONTINUE;
+    if (currentStep === totalSteps - 2) return TEXT_TRANSLATE_QUIZ.BUTTON_SUBMIT;
+    return TEXT_TRANSLATE_QUIZ.BUTTON_NEXT;
+  };
 
   const renderContent = () => {
     if (isLoading) {
       return <LoadingState />;
     }
+    
+    if (isSubmitting) {
+      return <SubmittingState />;
+    }
 
     if (currentStep === 0) {
       return <SpendingModelReview spendingModels={spendingModels} />;
-    } else if (currentStep > 0 && currentStep < totalSteps - 1) {
+    } else if (currentStep > 0 && currentStep < totalSteps - 1 && quiz) {
       const question = quiz.questions[quizStepIndex];
       return (
         <QuizQuestion
@@ -123,9 +166,10 @@ const QuizScreen = memo(() => {
       return (
         <SuggestionPage
           suggestedModel={suggestedModel}
-          onSubmit={handler.handleSubmit}
+          quizSubmitResponse={quizSubmitResponse}
+          onSubmit={() => {}}
           onNavigateModel={() => {
-            alert("Navigating to model selection page...");
+            router.replace(PATH_NAME.HOME.PERSONAL_EXPENSES_MODEL as any);
           }}
           isButtonBelow={true} // This ensures the button is not shown inside the component
         />
@@ -133,8 +177,8 @@ const QuizScreen = memo(() => {
     }
   };
 
-  const isSuggestionPage = currentStep === totalSteps - 1 && !isLoading;
-  const paddingBottom = !isLoading ? "pb-24" : "pb-4";
+  const isSuggestionPage = currentStep === totalSteps - 1 && !isLoading && !isSubmitting;
+  const paddingBottom = (!isLoading && !isSubmitting) ? "pb-24" : "pb-4";
 
   return (
     <SafeAreaViewCustom rootClassName="flex-1 bg-[#f9f9f9]">
@@ -154,23 +198,22 @@ const QuizScreen = memo(() => {
         </View>
       </ScrollViewCustom>
 
-      {!isLoading && currentStep < totalSteps - 1 && (
+      {!isLoading && !isSubmitting && currentStep < totalSteps - 1 && (
         <BottomButtons
           onPrevious={currentStep > 0 ? handler.previousStep : undefined}
           onNext={handler.nextStep}
-          currentStep={currentStep} 
           showPrevious={currentStep > 0}
-          buttonText={currentStep === 0
-            ? TEXT_TRANSLATE_QUIZ.BUTTON_CONTINUE
-            : TEXT_TRANSLATE_QUIZ.BUTTON_NEXT
-          }
+          buttonText={getButtonText()}
+          isDisabled={isNextButtonDisabled()}
         />
       )}
 
       {isSuggestionPage && (
-        <SuggestionButton onNavigateModel={() => {
-          router.replace(PATH_NAME.HOME.PERSONAL_EXPENSES_MODEL as any)
-        }} />
+        <SuggestionButton 
+          onNavigateModel={() => {
+            router.replace(PATH_NAME.HOME.PERSONAL_EXPENSES_MODEL as any)
+          }} 
+        />
       )}
     </SafeAreaViewCustom>
   );

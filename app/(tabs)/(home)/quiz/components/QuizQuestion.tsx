@@ -4,22 +4,12 @@ import * as Progress from "react-native-progress";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
 import TEXT_TRANSLATE_QUIZ from "../Quiz.translate";
-
-interface AnswerOption {
-  id: string;
-  content: string;
-}
-
-interface Question {
-  id: string;
-  content: string;
-  answerOptions: AnswerOption[];
-}
+import { QuizQuestion as QuestionType, QuizAnswerOption } from "@/types/quiz.types";
 
 interface QuizQuestionProps {
-  question: Question;
-  selectedAnswer: AnswerOption | null;
-  onSelectAnswer: (questionId: string, option: AnswerOption) => void;
+  question: QuestionType;
+  selectedAnswer: QuizAnswerOption | null;
+  onSelectAnswer: (questionId: string, option: QuizAnswerOption) => void;
   currentQuestionIndex: number;
   totalQuestions: number;
 }
@@ -31,7 +21,7 @@ const AnswerOptionItem = memo(({
   isSelected, 
   onPress 
 }: { 
-  option: AnswerOption; 
+  option: QuizAnswerOption; 
   isSelected: boolean; 
   onPress: () => void;
 }) => (
