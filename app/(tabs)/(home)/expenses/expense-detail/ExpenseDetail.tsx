@@ -8,7 +8,6 @@ import {
   SectionComponent,
 } from "@/components";
 import { Colors } from "@/helpers/constants/color";
-import { PATH_NAME } from "@/helpers/constants/pathname";
 import {
   calculateRemainingDays,
   formatCurrency,
@@ -17,7 +16,6 @@ import {
 } from "@/helpers/libs";
 import { AntDesign, FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { router } from "expo-router";
 import React from "react";
 import { Dimensions, Image, Text, TouchableOpacity, View } from "react-native";
 import TEXT_TRANSLATE_EXPENSE_DETAIL from "./ExpenseDetail.translate";
@@ -25,7 +23,7 @@ import useExpenseDetail from "./hooks/useExpenseDetail";
 
 export default function ExpenseDetail() {
   const { state, handler } = useExpenseDetail();
-  const { personalTransactionFinancialGoals, CHART_DATA, isLoading } = state;
+  const { personalTransactionFinancialGoals, isLoading } = state;
 
   const renderTransactionItem = ({ item }: { item: any }) => (
     <TouchableOpacity className="mx-4 flex-row items-center justify-between border-b border-[#f0f0f0] bg-white px-2 py-3">
@@ -119,7 +117,7 @@ export default function ExpenseDetail() {
           <View className="absolute right-0 top-0">
             <TouchableOpacity
               onPress={() =>
-                router.navigate(PATH_NAME.HOME.UPDATE_EXPENSE as any)
+                handler.handleNavigateAndUpdate(state.financialGoalDetail)
               }
             >
               <FontAwesome6
@@ -137,8 +135,7 @@ export default function ExpenseDetail() {
           {TEXT_TRANSLATE_EXPENSE_DETAIL.SPENDING_TREND}
         </Text>
         <BarChartExpenseCustom
-          data={CHART_DATA}
-          categories={["Tuần", "Tháng"]}
+          data={state.personalTransactionFinancialGoalChart}
           screenWidth={Dimensions.get("window").width}
         />
       </SectionComponent>

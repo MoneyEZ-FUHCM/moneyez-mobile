@@ -1,3 +1,5 @@
+import { PATH_NAME } from "@/helpers/constants/pathname";
+import { selectBudgetStatisticType } from "@/redux/hooks/budgetSelector";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import {
   useGetFinancialGoalByIdQuery,
@@ -5,13 +7,14 @@ import {
   useGetPersonalTransactionFinancialGoalsQuery,
 } from "@/services/financialGoal";
 import {
+  ChartDataItem,
   FinancialGoal,
   Goal,
   PersonalTransactionFinancialGoals,
 } from "@/types/financialGoal.type";
 import { router, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import EXPENSE_DETAIL_CONSTANTS from "../ExpenseDetail.const";
 
 const useExpenseDetail = () => {
@@ -28,7 +31,6 @@ const useExpenseDetail = () => {
     personalTransactionFinancialGoals,
     setPersonalTransactionFinancialGoals,
   ] = useState<PersonalTransactionFinancialGoals[]>([]);
-
   const { budgetId } = useLocalSearchParams();
   const {
     data,
@@ -43,8 +45,12 @@ const useExpenseDetail = () => {
     },
   );
 
+  const budgetStatisticType = useSelector(selectBudgetStatisticType);
   const { data: personalTransactionFinancialGoalChart } =
-    useGetPersonalFinancialGoalChartQuery({ goalId: budgetId, type: "week" });
+    useGetPersonalFinancialGoalChartQuery({
+      goalId: budgetId,
+      type: budgetStatisticType,
+    });
 
   const {
     data: getPersonalTransactionFinancialGoals,
@@ -128,6 +134,22 @@ const useExpenseDetail = () => {
     }
   }, [refetchPersonalTransactionFinancialGoals, refetchGoalsById]);
 
+  const handleNavigateAndUpdate = useCallback(
+    (finalcialGoalDetail: FinancialGoal) => {
+      router.navigate({
+        pathname: PATH_NAME.HOME.UPDATE_EXPENSE as any,
+        params: {
+          budgetId: finalcialGoalDetail?.id,
+          icon: finalcialGoalDetail?.subcategoryIcon,
+          name: finalcialGoalDetail?.subcategoryName,
+          amount: finalcialGoalDetail?.targetAmount,
+          subCategoryId: finalcialGoalDetail?.subcategoryId,
+        },
+      });
+    },
+    [],
+  );
+
   return {
     state: {
       TRANSACTIONS,
@@ -144,7 +166,8 @@ const useExpenseDetail = () => {
         isFetchingFinancialGoalById ||
         isFetchingPersonalTransactionFinancialGoals,
       personalTransactionFinancialGoalChart:
-        personalTransactionFinancialGoalChart?.data as Goal,
+        personalTransactionFinancialGoalChart?.data
+          ?.chartData as ChartDataItem[],
     },
     handler: {
       setIsLoading,
@@ -153,6 +176,7 @@ const useExpenseDetail = () => {
       closeAllTransactionsModal,
       handleLoadMore,
       handleRefresh,
+      handleNavigateAndUpdate,
     },
   };
 };

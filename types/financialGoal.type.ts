@@ -74,3 +74,11 @@ export interface Goal {
   completionPercentage: number;
   chartData: ChartDataItem[];
 }
+
+export interface UpdateBudgetPayload {
+  amount: number;
+  icon: string;
+  name: string;
+  subCategoryId: string;
+  budgetId: string;
+}

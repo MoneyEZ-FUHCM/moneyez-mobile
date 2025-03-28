@@ -1,6 +1,10 @@
 const UPDATE_EXPENSE_CONSTANTS = {
   DEFAULT_BUDGET: "400.000đ",
   MAX_BUDGET: "500.000",
+
+  ERROR_CODE: {
+    INVALID_TARGET_AMOUNT: "InvalidTargetAmount",
+  },
 };
 
 export default UPDATE_EXPENSE_CONSTANTS;
