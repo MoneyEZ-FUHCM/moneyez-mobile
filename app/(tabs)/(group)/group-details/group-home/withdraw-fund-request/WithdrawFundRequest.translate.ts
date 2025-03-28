@@ -1,7 +1,7 @@
 const TEXT_TRANSLATE_WITHDRAW_FUND_REQUEST = {
   // Title
   TITLE: {
-    MAIN_TITLE: "Tạo yêu cầu góp quỹ",
+    MAIN_TITLE: "Tạo yêu cầu rút quỹ",
     FUND_BALANCE: "Số dư quỹ",
   },
 
@@ -16,7 +16,7 @@ const TEXT_TRANSLATE_WITHDRAW_FUND_REQUEST = {
   // Button
   BUTTON: {
     BACK: "Quay lại",
-    SUBMIT: "Góp quỹ",
+    SUBMIT: "Rút quỹ",
     SUBMITTING: "Đang xử lý...",
   },
 

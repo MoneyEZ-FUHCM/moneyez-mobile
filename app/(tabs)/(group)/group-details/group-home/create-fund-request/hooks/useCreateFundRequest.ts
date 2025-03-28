@@ -16,7 +16,7 @@ const useCreateFundRequest = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [requestFund] = useRequestFundMutation();
   const { GROUP_HOME } = PATH_NAME;
-  const { HTTP_STATUS } = COMMON_CONSTANT;
+  const { HTTP_STATUS, SYSTEM_ERROR } = COMMON_CONSTANT;
 
   const currentGroup = useSelector(selectCurrentGroup);
   const fundBalance = currentGroup?.currentBalance || 0;
@@ -53,11 +53,8 @@ const useCreateFundRequest = () => {
         }
       } catch (err: any) {
         const error = err.data;
-        // if (error.errorCode === "") {
-        ToastAndroid.show(error.errorCode, ToastAndroid.SHORT);
-        return;
-        // }
-        // ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
+
+        ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
       } finally {
         setIsSubmitting(false);
       }
