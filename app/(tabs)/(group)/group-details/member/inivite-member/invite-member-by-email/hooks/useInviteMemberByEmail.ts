@@ -1,10 +1,14 @@
+import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import useDebounce from "@/hooks/useDebounce";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";
+import { selectUserInfo } from "@/redux/slices/userSlice";
+import { useInviteMemberEmailMutation } from "@/services/group";
 import { useGetUsersQuery } from "@/services/user";
 import { GroupMember } from "@/types/group.type";
 import { router } from "expo-router";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import INVITE_MEMBER_CONSTANTS from "../../InviteMember.constant";
 
@@ -37,12 +41,14 @@ const INVITE_SUGGESTION = [
 
 const useInviteMemberByEmail = () => {
   const [members, setMembers] = useState(INVITE_MEMBER_CONSTANTS.MEMBERS);
+  const userInfoDetail = useSelector(selectUserInfo);
   const dispatch = useDispatch();
   const groupDetail = useSelector(selectCurrentGroup);
   const groupMembers: GroupMember[] = groupDetail?.groupMembers || [];
   const [searchUser, setSearchUser] = useState("");
   const debouncedSearchTerm = useDebounce(searchUser, 500);
-
+  const [iniviteMemberByEmail] = useInviteMemberEmailMutation();
+  const { SYSTEM_ERROR } = COMMON_CONSTANT;
   const { data: userInfo, isFetching } = useGetUsersQuery(
     {
       search: debouncedSearchTerm,
@@ -54,6 +60,12 @@ const useInviteMemberByEmail = () => {
 
   const [selectedForInvite, setSelectedForInvite] = useState<string[]>([]);
   const [selectedTone, setSelectedTone] = useState(INVITE_SUGGESTION[0]);
+
+  useEffect(() => {
+    if (searchUser && searchUser.length === 0) {
+      setSelectedForInvite([]);
+    }
+  }, [searchUser]);
 
   const handleSearch = (text: string) => {
     setSearchUser(text);
@@ -77,8 +89,20 @@ const useInviteMemberByEmail = () => {
     );
   };
 
-  const handleSentInvite = () => {
-    console.log("selectedForInvite", selectedForInvite);
+  const handleSentInvite = async () => {
+    const payload = {
+      groupId: groupDetail?.id,
+      emails: selectedForInvite,
+      description: selectedTone.text(userInfoDetail?.fullName as string),
+    };
+
+    try {
+      await iniviteMemberByEmail(payload).unwrap();
+      ToastAndroid.show("Mời thành viên thành công", ToastAndroid.SHORT);
+      router.back();
+    } catch (err) {
+      ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
+    }
   };
 
   return {

@@ -58,7 +58,7 @@ const InviteMemberByQRCode = () => {
           <AntDesign name="arrowleft" size={24} color="#000000" />
         </TouchableOpacity>
         <View className="flex-row items-center">
-          <Text className="text-xl font-bold text-black">
+          <Text className="text-lg font-bold text-black">
             {TEXT_TRANSLATE_INVITE_MEMBER_BY_QR_CODE.HEADER_TITLE}
           </Text>
         </View>

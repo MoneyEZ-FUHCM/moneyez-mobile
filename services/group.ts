@@ -87,6 +87,7 @@ export const {
   useGetGroupDetailQuery,
   useGetGroupLogsQuery,
   useGetMemberLogsQuery,
+  useInviteMemberEmailMutation,
 } = groupApi;
 
 export default groupApi;

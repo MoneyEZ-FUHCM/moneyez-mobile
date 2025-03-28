@@ -1,31 +1,72 @@
 import AdminAvatar from "@/assets/images/logo/avatar_admin.jpg";
 import {
   FlatListCustom,
-  LoadingSectionWrapper,
   SafeAreaViewCustom,
   SectionComponent,
   SpaceComponent,
 } from "@/components";
 import { Colors } from "@/helpers/constants/color";
 import { PATH_NAME } from "@/helpers/constants/pathname";
+import { GroupMember } from "@/types/group.type";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import React from "react";
+import React, { memo, useEffect, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import TEXT_TRANSLATE_INVITE_MEMBER from "./InviteMember.translate";
 import useInviteMember from "./hooks/useInviteMember";
+
+const CountdownDisplay = memo(({ createdDate }: { createdDate: string }) => {
+  const [countdown, setCountdown] = useState("");
+
+  useEffect(() => {
+    const expireTime = new Date(createdDate).getTime() + 24 * 60 * 60 * 1000;
+
+    const updateCountdown = () => {
+      const now = Date.now();
+      const remainingTime = expireTime - now;
+
+      if (remainingTime <= 0) {
+        setCountdown("Hết hạn");
+        return true;
+      }
+
+      const hours = String(
+        Math.floor(remainingTime / (1000 * 60 * 60)),
+      ).padStart(2, "0");
+      const minutes = String(
+        Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60)),
+      ).padStart(2, "0");
+      const seconds = String(
+        Math.floor((remainingTime % (1000 * 60)) / 1000),
+      ).padStart(2, "0");
+
+      setCountdown(`${hours}:${minutes}:${seconds}`);
+      return false;
+    };
+    if (updateCountdown()) return;
+
+    const interval = setInterval(updateCountdown, 1000);
+    return () => clearInterval(interval);
+  }, [createdDate]);
+
+  return countdown ? (
+    <Text className="text-sm font-medium text-[#b62d2d]">
+      Lời mời sẽ hết hạn sau {countdown}
+    </Text>
+  ) : (
+    <Text></Text>
+  );
+});
 
 const InviteMember = () => {
   const { handler, state } = useInviteMember();
 
   const InviteMethodButton = ({
-    onPress,
     label,
     routePath,
     icon: Icon,
     iconColor,
   }: {
-    onPress: () => void;
     label: string;
     routePath: string;
     icon: React.ComponentType<{ size: number; color: string }>;
@@ -44,36 +85,89 @@ const InviteMember = () => {
     </TouchableOpacity>
   );
 
-  const MemberItem = ({ item }: { item: any }) => (
-    <View className="mx-4 mb-4 rounded-2xl bg-white p-4 shadow-md">
-      <View className="flex-row items-center justify-between">
-        <View className="flex-row items-center space-x-3">
-          <Image
-            source={{ uri: item?.userInfo?.avatarUrl as string }}
-            className="h-14 w-14 rounded-full"
-            defaultSource={AdminAvatar}
-          />
-          <View>
-            {item.role === "LEADER" && (
-              <Text className="text-xs font-medium text-primary">
-                {TEXT_TRANSLATE_INVITE_MEMBER.INVITE_MEMBER.OWNER}
+  const MemberItem = memo(({ item }: { item: GroupMember }) => {
+    return (
+      <View className="mx-4 mb-4 rounded-2xl bg-white p-4 shadow-md">
+        <View className="flex-row items-center justify-between">
+          <View
+            className={`${item.status === "ACTIVE" ? "flex-[0.6]" : ""} flex-row items-center space-x-3`}
+          >
+            <Image
+              source={
+                item?.userInfo?.avatarUrl
+                  ? { uri: item.userInfo.avatarUrl }
+                  : AdminAvatar
+              }
+              className="h-12 w-12 rounded-full"
+            />
+            <View>
+              {item.role === "LEADER" && (
+                <Text className="text-xs font-medium text-primary">
+                  {TEXT_TRANSLATE_INVITE_MEMBER.INVITE_MEMBER.OWNER}
+                </Text>
+              )}
+              <Text className="text-base font-bold text-gray-900">
+                {item?.userInfo?.fullName}
               </Text>
-            )}
-            <Text className="text-base font-bold text-gray-900">
-              {item?.userInfo?.fullName}
-            </Text>
-            <Text className="text-sm text-gray-500">
-              {item?.userInfo?.email}
-            </Text>
+              <Text className="text-sm text-gray-500">
+                {item?.userInfo?.email}
+              </Text>
+              {item.status === "PENDING" && (
+                <CountdownDisplay createdDate={item.createdDate} />
+              )}
+            </View>
           </View>
-        </View>
-        <View className="items-end">
-          <Text className="mb-1 text-xs text-gray-500">Tỉ lệ đóng góp</Text>
-          <Text className="text-base font-bold text-primary">
-            {item?.contributionPercentage}%
-          </Text>
+          {item.status === "ACTIVE" && (
+            <View className="flex-[0.4] items-end">
+              <Text className="mb-1 text-xs text-gray-500">Tỉ lệ đóng góp</Text>
+              <Text className="text-base font-bold text-primary">
+                {item?.contributionPercentage}%
+              </Text>
+            </View>
+          )}
         </View>
       </View>
+    );
+  });
+
+  const TabSelector = () => (
+    <View className="mx-4 mb-4 flex-row rounded-lg bg-gray-100 p-1">
+      <TouchableOpacity
+        onPress={() => {
+          handler.setActiveTab("ACTIVE");
+        }}
+        className={`flex-1 rounded-md py-1 ${
+          state.activeTab === "ACTIVE" ? "bg-white" : ""
+        }`}
+      >
+        <Text
+          className={`text-center text-sm ${
+            state.activeTab === "ACTIVE"
+              ? "font-bold text-primary"
+              : "text-gray-500"
+          }`}
+        >
+          Đang hoạt động
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          handler.setActiveTab("PENDING");
+        }}
+        className={`flex-1 rounded-md py-1 ${
+          state.activeTab === "PENDING" ? "bg-white" : ""
+        }`}
+      >
+        <Text
+          className={`text-center text-sm ${
+            state.activeTab === "PENDING"
+              ? "font-medium text-primary"
+              : "text-gray-500"
+          }`}
+        >
+          Đang chờ
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 
@@ -95,7 +189,6 @@ const InviteMember = () => {
         <InviteMethodButton
           label={TEXT_TRANSLATE_INVITE_MEMBER.INVITE_MEMBER.INVITE_BY_EMAIL}
           routePath={PATH_NAME.MEMBER.INVITE_MEMBER_BY_EMAIL}
-          onPress={() => {}}
           icon={({ size, color }) => (
             <MaterialIcons name="email" size={size} color={color} />
           )}
@@ -105,20 +198,35 @@ const InviteMember = () => {
         <InviteMethodButton
           label={TEXT_TRANSLATE_INVITE_MEMBER.INVITE_MEMBER.INVITE_BY_QR_CODE}
           routePath={PATH_NAME.MEMBER.INVITE_MEMBER_BY_QR_CODE}
-          onPress={() => {}}
           icon={({ size, color }) => (
             <Ionicons name="qr-code" size={size} color={color} />
           )}
           iconColor="#2196F3"
         />
       </View>
-      <Text className="mb-3 ml-4 text-lg font-bold text-gray-900">
-        {TEXT_TRANSLATE_INVITE_MEMBER.INVITE_MEMBER.MEMBER_LIST(
-          state.groupMembers?.length,
-        )}
-      </Text>
+      {state.activeTab === "ACTIVE" ? (
+        <Text className="mb-3 ml-4 text-lg font-bold text-gray-900">
+          {TEXT_TRANSLATE_INVITE_MEMBER.INVITE_MEMBER.MEMBER_LIST(
+            state.activeMembers?.length,
+          )}
+        </Text>
+      ) : (
+        <Text className="mb-3 ml-4 text-lg font-bold text-gray-900">
+          {TEXT_TRANSLATE_INVITE_MEMBER.INVITE_MEMBER.MEMBER_LIST(
+            state.pendingMembers?.length,
+          )}
+        </Text>
+      )}
+      {!state.isLeader && <TabSelector />}
       <FlatListCustom
-        data={state.groupMembers ?? []}
+        refreshing={state.isRefreshing}
+        onRefresh={handler.handleRefresh}
+        isBottomTab={true}
+        data={
+          state.activeTab === "ACTIVE"
+            ? state.activeMembers
+            : state.pendingMembers
+        }
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <MemberItem item={item} />}
         ListEmptyComponent={

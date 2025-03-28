@@ -136,9 +136,9 @@ const InviteMemberByEmail: React.FC = () => {
                 }`}
               >
                 {state.selectedForInvite.includes(item.email) ? (
-                  <Feather name="check" size={20} color={COLORS.PRIMARY} />
+                  <Feather name="minus" size={20} color={COLORS.PRIMARY} />
                 ) : (
-                  <Text className="text-sm text-[#609084]">Mời</Text>
+                  <Feather name="plus" size={20} color={COLORS.PRIMARY} />
                 )}
               </TouchableOpacity>
             </View>
