@@ -1,7 +1,9 @@
 import { PATH_NAME } from "@/helpers/constants/pathname";
+import { setGroupTabHidden } from "@/redux/slices/tabSlice";
 import { router } from "expo-router";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { Alert } from "react-native";
+import { useDispatch } from "react-redux";
 
 export interface Member {
   id: number;
@@ -17,8 +19,8 @@ export default function useGroupRatioMember() {
     { id: 2, name: "Dương Bảo", ratio: 33 },
     { id: 3, name: "Minh Trí", ratio: 34 },
   ]);
-
-  const { GROUP_SETTING } = PATH_NAME;
+  
+  const dispatch = useDispatch()
 
   const initialValuesRef = useRef<Record<number, number>>(
     members.reduce(
@@ -130,7 +132,8 @@ export default function useGroupRatioMember() {
   }, [localTotal]);
 
   const handleGoBack = useCallback(() => {
-    router.replace(GROUP_SETTING.GROUP_SETTING_DEFAULT as any);
+    dispatch(setGroupTabHidden(false))
+    router.back()
   }, []);
 
   return {

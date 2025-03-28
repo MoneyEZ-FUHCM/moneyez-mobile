@@ -1,16 +1,16 @@
 import LogoDeer from "@/assets/images/logo/logo_deer.png";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import {
-  Alarm,
+  Activity,
   Bookmark,
   Card,
   Category,
   Coin1,
+  EmptyWallet,
   Eye,
   EyeSlash,
   Profile2User,
-  WalletAdd1,
-  Activity,
+  WalletAdd1
 } from "iconsax-react-native";
 
 const { HOME } = PATH_NAME;
@@ -25,7 +25,11 @@ const HOME_SCREEN_CONSTANTS = {
       url: HOME.SPENDING_MODEL_HISTORY,
     },
     { label: "Thống kê", icon: Activity, url: HOME.STATISTICAL },
-    { label: "Tính năng 4", icon: Alarm },
+    {
+      label: "Quiz",
+      icon: EmptyWallet,
+      url: HOME.QUIZ,
+    },
     { label: "Tính năng 5", icon: Bookmark },
     { label: "Tính năng 6", icon: Card },
     { label: "Tính năng 7", icon: Category },

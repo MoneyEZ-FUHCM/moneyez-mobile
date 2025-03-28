@@ -86,7 +86,7 @@ const useHomeScreen = () => {
 
   const handleNavigateAddPersonalIncome = useCallback(() => {
     dispatch(setMainTabHidden(true));
-    router.navigate(HOME.PERSONAL_EXPENSES_MODEL as any);
+    router.navigate(HOME.QUIZ as any);
   }, []);
 
   const handleNavigateMenuItem = (url: string) => {
