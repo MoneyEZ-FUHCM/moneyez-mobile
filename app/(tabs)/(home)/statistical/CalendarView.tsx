@@ -1,21 +1,46 @@
 import React from "react";
 import { TouchableOpacity, View } from "react-native";
 import { Text, StyleSheet } from "react-native";
-import { Calendar, DateData, } from "react-native-calendars";
+import { Calendar, DateData, LocaleConfig, } from "react-native-calendars";
 import useStatistical from "./hooks/useStatistical";
 import { formatCurrency } from "@/helpers/libs";
 import { MarkedDates, Transaction, TransactionsByDate } from "@/types/transaction.types";
+import TEXT_TRANSLATE_STATISTICAL from "./Statistical.translate";
 
 
 const CalendarView: React.FC = () => {
     const { state, handler } = useStatistical();
+
+    LocaleConfig.locales['fr'] = {
+        monthNames: [
+            'Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4',
+            'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8',
+            'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'
+        ],
+        monthNamesShort: [
+            'Th.1', 'Th.2', 'Th.3', 'Th.4',
+            'Th.5', 'Th.6', 'Th.7', 'Th.8',
+            'Th.9', 'Th.10', 'Th.11', 'Th.12'
+        ],
+        dayNames: [
+            'Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư',
+            'Thứ năm', 'Thứ sáu', 'Thứ bảy'
+        ],
+        dayNamesShort: [
+            'CN', 'T2', 'T3', 'T4',
+            'T5', 'T6', 'T7'
+        ],
+        today: "Hôm nay"
+    };
+
+    LocaleConfig.defaultLocale = 'fr';
 
     const renderFinancialSummary = () => (
         <View className="bg-white mx-4 my-2 rounded-lg p-4 shadow-sm">
             <View className="flex-row justify-between">
                 <View className="items-center flex-1">
                     <Text className="text-sm font-semibold text-gray-600 mb-1">
-                        Income
+                        {TEXT_TRANSLATE_STATISTICAL.LABELS.INCOME}
                     </Text>
                     <Text className="text-blue-600 font-bold text-base">
                         {formatCurrency(state.totalIncome)}
@@ -23,7 +48,7 @@ const CalendarView: React.FC = () => {
                 </View>
                 <View className="items-center flex-1">
                     <Text className="text-sm font-semibold text-gray-600 mb-1">
-                        Expense
+                        {TEXT_TRANSLATE_STATISTICAL.LABELS.EXPENSE}
                     </Text>
                     <Text className="text-red font-bold text-base">
                         {formatCurrency(state.totalExpense)}
@@ -31,7 +56,8 @@ const CalendarView: React.FC = () => {
                 </View>
                 <View className="items-center flex-1">
                     <Text className="text-sm font-semibold text-gray-600 mb-1">
-                        Total
+                        {TEXT_TRANSLATE_STATISTICAL.LABELS.TOTAL}
+
                     </Text>
                     <Text
                         className={`font-bold text-base ${state.totalIncome - state.totalExpense >= 0
@@ -185,7 +211,7 @@ const CalendarView: React.FC = () => {
 const styles = StyleSheet.create({
     dateContainer: {
         width: "100%",
-        height: 75,
+        height: 65,
         justifyContent: "space-between",
         alignItems: "center",
         borderRadius: 12,
