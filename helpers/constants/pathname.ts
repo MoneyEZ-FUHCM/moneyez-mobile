@@ -45,6 +45,7 @@ const PATH_NAME = {
     EXPENSES_DETAIL: "expenses/expense-detail/ExpenseDetail",
     UPDATE_EXPENSE: "expenses/update-expense/UpdateExpense",
     STATISTICAL: "statistical/Statistical",
+    QUIZ: "quiz/QuizScreen",
   },
   ACCOUNT: {
     ACCOUNT_SETTING: "setting/AccountSetting",
