@@ -3,9 +3,14 @@ import useHideGroupTabbar from "@/hooks/useHideGroupTabbar";
 import AntDesign from "@expo/vector-icons/build/AntDesign";
 import * as FileSystem from "expo-file-system";
 import { router } from "expo-router";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Alert, Share, Text, TouchableOpacity, View } from "react-native";
 import QRCode from "react-native-qrcode-svg";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import useInviteMemberByQRCode from "./hooks/useInviteMemberByQRCode";
 import TEXT_TRANSLATE_INVITE_MEMBER_BY_QR_CODE from "./InviteMemberByQRCode.translate";
 
@@ -16,6 +21,30 @@ const InviteMemberByQRCode = () => {
     toDataURL: (callback: (data: string) => void) => void;
   } | null>(null);
   const INVITE_LINK = "https://ezmoney.com.vn/daylalinhthamgianhom";
+
+  const [qrValue, setQrValue] = useState(
+    state.groupDetail?.description || "default_value",
+  );
+
+  // Shared Value để kiểm soát opacity
+  const opacity = useSharedValue(1);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      opacity.value = 0;
+      setTimeout(() => {
+        setQrValue(`${state.groupDetail?.description}?time=${Date.now()}`);
+        opacity.value = withTiming(1, { duration: 500 });
+      }, 200);
+    }, 5 * 60000);
+
+    return () => clearInterval(interval);
+  }, [state.groupDetail?.description]);
+
+  // Animated style cho hiệu ứng fade in
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+  }));
 
   // Chia sẻ link qua ứng dụng khác
   const shareLink = async () => {
@@ -49,6 +78,7 @@ const InviteMemberByQRCode = () => {
         });
     });
   };
+
   useHideGroupTabbar();
 
   return (
@@ -58,7 +88,7 @@ const InviteMemberByQRCode = () => {
           <AntDesign name="arrowleft" size={24} color="#000000" />
         </TouchableOpacity>
         <View className="flex-row items-center">
-          <Text className="text-lg font-bold text-black">
+          <Text className="text-xl font-bold text-black">
             {TEXT_TRANSLATE_INVITE_MEMBER_BY_QR_CODE.HEADER_TITLE}
           </Text>
         </View>
@@ -72,16 +102,18 @@ const InviteMemberByQRCode = () => {
           <Text className="mt-2 text-sm text-gray-600">
             {state.groupDetail?.description}
           </Text>
-          <View className="my-8 items-center">
+          <View className="my-5 items-center">
             <View className="rounded-2xl bg-white p-4 shadow-lg">
-              <QRCode
-                value={state.groupDetail?.description}
-                size={230}
-                getRef={(c) => (QR_REF.current = c)}
-              />
+              <Animated.View style={animatedStyle}>
+                <QRCode
+                  value={qrValue}
+                  size={260}
+                  getRef={(c) => (QR_REF.current = c)}
+                />
+              </Animated.View>
             </View>
           </View>
-          <Text className="mb-4 text-center text-xs text-gray-500">
+          <Text className="mb-2 text-center text-xs text-gray-500">
             {TEXT_TRANSLATE_INVITE_MEMBER_BY_QR_CODE.QR_CODE_REFRESH}
           </Text>
           <TouchableOpacity className="mb-6 rounded-xl bg-gray-50 p-4">

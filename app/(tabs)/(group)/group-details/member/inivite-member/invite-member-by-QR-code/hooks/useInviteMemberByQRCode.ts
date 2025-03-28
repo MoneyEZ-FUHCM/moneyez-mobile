@@ -1,8 +1,7 @@
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";
-import { GroupMember } from "@/types/group.type";
 import { router } from "expo-router";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const useInviteMemberByQRCode = () => {

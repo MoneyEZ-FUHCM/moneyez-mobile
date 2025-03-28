@@ -2,7 +2,7 @@ import ArrowDown from "@/assets/icons/arrow-down-short-wide.png";
 import ArrowUp from "@/assets/icons/arrow-up-wide-short.png";
 import AdminAvatar from "@/assets/images/logo/avatar_admin.jpg";
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
-import { TRANSACTION_TYPE, TRANSACTION_TYPE_TEXT } from "@/enums/globals";
+import { TRANSACTION_TYPE_TEXT } from "@/enums/globals";
 import { Colors } from "@/helpers/constants/color";
 import {
   formatCurrency,

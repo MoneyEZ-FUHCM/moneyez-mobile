@@ -1,10 +1,9 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
-import useHideTabbar from "@/hooks/useHideTabbar";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { useGetSpendingModelQuery } from "@/services/spendingModel";
 import { useCreateUserSpendingModelMutation } from "@/services/userSpendingModel";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { ToastAndroid } from "react-native";
 import { useDispatch } from "react-redux";
@@ -40,7 +39,12 @@ const usePersonalExpensesModel = () => {
   const { MESSAGE_ERROR } = TEXT_TRANSLATE_PERSONAL_EXPENSES;
   const { ERROR_CODE } = PERSONAL_EXPENSES_MODEL_CONSTANTS;
 
-  useHideTabbar();
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(setMainTabHidden(true));
+    }, [dispatch]),
+  );
+
   const [selectedTime, setSelectedTime] = useState<TimeOption>(TIME_OPTIONS[1]);
   const [startDate, setStartDate] = useState(() => {
     const today = new Date().toISOString().split("T")[0];

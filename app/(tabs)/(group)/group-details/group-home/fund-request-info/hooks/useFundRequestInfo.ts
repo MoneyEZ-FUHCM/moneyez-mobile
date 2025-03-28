@@ -1,12 +1,16 @@
 import { PATH_NAME } from "@/helpers/constants/pathname";
+import { setGroupTabHidden } from "@/redux/slices/tabSlice";
 import * as Clipboard from "expo-clipboard";
-import { router, useLocalSearchParams } from "expo-router";
-import { ToastAndroid } from "react-native";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { useCallback } from "react";
+import { BackHandler, ToastAndroid } from "react-native";
+import { useDispatch } from "react-redux";
 import TEXT_TRANSLATE_FUND_REQUEST_INFO from "../FundRequestInfo.translate";
 
 const useFundRequestInfo = () => {
   const { GROUP_HOME } = PATH_NAME;
   const { MESSAGE } = TEXT_TRANSLATE_FUND_REQUEST_INFO;
+  const dispatch = useDispatch();
   const params = useLocalSearchParams();
   const {
     id,
@@ -29,6 +33,24 @@ const useFundRequestInfo = () => {
     description: description,
   };
 
+  const handleBack = useCallback(() => {
+    router.back();
+    dispatch(setGroupTabHidden(false));
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        handleBack();
+        return true;
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [handleBack]),
+  );
+
   const copyToClipboard = async (text: string | string[]) => {
     try {
       await Clipboard.setStringAsync(
@@ -40,12 +62,13 @@ const useFundRequestInfo = () => {
     }
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = useCallback(() => {
     router.replace({
       pathname: GROUP_HOME.GROUP_HOME_DEFAULT as any,
       params: { id: fundRequest.id },
     });
-  };
+    dispatch(setGroupTabHidden(false));
+  }, []);
 
   return {
     state: {
@@ -54,6 +77,7 @@ const useFundRequestInfo = () => {
     handler: {
       copyToClipboard,
       handleConfirm,
+      handleBack,
     },
   };
 };

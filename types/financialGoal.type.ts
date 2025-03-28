@@ -60,3 +60,17 @@ export interface PersonalLimitBudgetSubcate {
   subcategoryId: string;
   subcategoryName: string;
 }
+
+export interface ChartDataItem {
+  label: string;
+  amount: number;
+  date: string;
+}
+
+export interface Goal {
+  goalName: string;
+  targetAmount: number;
+  currentAmount: number;
+  completionPercentage: number;
+  chartData: ChartDataItem[];
+}

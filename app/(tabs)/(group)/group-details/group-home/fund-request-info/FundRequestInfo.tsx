@@ -19,10 +19,7 @@ export default function FundRequestInfoPage() {
       {/* Header */}
       <SectionComponent rootClassName="h-14 bg-white justify-center">
         <View className="flex-row items-center justify-between px-5">
-          <TouchableOpacity
-          // onPress={() => {
-          // }}
-          >
+          <TouchableOpacity onPress={() => handler.handleBack}>
             <MaterialIcons name="arrow-back" size={24} />
           </TouchableOpacity>
           <Text className="text-lg font-bold text-black">

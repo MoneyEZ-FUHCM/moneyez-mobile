@@ -1,10 +1,12 @@
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import {
   useGetFinancialGoalByIdQuery,
+  useGetPersonalFinancialGoalChartQuery,
   useGetPersonalTransactionFinancialGoalsQuery,
 } from "@/services/financialGoal";
 import {
   FinancialGoal,
+  Goal,
   PersonalTransactionFinancialGoals,
 } from "@/types/financialGoal.type";
 import { router, useLocalSearchParams } from "expo-router";
@@ -40,6 +42,9 @@ const useExpenseDetail = () => {
       skip: !budgetId,
     },
   );
+
+  const { data: personalTransactionFinancialGoalChart } =
+    useGetPersonalFinancialGoalChartQuery({ goalId: budgetId, type: "week" });
 
   const {
     data: getPersonalTransactionFinancialGoals,
@@ -138,6 +143,8 @@ const useExpenseDetail = () => {
       isFetchingRefresh:
         isFetchingFinancialGoalById ||
         isFetchingPersonalTransactionFinancialGoals,
+      personalTransactionFinancialGoalChart:
+        personalTransactionFinancialGoalChart?.data as Goal,
     },
     handler: {
       setIsLoading,
