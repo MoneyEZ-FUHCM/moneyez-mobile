@@ -2,6 +2,7 @@ import { TRANSACTION_STATUS } from "@/enums/globals";
 import { TransactionType } from "./invidual.types";
 
 export interface Transaction {
+  [x: string]: any;
   id: string;
   groupId: string | null;
   userId: string;
@@ -48,4 +49,17 @@ export interface TransactionPayload {
 export interface TransactionPreviewPayload extends TransactionPayload {
   subCategoryIcon: string;
   subCategoryName: string;
+}
+
+export interface TransactionsByDate {
+  [date: string]: Transaction[];
+}
+
+export interface MarkedDates {
+  [date: string]: {
+      marked?: boolean;
+      dotColor?: string;
+      selected?: boolean;
+      selectedColor?: string;
+  };
 }
