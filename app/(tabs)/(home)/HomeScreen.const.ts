@@ -10,7 +10,7 @@ import {
   EyeSlash,
   Profile2User,
   WalletAdd1,
-  EmptyWallet,
+  Activity,
 } from "iconsax-react-native";
 
 const { HOME } = PATH_NAME;
@@ -24,7 +24,7 @@ const HOME_SCREEN_CONSTANTS = {
       icon: Coin1,
       url: HOME.SPENDING_MODEL_HISTORY,
     },
-    { label: "Tính năng 3", icon: EmptyWallet },
+    { label: "Thống kê", icon: Activity, url: HOME.STATISTICAL },
     { label: "Tính năng 4", icon: Alarm },
     { label: "Tính năng 5", icon: Bookmark },
     { label: "Tính năng 6", icon: Card },
