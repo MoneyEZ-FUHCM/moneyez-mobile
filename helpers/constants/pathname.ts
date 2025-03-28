@@ -44,6 +44,7 @@ const PATH_NAME = {
     ADD_SPENDING_BUDGET_STEP_2: "add-spending-budget/CreateSpendingBudgetStep2",
     EXPENSES_DETAIL: "expenses/expense-detail/ExpenseDetail",
     UPDATE_EXPENSE: "expenses/update-expense/UpdateExpense",
+    STATISTICAL: "statistical/Statistical",
   },
   ACCOUNT: {
     ACCOUNT_SETTING: "setting/AccountSetting",

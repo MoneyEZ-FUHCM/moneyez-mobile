@@ -2,6 +2,7 @@ import { TRANSACTION_STATUS } from "@/enums/globals";
 import { TransactionType } from "./invidual.types";
 
 export interface Transaction {
+  [x: string]: any;
   id: string;
   groupId: string | null;
   userId: string;
@@ -72,3 +73,15 @@ export interface GroupTransaction {
 }
 
 export type GroupTransactionList = GroupTransaction[];
+export interface TransactionsByDate {
+  [date: string]: Transaction[];
+}
+
+export interface MarkedDates {
+  [date: string]: {
+    marked?: boolean;
+    dotColor?: string;
+    selected?: boolean;
+    selectedColor?: string;
+  };
+}
