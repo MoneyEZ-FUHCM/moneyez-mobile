@@ -7,7 +7,9 @@ import {
   SectionComponent,
   SpaceComponent,
 } from "@/components";
+import { PATH_NAME } from "@/helpers/constants/pathname";
 import { AntDesign, Entypo } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import usePersonalExpensesModel from "./hooks/usePersonalExpensesModel";
@@ -18,7 +20,6 @@ import TEXT_TRANSLATE_PERSONAL_EXPENSES from "./PersonalExpensesModel.translate"
 
 const PersonalExpensesModel = () => {
   const { state, handler } = usePersonalExpensesModel();
-  const MODELS = PERSONAL_EXPENSES_MODEL_CONSTANTS.MODELS;
   const STEPS = PERSONAL_EXPENSES_MODEL_CONSTANTS.STEPS;
 
   return (
@@ -130,7 +131,10 @@ const PersonalExpensesModel = () => {
               )}
             />
 
-            <TouchableOpacity className="mt-4">
+            <TouchableOpacity
+              onPress={() => router.replace(PATH_NAME.HOME.QUIZ as any)}
+              className="mt-4"
+            >
               <Text className="text-green-600 text-center underline">
                 {TEXT_TRANSLATE_PERSONAL_EXPENSES.HELP_TEXT}
               </Text>

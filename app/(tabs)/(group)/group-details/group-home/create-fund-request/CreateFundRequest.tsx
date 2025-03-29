@@ -40,11 +40,8 @@ export default function CreateFundRequest() {
 
   return (
     <SafeAreaViewCustom rootClassName="flex-1 bg-[#f9f9f9] relative">
-      <SectionComponent rootClassName="flex-row relative justify-center items-center h-14 px-4">
-        <TouchableOpacity
-          onPress={handleBack}
-          className="absolute bottom-[17px] left-4"
-        >
+      <SectionComponent rootClassName="flex-row relative justify-center items-center bg-white h-14 px-4">
+        <TouchableOpacity onPress={handleBack} className="absolute left-4">
           <MaterialIcons name="arrow-back" size={24} />
         </TouchableOpacity>
         <Text className="text-lg font-bold">{TITLE.MAIN_TITLE}</Text>
@@ -61,7 +58,7 @@ export default function CreateFundRequest() {
       <Formik
         initialValues={{
           amount: "",
-          description: "",
+          description: "Góp vào quỹ chung",
         }}
         validationSchema={FundRequestSchema}
         onSubmit={handleCreateFundRequest}

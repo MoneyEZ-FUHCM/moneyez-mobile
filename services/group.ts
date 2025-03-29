@@ -1,8 +1,7 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import apiSlice from "@/redux/slices/apiSlice";
-import { GroupDetail, GroupLogs, MemberLogs } from "@/types/group.type";
+import { GroupDetail, GroupLogs } from "@/types/group.type";
 import { transformCommonResponse } from "@/types/system.types";
-import { GroupTransaction } from "@/types/transaction.types";
 
 const { HTTP_METHOD } = COMMON_CONSTANT;
 const groupApi = apiSlice.injectEndpoints({
@@ -68,6 +67,14 @@ const groupApi = apiSlice.injectEndpoints({
       }),
       transformResponse: (response) => transformCommonResponse(response),
     }),
+    inviteMemberEmail: builder.mutation({
+      query: (payload) => ({
+        url: `/groups/invite-member/email`,
+        method: HTTP_METHOD.POST,
+        body: payload,
+      }),
+      invalidatesTags: ["Group"],
+    }),
   }),
 });
 
@@ -80,6 +87,7 @@ export const {
   useGetGroupDetailQuery,
   useGetGroupLogsQuery,
   useGetMemberLogsQuery,
+  useInviteMemberEmailMutation,
 } = groupApi;
 
 export default groupApi;

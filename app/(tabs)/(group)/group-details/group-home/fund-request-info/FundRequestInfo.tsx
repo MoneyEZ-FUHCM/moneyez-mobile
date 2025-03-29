@@ -3,7 +3,7 @@ import {
   SectionComponent,
   SpaceComponent,
 } from "@/components";
-import { formatDate } from "@/helpers/libs";
+import { formatCurrency, formatDate } from "@/helpers/libs";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
@@ -19,16 +19,13 @@ export default function FundRequestInfoPage() {
       {/* Header */}
       <SectionComponent rootClassName="h-14 bg-white justify-center">
         <View className="flex-row items-center justify-between px-5">
-          <TouchableOpacity
-          // onPress={() => {
-          // }}
-          >
+          <TouchableOpacity onPress={() => handler.handleBack}>
             <MaterialIcons name="arrow-back" size={24} />
           </TouchableOpacity>
           <Text className="text-lg font-bold text-black">
             {TITLE.MAIN_TITLE}
           </Text>
-          <View style={{ width: 24 }} />
+          <SpaceComponent width={24} />
         </View>
       </SectionComponent>
 
@@ -46,7 +43,9 @@ export default function FundRequestInfoPage() {
           <Text className="text-sm font-bold text-gray-700">
             {LABELS.AMOUNT}
           </Text>
-          <Text className="text-sm text-black">{state.fundRequest.amount}</Text>
+          <Text className="text-sm text-black">
+            {formatCurrency(state.fundRequest?.amount as any)}
+          </Text>
         </View>
 
         <View className="flex-row items-center justify-between border-b border-gray-100 py-2">
@@ -55,6 +54,12 @@ export default function FundRequestInfoPage() {
           </Text>
           <Text className="text-sm text-black">
             {formatDate(state.fundRequest.createdDate, "DD/MM/YYYY - HH:mm:ss")}
+          </Text>
+        </View>
+        <View className="flex-row items-center justify-between border-b border-gray-100 py-2">
+          <Text className="text-sm font-bold text-gray-700">Lời nhắn:</Text>
+          <Text className="text-sm text-black">
+            {state.fundRequest?.description}
           </Text>
         </View>
 
@@ -82,11 +87,11 @@ export default function FundRequestInfoPage() {
           </Text>
           <View className="flex-row items-center">
             <Text className="mr-2 text-sm text-black">
-              {state.fundRequest.recipientAccount}
+              {state.fundRequest?.recipientAccount}
             </Text>
             <TouchableOpacity
               onPress={() =>
-                handler.copyToClipboard(state.fundRequest.recipientAccount)
+                handler.copyToClipboard(state.fundRequest?.recipientAccount)
               }
             >
               <MaterialIcons name="content-copy" size={20} color="#609084" />

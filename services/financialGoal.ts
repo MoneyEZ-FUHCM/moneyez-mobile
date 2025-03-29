@@ -46,6 +46,20 @@ const financialGoalApi = apiSlice.injectEndpoints({
         method: HTTP_METHOD.GET,
       }),
     }),
+    getPersonalFinancialGoalChart: builder.query({
+      query: ({ goalId, type }) => ({
+        url: `/financial-goals/personal/chart/${goalId}?type=${type}`,
+        method: HTTP_METHOD.GET,
+      }),
+    }),
+    updateFinancialGoal: builder.mutation({
+      query: (payload) => ({
+        url: `/financial-goals/personal`,
+        method: HTTP_METHOD.PUT,
+        body: payload,
+      }),
+      invalidatesTags: ["FinancialGoal"],
+    }),
   }),
 });
 
@@ -55,6 +69,8 @@ export const {
   useGetFinancialGoalByIdQuery,
   useGetPersonalTransactionFinancialGoalsQuery,
   useGetPersonalLimitBudgetSubcategoryQuery,
+  useGetPersonalFinancialGoalChartQuery,
+  useUpdateFinancialGoalMutation,
 } = financialGoalApi;
 
 export default financialGoalApi;

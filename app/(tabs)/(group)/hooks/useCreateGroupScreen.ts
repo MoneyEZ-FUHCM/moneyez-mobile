@@ -132,7 +132,7 @@ const useCreateGroupScreen = () => {
   const handleSelectBank = useCallback(
     (bank: any, setFieldValue: (field: string, value: any) => void) => {
       if (!setFieldValue) {
-        console.log("setFieldValue is undefined");
+        console.log("Vui lòng chọn số tài khoản");
         return;
       }
 
@@ -143,7 +143,7 @@ const useCreateGroupScreen = () => {
         setSelectedBank(bank);
         bankSelectModalRef.current?.close();
       } catch (error) {
-        console.log("Error in handleSelectBank:", error);
+        ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
       }
     },
     [],

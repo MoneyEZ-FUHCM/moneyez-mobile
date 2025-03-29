@@ -1,5 +1,12 @@
-import { useState } from "react";
-import { spendingModels, SpendingModel } from "@/helpers/constants/spendingModels";
+import {
+  SpendingModel,
+  spendingModels,
+} from "@/helpers/constants/spendingModels";
+import { setMainTabHidden } from "@/redux/slices/tabSlice";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
+import { BackHandler } from "react-native";
+import { useDispatch } from "react-redux";
 
 interface AnswerOption {
   id: string;
@@ -51,8 +58,14 @@ const constantQuiz: Quiz = {
       id: "84d30e7b-3f7d-4bb3-dc50-08dd6c7a2e34",
       content: "Who wrote 'Hamlet'?",
       answerOptions: [
-        { id: "e693637f-9fd3-4621-6fff-08dd6c7a2e3b", content: "Charles Dickens" },
-        { id: "95fb0902-eba1-4bb0-7000-08dd6c7a2e3b", content: "William Shakespeare" },
+        {
+          id: "e693637f-9fd3-4621-6fff-08dd6c7a2e3b",
+          content: "Charles Dickens",
+        },
+        {
+          id: "95fb0902-eba1-4bb0-7000-08dd6c7a2e3b",
+          content: "William Shakespeare",
+        },
       ],
     },
   ],
@@ -65,14 +78,16 @@ const useQuiz = () => {
   const [currentStep, setCurrentStep] = useState<number>(0);
   // answers: { [questionId]: answerOption }
   const [answers, setAnswers] = useState<AnswersState>({});
-  const [suggestedModel, setSuggestedModel] = useState<SpendingModel | null>(null);
+  const [suggestedModel, setSuggestedModel] = useState<SpendingModel | null>(
+    null,
+  );
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Simulate suggestion based on quiz answers - randomly select a model for demonstration
   const computeSuggestion = (): SpendingModel => {
     // Simulate a loading effect
     setIsLoading(true);
-    
+
     // Random index between 0 and spendingModels.length - 1
     const randomIndex = Math.floor(Math.random() * spendingModels.length);
     return spendingModels[randomIndex];
@@ -82,7 +97,7 @@ const useQuiz = () => {
     // When moving from last quiz question to suggestion page, compute suggestion.
     if (currentStep === totalSteps - 2) {
       setIsLoading(true);
-      
+
       // Simulate network delay for more realistic feel
       setTimeout(() => {
         const suggestion = computeSuggestion();
@@ -101,7 +116,10 @@ const useQuiz = () => {
     }
   };
 
-  const selectAnswer = (questionId: string, answerOption: AnswerOption): void => {
+  const selectAnswer = (
+    questionId: string,
+    answerOption: AnswerOption,
+  ): void => {
     setAnswers({
       ...answers,
       [questionId]: answerOption,
@@ -122,6 +140,21 @@ const useQuiz = () => {
     console.log("Submitting Quiz", payload);
     alert("Quiz submitted successfully!");
   };
+  const dispatch = useDispatch();
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        router.back();
+        dispatch(setMainTabHidden(false));
+        return true;
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [dispatch]),
+  );
 
   return {
     state: {

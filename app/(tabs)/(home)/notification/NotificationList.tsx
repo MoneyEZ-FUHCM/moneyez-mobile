@@ -59,7 +59,7 @@ export default function NotificationList() {
       <View className="flex-row items-start gap-3">
         <View className="rounded-full bg-primary p-2">
           <MaterialIcons
-            name={getNotificationIcon(item?.type)}
+            name={getNotificationIcon(item?.type) || "info"}
             size={28}
             color="#ffffff"
           />

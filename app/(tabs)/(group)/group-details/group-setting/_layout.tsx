@@ -14,14 +14,8 @@ export default function GroupSettingLayout() {
         animation: ANIMATION_NAVIGATE_STACK.SLIDE_FROM_RIGHT,
       }}
     >
-      <Stack.Screen
-        name={PATH_NAME.GROUP_SETTING.GROUP_SETTING_DEFAULT}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name={PATH_NAME.GROUP_SETTING.GROUP_RATIO_MEMBER}
-        options={{ headerShown: false }}
-      />
+      <Stack.Screen name={PATH_NAME.GROUP_SETTING.GROUP_SETTING_DEFAULT} />
+      <Stack.Screen name={PATH_NAME.GROUP_SETTING.GROUP_RATIO_MEMBER} />
     </Stack>
   );
 }

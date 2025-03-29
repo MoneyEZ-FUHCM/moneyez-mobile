@@ -55,7 +55,7 @@ export interface GroupTransaction {
   groupId: string;
   userId: string;
   amount: number;
-  type: number;
+  type: "INCOME" | "EXPENSE";
   transactionDate: string;
   description: string;
   images: string[];

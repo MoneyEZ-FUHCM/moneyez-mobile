@@ -3,21 +3,17 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { BarChart } from "react-native-gifted-charts";
 import { SectionComponent } from "../SectionComponent";
 import { useBarChart } from "./hooks/useBarChart";
-
-interface DataItem {
-  [key: string]: number | string;
-  label: string;
-}
+import { ChartDataItem, Goal } from "@/types/financialGoal.type";
+import { formatDateMonth } from "@/helpers/libs";
 
 interface GenericBarChartProps {
-  data: DataItem[];
-  categories: string[];
+  data: ChartDataItem[];
   screenWidth: number;
 }
 
 const BarChartExpenseCustom = React.memo(
-  ({ data, categories, screenWidth }: GenericBarChartProps) => {
-    const { state, handler } = useBarChart(categories);
+  ({ data, screenWidth }: GenericBarChartProps) => {
+    const { state, handler } = useBarChart();
     const PRIMARY_COLOR = "#609084";
     const GRAY_COLOR = "#E7E7E7";
 
@@ -27,20 +23,24 @@ const BarChartExpenseCustom = React.memo(
         rootClassName="self-center"
       >
         <View className="mb-4 flex-row justify-start">
-          {categories?.map((category) => (
+          {Object.entries(state.types).map(([type, label]) => (
             <TouchableOpacity
-              key={category}
-              onPress={() => handler.handleSelectCategory(category)}
+              key={type}
+              onPress={() => handler.handleSelectType(type as any)}
               className={`mx-1 rounded-lg border px-6 py-0.5 ${
-                state.selectedCategory === category
+                state.selectedType === type
                   ? "border-primary bg-thirdly"
                   : "border-gray-300 bg-white"
               }`}
             >
               <Text
-                className={`text-sm ${state.selectedCategory === category ? "font-extrabold text-primary" : "text-black"} `}
+                className={`text-sm ${
+                  state.selectedType === type
+                    ? "font-extrabold text-primary"
+                    : "text-black"
+                }`}
               >
-                {category}
+                {label}
               </Text>
             </TouchableOpacity>
           ))}
@@ -48,21 +48,20 @@ const BarChartExpenseCustom = React.memo(
         <View className="w-full overflow-hidden">
           <BarChart
             barWidth={40}
-            spacing={23}
+            spacing={24}
             noOfSections={3}
+            minHeight={3}
+            maxValue={Math.max(...data.map((item) => item.amount))}
             barBorderRadius={6}
-            data={data.map((item) => ({
-              value:
-                typeof item[state.selectedCategory] === "number"
-                  ? (item[state.selectedCategory] as number)
-                  : 0,
-              label: item.label,
-              frontColor:
-                item.label === state.dow[state.currentDateIndex]
-                  ? PRIMARY_COLOR
-                  : GRAY_COLOR,
-              opacity:
-                item.label === state.dow[state.currentDateIndex] ? 1 : 0.5,
+            data={data?.map((item) => ({
+              value: item?.amount,
+              label: formatDateMonth(item?.date),
+              frontColor: state.isCurrentPeriod(item?.date, state.selectedType)
+                ? PRIMARY_COLOR
+                : GRAY_COLOR,
+              opacity: state.isCurrentPeriod(item?.date, state.selectedType)
+                ? 1
+                : 0.5,
             }))}
             yAxisThickness={0}
             xAxisThickness={0}

@@ -8,6 +8,7 @@ import systemReducer from "./slices/systemSlice";
 import userSpendingModelReducer from "./slices/userSpendingModelSlice";
 import transactionReducer from "./slices/transactionSlice";
 import groupReducer from "./slices/groupSlice";
+import budgetReducer from "./slices/budgetSlice";
 import apiSlice from "./slices/apiSlice";
 
 const rootReducer = combineReducers({
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   userSpendingModel: userSpendingModelReducer,
   transaction: transactionReducer,
   group: groupReducer,
+  budget: budgetReducer,
 });
 
 export const store = configureStore({

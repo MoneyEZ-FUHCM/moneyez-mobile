@@ -1,16 +1,23 @@
+import { PATH_NAME } from "@/helpers/constants/pathname";
+import { selectBudgetStatisticType } from "@/redux/hooks/budgetSelector";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import {
   useGetFinancialGoalByIdQuery,
+  useGetPersonalFinancialGoalChartQuery,
   useGetPersonalTransactionFinancialGoalsQuery,
 } from "@/services/financialGoal";
 import {
+  ChartDataItem,
   FinancialGoal,
+  Goal,
   PersonalTransactionFinancialGoals,
 } from "@/types/financialGoal.type";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import EXPENSE_DETAIL_CONSTANTS from "../ExpenseDetail.const";
+import { setBudgetStatisticType } from "@/redux/slices/budgetSlice";
+import { BackHandler } from "react-native";
 
 const useExpenseDetail = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -26,7 +33,6 @@ const useExpenseDetail = () => {
     personalTransactionFinancialGoals,
     setPersonalTransactionFinancialGoals,
   ] = useState<PersonalTransactionFinancialGoals[]>([]);
-
   const { budgetId } = useLocalSearchParams();
   const {
     data,
@@ -40,6 +46,13 @@ const useExpenseDetail = () => {
       skip: !budgetId,
     },
   );
+
+  const budgetStatisticType = useSelector(selectBudgetStatisticType);
+  const { data: personalTransactionFinancialGoalChart } =
+    useGetPersonalFinancialGoalChartQuery({
+      goalId: budgetId,
+      type: budgetStatisticType,
+    });
 
   const {
     data: getPersonalTransactionFinancialGoals,
@@ -107,7 +120,21 @@ const useExpenseDetail = () => {
   const handleBack = useCallback(() => {
     router.back();
     dispatch(setMainTabHidden(true));
+    dispatch(setBudgetStatisticType("week"));
   }, [dispatch]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        handleBack();
+        return true;
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [handleBack]),
+  );
 
   const handleRefresh = useCallback(async () => {
     setIsLoading(true);
@@ -122,6 +149,22 @@ const useExpenseDetail = () => {
       setIsLoading(false);
     }
   }, [refetchPersonalTransactionFinancialGoals, refetchGoalsById]);
+
+  const handleNavigateAndUpdate = useCallback(
+    (finalcialGoalDetail: FinancialGoal) => {
+      router.navigate({
+        pathname: PATH_NAME.HOME.UPDATE_EXPENSE as any,
+        params: {
+          budgetId: finalcialGoalDetail?.id,
+          icon: finalcialGoalDetail?.subcategoryIcon,
+          name: finalcialGoalDetail?.subcategoryName,
+          amount: finalcialGoalDetail?.targetAmount,
+          subCategoryId: finalcialGoalDetail?.subcategoryId,
+        },
+      });
+    },
+    [],
+  );
 
   return {
     state: {
@@ -138,6 +181,9 @@ const useExpenseDetail = () => {
       isFetchingRefresh:
         isFetchingFinancialGoalById ||
         isFetchingPersonalTransactionFinancialGoals,
+      personalTransactionFinancialGoalChart:
+        personalTransactionFinancialGoalChart?.data
+          ?.chartData as ChartDataItem[],
     },
     handler: {
       setIsLoading,
@@ -146,6 +192,7 @@ const useExpenseDetail = () => {
       closeAllTransactionsModal,
       handleLoadMore,
       handleRefresh,
+      handleNavigateAndUpdate,
     },
   };
 };

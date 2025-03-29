@@ -1,7 +1,8 @@
 import ArrowDown from "@/assets/icons/arrow-down-short-wide.png";
 import ArrowUp from "@/assets/icons/arrow-up-wide-short.png";
+import AdminAvatar from "@/assets/images/logo/avatar_admin.jpg";
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
-import { TRANSACTION_TYPE } from "@/enums/globals";
+import { TRANSACTION_TYPE_TEXT } from "@/enums/globals";
 import { Colors } from "@/helpers/constants/color";
 import {
   formatCurrency,
@@ -14,6 +15,7 @@ import React from "react";
 import {
   Image,
   ImageBackground,
+  RefreshControl,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -23,25 +25,32 @@ import TEXT_TRANSLATE_GROUP_HOME_DEFAULT from "./GroupHomeDefault.translate";
 import useGroupHomeDefault from "./hooks/useGroupHomeDefault";
 
 const GroupHomeDefault = () => {
-  const { TITLE, BUTTON, TEXT } = TEXT_TRANSLATE_GROUP_HOME_DEFAULT;
+  const { BUTTON, TEXT } = TEXT_TRANSLATE_GROUP_HOME_DEFAULT;
   const { state, handler } = useGroupHomeDefault();
 
   return (
     <SafeAreaViewCustom>
-      <SectionComponent rootClassName="flex-row bg-white justify-between items-center h-14 px-4">
-        <TouchableOpacity onPress={router.back}>
+      <SectionComponent rootClassName="h-14 bg-white justify-center items-center relative">
+        <TouchableOpacity
+          onPress={() => router.back()}
+          className="absolute left-4"
+        >
           <AntDesign name="arrowleft" size={24} color="#000000" />
         </TouchableOpacity>
-        <View className="flex-row items-center gap-1">
-          <Text className="text-lg font-bold text-black">
-            {state.groupDetail?.name}
-          </Text>
-        </View>
-        <TouchableOpacity></TouchableOpacity>
+        <Text className="text-center text-lg font-bold">
+          {state.groupDetail?.name}
+        </Text>
+        <View className="w-8" />
       </SectionComponent>
       <ScrollView
         className="flex-1 bg-gray-100"
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={state.refreshing}
+            onRefresh={handler.onRefresh}
+          />
+        }
       >
         {/* Header */}
         <ImageBackground
@@ -143,7 +152,7 @@ const GroupHomeDefault = () => {
                       <View className="my-1 flex-row items-center gap-x-1">
                         <Image
                           source={
-                            activity?.type === TRANSACTION_TYPE.INCOME
+                            activity?.type === TRANSACTION_TYPE_TEXT.INCOME
                               ? ArrowDown
                               : ArrowUp
                           }
@@ -151,15 +160,13 @@ const GroupHomeDefault = () => {
                           resizeMode="contain"
                         />
                         <Text
-                          className={`${activity?.type === TRANSACTION_TYPE.INCOME ? "text-green" : "text-red"} text-xs font-bold`}
+                          className={`${activity?.type === TRANSACTION_TYPE_TEXT.INCOME ? "text-green" : "text-red"} text-xs font-bold`}
                         >
-                          {activity?.type === TRANSACTION_TYPE.INCOME
-                            ? "Góp quỹ"
-                            : "Rút quỹ"}
+                          {activity?.type === "INCOME" ? "Góp quỹ" : "Rút quỹ"}
                         </Text>
                       </View>
                       <View className="w-full flex-1 flex-row items-center justify-between">
-                        <View className="flex-row space-x-3">
+                        <View className="flex-[0.7] flex-row space-x-3">
                           <Image
                             source={{ uri: activity.avatarUrl }}
                             className="h-9 w-9 rounded-full"
@@ -171,15 +178,15 @@ const GroupHomeDefault = () => {
                             <Text>"{activity?.description}"</Text>
                           </View>
                         </View>
-                        <View>
+                        <View className="flex-[0.3]">
                           <Text
-                            className={`text-base font-bold ${
-                              activity?.type === TRANSACTION_TYPE.INCOME
+                            className={`text-right text-base font-bold ${
+                              activity?.type === TRANSACTION_TYPE_TEXT.INCOME
                                 ? "text-green"
                                 : "text-red"
                             }`}
                           >
-                            {activity?.type === TRANSACTION_TYPE.INCOME
+                            {activity?.type === TRANSACTION_TYPE_TEXT.INCOME
                               ? `+ ${formatCurrency(activity?.amount)}`
                               : `- ${formatCurrency(activity?.amount)}`}
                           </Text>
@@ -233,7 +240,11 @@ const GroupHomeDefault = () => {
                   >
                     <View className="flex-1 flex-row items-center space-x-3">
                       <Image
-                        source={{ uri: activity.imageUrl }}
+                        source={
+                          activity.imageUrl
+                            ? { uri: activity.imageUrl }
+                            : AdminAvatar
+                        }
                         className="h-9 w-9 rounded-full"
                       />
                       <Text className="flex-1 text-sm font-bold">
