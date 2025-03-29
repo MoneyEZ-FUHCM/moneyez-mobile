@@ -12,10 +12,12 @@ import {
   Goal,
   PersonalTransactionFinancialGoals,
 } from "@/types/financialGoal.type";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import EXPENSE_DETAIL_CONSTANTS from "../ExpenseDetail.const";
+import { setBudgetStatisticType } from "@/redux/slices/budgetSlice";
+import { BackHandler } from "react-native";
 
 const useExpenseDetail = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -118,7 +120,21 @@ const useExpenseDetail = () => {
   const handleBack = useCallback(() => {
     router.back();
     dispatch(setMainTabHidden(true));
+    dispatch(setBudgetStatisticType("week"));
   }, [dispatch]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        handleBack();
+        return true;
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [handleBack]),
+  );
 
   const handleRefresh = useCallback(async () => {
     setIsLoading(true);

@@ -48,7 +48,7 @@ const BarChartExpenseCustom = React.memo(
         <View className="w-full overflow-hidden">
           <BarChart
             barWidth={40}
-            spacing={23}
+            spacing={24}
             noOfSections={3}
             minHeight={3}
             maxValue={Math.max(...data.map((item) => item.amount))}

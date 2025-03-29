@@ -84,13 +84,13 @@ export default function ExpenseDetail() {
                   {state.financialGoalDetail?.name}
                 </Text>
                 <Text className="text-base text-gray-500">
-                  Chi tiêu cho{" "}
+                  Kết thúc sau{" "}
                   <Text className="text-sm font-bold">
                     {calculateRemainingDays(
                       state.financialGoalDetail?.deadline,
-                    )}
-                  </Text>{" "}
-                  ngày
+                    )}{" "}
+                    ngày
+                  </Text>
                 </Text>
                 <Text className="text-sm">
                   {TEXT_TRANSLATE_EXPENSE_DETAIL.BUDGET_REMAINING}
@@ -141,11 +141,7 @@ export default function ExpenseDetail() {
       </SectionComponent>
       {/* AI NOTICE */}
       <LinearGradient
-        colors={
-          state.financialGoalDetail.prediction.isOnTrack
-            ? [Colors.colors.secondary, Colors.colors.thirdly]
-            : ["#fa3916df", "#fdd1d1d5"]
-        }
+        colors={[Colors.colors.secondary, Colors.colors.thirdly]}
         className="m-4 overflow-hidden rounded-3xl shadow-2xl"
       >
         <View className="flex-row items-center justify-between">
@@ -158,13 +154,6 @@ export default function ExpenseDetail() {
               />
             </View>
             <Text className="text-lg font-bold drop-shadow-md">MewMo</Text>
-          </View>
-          <View className="rounded-l-2xl bg-white/80 p-2">
-            <Text className="font-semibold">
-              {state.financialGoalDetail.prediction.isOnTrack
-                ? "Đúng Tiến Độ"
-                : "Sai Tiến Độ"}
-            </Text>
           </View>
         </View>
 
