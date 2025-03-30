@@ -40,7 +40,7 @@ const groupApi = apiSlice.injectEndpoints({
     }),
     requestFund: builder.mutation({
       query: (payload) => ({
-        url: `/groups/funds/request`,
+        url: `/groups/fund-rasising/request`,
         method: HTTP_METHOD.POST,
         body: payload,
       }),
