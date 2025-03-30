@@ -4,23 +4,19 @@ import {
   startConnection,
   stopConnection,
 } from "@/configs/signalR";
-import { CHATBOT_CONNECTION } from "@/enums/globals";
+import { CHAT_ROLE, CHATBOT_CONNECTION } from "@/enums/globals";
 import useHideTabbar from "@/hooks/useHideTabbar";
+import { setIsThinking } from "@/redux/slices/systemSlice";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
+import { selectUserInfo } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
+import { useGetBotHistoryQuery } from "@/services/bot";
+import { Message } from "@/types/bot.types";
 import { router } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Animated, FlatList } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import BOT_SCREEN_CONSTANTS from "../BotScreen.const";
-import { selectUserInfo } from "@/redux/slices/userSlice";
-
-export interface Message {
-  id: string;
-  text: string;
-  sender: "user" | "bot";
-  createdAt: string;
-}
 
 const useChatBotScreen = () => {
   const [state, setState] = useState({
@@ -29,7 +25,6 @@ const useChatBotScreen = () => {
     isModalVisible: false,
     selectedMessageIds: new Set<string>(),
     showScrollToBottom: false,
-    isBotTyping: false,
     isSending: false,
   });
 
@@ -41,25 +36,41 @@ const useChatBotScreen = () => {
     (state: RootState) => state.system.status,
   );
   const userInfo = useSelector(selectUserInfo);
+  const [isLoadingHistoryChat, setIsLoadingHistoryChat] = useState(false);
 
   const lastOffsetY = useRef(0);
   const dispatch = useDispatch();
+  const { data: botHistory } = useGetBotHistoryQuery({
+    PageIndex: 1,
+    PageSize: 100,
+  });
 
   useHideTabbar();
+
+  useEffect(() => {
+    setIsLoadingHistoryChat(true);
+    if (botHistory?.items) {
+      setState((prev: any) => ({
+        ...prev,
+        messages: [...botHistory.items].reverse(),
+      }));
+    }
+    setIsLoadingHistoryChat(false);
+  }, [botHistory]);
 
   useEffect(() => {
     startConnection();
 
     receiveMessage("ReceiveMessage", (botName: string, newMessage: any) => {
+      const messageId = newMessage.id || Date.now().toString();
       setState((prev) => ({
         ...prev,
-        isBotTyping: false,
         messages: [
           ...prev.messages,
           {
-            id: newMessage.id || Date.now().toString(),
-            text: newMessage,
-            sender: "bot",
+            id: messageId,
+            message: newMessage,
+            type: CHAT_ROLE.BOT,
             createdAt: newMessage.createdAt || new Date().toISOString(),
           },
         ],
@@ -76,11 +87,12 @@ const useChatBotScreen = () => {
     if (connectionStatus !== CHATBOT_CONNECTION.CONNECTED) return;
 
     const inputText = message || state.input.trim();
+
     if (!inputText) return;
     const newUserMessage: Message = {
       id: Date.now().toString(),
-      text: inputText,
-      sender: "user",
+      message: inputText,
+      type: CHAT_ROLE.USER,
       createdAt: new Date().toISOString(),
     };
 
@@ -88,14 +100,16 @@ const useChatBotScreen = () => {
       ...prev,
       messages: [...prev.messages, newUserMessage],
       input: message ? state.input : "",
-      isBotTyping: true,
       isSending: true,
     }));
+    dispatch(setIsThinking(true));
+
     try {
       await sendMessage("SendMessage", userInfo?.id as string, inputText);
-    } catch {
+    } catch (err) {
       setState((prev) => ({ ...prev, isBotTyping: false }));
     } finally {
+      dispatch(setIsThinking(false));
       setTimeout(() => {
         setState((prev) => ({ ...prev, isSending: false }));
       }, 1000);
@@ -126,29 +140,37 @@ const useChatBotScreen = () => {
     }
   };
 
-  const handleScroll = (event: any) => {
+  const handleScroll = useCallback((event: any) => {
     const offsetY = event.nativeEvent.contentOffset.y;
     const contentHeight = event.nativeEvent.contentSize.height;
     const threshold = contentHeight / 3;
 
     if (offsetY > threshold) {
-      setState((prev) => ({ ...prev, showScrollToBottom: true }));
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
+      setState((prev) => {
+        if (!prev.showScrollToBottom) {
+          Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 300,
+            useNativeDriver: true,
+          }).start();
+        }
+        return { ...prev, showScrollToBottom: true };
+      });
     } else {
-      setState((prev) => ({ ...prev, showScrollToBottom: false }));
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
+      setState((prev) => {
+        if (prev.showScrollToBottom) {
+          Animated.timing(fadeAnim, {
+            toValue: 0,
+            duration: 300,
+            useNativeDriver: true,
+          }).start();
+        }
+        return { ...prev, showScrollToBottom: false };
+      });
     }
 
     lastOffsetY.current = offsetY;
-  };
+  }, []);
 
   useEffect(() => {
     if (state.showScrollToBottom) {
@@ -184,7 +206,14 @@ const useChatBotScreen = () => {
 
   return {
     state: useMemo(
-      () => ({ ...state, fadeAnim, moveAnim, flatListRef, SUGGESTION }),
+      () => ({
+        ...state,
+        fadeAnim,
+        moveAnim,
+        flatListRef,
+        SUGGESTION,
+        isLoadingHistoryChat,
+      }),
       [state],
     ),
     handler: {

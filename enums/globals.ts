@@ -74,3 +74,9 @@ export enum GROUP_ROLE {
   MEMBER = "MEMBER",
   LEADER = "LEADER",
 }
+
+export enum CHAT_ROLE {
+  BOT,
+  USER,
+  ADMIN,
+}

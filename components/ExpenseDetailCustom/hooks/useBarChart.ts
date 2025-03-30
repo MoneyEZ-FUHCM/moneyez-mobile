@@ -26,7 +26,6 @@ export const useBarChart = () => {
   };
 
   const isCurrentWeekRange = (dateRange: string) => {
-    console.log("chec dateRange", dateRange);
     const today = new Date();
     const [startStr, endStr] = dateRange.split(" - ");
     const [startDay, startMonth] = startStr.split("/").map(Number);
@@ -55,16 +54,27 @@ export const useBarChart = () => {
     const itemDate = new Date(date);
 
     if (type === "week") {
-      const itemWeekStart = new Date(itemDate);
-      itemWeekStart.setDate(itemDate.getDate() - itemDate.getDay() + 1);
+      const todayStart = new Date(today);
+      todayStart.setHours(0, 0, 0, 0);
 
-      const currentWeekStart = new Date(today);
-      currentWeekStart.setDate(today.getDate() - today.getDay() + 1);
+      const itemDateStart = new Date(itemDate);
+      itemDateStart.setHours(0, 0, 0, 0);
 
-      itemWeekStart.setHours(0, 0, 0, 0);
-      currentWeekStart.setHours(0, 0, 0, 0);
+      const currentWeekStart = new Date(todayStart);
+      currentWeekStart.setDate(
+        todayStart.getDate() -
+          todayStart.getDay() +
+          (todayStart.getDay() === 0 ? -6 : 1),
+      );
 
-      return itemWeekStart.getTime() === currentWeekStart.getTime();
+      const itemWeekStart = new Date(itemDateStart);
+      itemWeekStart.setDate(
+        itemDateStart.getDate() -
+          itemDateStart.getDay() +
+          (itemDateStart.getDay() === 0 ? -6 : 1),
+      );
+
+      return currentWeekStart.getTime() === itemWeekStart.getTime();
     }
 
     return (

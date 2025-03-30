@@ -4,7 +4,8 @@ import { BarChart } from "react-native-gifted-charts";
 import { SectionComponent } from "../SectionComponent";
 import { useBarChart } from "./hooks/useBarChart";
 import { ChartDataItem, Goal } from "@/types/financialGoal.type";
-import { formatDateMonth } from "@/helpers/libs";
+import { formatCurrency, formatDateMonth } from "@/helpers/libs";
+import { formatCurrencyCompact } from "@/helpers/formatCurrency";
 
 interface GenericBarChartProps {
   data: ChartDataItem[];
@@ -16,6 +17,21 @@ const BarChartExpenseCustom = React.memo(
     const { state, handler } = useBarChart();
     const PRIMARY_COLOR = "#609084";
     const GRAY_COLOR = "#E7E7E7";
+    const formatAmount = (amount: number) => {
+      if (amount >= 1000000) return `${(amount / 1000000).toFixed(1)}M`;
+      if (amount >= 1000) return `${(amount / 1000).toFixed(1)}K`;
+      return amount.toString();
+    };
+
+    const maxAmount = Math.max(...data.map((item) => item?.amount || 0));
+    const adjustedMaxValue =
+      maxAmount >= 1000 ? maxAmount * 1.1 : maxAmount + 100;
+    const yAxisValues = Array.from(
+      { length: 5 },
+      (_, i) => (adjustedMaxValue / 4) * i,
+    );
+
+    const formattedYAxisLabels = yAxisValues.map(formatAmount);
 
     return (
       <SectionComponent
@@ -47,14 +63,15 @@ const BarChartExpenseCustom = React.memo(
         </View>
         <View className="w-full overflow-hidden">
           <BarChart
+            yAxisLabelTexts={formattedYAxisLabels}
             barWidth={40}
-            spacing={24}
-            noOfSections={3}
+            spacing={18}
+            noOfSections={4}
             minHeight={3}
-            maxValue={Math.max(...data.map((item) => item.amount))}
+            maxValue={adjustedMaxValue}
             barBorderRadius={6}
             data={data?.map((item) => ({
-              value: item?.amount,
+              value: item?.amount || 0,
               label: formatDateMonth(item?.date),
               frontColor: state.isCurrentPeriod(item?.date, state.selectedType)
                 ? PRIMARY_COLOR
@@ -67,6 +84,14 @@ const BarChartExpenseCustom = React.memo(
             xAxisThickness={0}
             isAnimated
             animationDuration={300}
+            yAxisTextStyle={{ fontSize: 12 }}
+            showYAxisIndices={true}
+            leftShiftForLastIndexTooltip={20}
+            renderTooltip={(item: any) => (
+              <View className="rounded-md bg-white p-2">
+                <Text className="text-sm">{formatCurrency(item?.value)}</Text>
+              </View>
+            )}
           />
         </View>
       </SectionComponent>

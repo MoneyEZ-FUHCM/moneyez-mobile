@@ -1,58 +1,40 @@
 import { SectionComponent, TypingIndicatorComponent } from "@/components";
-import { formatFromNow } from "@/helpers/libs";
+import { Message } from "@/types/bot.types";
 import { ArrowDown2 } from "iconsax-react-native";
-import React from "react";
-import {
-  Animated,
-  FlatList,
-  Pressable,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import useChatBotScreen, { Message } from "../hooks/useChatbotScreen";
+import React, { useMemo } from "react";
+import { Animated, FlatList, TouchableOpacity, View } from "react-native";
+import useChatBotScreen from "../hooks/useChatbotScreen";
+import ChatMessageItem from "./ChatMessageItem";
+import { useSelector } from "react-redux";
+import { selectIsBotThinking } from "@/redux/hooks/systemSelector";
 
 const ChatMessages = ({ messages }: { messages: Message[] }) => {
   const { state, handler } = useChatBotScreen();
+  const reversedMessages = useMemo(() => [...messages]?.reverse(), [messages]);
+  const isThikning = useSelector(selectIsBotThinking);
 
   return (
     <SectionComponent rootClassName="flex-1">
+      {/* <LoadingSectionWrapper isLoading={state.isLoadingHistoryChat}> */}
       <FlatList
         inverted
+        showsVerticalScrollIndicator={false}
         ref={state.flatListRef}
         removeClippedSubviews={false}
-        data={[...messages].reverse()}
-        keyExtractor={(item) => item.id}
+        data={reversedMessages}
+        keyExtractor={(item) => item?.id}
         scrollEventThrottle={10}
         onScroll={handler.handleScroll}
         renderItem={({ item }) => (
-          <View
-            className={`px-4 py-2 ${item.sender === "user" ? "items-end" : "items-start"}`}
-          >
-            <Pressable
-              onPress={() => handler.toggleTimestamp(item.id)}
-              className={`max-w-[70%] px-3 py-2 shadow-sm ${
-                item.sender === "user"
-                  ? "rounded-b-2xl rounded-tl-2xl bg-[#609084]"
-                  : "rounded-b-2xl rounded-tr-2xl bg-gray-200"
-              }`}
-            >
-              <Text
-                className={`text-base ${item.sender === "user" ? "text-white" : "text-black"}`}
-              >
-                {item.text}
-              </Text>
-            </Pressable>
-            {state.selectedMessageIds.has(item.id) && item.createdAt && (
-              <Text className="text-xs text-gray-500">
-                {formatFromNow(item.createdAt)}
-              </Text>
-            )}
-          </View>
+          <ChatMessageItem
+            item={item}
+            selectedMessageIds={state.selectedMessageIds}
+            toggleTimestamp={handler.toggleTimestamp}
+          />
         )}
       />
 
-      {state.isBotTyping && (
+      {isThikning && (
         <View className="items-start px-4 py-2">
           <View className="max-w-[70%] rounded-b-2xl rounded-tr-2xl bg-gray-200 px-3 py-2">
             <TypingIndicatorComponent />
@@ -78,6 +60,7 @@ const ChatMessages = ({ messages }: { messages: Message[] }) => {
           </TouchableOpacity>
         </Animated.View>
       )}
+      {/* </LoadingSectionWrapper> */}
     </SectionComponent>
   );
 };

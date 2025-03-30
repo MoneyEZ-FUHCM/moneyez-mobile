@@ -5,12 +5,14 @@ interface SystemState {
   otpCode: string;
   status: CHATBOT_CONNECTION;
   isShowImageView: boolean;
+  isThinking: boolean;
 }
 
 const initialState: SystemState = {
   otpCode: "",
   status: CHATBOT_CONNECTION.CONNECTING,
   isShowImageView: false,
+  isThinking: false,
 };
 
 const systemSlice = createSlice({
@@ -29,9 +31,12 @@ const systemSlice = createSlice({
     setImageView: (state, action) => {
       state.isShowImageView = action.payload;
     },
+    setIsThinking: (state, action) => {
+      state.isThinking = action.payload;
+    },
   },
 });
 
-export const { setOtpCode, setConnectionStatus, setImageView } =
+export const { setOtpCode, setConnectionStatus, setImageView, setIsThinking } =
   systemSlice.actions;
 export default systemSlice.reducer;

@@ -21,10 +21,9 @@ const SetNewPassword = () => {
 
   return (
     <SafeAreaViewCustom rootClassName="justify-center px-10 items-center bg-white relative">
-      <SectionComponent rootClassName="w-full absolute left-0 top-2">
+      <SectionComponent rootClassName="w-full mb-10">
         <BackScreenButton onPress={() => router.back()} />
       </SectionComponent>
-      <SpaceComponent height={50} />
       <SectionComponent rootClassName="w-full">
         <Text className="text-2xl font-semibold">
           {TITLE.RESET_PASSWORD_TITLE}
