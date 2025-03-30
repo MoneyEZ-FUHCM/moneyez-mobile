@@ -84,3 +84,27 @@ export const calculateRemainingDays = (endDate: string | Date): number => {
   const diffTime = targetDate.getTime() - today.getTime();
   return Math.max(Math.ceil(diffTime / (1000 * 60 * 60 * 24)), 0);
 };
+
+export const parseMarkdown = (markdown: string) => {
+  if (!markdown) return "";
+
+  // Xử lý tiêu đề
+  markdown = markdown.replace(/^### (.*$)/gm, "$1\n");
+  markdown = markdown.replace(/^## (.*$)/gm, "$1\n");
+  markdown = markdown.replace(/^# (.*$)/gm, "$1\n");
+
+  // Xử lý chữ đậm và nghiêng
+  markdown = markdown.replace(/\*\*([^\*]+)\*\*/g, "$1"); // **bold** -> bold
+  markdown = markdown.replace(/\*([^\*]+)\*/g, "$1"); // *italic* -> italic
+
+  // Xử lý danh sách
+  markdown = markdown.replace(/\n- (.*)/g, "- $1");
+
+  // Xử lý link
+  markdown = markdown.replace(/\[([^\]]+)\]\(([^\)]+)\)/g, "$1 ($2)");
+
+  // Xử lý xuống dòng
+  markdown = markdown.replace(/\n{2,}/g, "\n\n");
+
+  return markdown.trim();
+};

@@ -21,7 +21,7 @@ const ConfirmEmail = () => {
 
   return (
     <SafeAreaViewCustom rootClassName="justify-center px-10 items-center bg-white relative">
-      <SectionComponent rootClassName="w-full absolute left-0 top-2">
+      <SectionComponent rootClassName="w-full mb-10">
         <BackScreenButton onPress={() => router.back()} />
       </SectionComponent>
       <SectionComponent rootClassName="w-full">

@@ -92,7 +92,6 @@ const useUpdateExpense = () => {
           router.back();
         }
       } catch (err: any) {
-        console.log("check err", err);
         const error = err?.data;
         if (error?.errorCode === ERROR_CODE.INVALID_TARGET_AMOUNT) {
           ToastAndroid.show(
@@ -113,10 +112,7 @@ const useUpdateExpense = () => {
       currentSpendingModel?.endDate,
     ],
   );
-  console.log(
-    "check personalLimitBudgetSubcate",
-    personalLimitBudgetSubcate?.data,
-  );
+
   return {
     state: {
       budget: data,

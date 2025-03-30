@@ -1,6 +1,6 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import apiSlice from "@/redux/slices/apiSlice";
-import { SpendingModel, SpendingModelMap } from "@/types/spendingModel.types";
+import { SpendingModelMap } from "@/types/spendingModel.types";
 import { transformCommonResponse } from "@/types/system.types";
 
 const { HTTP_METHOD } = COMMON_CONSTANT;

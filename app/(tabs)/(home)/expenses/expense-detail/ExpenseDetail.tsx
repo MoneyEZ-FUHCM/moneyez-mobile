@@ -75,7 +75,7 @@ export default function ExpenseDetail() {
                 thickness={11}
                 iconName={state.financialGoalDetail?.subcategoryIcon}
                 iconSize={30}
-                isSaving={state.financialGoalDetail.isSaving}
+                isSaving={state.financialGoalDetail?.isSaving}
               />
             </View>
             <View className="w-full flex-1">
@@ -172,7 +172,7 @@ export default function ExpenseDetail() {
                 Tiến Độ Hiện Tại
               </Text>
               <Text className="text-xl font-bold text-[#2c4a42]">
-                {state.financialGoalDetail.prediction.totalProgress}%
+                {state.financialGoalDetail?.prediction?.totalProgress}%
               </Text>
             </View>
 
@@ -181,35 +181,37 @@ export default function ExpenseDetail() {
                 Ngày Còn Lại
               </Text>
               <Text className="text-xl font-bold text-[#2c4a42]">
-                {state.financialGoalDetail.prediction.remainingDays} ngày
+                {state.financialGoalDetail?.prediction?.remainingDays} ngày
               </Text>
             </View>
           </View>
           <View className="mb-4 rounded-2xl bg-white/90 p-4 shadow-md">
             <Text className="mb-4 text-center text-sm italic text-[#609084]">
-              {state.financialGoalDetail.prediction.trendDescription}
+              {state.financialGoalDetail?.prediction?.trendDescription}
             </Text>
             <View className="space-y-3">
               {[
                 {
-                  label: `Mức ${state.financialGoalDetail.isSaving ? "Tiết kiệm" : "Chi tiêu"} Trung Bình:`,
+                  label: `Mức ${state.financialGoalDetail?.isSaving ? "Tiết kiệm" : "Chi tiêu"} Trung Bình:`,
                   value:
                     formatCurrency(
-                      state.financialGoalDetail.prediction.averageChangePerDay,
+                      state.financialGoalDetail?.prediction
+                        ?.averageChangePerDay,
                     ) + "/ngày",
                 },
                 {
                   label: "Mục Tiêu Hằng Ngày:",
                   value:
                     formatCurrency(
-                      state.financialGoalDetail.prediction.requiredDailyChange,
+                      state.financialGoalDetail?.prediction
+                        ?.requiredDailyChange,
                     ) + "/ngày",
                 },
                 {
                   label: `Ngày Dự Kiến ${state.financialGoalDetail?.isSaving ? "Hoàn Thành" : "Kết Thúc Chi Tiêu"}:`,
                   value: formatDate(
-                    state.financialGoalDetail.prediction
-                      .predictedCompletionDate,
+                    state.financialGoalDetail?.prediction
+                      ?.predictedCompletionDate,
                   ),
                 },
               ]?.map((item, index) => (
@@ -219,7 +221,7 @@ export default function ExpenseDetail() {
                     index < 2 ? "border-b border-[#bad8b6]" : ""
                   }`}
                 >
-                  <Text className="text-sm text-[#2c4a42]">{item.label}</Text>
+                  <Text className="text-sm text-[#2c4a42]">{item?.label}</Text>
                   <Text className="text-sm font-bold text-[#609084]">
                     {item.value}
                   </Text>
@@ -253,7 +255,6 @@ export default function ExpenseDetail() {
         <Text className="text-lg font-bold">
           {TEXT_TRANSLATE_EXPENSE_DETAIL.HEADER_TITLE}
         </Text>
-        {/* Remove reload button */}
       </SectionComponent>
 
       {/* Danh sách giao dịch */}
