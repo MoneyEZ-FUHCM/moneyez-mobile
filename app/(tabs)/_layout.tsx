@@ -1,43 +1,48 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
-
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { TabBar } from "@/components";
+import { COMMON_CONSTANT } from "@/helpers/constants/common";
+import { Tabs } from "expo-router";
+import React from "react";
+import "../../globals.css";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const {
+    BOTTOM_TAB_NAME: BOTTOM_TABLE_NAME,
+    BOTTOM_TAB_TRANSLATE: BOTTOM_TABLE_TRANSLATE,
+    CONDITION,
+    ANIMATION_NAVIGATE_TAB,
+  } = COMMON_CONSTANT;
 
   return (
     <Tabs
+      tabBar={(props) => <TabBar {...props} type="main" />}
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
+        headerShown: CONDITION.FALSE,
+        animation: ANIMATION_NAVIGATE_TAB.SHIFT,
+      }}
+    >
       <Tabs.Screen
-        name="index"
+        name={BOTTOM_TABLE_NAME.HOME}
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: BOTTOM_TABLE_TRANSLATE.HOME,
+          headerShown: CONDITION.FALSE,
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name={BOTTOM_TABLE_NAME.BOT}
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: BOTTOM_TABLE_TRANSLATE.BOT,
+        }}
+      />
+      <Tabs.Screen
+        name={BOTTOM_TABLE_NAME.GROUP}
+        options={{
+          title: BOTTOM_TABLE_TRANSLATE.GROUP,
+        }}
+      />
+      <Tabs.Screen
+        name={BOTTOM_TABLE_NAME.ACCOUNT}
+        options={{
+          title: BOTTOM_TABLE_TRANSLATE.ACCOUNT,
         }}
       />
     </Tabs>
