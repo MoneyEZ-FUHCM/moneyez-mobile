@@ -84,21 +84,21 @@ const useLoginScreen = () => {
         }
       }
     } catch (err: any) {
-      const error = err.data;
+      const error = err?.data;
 
-      if (error.errorCode === ERROR_CODE.ACCOUNT_NOT_EXIST) {
+      if (error?.errorCode === ERROR_CODE.ACCOUNT_NOT_EXIST) {
         ToastAndroid.show(MESSAGE_ERROR.INVALID_INFO, ToastAndroid.SHORT);
         return;
       }
-      if (error.errorCode === ERROR_CODE.INVALID_ACCOUNT) {
+      if (error?.errorCode === ERROR_CODE.INVALID_ACCOUNT) {
         ToastAndroid.show(MESSAGE_ERROR.INVALID_INFO, ToastAndroid.SHORT);
         return;
       }
-      if (error.errorCode === ERROR_CODE.ACCOUNT_BLOCKED) {
+      if (error?.errorCode === ERROR_CODE.ACCOUNT_BLOCKED) {
         ToastAndroid.show(MESSAGE_ERROR.ACCOUNT_BLOCKED, ToastAndroid.SHORT);
         return;
       }
-      if (error.errorCode === ERROR_CODE.ACCOUNT_NEED_CONFIRM_EMAIL) {
+      if (error?.errorCode === ERROR_CODE.ACCOUNT_NEED_CONFIRM_EMAIL) {
         dispatch(setEmail(payload.email));
         router.navigate({
           pathname: AUTH.INPUT_OTP as any,
@@ -120,8 +120,8 @@ const useLoginScreen = () => {
   const sendUserInfoToServer = async (idToken: string) => {
     try {
       const res = await loginGoogle(JSON.stringify(idToken)).unwrap();
-      if (res && res.status === HTTP_STATUS.SUCCESS.OK) {
-        const jwtToken = res.data.accessToken;
+      if (res && res?.status === HTTP_STATUS.SUCCESS.OK) {
+        const jwtToken = res?.data?.accessToken;
         if (jwtToken) {
           const decoded: any = jwtDecode(jwtToken);
           const role =
@@ -133,6 +133,7 @@ const useLoginScreen = () => {
               MESSAGE_ERROR.NOT_PERMISSION,
               ToastAndroid.CENTER,
             );
+            await GoogleSignin.signOut();
             return;
           } else {
             await Promise.all([
@@ -149,9 +150,9 @@ const useLoginScreen = () => {
         }
       }
     } catch (err: any) {
-      const error = err.data;
+      const error = err?.data;
 
-      if (error.errorCode === ERROR_CODE.ACCOUNT_BLOCKED) {
+      if (error?.errorCode === ERROR_CODE.ACCOUNT_BLOCKED) {
         ToastAndroid.show(MESSAGE_ERROR.ACCOUNT_BLOCKED, ToastAndroid.SHORT);
         await GoogleSignin.signOut();
         return;
@@ -159,6 +160,8 @@ const useLoginScreen = () => {
 
       await GoogleSignin.signOut();
       ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
@@ -166,6 +169,7 @@ const useLoginScreen = () => {
     await GoogleSignin.hasPlayServices({
       showPlayServicesUpdateDialog: true,
     });
+    dispatch(setLoading(true));
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo: any = await GoogleSignin.signIn();
@@ -173,6 +177,7 @@ const useLoginScreen = () => {
         await sendUserInfoToServer(userInfo.data.idToken);
       }
     } catch (err) {
+      dispatch(setLoading(false));
       ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
     }
   };
