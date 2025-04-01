@@ -9,7 +9,8 @@ import {
   UserSpendingModel,
 } from "@/types/spendingModel.types";
 import { router } from "expo-router";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { ToastAndroid } from "react-native";
 import { useDispatch } from "react-redux";
 
 const useSpendingModelHistory = () => {
@@ -23,6 +24,7 @@ const useSpendingModelHistory = () => {
   const [allSpendingModels, setAllSpendingModels] = useState<
     UserSpendingModel[]
   >([]);
+  const [isRefetching, setIsRefetching] = useState(false);
 
   const { HOME } = PATH_NAME;
   const dispatch = useDispatch();
@@ -127,6 +129,22 @@ const useSpendingModelHistory = () => {
     router.back();
   };
 
+  const handleRefetch = useCallback(async () => {
+    if (isRefetching) {
+      ToastAndroid.show(
+        "Vui lòng đợi trước khi làm mới lại!",
+        ToastAndroid.SHORT,
+      );
+      return;
+    }
+
+    setIsRefetching(true);
+    await refetch().finally(() => {
+      setTimeout(() => setIsRefetching(false), 2000);
+      ToastAndroid.show("Danh sách đã được cập nhật", ToastAndroid.SHORT);
+    });
+  }, [refetch, isRefetching]);
+
   return {
     state: {
       spendingModelsByYear,
@@ -135,6 +153,7 @@ const useSpendingModelHistory = () => {
       isLoading,
       error,
       isLoadingHistory,
+      isRefetching,
     },
     handler: {
       formatCurrency,
@@ -144,6 +163,7 @@ const useSpendingModelHistory = () => {
       refetch,
       handleViewPeriodHistory,
       useHideTabbar,
+      handleRefetch,
     },
   };
 };

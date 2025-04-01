@@ -48,7 +48,11 @@ const useLoginScreen = () => {
     password: Yup.string()
       .trim()
       .required(MESSAGE_VALIDATE.PASSWORD_REQUIRED)
-      .min(8, MESSAGE_VALIDATE.PASSWORD_8_CHARACTERS),
+      .min(8, MESSAGE_VALIDATE.PASSWORD_8_CHARACTERS)
+      .matches(/[\W_]/, MESSAGE_VALIDATE.PASSWORD_SPECIAL_CHAR)
+      .matches(/[a-zA-Z]/, MESSAGE_VALIDATE.PASSWORD_LETTERS)
+      .matches(/^\S*$/, MESSAGE_VALIDATE.PASSWORD_NO_WHITESPACE)
+      .matches(/[A-Z]/, MESSAGE_VALIDATE.PASSWORD_UPPERCASE),
   });
 
   const handleLogin = async (payload: AuthRequest) => {
@@ -118,6 +122,8 @@ const useLoginScreen = () => {
   };
 
   const sendUserInfoToServer = async (idToken: string) => {
+    dispatch(setLoading(true));
+
     try {
       const res = await loginGoogle(JSON.stringify(idToken)).unwrap();
       if (res && res?.status === HTTP_STATUS.SUCCESS.OK) {
@@ -166,10 +172,10 @@ const useLoginScreen = () => {
   };
 
   const handleLoginGoogle = async () => {
+    await GoogleSignin.signOut();
     await GoogleSignin.hasPlayServices({
       showPlayServicesUpdateDialog: true,
     });
-    dispatch(setLoading(true));
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo: any = await GoogleSignin.signIn();
@@ -177,7 +183,6 @@ const useLoginScreen = () => {
         await sendUserInfoToServer(userInfo.data.idToken);
       }
     } catch (err) {
-      dispatch(setLoading(false));
       ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
     }
   };

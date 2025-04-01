@@ -17,7 +17,6 @@ const useLogout = () => {
   const handleLogout = async () => {
     try {
       await AsyncStorage.clear();
-      await GoogleSignin.signOut();
       dispatch(clearUserInfo());
       dispatch(apiSlice.util.resetApiState());
       dispatch(clearCurrentModel());

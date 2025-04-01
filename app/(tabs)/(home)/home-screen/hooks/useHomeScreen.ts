@@ -9,7 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import dayjs from "dayjs";
 import { router } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { FlatList } from "react-native";
+import { FlatList, ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import HOME_SCREEN_CONSTANTS from "../../HomeScreen.const";
 import { GroupDetail } from "@/types/group.type";
@@ -37,6 +37,7 @@ const useHomeScreen = () => {
   const dispatch = useDispatch();
   const { HOME } = PATH_NAME;
   const [updateFcmToken] = useUpdateFcmTokenMutation();
+  const [isRefetching, setIsRefetching] = useState(false);
 
   const { isLoading, refetch: refetchSpendingModel } =
     useGetCurrentUserSpendingModelQuery(undefined, {});
@@ -112,6 +113,25 @@ const useHomeScreen = () => {
     fetchData();
   }, []);
 
+  const handleRefetch = useCallback(async () => {
+    if (isRefetching) {
+      ToastAndroid.show(
+        "Vui lòng đợi trước khi làm mới lại!",
+        ToastAndroid.SHORT,
+      );
+      return;
+    }
+
+    setIsRefetching(true);
+
+    try {
+      await Promise.all([refetchGroups(), refetchSpendingModel()]);
+      ToastAndroid.show("Cập nhật thành công", ToastAndroid.SHORT);
+    } finally {
+      setTimeout(() => setIsRefetching(false), 2000);
+    }
+  }, [refetchGroups, refetchSpendingModel, isRefetching]);
+
   return {
     state: {
       isShow,
@@ -136,6 +156,7 @@ const useHomeScreen = () => {
       handleNavigateMenuItem,
       toggleVisibilityGroupBalance,
       handleNavigateNotification,
+      handleRefetch,
     },
   };
 };

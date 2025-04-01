@@ -162,10 +162,16 @@ const Group = () => {
           </LoadingSectionWrapper>
         )}
         {groups && groups?.length > 0 && (
-          <View className="absolute bottom-10 right-5">
+          <View className="absolute bottom-10 right-5 space-y-2">
             <TouchableOpacity
               className="h-14 w-14 items-center justify-center rounded-full bg-primary shadow-lg shadow-gray-400"
               onPress={handler.handleCreateGroupAndHideTabbar}
+            >
+              <AntDesign name="addusergroup" size={24} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="h-14 w-14 items-center justify-center rounded-full bg-primary shadow-lg shadow-gray-400"
+              onPress={handler.handleJoinGroup}
             >
               <AntDesign name="addusergroup" size={24} color="white" />
             </TouchableOpacity>

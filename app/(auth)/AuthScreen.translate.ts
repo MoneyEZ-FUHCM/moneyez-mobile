@@ -88,6 +88,10 @@ const TEXT_TRANSLATE_AUTH = {
     PASSWORDS_MUST_MATCH: "Mật khẩu và xác nhận mật khẩu phải giống nhau",
     OTP_5_DIGITS: "Vui lòng nhập đầy đủ 5 chữ số",
     RESET_PASSWORD: "Vui lòng nhập mật khẩu mới và xác nhận",
+    PASSWORD_SPECIAL_CHAR: "Mật khẩu phải có ít nhất 1 kí tự đặc biệt",
+    PASSWORD_LETTERS: "Mật khẩu phải có ít nhất một chữ cái",
+    PASSWORD_NO_WHITESPACE: "Mật khẩu không được có khoảng trắng",
+    PASSWORD_UPPERCASE: "Mật khẩu phải có ít nhất một chữ cái in hoa",
   },
 };
 

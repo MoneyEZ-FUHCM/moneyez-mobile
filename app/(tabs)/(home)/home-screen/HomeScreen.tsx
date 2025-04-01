@@ -18,6 +18,7 @@ import React from "react";
 import {
   FlatList,
   Image,
+  RefreshControl,
   Text,
   ToastAndroid,
   TouchableOpacity,
@@ -64,7 +65,16 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaViewCustom rootClassName="relative">
-      <ScrollViewCustom isBottomTab showsVerticalScrollIndicator={false}>
+      <ScrollViewCustom
+        isBottomTab
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={false}
+            onRefresh={handler.handleRefetch}
+          />
+        }
+      >
         <SectionComponent
           rootClassName="relative flex-1 "
           style={{

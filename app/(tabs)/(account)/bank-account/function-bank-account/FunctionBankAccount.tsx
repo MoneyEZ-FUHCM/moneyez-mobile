@@ -11,7 +11,6 @@ import React from "react";
 import {
   Image,
   Pressable,
-  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -121,12 +120,12 @@ const FunctionBankAccount = () => {
 
                   <View className="">
                     <TouchableOpacity
-                      className="rounded-lg bg-gray-50"
+                      className="rounded-lg"
                       onPress={handler.handleOpenBankSelect}
                     >
                       <View className="relative">
                         <TouchableOpacity
-                          className="rounded-lg bg-gray-50"
+                          className="rounded-lg"
                           onPress={handler.handleOpenBankSelect}
                           activeOpacity={0.8}
                         >
@@ -136,7 +135,7 @@ const FunctionBankAccount = () => {
                             label="Tên ngân hàng"
                             placeholder="Chọn ngân hàng"
                             labelClass="text-text-gray text-xs font-semibold"
-                            inputClass="h-11  bg-gray-50 px-3 py-2 rounded-lg pr-10"
+                            inputClass="h-11 bg-gray-50 px-3 py-2 rounded-lg pr-10"
                             editable={false}
                             value={values.bankName}
                             rightIcon={

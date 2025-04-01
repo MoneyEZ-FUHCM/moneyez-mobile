@@ -70,6 +70,10 @@ const useFundRequestInfo = () => {
     dispatch(setGroupTabHidden(false));
   }, []);
 
+  const handleCreateFundRequest = useCallback(() => {
+    router.replace(GROUP_HOME.CREATE_FUND_REQUEST as any);
+  }, []);
+
   return {
     state: {
       fundRequest,
@@ -78,6 +82,7 @@ const useFundRequestInfo = () => {
       copyToClipboard,
       handleConfirm,
       handleBack,
+      handleCreateFundRequest,
     },
   };
 };

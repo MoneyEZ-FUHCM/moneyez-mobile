@@ -6,7 +6,8 @@ export const TEXT_TRANSLATE_FUND_REQUEST_INFO = {
   },
   // Message
   MESSAGE: {
-    SUCCESS: "Bạn đã tạo yêu cầu góp quỹ thành công, vui lòng thực hiện chuyển khoản theo các thông tin bên dưới để được trưởng nhóm duyệt.",
+    SUCCESS:
+      "Bạn đã tạo yêu cầu góp quỹ thành công, vui lòng thực hiện chuyển khoản theo các thông tin bên dưới để được trưởng nhóm duyệt.",
     COPY_SUCCESS: "Đã sao chép",
     COPY_ERROR: "Sao chép thất bại, vui lòng thử lại",
   },
@@ -23,6 +24,7 @@ export const TEXT_TRANSLATE_FUND_REQUEST_INFO = {
   BUTTON: {
     COPY: "copy",
     CONFIRM: "Xác nhận",
+    CREATE_FUND_REQUEST: "Tạo giao dịch mới",
   },
 };
 

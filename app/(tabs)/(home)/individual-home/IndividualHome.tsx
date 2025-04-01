@@ -11,7 +11,14 @@ import {
 } from "@/components";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-import { Image, Pressable, Text, View, TouchableOpacity } from "react-native";
+import {
+  Image,
+  Pressable,
+  Text,
+  View,
+  TouchableOpacity,
+  RefreshControl,
+} from "react-native";
 import TEXT_TRANSLATE_INDIVIDUAL_HOME from "./IndividualHome.translate";
 import useIndividualHome from "./hooks/useIndividualHome";
 import SpendingBudgetComponent from "@/components/SpendingBudgetComponent";
@@ -35,10 +42,16 @@ export default function IndividualHome() {
           <Text></Text>
         </View>
       </SectionComponent>
-      <LoadingSectionWrapper isLoading={state.isLoading}>
+      <LoadingSectionWrapper isLoading={state.isLoading || state.isRefetching}>
         <ScrollViewCustom
           isBottomTab={true}
           showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={false}
+              onRefresh={handler.handleRefetch}
+            />
+          }
         >
           {/* BALANCE CARD */}
           <SectionComponent rootClassName="mx-5 mt-8 rounded-[10px] bg-white p-4 shadow-sm">

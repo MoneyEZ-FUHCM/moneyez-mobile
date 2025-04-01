@@ -3,14 +3,14 @@ import useHideTabbar from "@/hooks/useHideTabbar";
 import { setCurrentGroup } from "@/redux/slices/groupSlice";
 import { setGroupTabHidden, setMainTabHidden } from "@/redux/slices/tabSlice";
 import { useGetGroupsQuery } from "@/services/group";
+import { GroupDetail } from "@/types/group.type";
+import { Camera } from "expo-camera";
 import { router } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ToastAndroid } from "react-native";
+import { Modalize } from "react-native-modalize";
 import { useDispatch } from "react-redux";
 import TEXT_TRANSLATE_GROUP_LIST from "../GroupList.translate";
-import { Camera } from "expo-camera";
-import { Modalize } from "react-native-modalize";
-import { GroupDetail } from "@/types/group.type";
 
 const useGroupList = () => {
   const pageSize = 10;
@@ -44,18 +44,23 @@ const useGroupList = () => {
 
   useEffect(() => {
     if (data?.items) {
-      setGroups((prevGroups) => {
-        const existingIds = new Set(prevGroups.map((item) => item.id));
-        const newItems = data.items.filter(
-          (item: any) => !existingIds.has(item.id),
-        );
-        return [...prevGroups, ...newItems];
-      });
+      if (isRefetching) {
+        setGroups(data?.items);
+        setPageIndex(1);
+      } else {
+        setGroups((prevGroups) => {
+          const existingIds = new Set(prevGroups.map((item) => item.id));
+          const newItems = data.items.filter(
+            (item: any) => !existingIds.has(item.id),
+          );
+          return [...prevGroups, ...newItems];
+        });
+      }
 
       setIsFetchingData(false);
       setIsLoadingMore(false);
     }
-  }, [data?.items]);
+  }, [data?.items, isRefetching]);
 
   const handleNavigateAndHideTabbar = useCallback(
     (group: GroupDetail) => () => {
@@ -87,7 +92,7 @@ const useGroupList = () => {
     }));
   }, []);
 
-  const handleRefetchGrouplist = useCallback(() => {
+  const handleRefetchGrouplist = useCallback(async () => {
     if (isRefetching) {
       ToastAndroid.show(
         "Vui lòng đợi trước khi làm mới lại!",
@@ -97,7 +102,8 @@ const useGroupList = () => {
     }
 
     setIsRefetching(true);
-    refetch().finally(() => {
+    setPageIndex(1);
+    await refetch().finally(() => {
       setTimeout(() => setIsRefetching(false), 2000);
       ToastAndroid.show("Danh sách đã được cập nhật", ToastAndroid.SHORT);
     });
@@ -124,6 +130,7 @@ const useGroupList = () => {
 
   const handleScanSuccess = async (token: string) => {
     try {
+      console.log("check token", token);
     } catch (error) {
       ToastAndroid.show("Có lỗi xảy ra", ToastAndroid.SHORT);
     }

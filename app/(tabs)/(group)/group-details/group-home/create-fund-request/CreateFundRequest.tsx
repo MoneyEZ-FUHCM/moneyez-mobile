@@ -8,7 +8,7 @@ import { formatCurrency, formatCurrencyInput } from "@/helpers/libs";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Formik } from "formik";
 import React from "react";
-import { Text, TouchableOpacity } from "react-native";
+import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import * as Yup from "yup";
 import useCreateFundRequest from "./hooks/useCreateFundRequest";
 import TEXT_TRANSLATE_CREATE_FUND_REQUEST from "./CreateFundRequest.translate";
@@ -25,14 +25,11 @@ export default function CreateFundRequest() {
   const FundRequestSchema = Yup.object().shape({
     amount: Yup.string()
       .required(MESSAGE_VALIDATE.AMOUNT_REQUIRED)
-      .test(
-        "is-valid-amount",
-        MESSAGE_VALIDATE.AMOUNT_MUST_GREATER_THAN_ZERO,
-        (value) => {
-          const numericValue = value ? parseInt(value.replace(/\D/g, "")) : 0;
-          return numericValue > 0;
-        },
-      ),
+      .test("min-amount", "Giá trị thấp nhất là 10.000đ", function (value) {
+        if (!value) return true;
+        const numericValue = Number(value.replace(/\./g, ""));
+        return numericValue >= 10000;
+      }),
     description: Yup.string()
       .required(MESSAGE_VALIDATE.DESCRIPTION_REQUIRED)
       .min(5, MESSAGE_VALIDATE.DESCRIPTION_MIN_LENGTH),
@@ -60,6 +57,7 @@ export default function CreateFundRequest() {
           amount: "",
           description: "Góp vào quỹ chung",
         }}
+        innerRef={(ref) => (state.formikRef.current = ref)}
         validationSchema={FundRequestSchema}
         onSubmit={handleCreateFundRequest}
       >
@@ -72,9 +70,27 @@ export default function CreateFundRequest() {
                 placeholder={LABELS.AMOUNT_PLACEHOLDER}
                 inputMode="numeric"
                 isRequired
-                labelClass="text-text-gray text-[12px]"
+                labelClass="text-text-gray text-[12px] font-bold"
                 formatter={formatCurrencyInput}
               />
+              <View className="flex-row flex-wrap gap-2">
+                {[50000, 100000, 200000, 500000].map((amount) => (
+                  <Pressable
+                    key={amount}
+                    onPress={() => {
+                      state.formikRef.current?.setFieldValue(
+                        "amount",
+                        formatCurrencyInput(amount.toString()),
+                      );
+                    }}
+                    className="rounded-full bg-thirdly px-3 py-0.5 text-primary"
+                  >
+                    <Text className="text-xs text-gray-700">
+                      {formatCurrencyInput(amount.toString())}
+                    </Text>
+                  </Pressable>
+                ))}
+              </View>
               <SpaceComponent height={10} />
               <TextAreaComponent
                 name="description"
