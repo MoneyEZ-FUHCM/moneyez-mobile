@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "285230826131-76tkufpevsj2acg8d323f01k999knndt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ezmoney",
+            "certificate_hash": "2e892c1aee020f0106153c98e2e8f04b2ed85dfa"
+          }
+        },
+        {
           "client_id": "285230826131-c2vp4h4agr5kb52ma4d4q5vnv088tlk0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
