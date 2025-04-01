@@ -1,6 +1,7 @@
 import NoData from "@/assets/images/InviteMemberAssets/not-found-result.png";
 import {
   FlatListCustom,
+  LoadingSectionWrapper,
   SafeAreaViewCustom,
   SectionComponent,
 } from "@/components";
@@ -125,17 +126,21 @@ export default function SpendingModelHistory() {
         </View>
       ) : state.spendingModelsByYear &&
         state.spendingModelsByYear.length > 0 ? (
-        <FlatListCustom
-          showsVerticalScrollIndicator={false}
-          data={state.spendingModelsByYear ?? []}
-          renderItem={renderYearSection}
-          keyExtractor={(item) => item.year}
-          ListHeaderComponent={renderListHeader}
-          contentContainerStyle={{
-            paddingTop: 4,
-            paddingBottom: 24,
-          }}
-        />
+        <LoadingSectionWrapper isLoading={state.isRefetching}>
+          <FlatListCustom
+            showsVerticalScrollIndicator={false}
+            data={state.spendingModelsByYear ?? []}
+            renderItem={renderYearSection}
+            keyExtractor={(item) => item.year}
+            ListHeaderComponent={renderListHeader}
+            contentContainerStyle={{
+              paddingTop: 4,
+              paddingBottom: 24,
+            }}
+            refreshing={state.isRefetching}
+            onRefresh={handler.handleRefetch}
+          />
+        </LoadingSectionWrapper>
       ) : (
         <View className="mb-28 flex-1 items-center justify-center">
           <Image

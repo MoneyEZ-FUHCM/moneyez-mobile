@@ -128,7 +128,7 @@ const usePeriodHistoryDetail = () => {
   }, [transactionsData?.totalCount]);
 
   useEffect(() => {
-    if (transactions.length > 0) {
+    if (transactions?.length > 0) {
       setTransactions([]);
       setPageIndex(1);
     }
@@ -136,25 +136,30 @@ const usePeriodHistoryDetail = () => {
 
   useEffect(() => {
     if (transactionsData?.items) {
-      setTransactions((prevTransactions: any) => {
-        const newTransactions = transactionsData.items.map(
-          formatTransaction as any,
-        );
-        const uniqueTransactions = [
-          ...prevTransactions,
-          ...newTransactions.filter(
-            (newTrans: any) =>
-              !prevTransactions.some(
-                (oldTrans: any) => oldTrans.id === newTrans.id,
-              ),
-          ),
-        ];
-        return uniqueTransactions;
-      });
+      if (isRefetching) {
+        setTransactions(transactionsData?.items?.map(formatTransaction as any));
+        setPageIndex(1);
+      } else {
+        setTransactions((prevTransactions: any) => {
+          const newTransactions = transactionsData?.items?.map(
+            formatTransaction as any,
+          );
+          const uniqueTransactions = [
+            ...prevTransactions,
+            ...newTransactions.filter(
+              (newTrans: any) =>
+                !prevTransactions.some(
+                  (oldTrans: any) => oldTrans?.id === newTrans?.id,
+                ),
+            ),
+          ];
+          return uniqueTransactions;
+        });
+      }
       setIsFiltering(false);
       setIsLoadingMore(false);
     }
-  }, [transactionsData?.items]);
+  }, [transactionsData?.items, isRefetching]);
 
   const loadMoreData = useCallback(() => {
     if (

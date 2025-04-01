@@ -10,8 +10,7 @@ import {
 } from "@/services/notification";
 import { router } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Animated, ToastAndroid } from "react-native";
-import { State } from "react-native-gesture-handler";
+import { ToastAndroid } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { useDispatch } from "react-redux";
 import NOTIFICATION_CONSTANTS from "../NotificationList.const";
@@ -76,27 +75,34 @@ const useNotificationList = () => {
 
   useEffect(() => {
     if (data?.items) {
-      setNotifications((prev) => {
-        const newNotifications = data.items?.map((notice: any) => ({
-          id: notice.id,
-          title: notice.title,
-          type: notice.type,
-          message: notice.message.toLowerCase(),
-          isRead: notice.isRead,
-          formattedDate: formatDate(notice.createdDate),
-          formattedTime: formatTime(notice.createdDate),
-        }));
-        return [
-          ...prev,
-          ...newNotifications.filter(
-            (newTrans) => !prev.some((oldTrans) => oldTrans.id === newTrans.id),
-          ),
-        ];
-      });
+      if (isFetchingData) {
+        setNotifications(data?.items);
+        setPageIndex(1);
+      } else {
+        setNotifications((prev) => {
+          const newNotifications = data.items?.map((notice: any) => ({
+            id: notice.id,
+            title: notice.title,
+            type: notice.type,
+            message: notice.message.toLowerCase(),
+            isRead: notice.isRead,
+            formattedDate: formatDate(notice.createdDate),
+            formattedTime: formatTime(notice.createdDate),
+          }));
+          return [
+            ...prev,
+            ...newNotifications.filter(
+              (newTrans) =>
+                !prev.some((oldTrans) => oldTrans.id === newTrans.id),
+            ),
+          ];
+        });
+      }
+
       setIsFetchingData(false);
       setIsLoadingMore(false);
     }
-  }, [data?.items]);
+  }, [data?.items, isFetchingData]);
 
   const handleGoBack = () => {
     router.back();
@@ -151,27 +157,6 @@ const useNotificationList = () => {
     setIsFetchingData(false);
   }, []);
 
-  // gesture
-  const currentIndex = tabs.findIndex((tab) => tab.type === activeTab);
-  const slideAnim = useRef(new Animated.Value(0)).current;
-
-  const onGestureEvent = Animated.event(
-    [{ nativeEvent: { translationX: slideAnim } }],
-    { useNativeDriver: false },
-  );
-
-  const onHandlerStateChange = ({ nativeEvent }: { nativeEvent: any }) => {
-    if (nativeEvent.state === State.END) {
-      const dragX = nativeEvent.translationX;
-      if (dragX < -50 && currentIndex < tabs.length - 1) {
-        setActiveTab(tabs[currentIndex + 1].type);
-      } else if (dragX > 50 && currentIndex > 0) {
-        setActiveTab(tabs[currentIndex - 1].type);
-      }
-      Animated.spring(slideAnim, { toValue: 0, useNativeDriver: true }).start();
-    }
-  };
-
   return {
     state: {
       activeTab,
@@ -189,7 +174,6 @@ const useNotificationList = () => {
       isFetchingData,
       isRefetching,
       tabs,
-      slideAnim,
     },
     handler: {
       setActiveTab,
@@ -201,8 +185,6 @@ const useNotificationList = () => {
       handleOpenMore,
       handleDeleteNotice,
       handleRefetchNotice,
-      onGestureEvent,
-      onHandlerStateChange,
     },
   };
 };

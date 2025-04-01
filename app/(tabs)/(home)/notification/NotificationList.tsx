@@ -1,31 +1,22 @@
 import NoData from "@/assets/images/InviteMemberAssets/not-found-result.png";
 import {
-  FlatListGestureCustom,
+  FlatListCustom,
   LoadingSectionWrapper,
   ModalLizeComponent,
   SafeAreaViewCustom,
   SectionComponent,
   SpaceComponent,
 } from "@/components";
+import { Colors } from "@/helpers/constants/color";
+import { Notification } from "@/types/notification.type";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { Bookmark, Forbidden2 } from "iconsax-react-native";
 import React from "react";
-import {
-  Animated,
-  GestureResponderEvent,
-  Image,
-  Pressable,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import {
-  GestureHandlerRootView,
-  PanGestureHandler,
-} from "react-native-gesture-handler";
+import { Image, Pressable, Text, TouchableOpacity, View } from "react-native";
 import useNotificationList from "./hooks/useNotificationList";
 import { getNotificationIcon } from "./NotificationList.const";
 import TEXT_TRANSLATE_NOTICE from "./NotificationList.translate";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function NotificationList() {
   const { state, handler } = useNotificationList();
@@ -36,7 +27,7 @@ export default function NotificationList() {
     isLoadingMore,
     isFetchingData,
     tabs,
-    slideAnim,
+    data,
   } = state;
   const {
     setActiveTab,
@@ -46,35 +37,47 @@ export default function NotificationList() {
     handleOpenMore,
     loadMoreData,
     handleRefetchNotice,
-    onGestureEvent,
-    onHandlerStateChange,
   } = handler;
-  const PRIMARY_COLOR = "#609084";
 
-  const renderNotificationItem = ({ item }: { item: any }) => (
+  const highlightText = (text: string, highlightStyle: any) => {
+    const parts = text.split(/\[|\]/);
+
+    return parts.map((part: string, index: number) => {
+      if (index % 2 === 1) {
+        return (
+          <Text key={index} style={highlightStyle}>
+            {part}
+          </Text>
+        );
+      } else {
+        return <Text key={index}>{part}</Text>;
+      }
+    });
+  };
+
+  const renderNotificationItem = ({ item }: { item: Notification }) => (
     <Pressable
       key={item.id}
-      className={`rounded-lg border border-gray-200 p-3 ${item?.isRead ? "bg-white" : "bg-thirdly"}`}
+      className="relative border-b border-gray-200 bg-white p-3"
     >
       <View className="flex-row items-start gap-3">
-        <View className="rounded-full bg-primary p-2">
+        <View className="relative rounded-full bg-primary p-2">
           <MaterialIcons
             name={getNotificationIcon(item?.type) || "info"}
             size={28}
             color="#ffffff"
           />
+          {!item?.isRead && (
+            <View className="absolute -right-0.5 -top-1 h-4 w-4 rounded-full border-2 border-white bg-red" />
+          )}
         </View>
         <View className="flex-1">
-          <View className="flex-row items-center justify-between">
-            <Text className="text-base font-semibold text-[#021433]">
-              {item.title}
-            </Text>
-            <Pressable
-              onPress={(event: GestureResponderEvent) => handleOpenMore(item)}
-            >
-              <MaterialIcons name="more-horiz" size={24} color="#757575" />
-            </Pressable>
-          </View>
+          <Text className="max-w-[90%] text-base font-semibold">
+            {highlightText(item?.title || "No Title", {
+              color: Colors.colors.primary,
+              fontWeight: "bold",
+            })}
+          </Text>
           <Text className="mt-1 text-sm text-[#1e1e1e]">
             {item?.message?.charAt(0)?.toUpperCase() + item?.message?.slice(1)}
           </Text>
@@ -85,11 +88,17 @@ export default function NotificationList() {
           </View>
         </View>
       </View>
+      <Pressable
+        onPress={() => handleOpenMore(item)}
+        className="absolute right-2 top-1"
+      >
+        <MaterialIcons name="more-horiz" size={24} color="#757575" />
+      </Pressable>
     </Pressable>
   );
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView>
       <SafeAreaViewCustom rootClassName="bg-[#fafafa]">
         <SectionComponent rootClassName="h-14 bg-white items-center justify-center relative">
           <Pressable
@@ -98,13 +107,10 @@ export default function NotificationList() {
           >
             <MaterialIcons name="arrow-back" size={24} />
           </Pressable>
-          <Text className="text-xl font-semibold text-black">Thông báo</Text>
-          <TouchableOpacity
-            onPress={handleRefetchNotice}
-            className="absolute right-3 rounded-full p-2"
-          >
-            <AntDesign name="reload1" size={24} color={PRIMARY_COLOR} />
-          </TouchableOpacity>
+          <Text className="text-xl font-semibold text-black">
+            Thông báo ({data?.totalCount})
+          </Text>
+          <SpaceComponent width={24} />
         </SectionComponent>
         <View className="flex-row bg-white">
           {tabs.map((tab) => (
@@ -121,40 +127,34 @@ export default function NotificationList() {
             </Pressable>
           ))}
         </View>
-        <PanGestureHandler
-          onGestureEvent={onGestureEvent}
-          onHandlerStateChange={onHandlerStateChange}
-        >
-          <Animated.View
-            style={{ flex: 1, transform: [{ translateX: slideAnim }] }}
-          >
-            <LoadingSectionWrapper isLoading={isLoading || isFetchingData}>
-              {noticeData && noticeData?.length > 0 ? (
-                <FlatListGestureCustom
-                  isBottomTab={false}
-                  isLoading={isLoadingMore}
-                  data={noticeData ?? []}
-                  renderItem={renderNotificationItem}
-                  keyExtractor={(item) => item.id.toString()}
-                  onLoadMore={loadMoreData}
-                  hasMore={state.data?.items?.length === state.pageSize}
-                  showsVerticalScrollIndicator={false}
-                  contentContainerStyle={{ padding: 16, gap: 12 }}
-                  refreshing={isFetchingData}
-                  onRefresh={handleRefetchNotice}
-                />
-              ) : (
-                <View className="mt-36 items-center justify-center px-5">
-                  <Image
-                    source={NoData}
-                    className="h-[400px] w-full"
-                    resizeMode="contain"
-                  />
-                </View>
-              )}
-            </LoadingSectionWrapper>
-          </Animated.View>
-        </PanGestureHandler>
+        <LoadingSectionWrapper isLoading={isLoading || isFetchingData}>
+          {noticeData && noticeData?.length > 0 ? (
+            <FlatListCustom
+              isBottomTab={true}
+              isLoading={isLoadingMore}
+              className="mx-3 mt-5 rounded-2xl"
+              data={noticeData ?? []}
+              renderItem={renderNotificationItem}
+              keyExtractor={(item) => item?.id.toString()}
+              onLoadMore={loadMoreData}
+              hasMore={state.data?.items?.length === state.pageSize}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                paddingBottom: 110,
+              }}
+              refreshing={isFetchingData}
+              onRefresh={handleRefetchNotice}
+            />
+          ) : (
+            <View className="mt-36 items-center justify-center px-5">
+              <Image
+                source={NoData}
+                className="h-[400px] w-full"
+                resizeMode="contain"
+              />
+            </View>
+          )}
+        </LoadingSectionWrapper>
         <ModalLizeComponent ref={state.modalizeRef}>
           {state.selectedNotice && (
             <View className="rounded-xl bg-white p-4 shadow-lg">
@@ -162,7 +162,9 @@ export default function NotificationList() {
               <View className="mb-2 items-center">
                 <View className="h-14 w-14 items-center justify-center rounded-full border-primary bg-primary p-2">
                   <MaterialIcons
-                    name={getNotificationIcon(state.selectedNotice?.type)}
+                    name={
+                      getNotificationIcon(state.selectedNotice?.type) || "info"
+                    }
                     size={30}
                     color="#ffffff"
                   />

@@ -159,7 +159,13 @@ const useAddTransaction = (type: string) => {
   const validationSchema = useMemo(
     () =>
       Yup.object().shape({
-        amount: Yup.string().required(MESSAGE_VALIDATE.MONEY_REQUIRED),
+        amount: Yup.string()
+          .required(MESSAGE_VALIDATE.MONEY_REQUIRED)
+          .test("min-amount", "Giá trị thấp nhất là 10.000đ", function (value) {
+            if (!value) return true;
+            const numericValue = Number(value.replace(/\./g, ""));
+            return numericValue >= 10000;
+          }),
         dob: Yup.string().required(MESSAGE_VALIDATE.DATE_REQUIRED),
         description: Yup.string().required(
           MESSAGE_VALIDATE.DESCRIPTION_REQUIRED,

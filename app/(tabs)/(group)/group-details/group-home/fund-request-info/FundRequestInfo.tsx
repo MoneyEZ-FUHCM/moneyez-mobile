@@ -19,7 +19,7 @@ export default function FundRequestInfoPage() {
       {/* Header */}
       <SectionComponent rootClassName="h-14 bg-white justify-center">
         <View className="flex-row items-center justify-between px-5">
-          <TouchableOpacity onPress={() => handler.handleBack}>
+          <TouchableOpacity onPress={handler.handleBack}>
             <MaterialIcons name="arrow-back" size={24} />
           </TouchableOpacity>
           <Text className="text-lg font-bold text-black">
@@ -122,11 +122,11 @@ export default function FundRequestInfoPage() {
       {/* Confirm Button */}
       <SectionComponent rootClassName="absolute bottom-0 left-0 right-0 p-5 bg-white">
         <TouchableOpacity
-          onPress={handler.handleConfirm}
+          onPress={handler.handleCreateFundRequest}
           className="rounded-xl bg-[#609084] py-3"
         >
           <Text className="text-center text-lg font-medium text-white">
-            {BUTTON.CONFIRM}
+            {BUTTON.CREATE_FUND_REQUEST}
           </Text>
         </TouchableOpacity>
       </SectionComponent>

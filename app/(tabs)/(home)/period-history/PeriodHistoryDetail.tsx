@@ -1,5 +1,5 @@
-import NoData from "@/assets/images/not-found-result.png";
 import NoImages from "@/assets/images/no-images.png";
+import NoData from "@/assets/images/not-found-result.png";
 import {
   FlatListCustom,
   ImageViewerComponent,
@@ -13,7 +13,7 @@ import { TRANSACTION_TYPE } from "@/enums/globals";
 import { Colors } from "@/helpers/constants/color";
 import { formatCurrency, formatDate, formatDateTime } from "@/helpers/libs";
 import { TransactionViewModelDetail } from "@/types/transaction.types";
-import { AntDesign, MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import {
   ActivityIndicator,
@@ -268,21 +268,11 @@ export default function PeriodHistoryDetail() {
                 onPress={handler.handleBack}
                 className="absolute left-3 rounded-full p-2"
               >
-                <AntDesign name="close" size={24} />
+                <MaterialIcons name="arrow-back" size={24} />
               </TouchableOpacity>
-              <Text className="text-lg font-bold">
+              <Text className="text-center text-lg font-bold">
                 {state.modelDetails?.startDate} - {state.modelDetails?.endDate}
               </Text>
-              <TouchableOpacity
-                onPress={handler.handleRefetchData}
-                className="absolute right-3 rounded-full p-2"
-              >
-                <AntDesign
-                  name="reload1"
-                  size={24}
-                  color={Colors.colors.primary}
-                />
-              </TouchableOpacity>
             </SectionComponent>
             <View className="flex-1 items-center justify-center">
               <ActivityIndicator size="large" color="#609084" />
@@ -298,17 +288,11 @@ export default function PeriodHistoryDetail() {
                 onPress={handler.handleBack}
                 className="absolute left-3 rounded-full p-2"
               >
-                <AntDesign name="close" size={24} />
+                <MaterialIcons name="arrow-back" size={24} />
               </TouchableOpacity>
-              <Text className="text-lg font-bold">
+              <Text className="text-center text-lg font-bold">
                 {state.modelDetails?.startDate} - {state.modelDetails?.endDate}
               </Text>
-              <TouchableOpacity
-                onPress={handler.handleRefetchData}
-                className="absolute right-3 rounded-full p-2"
-              >
-                <AntDesign name="reload1" size={24} />
-              </TouchableOpacity>
             </SectionComponent>
             <LoadingSectionWrapper isLoading={state.isRefetching}>
               <View className="px-5">
@@ -340,6 +324,8 @@ export default function PeriodHistoryDetail() {
                     onLoadMore={handler.loadMoreData}
                     isLoading={state.isLoadingMore}
                     ListEmptyComponent={renderEmptyList}
+                    refreshing={state.isRefetching}
+                    onRefresh={handler.handleRefetchData}
                   />
                 </LoadingSectionWrapper>
               </SectionComponent>

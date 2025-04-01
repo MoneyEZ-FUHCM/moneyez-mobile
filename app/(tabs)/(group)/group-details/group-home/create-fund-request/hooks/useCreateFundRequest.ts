@@ -1,13 +1,14 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
-import useHideGroupTabbar from "@/hooks/useHideGroupTabbar";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
+import { setLoading } from "@/redux/slices/loadingSlice";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";
 import { useRequestFundMutation } from "@/services/group";
 import { router, useFocusEffect } from "expo-router";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { BackHandler, ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import TEXT_TRANSLATE_CREATE_FUND_REQUEST from "../CreateFundRequest.translate";
 
 interface FundRequestForm {
   amount: string;
@@ -22,6 +23,7 @@ const useCreateFundRequest = () => {
   const dispatch = useDispatch();
   const currentGroup = useSelector(selectCurrentGroup);
   const fundBalance = currentGroup?.currentBalance || 0;
+  const formikRef = useRef<any>(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -51,6 +53,7 @@ const useCreateFundRequest = () => {
   // Handle form submission
   const handleCreateFundRequest = useCallback(
     async (values: FundRequestForm) => {
+      dispatch(setLoading(true));
       try {
         setIsSubmitting(true);
         const numericAmount = parseInt(values.amount.replace(/\D/g, ""));
@@ -61,7 +64,7 @@ const useCreateFundRequest = () => {
           description: values.description,
         }).unwrap();
 
-        if (response && response.status === HTTP_STATUS.SUCCESS.OK) {
+        if (response && response?.status === HTTP_STATUS.SUCCESS.OK) {
           router.replace({
             pathname: GROUP_HOME.FUND_REQUEST_INFO as any,
             params: {
@@ -75,13 +78,18 @@ const useCreateFundRequest = () => {
               description: values?.description,
             },
           });
+          ToastAndroid.show(
+            TEXT_TRANSLATE_CREATE_FUND_REQUEST.MESSAGE_SUCCESS.CREATE_SUCCESS,
+            ToastAndroid.SHORT,
+          );
         }
       } catch (err: any) {
-        const error = err.data;
+        const error = err?.data;
 
         ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
       } finally {
         setIsSubmitting(false);
+        dispatch(setLoading(false));
       }
     },
     [requestFund],
@@ -92,10 +100,10 @@ const useCreateFundRequest = () => {
       () => ({
         fundBalance,
         isSubmitting,
+        formikRef,
       }),
-      [fundBalance, isSubmitting],
+      [fundBalance, isSubmitting, formikRef],
     ),
-
     handler: {
       handleBack,
       handleCreateFundRequest,
