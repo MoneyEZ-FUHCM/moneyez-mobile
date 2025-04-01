@@ -25,6 +25,8 @@ const PATH_NAME = {
     CREATE_GROUP_STEP_1: "create-group/CreateGroup",
     CREATE_FUND_CONTRIBUTION_REQUEST:
       "fund-contribution-request/FundContributionRequest",
+    CREATE_FUNCTION_BANK_ACCOUNT:
+      "create-group/function-bank-account/FunctionBankAccount",
   },
   BOT: {
     CHATBOT: "chatbot/ChatBot",

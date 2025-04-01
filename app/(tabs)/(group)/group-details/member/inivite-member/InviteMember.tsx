@@ -17,6 +17,7 @@ import useInviteMember from "./hooks/useInviteMember";
 
 const CountdownDisplay = memo(({ createdDate }: { createdDate: string }) => {
   const [countdown, setCountdown] = useState("");
+  const [isExpired, setIsExpired] = useState(false);
 
   useEffect(() => {
     const expireTime = new Date(createdDate).getTime() + 24 * 60 * 60 * 1000;
@@ -26,7 +27,8 @@ const CountdownDisplay = memo(({ createdDate }: { createdDate: string }) => {
       const remainingTime = expireTime - now;
 
       if (remainingTime <= 0) {
-        setCountdown("Hết hạn");
+        setIsExpired(true);
+        setCountdown("");
         return true;
       }
 
@@ -49,12 +51,10 @@ const CountdownDisplay = memo(({ createdDate }: { createdDate: string }) => {
     return () => clearInterval(interval);
   }, [createdDate]);
 
-  return countdown ? (
+  return (
     <Text className="text-sm font-medium text-[#b62d2d]">
-      Lời mời sẽ hết hạn sau {countdown}
+      {isExpired ? "Lời mời đã hết hạn" : `Lời mời sẽ hết hạn sau ${countdown}`}
     </Text>
-  ) : (
-    <Text></Text>
   );
 });
 

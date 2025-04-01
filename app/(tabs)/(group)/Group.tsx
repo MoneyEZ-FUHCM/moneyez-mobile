@@ -11,7 +11,11 @@ import VisibilityIcon from "@/components/GroupListCustom/VisibilityIcon";
 import { appInfo } from "@/helpers/constants/appInfos";
 import { Colors } from "@/helpers/constants/color";
 import { formatCurrency } from "@/helpers/libs";
-import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  AntDesign,
+  FontAwesome6,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import { Scan } from "iconsax-react-native";
 import React from "react";
 import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -162,7 +166,7 @@ const Group = () => {
           </LoadingSectionWrapper>
         )}
         {groups && groups?.length > 0 && (
-          <View className="absolute bottom-10 right-5 space-y-2">
+          <View className="absolute bottom-10 right-5 space-y-4">
             <TouchableOpacity
               className="h-14 w-14 items-center justify-center rounded-full bg-primary shadow-lg shadow-gray-400"
               onPress={handler.handleCreateGroupAndHideTabbar}
@@ -173,7 +177,7 @@ const Group = () => {
               className="h-14 w-14 items-center justify-center rounded-full bg-primary shadow-lg shadow-gray-400"
               onPress={handler.handleJoinGroup}
             >
-              <AntDesign name="addusergroup" size={24} color="white" />
+              <FontAwesome6 name="people-group" size={24} color="white" />
             </TouchableOpacity>
           </View>
         )}
