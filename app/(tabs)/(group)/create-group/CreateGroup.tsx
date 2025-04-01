@@ -20,10 +20,9 @@ import {
   View,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import TEXT_TRANSLATE_BANK_ACCOUNT from "../../(account)/bank-account/bank-account-list/BankAccount.translate";
 import useCreateGroupScreen from "../hooks/useCreateGroupScreen";
 import TEXT_TRANSLATE_CREATE_GROUP from "./CreateGroup.translate";
-import TEXT_TRANSLATE_BANK_ACCOUNT from "../../(account)/bank-account/bank-account-list/BankAccount.translate";
-import { PATH_NAME } from "@/helpers/constants/pathname";
 
 const CreateGroup = () => {
   const { TITLE, STEPS, BUTTON, TEXT, PLACEHOLDER } =
@@ -73,17 +72,17 @@ const CreateGroup = () => {
             >
               <View className="mr-4 h-12 w-12 items-center justify-center rounded-full bg-gray-50">
                 <Image
-                  source={{ uri: item.logo ?? undefined }}
+                  source={{ uri: item?.logo ?? undefined }}
                   className="h-full w-full rounded-full"
                   resizeMode="contain"
                 />
               </View>
               <View className="flex-1">
                 <Text className="text-base font-semibold text-gray-800">
-                  {item.accountHolderName}
+                  {item?.accountHolderName}
                 </Text>
                 <Text className="text-sm text-gray-600">
-                  {item.accountNumber}
+                  {item?.accountNumber}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -96,9 +95,15 @@ const CreateGroup = () => {
             <Text className="mb-2 text-center text-lg font-semibold text-gray-700">
               {TEXT_TRANSLATE_BANK_ACCOUNT.TITLE.NO_BANK_ACCOUNT}
             </Text>
-            <Text className="text-center text-base text-gray-500">
-              Vui lòng tạo tài khoản trước khi tạo nhóm
+            <Text className="text-center text-gray-500">
+              Nhấn nút bên dưới để thêm tài khoản mới
             </Text>
+            <TouchableOpacity
+              className="my-5 rounded-lg bg-primary px-4 py-2"
+              onPress={handler.handleNavigateCreateBankAccount}
+            >
+              <Text className="font-semibold text-white">Tạo tài khoản</Text>
+            </TouchableOpacity>
           </View>
         )}
       </View>
@@ -143,7 +148,6 @@ const CreateGroup = () => {
               </Text>
 
               <View className="rounded-lg bg-white p-5 shadow-md">
-                {/* Nhập thông tin nhóm */}
                 <InputComponent
                   name="name"
                   label={TEXT.GROUP_NAME}
@@ -154,7 +158,7 @@ const CreateGroup = () => {
                   inputClass="text-sm text-gray-800"
                 />
                 <TouchableOpacity
-                  className="rounded-lg bg-gray-50"
+                  className="rounded-lg"
                   onPress={handler.handleOpenBankSelect}
                 >
                   <InputComponent
@@ -202,7 +206,6 @@ const CreateGroup = () => {
             </KeyboardAvoidingView>
           )}
         </Formik>
-
         <ModalLizeComponent
           panGestureEnabled={state.isAtTop}
           scrollViewProps={{

@@ -16,6 +16,7 @@ export default function GroupLayout() {
       }}
     >
       <Stack.Screen name={PATH_NAME.GROUP.GROUP_LIST} />
+      <Stack.Screen name={PATH_NAME.GROUP.CREATE_FUNCTION_BANK_ACCOUNT} />
       <Stack.Screen name="group-details" options={{ headerShown: false }} />
     </Stack>
   );

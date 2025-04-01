@@ -159,6 +159,11 @@ const useCreateGroupScreen = () => {
       bank.accountNumber?.toLowerCase().includes(searchText.toLowerCase()),
   );
 
+  const handleNavigateCreateBankAccount = useCallback(() => {
+    bankSelectModalRef.current?.close();
+    router.navigate(PATH_NAME.GROUP.CREATE_FUNCTION_BANK_ACCOUNT as any);
+  }, []);
+
   return {
     state: {
       isKeyboardVisible,
@@ -180,6 +185,7 @@ const useCreateGroupScreen = () => {
       handleCloseModal,
       handleSelectBank,
       setSearchText,
+      handleNavigateCreateBankAccount,
     },
   };
 };
