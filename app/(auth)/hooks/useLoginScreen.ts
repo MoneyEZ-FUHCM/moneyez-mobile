@@ -174,12 +174,12 @@ const useLoginScreen = () => {
   };
 
   const handleLoginGoogle = async () => {
-    await GoogleSignin.signOut();
-    await GoogleSignin.hasPlayServices({
-      showPlayServicesUpdateDialog: true,
-    });
     try {
-      await GoogleSignin.hasPlayServices();
+      await GoogleSignin.signOut();
+      await GoogleSignin.hasPlayServices({
+        showPlayServicesUpdateDialog: true,
+      });
+
       const userInfo: any = await GoogleSignin.signIn();
       if (userInfo?.data?.idToken) {
         await sendUserInfoToServer(userInfo.data.idToken);
