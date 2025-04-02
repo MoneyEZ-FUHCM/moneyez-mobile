@@ -7,7 +7,7 @@ import {
   SectionComponent,
   SpaceComponent,
 } from "@/components";
-import { AntDesign } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import { Formik } from "formik";
 import { Buildings, Call, User } from "iconsax-react-native";
 import { Image, Text, TouchableOpacity, View } from "react-native";
@@ -25,12 +25,11 @@ const UpdateUserInfo = () => {
           onPress={handler.handleBack}
           className="absolute bottom-[17px] left-4"
         >
-          <AntDesign name="close" size={24} />
+          <MaterialIcons name="arrow-back" size={24} />
         </TouchableOpacity>
         <Text className="text-lg font-bold">
           {TEXT_TRANSLATE_ACCOUNT.TITLE.ACCOUNT}
         </Text>
-        <Text></Text>
       </SectionComponent>
       <SectionComponent rootClassName="my-4">
         <View className="items-center justify-center gap-2">

@@ -4,32 +4,26 @@ import { setGroupTabHidden } from "@/redux/slices/tabSlice";
 import { useGetGroupDetailQuery, useGetGroupLogsQuery } from "@/services/group";
 import { useGetGroupTransactionQuery } from "@/services/transaction";
 import { router, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 const useGroupHomeDefault = () => {
   const dispatch = useDispatch();
   const { id } = useLocalSearchParams();
-  const { refetch } = useGetGroupDetailQuery(
-    { id },
-    { refetchOnMountOrArgChange: true },
-  );
+  const { refetch: refetchGroupDetail } = useGetGroupDetailQuery({ id });
 
   const groupDetail = useSelector(selectCurrentGroup);
 
-  const { data: groupLogs } = useGetGroupLogsQuery(
+  const { data: groupLogs, refetch: refetchGroupLogs } = useGetGroupLogsQuery(
     { groupId: id, PageIndex: 1, PageSize: 100 },
-    { skip: !id, refetchOnMountOrArgChange: true },
+    { skip: !id },
   );
-  const { data: groupTransaction } = useGetGroupTransactionQuery(
-    { id: id, PageIndex: 1, PageSize: 100 },
-    { skip: !id, refetchOnMountOrArgChange: true },
-  );
-
-  // const { data: memberLogs } = useGetMemberLogsQuery(
-  //   { groupId: id, PageIndex: 1, PageSize: 100 },
-  //   { skip: !id },
-  // );
+  const { data: groupTransaction, refetch: refetchGroupTransactions } =
+    useGetGroupTransactionQuery(
+      { id: id, PageIndex: 1, PageSize: 100 },
+      { skip: !id },
+    );
 
   const handleCreateFundRequest = () => {
     dispatch(setGroupTabHidden(true));
@@ -53,29 +47,32 @@ const useGroupHomeDefault = () => {
   };
 
   const handleStatistic = () => {};
-  const [refreshing, setRefreshing] = useState(false);
+  const [isRefetching, setIsRefetching] = useState(false);
 
-  const onRefresh = () => {
-    setRefreshing(true);
-    setTimeout(() => {
-      refetch();
-      setRefreshing(false);
-    }, 2000);
-  };
+  const handleRefetchData = useCallback(() => {
+    Promise.all([
+      refetchGroupDetail(),
+      refetchGroupLogs(),
+      refetchGroupTransactions(),
+    ]).finally(() => {
+      setIsRefetching(false);
+      ToastAndroid.show("Danh sách đã được cập nhật", ToastAndroid.SHORT);
+    });
+  }, [refetchGroupDetail, refetchGroupLogs, refetchGroupTransactions]);
 
   return {
     state: {
       groupDetail,
       groupLogs: groupLogs?.items,
       groupTransaction: groupTransaction?.items,
-      refreshing,
+      refreshing: isRefetching,
     },
     handler: {
       handleCreateFundRequest,
       handleCreateWithdrawRequest,
       handleFundRemind,
       handleStatistic,
-      onRefresh,
+      handleRefetchData,
     },
   };
 };

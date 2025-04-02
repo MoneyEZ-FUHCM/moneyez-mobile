@@ -108,10 +108,16 @@ const useLoginScreen = () => {
           pathname: AUTH.INPUT_OTP as any,
           params: { mode: "verify" },
         });
-        ToastAndroid.show(
-          MESSAGE_ERROR.DOEST_NOT_VERIFY_EMAIL,
-          ToastAndroid.SHORT,
-        );
+        ToastAndroid.show(MESSAGE_ERROR.OTP_HAS_SENT, ToastAndroid.SHORT);
+        return;
+      }
+      if (error?.errorCode === ERROR_CODE.OTP_HAS_SENT) {
+        dispatch(setEmail(payload.email));
+        router.navigate({
+          pathname: AUTH.INPUT_OTP as any,
+          params: { mode: "verify" },
+        });
+        ToastAndroid.show(MESSAGE_ERROR.OTP_HAS_SENT, ToastAndroid.SHORT);
         return;
       }
       ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);

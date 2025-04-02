@@ -27,8 +27,9 @@ const useBankAccount = () => {
   const { SYSTEM_ERROR } = COMMON_CONSTANT;
   const { BANK_LIST, ERROR_CODE } = BANK_ACCOUNT_CONSTANT;
   const { MESSAGE_ERROR, MESSAGE_SUCCESS } = TEXT_TRANSLATE_BANK_ACCOUNT;
+  const [isRefetching, setIsRefetching] = useState(false);
 
-  const { data, isLoading } = useGetBankAccountsQuery({
+  const { data, isLoading, refetch } = useGetBankAccountsQuery({
     PageIndex: 1,
     PageSize: 100,
   });
@@ -37,7 +38,7 @@ const useBankAccount = () => {
   const [registerWebHook] = useRegisterWebHookMutation();
 
   const bankAccounts =
-    data?.items.map((account) => {
+    data?.items?.map((account) => {
       const matchingBank = BANK_LIST.find(
         (bank) => bank.shortName === account.bankShortName,
       );
@@ -117,12 +118,29 @@ const useBankAccount = () => {
     }
   }, []);
 
+  const handleRefetch = useCallback(async () => {
+    if (isRefetching) {
+      ToastAndroid.show(
+        "Vui lòng đợi trước khi làm mới lại!",
+        ToastAndroid.SHORT,
+      );
+      return;
+    }
+
+    setIsRefetching(true);
+    await refetch().finally(() => {
+      setTimeout(() => setIsRefetching(false), 2000);
+      ToastAndroid.show("Danh sách đã được cập nhật", ToastAndroid.SHORT);
+    });
+  }, [refetch, isRefetching]);
+
   return {
     state: {
       bankAccounts,
       detailModalRef,
       selectedAccount,
       isLoading,
+      isRefetching,
     },
     handler: {
       handleBack,
@@ -131,6 +149,7 @@ const useBankAccount = () => {
       handleEditBankAccount,
       handleCopyAccountNumber,
       handleLinkAccount,
+      handleRefetch,
     },
   };
 };

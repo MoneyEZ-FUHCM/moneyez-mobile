@@ -3,9 +3,12 @@ import { PATH_NAME } from "@/helpers/constants/pathname";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { setLoading } from "@/redux/slices/loadingSlice";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";
-import { useRequestFundMutation } from "@/services/group";
-import { router, useFocusEffect } from "expo-router";
-import { useCallback, useMemo, useRef, useState } from "react";
+import {
+  useGetGroupDetailQuery,
+  useRequestFundMutation,
+} from "@/services/group";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BackHandler, ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import TEXT_TRANSLATE_CREATE_FUND_REQUEST from "../CreateFundRequest.translate";
@@ -16,11 +19,14 @@ interface FundRequestForm {
 }
 
 const useCreateFundRequest = () => {
+  const params = useLocalSearchParams();
+  const { id } = params;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [requestFund] = useRequestFundMutation();
   const { GROUP_HOME } = PATH_NAME;
   const { HTTP_STATUS, SYSTEM_ERROR } = COMMON_CONSTANT;
   const dispatch = useDispatch();
+  const { refetch } = useGetGroupDetailQuery({ id: id });
   const currentGroup = useSelector(selectCurrentGroup);
   const fundBalance = currentGroup?.currentBalance || 0;
   const formikRef = useRef<any>(null);
@@ -30,6 +36,12 @@ const useCreateFundRequest = () => {
       dispatch(setGroupTabHidden(true));
     }, [dispatch]),
   );
+
+  useEffect(() => {
+    if (id) {
+      refetch();
+    }
+  }, [id]);
 
   // Navigate back
   const handleBack = useCallback(() => {

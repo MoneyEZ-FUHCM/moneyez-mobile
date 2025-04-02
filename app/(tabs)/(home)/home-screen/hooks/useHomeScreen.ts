@@ -2,7 +2,10 @@ import { PATH_NAME } from "@/helpers/constants/pathname";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { selectUserInfo } from "@/redux/slices/userSlice";
 import { selectCurrentUserSpendingModel } from "@/redux/slices/userSpendingModelSlice";
-import { useUpdateFcmTokenMutation } from "@/services/auth";
+import {
+  useGetInfoUserQuery,
+  useUpdateFcmTokenMutation,
+} from "@/services/auth";
 import { useGetGroupsQuery } from "@/services/group";
 import { useGetCurrentUserSpendingModelQuery } from "@/services/userSpendingModel";
 import AsyncStorage from "@react-native-async-storage/async-storage";

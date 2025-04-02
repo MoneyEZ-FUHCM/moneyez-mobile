@@ -5,8 +5,8 @@ import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import {
   useDeleteNotificationMutation,
   useGetNotificationQuery,
+  useLazyReadNotificationQuery,
   useReadAllNotificationMutation,
-  useReadNotificationMutation,
 } from "@/services/notification";
 import { router } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -48,7 +48,7 @@ const useNotificationList = () => {
     type: activeTab,
   };
 
-  const [readNotification] = useReadNotificationMutation();
+  const [triggerReadNotification] = useLazyReadNotificationQuery();
   const [readAllNotification] = useReadAllNotificationMutation();
   const [deleteNotification] = useDeleteNotificationMutation();
   const {
@@ -63,13 +63,12 @@ const useNotificationList = () => {
   useHideTabbar();
 
   useEffect(() => {
-    setIsFetchingData(true);
     const fetchData = async () => {
       setPageIndex(initialPageIndex);
       setNotifications([]);
-      await refetch();
-      setIsFetchingData(false);
+      await handleRefetchNotice();
     };
+
     fetchData();
   }, [activeTab]);
 
@@ -116,9 +115,26 @@ const useNotificationList = () => {
     }
   }, [data?.items.length, isLoading, isLoadingMore, pageSize]);
 
-  const handleMarkAsRead = async (id: string) => {
-    await readNotification(id).unwrap();
-  };
+  const handleMarkAsRead = useCallback(async (id: string) => {
+    try {
+      await triggerReadNotification(id).unwrap();
+      setNotifications((prev) =>
+        prev.map((notice) =>
+          notice.id === id ? { ...notice, isRead: true } : notice,
+        ),
+      );
+      ToastAndroid.show(
+        "Đánh dấu thông báo đã đọc thành công",
+        ToastAndroid.SHORT,
+      );
+      setTimeout(() => {
+        refetch();
+      }, 500);
+      modalizeRef.current?.close();
+    } catch (err) {
+      ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
+    }
+  }, []);
 
   const handleMarkAllAsRead = async () => {
     await readAllNotification({});

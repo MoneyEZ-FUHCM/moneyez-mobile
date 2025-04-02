@@ -192,13 +192,30 @@ export default function NotificationList() {
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  className="flex-1 flex-row items-center justify-start space-x-2 rounded-lg bg-gray-100/60 px-7 py-2"
-                  onPress={() => handleMarkAsRead(state.selectedNotice.id)}
+                  className={`flex-1 flex-row items-center justify-start space-x-2 rounded-lg px-7 py-2 transition-opacity ${
+                    state.selectedNotice?.isRead
+                      ? "bg-gray-200 opacity-50"
+                      : "bg-gray-100"
+                  }`}
+                  onPress={() => handleMarkAsRead(state.selectedNotice?.id)}
+                  disabled={state.selectedNotice?.isRead}
                 >
-                  <View className="rounded-full bg-primary p-2">
+                  <View
+                    className={`rounded-full p-2 ${
+                      state.selectedNotice?.isRead
+                        ? "bg-gray-300"
+                        : "bg-primary"
+                    }`}
+                  >
                     <Bookmark size="18" color="white" variant="Bold" />
                   </View>
-                  <Text className="text-xs font-medium">
+                  <Text
+                    className={`text-xs font-medium ${
+                      state.selectedNotice?.isRead
+                        ? "text-gray-400"
+                        : "text-black"
+                    }`}
+                  >
                     {TEXT_TRANSLATE_NOTICE.BUTTON.MARK_AS_READ}
                   </Text>
                 </TouchableOpacity>
