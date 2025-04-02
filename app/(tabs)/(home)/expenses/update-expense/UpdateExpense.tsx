@@ -18,10 +18,9 @@ const EditBudgetScreen = () => {
 
   return (
     <SafeAreaViewCustom rootClassName="flex-1 bg-[#f9f9f9]">
-      {/* Header */}
       <SectionComponent rootClassName="h-14 bg-white justify-center px-5">
         <View className="flex-row items-center justify-between">
-          <Pressable onPress={() => {}}>
+          <Pressable onPress={handler.handleBack}>
             <MaterialIcons name="arrow-back" size={24} />
           </Pressable>
           <Text className="text-lg font-bold">
