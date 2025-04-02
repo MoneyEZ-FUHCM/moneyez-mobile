@@ -1,8 +1,10 @@
 import { TabBar } from "@/components";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
-import { Tabs } from "expo-router";
-import React from "react";
+import { router, Tabs } from "expo-router";
+import React, { useEffect } from "react";
 import "../../globals.css";
+import { PATH_NAME } from "@/helpers/constants/pathname";
+import * as Linking from "expo-linking";
 
 export default function TabLayout() {
   const {
@@ -11,6 +13,29 @@ export default function TabLayout() {
     CONDITION,
     ANIMATION_NAVIGATE_TAB,
   } = COMMON_CONSTANT;
+
+  useEffect(() => {
+    const handleDeepLink = async (event: Linking.EventType) => {
+      const { url } = event;
+      if (url) {
+        if (url.includes(PATH_NAME.GROUP.GROUP_LIST)) {
+          router.replace(PATH_NAME.GROUP.GROUP_LIST as any);
+        }
+      }
+    };
+
+    const subscription = Linking.addEventListener("url", handleDeepLink);
+
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        handleDeepLink({ url });
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   return (
     <Tabs

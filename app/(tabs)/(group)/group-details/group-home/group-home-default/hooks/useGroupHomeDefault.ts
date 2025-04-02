@@ -11,7 +11,10 @@ import { useDispatch, useSelector } from "react-redux";
 const useGroupHomeDefault = () => {
   const dispatch = useDispatch();
   const { id } = useLocalSearchParams();
-  const { refetch: refetchGroupDetail } = useGetGroupDetailQuery({ id });
+  const { refetch: refetchGroupDetail } = useGetGroupDetailQuery(
+    { id },
+    { skip: !id },
+  );
 
   const groupDetail = useSelector(selectCurrentGroup);
 
