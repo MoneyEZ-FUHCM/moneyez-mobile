@@ -63,6 +63,18 @@ const useNotificationList = () => {
 
   useHideTabbar();
 
+  const formatNotifications = (items: any[]) => {
+    return items?.map((notice: any) => ({
+      id: notice?.id,
+      title: notice?.title,
+      type: notice?.type,
+      message: notice?.message?.toLowerCase(),
+      isRead: notice?.isRead,
+      formattedDate: formatDate(notice?.createdDate),
+      formattedTime: formatTime(notice?.createdDate),
+    }));
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       setPageIndex(initialPageIndex);
@@ -76,19 +88,11 @@ const useNotificationList = () => {
   useEffect(() => {
     if (data?.items) {
       if (isFetchingData) {
-        setNotifications(data?.items);
+        setNotifications(formatNotifications(data.items));
         setPageIndex(1);
       } else {
         setNotifications((prev) => {
-          const newNotifications = data.items?.map((notice: any) => ({
-            id: notice.id,
-            title: notice.title,
-            type: notice.type,
-            message: notice.message.toLowerCase(),
-            isRead: notice.isRead,
-            formattedDate: formatDate(notice.createdDate),
-            formattedTime: formatTime(notice.createdDate),
-          }));
+          const newNotifications = formatNotifications(data.items);
           return [
             ...prev,
             ...newNotifications.filter(
