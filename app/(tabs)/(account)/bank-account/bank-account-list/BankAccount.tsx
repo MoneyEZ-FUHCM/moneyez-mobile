@@ -16,7 +16,14 @@ import {
 } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  ScrollView,
+  Text,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import TEXT_TRANSLATE_ACCOUNT from "../../AccountScreen.translate";
 import TEXT_TRANSLATE_BANK_ACCOUNT from "./BankAccount.translate";
@@ -104,7 +111,7 @@ const BankAccount = () => {
               className="flex-1 flex-row items-center justify-center py-3"
               onPress={(e) => {
                 e.stopPropagation();
-                handler.handleLinkAccount(item?.id as string);
+                handler.handleWebhook(item?.id as string, false);
               }}
             >
               <Feather name="link" size={16} color="#FF9900" />
@@ -117,7 +124,7 @@ const BankAccount = () => {
               className="flex-1 flex-row items-center justify-center py-3"
               onPress={(e) => {
                 e.stopPropagation();
-                // handler.handleLinkAccount(item?.id as string);
+                handler.handleWebhook(item?.id as string, true);
               }}
             >
               <AntDesign name="disconnect" size={16} color="#FF9900" />
@@ -126,13 +133,13 @@ const BankAccount = () => {
               </Text>
             </TouchableOpacity>
           )}
-          {item?.isLinked && (
+          {!item?.isLinked && (
             <>
               <View className="w-px bg-gray-100" />
               <TouchableOpacity
                 className="flex-1 flex-row items-center justify-center py-3"
                 onPress={(e) => {
-                  handler.handleDeleteAccount(item?.id as string);
+                  handler.handleOpenModalDelete(item?.id as string);
                 }}
               >
                 <Feather name="trash-2" size={16} color="#FF6B6B" />
@@ -265,7 +272,33 @@ const BankAccount = () => {
         <ModalLizeComponent ref={state.detailModalRef}>
           <AccountDetail />
         </ModalLizeComponent>
-        {state.bankAccounts && state.bankAccounts?.length < 2 && (
+        <ModalLizeComponent ref={state.deleteModalRef}>
+          <View className="p-6">
+            <Text className="mb-4 text-center text-lg font-bold text-gray-900">
+              Xác nhận xóa tài khoản
+            </Text>
+            <Text className="mb-6 text-center text-gray-600">
+              Bạn có chắc chắn muốn xóa tài khoản ngân hàng này?
+            </Text>
+            <View className="flex-row gap-4">
+              <TouchableOpacity
+                className="flex-1 rounded-lg border border-gray-200 py-3"
+                onPress={() => state.deleteModalRef.current?.close()}
+              >
+                <Text className="text-center font-medium text-gray-700">
+                  Hủy
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="flex-1 rounded-lg bg-red py-3"
+                onPress={handler.handleConfirmDelete}
+              >
+                <Text className="text-center font-medium text-white">Xóa</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ModalLizeComponent>
+        {state.bankAccounts && state.bankAccounts?.length < 3 && (
           <SectionComponent rootClassName="absolute bottom-10 right-5">
             <TouchableOpacity
               className="h-14 w-14 items-center justify-center rounded-full bg-primary shadow-lg shadow-gray-400"

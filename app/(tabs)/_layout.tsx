@@ -5,6 +5,7 @@ import React, { useEffect } from "react";
 import "../../globals.css";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import * as Linking from "expo-linking";
+import useGroupList from "./(group)/hooks/useGroupList";
 
 export default function TabLayout() {
   const {
@@ -13,13 +14,15 @@ export default function TabLayout() {
     CONDITION,
     ANIMATION_NAVIGATE_TAB,
   } = COMMON_CONSTANT;
+  const { handler } = useGroupList();
 
   useEffect(() => {
     const handleDeepLink = async (event: Linking.EventType) => {
       const { url } = event;
       if (url) {
         if (url.includes(PATH_NAME.GROUP.GROUP_LIST)) {
-          router.replace(PATH_NAME.GROUP.GROUP_LIST as any);
+          await handler.handleRefetchGrouplist();
+          router.push(PATH_NAME.GROUP.GROUP_LIST as any);
         }
       }
     };
@@ -28,7 +31,7 @@ export default function TabLayout() {
 
     Linking.getInitialURL().then((url) => {
       if (url) {
-        handleDeepLink({ url });
+        handleDeepLink({ url } as Linking.EventType);
       }
     });
 

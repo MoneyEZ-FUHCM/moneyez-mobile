@@ -67,8 +67,7 @@ const useFunctionBankAccount = (params: any) => {
 
   const validationSchema = Yup.object().shape({
     accountNumber: Yup.string()
-      .min(5, "Số tài khoản phải có ít nhất 5 số")
-      .max(50, "Số tài khoản không được quá 50 số")
+      .length(12, "Số tài khoản phải có đúng 12 số")
       .required("Số tài khoản là bắt buộc"),
     bankName: Yup.string().required("Vui lòng chọn ngân hàng"),
     accountHolderName: Yup.string().required("Tên chủ tài khoản là bắt buộc"),

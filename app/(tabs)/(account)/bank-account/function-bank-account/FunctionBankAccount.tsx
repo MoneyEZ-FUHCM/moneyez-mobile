@@ -83,8 +83,8 @@ const FunctionBankAccount = () => {
           </TouchableOpacity>
           <Text className="text-lg font-bold">
             {state.editMode
-              ? "Chỉnh sửa tài khoản ngân hàng"
-              : "Thêm tài khoản ngân hàng"}
+              ? "Chỉnh sửa thông tin ngân hàng"
+              : "Liên kết ngân hàng"}
           </Text>
         </SectionComponent>
         <SectionComponent rootClassName="flex-1 p-6">

@@ -1,5 +1,6 @@
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { selectBudgetStatisticType } from "@/redux/hooks/budgetSelector";
+import { setBudgetStatisticType } from "@/redux/slices/budgetSlice";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import {
   useGetFinancialGoalByIdQuery,
@@ -9,15 +10,13 @@ import {
 import {
   ChartDataItem,
   FinancialGoal,
-  Goal,
   PersonalTransactionFinancialGoals,
 } from "@/types/financialGoal.type";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
+import { BackHandler } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import EXPENSE_DETAIL_CONSTANTS from "../ExpenseDetail.const";
-import { setBudgetStatisticType } from "@/redux/slices/budgetSlice";
-import { BackHandler } from "react-native";
 
 const useExpenseDetail = () => {
   const [isLoading, setIsLoading] = useState(false);
