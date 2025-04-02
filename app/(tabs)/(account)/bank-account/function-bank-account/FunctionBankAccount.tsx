@@ -4,7 +4,7 @@ import {
   SafeAreaViewCustom,
   SectionComponent,
 } from "@/components";
-import { AntDesign, Feather } from "@expo/vector-icons";
+import { AntDesign, Feather, MaterialIcons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { Formik } from "formik";
 import React from "react";
@@ -79,7 +79,7 @@ const FunctionBankAccount = () => {
             onPress={() => router.back()}
             className="absolute bottom-[17px] left-4"
           >
-            <AntDesign name="close" size={24} />
+            <MaterialIcons name="arrow-back" size={24} />
           </TouchableOpacity>
           <Text className="text-lg font-bold">
             {state.editMode

@@ -15,6 +15,7 @@ import {
   AntDesign,
   FontAwesome6,
   MaterialCommunityIcons,
+  MaterialIcons,
 } from "@expo/vector-icons";
 import { Scan } from "iconsax-react-native";
 import React from "react";
@@ -53,7 +54,7 @@ const Group = () => {
               onPress={handler.handleBack}
               className="absolute left-3 rounded-full p-2"
             >
-              <AntDesign name="close" size={24} />
+              <MaterialIcons name="arrow-back" size={24} />
             </TouchableOpacity>
             <Text className="text-lg font-bold">
               {TEXT_TRANSLATE_GROUP_LIST.TITLE.GROUP_FUND}

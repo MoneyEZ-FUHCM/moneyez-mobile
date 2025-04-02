@@ -61,7 +61,6 @@ const useRegisterScreen = () => {
         );
       }
     } catch (err: any) {
-      console.log("check err", err);
       const error = err.data;
       if (error.errorCode === ERROR_CODE.ACCOUNT_NOT_EXIST) {
         ToastAndroid.show(MESSAGE_ERROR.INVALID_INFO, ToastAndroid.SHORT);

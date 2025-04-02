@@ -6,6 +6,7 @@ import { setOtpCode } from "@/redux/slices/systemSlice";
 import { RootState } from "@/redux/store";
 import {
   useConfirmOtpMutation,
+  useGetInfoUserQuery,
   useResetPasswordMutation,
   useVerifyMutation,
 } from "@/services/auth";
@@ -29,6 +30,8 @@ const useOtpScreen = () => {
   const dispatch = useDispatch();
   const { mode } = useLocalSearchParams();
   const otpCode = useSelector(selectOtpCode);
+  const { refetch } = useGetInfoUserQuery();
+
   const VERIFY_MODE = "verify";
 
   const handleConfirmEmail = () => {
@@ -60,6 +63,7 @@ const useOtpScreen = () => {
             ["accessToken", res.data.accessToken],
             ["refreshToken", res.data.refreshToken],
           ]);
+          await refetch();
           router.replace(HOME.HOME_DEFAULT as any);
           ToastAndroid.show(
             MESSAGE_SUCCESS.LOGIN_SUCCESSFUL,

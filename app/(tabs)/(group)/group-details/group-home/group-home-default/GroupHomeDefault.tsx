@@ -48,7 +48,7 @@ const GroupHomeDefault = () => {
         refreshControl={
           <RefreshControl
             refreshing={state.refreshing}
-            onRefresh={handler.onRefresh}
+            onRefresh={handler.handleRefetchData}
           />
         }
       >

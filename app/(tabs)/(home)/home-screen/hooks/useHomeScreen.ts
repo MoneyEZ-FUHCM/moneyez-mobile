@@ -2,7 +2,10 @@ import { PATH_NAME } from "@/helpers/constants/pathname";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { selectUserInfo } from "@/redux/slices/userSlice";
 import { selectCurrentUserSpendingModel } from "@/redux/slices/userSpendingModelSlice";
-import { useUpdateFcmTokenMutation } from "@/services/auth";
+import {
+  useGetInfoUserQuery,
+  useUpdateFcmTokenMutation,
+} from "@/services/auth";
 import { useGetGroupsQuery } from "@/services/group";
 import { useGetCurrentUserSpendingModelQuery } from "@/services/userSpendingModel";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -13,6 +16,8 @@ import { FlatList, ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import HOME_SCREEN_CONSTANTS from "../../HomeScreen.const";
 import { GroupDetail } from "@/types/group.type";
+import { useGetNotificationQuery } from "@/services/notification";
+import { selectHasUnreadNotification } from "@/redux/hooks/systemSelector";
 
 interface ItemType {
   id: string;
@@ -34,6 +39,7 @@ const useHomeScreen = () => {
   const flatListRef = useRef<FlatList<ItemType>>(null);
   const userInfo = useSelector(selectUserInfo);
   const currentSpendingModel = useSelector(selectCurrentUserSpendingModel);
+  const hasUnreadNotification = useSelector(selectHasUnreadNotification);
   const dispatch = useDispatch();
   const { HOME } = PATH_NAME;
   const [updateFcmToken] = useUpdateFcmTokenMutation();
@@ -149,6 +155,7 @@ const useHomeScreen = () => {
       groupData,
       isGroupLoading,
       isShowGroupBalance,
+      hasUnreadNotification,
     },
     handler: {
       toggleVisibility,

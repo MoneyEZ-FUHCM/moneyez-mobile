@@ -27,12 +27,11 @@ const notificationApi = apiSlice.injectEndpoints({
         transformCommonResponse<Notification>(response),
       providesTags: ["Notification"],
     }),
-    readNotification: builder.mutation({
-      query: ({ id }) => ({
-        url: `/notifications/${id}/mark-is-read`,
+    readNotification: builder.query({
+      query: (notificationId) => ({
+        url: `/notifications/${notificationId}/mark-isread`,
         method: HTTP_METHOD.GET,
       }),
-      invalidatesTags: ["Notification"],
     }),
     readAllNotification: builder.mutation({
       query: () => ({
@@ -55,8 +54,8 @@ export const {
   useGetNotificationQuery,
   useGetNotificationByIdQuery,
   useReadAllNotificationMutation,
-  useReadNotificationMutation,
   useDeleteNotificationMutation,
+  useLazyReadNotificationQuery,
 } = notificationApi;
 
 export default notificationApi;

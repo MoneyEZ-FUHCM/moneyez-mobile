@@ -8,7 +8,12 @@ import {
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { formatDate } from "@/helpers/libs";
 import { BankCardProps } from "@/types/bankAccount.types";
-import { AntDesign, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  AntDesign,
+  Feather,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
@@ -220,13 +225,15 @@ const BankAccount = () => {
             onPress={handler.handleBack}
             className="absolute bottom-[17px] left-4"
           >
-            <AntDesign name="close" size={24} />
+            <MaterialIcons name="arrow-back" size={24} />
           </TouchableOpacity>
           <Text className="text-lg font-bold">
             {TEXT_TRANSLATE_ACCOUNT.TITLE.BANK_ACCOUNT}
           </Text>
         </SectionComponent>
-        <LoadingSectionWrapper isLoading={state.isLoading}>
+        <LoadingSectionWrapper
+          isLoading={state.isLoading || state.isRefetching}
+        >
           <FlatListCustom
             showsVerticalScrollIndicator={false}
             data={state.bankAccounts}
@@ -251,6 +258,8 @@ const BankAccount = () => {
                 </Text>
               </View>
             }
+            refreshing={state.isRefetching}
+            onRefresh={handler.handleRefetch}
           />
         </LoadingSectionWrapper>
         <ModalLizeComponent ref={state.detailModalRef}>

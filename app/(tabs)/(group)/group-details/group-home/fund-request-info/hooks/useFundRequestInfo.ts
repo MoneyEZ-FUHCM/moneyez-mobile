@@ -62,16 +62,11 @@ const useFundRequestInfo = () => {
     }
   };
 
-  const handleConfirm = useCallback(() => {
-    router.replace({
-      pathname: GROUP_HOME.GROUP_HOME_DEFAULT as any,
-      params: { id: fundRequest.id },
-    });
-    dispatch(setGroupTabHidden(false));
-  }, []);
-
   const handleCreateFundRequest = useCallback(() => {
-    router.replace(GROUP_HOME.CREATE_FUND_REQUEST as any);
+    router.replace({
+      pathname: GROUP_HOME.CREATE_FUND_REQUEST as any,
+      params: { id: fundRequest?.id },
+    });
   }, []);
 
   return {
@@ -80,7 +75,6 @@ const useFundRequestInfo = () => {
     },
     handler: {
       copyToClipboard,
-      handleConfirm,
       handleBack,
       handleCreateFundRequest,
     },
