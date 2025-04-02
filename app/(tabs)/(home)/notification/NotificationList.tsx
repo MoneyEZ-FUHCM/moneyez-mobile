@@ -9,14 +9,14 @@ import {
 } from "@/components";
 import { Colors } from "@/helpers/constants/color";
 import { Notification } from "@/types/notification.type";
-import { AntDesign, MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import { Bookmark, Forbidden2 } from "iconsax-react-native";
 import React from "react";
 import { Image, Pressable, Text, TouchableOpacity, View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import useNotificationList from "./hooks/useNotificationList";
 import { getNotificationIcon } from "./NotificationList.const";
 import TEXT_TRANSLATE_NOTICE from "./NotificationList.translate";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function NotificationList() {
   const { state, handler } = useNotificationList();
@@ -58,6 +58,7 @@ export default function NotificationList() {
   const renderNotificationItem = ({ item }: { item: Notification }) => (
     <Pressable
       key={item.id}
+      onPress={() => handler.handlePressNotification(item)}
       className="relative border-b border-gray-200 bg-white p-3"
     >
       <View className="flex-row items-start gap-3">

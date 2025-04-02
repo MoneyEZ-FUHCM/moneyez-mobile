@@ -1,6 +1,7 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { formatDate, formatTime } from "@/helpers/libs";
 import useHideTabbar from "@/hooks/useHideTabbar";
+import { setHasUnreadNotification } from "@/redux/slices/systemSlice";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import {
   useDeleteNotificationMutation,
@@ -10,10 +11,9 @@ import {
 } from "@/services/notification";
 import { router } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ToastAndroid } from "react-native";
+import { Linking, ToastAndroid } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { useDispatch } from "react-redux";
-import { setHasUnreadNotification } from "@/redux/slices/systemSlice";
 import NOTIFICATION_CONSTANTS from "../NotificationList.const";
 import TEXT_TRANSLATE_NOTICE from "../NotificationList.translate";
 
@@ -72,6 +72,7 @@ const useNotificationList = () => {
       isRead: notice?.isRead,
       formattedDate: formatDate(notice?.createdDate),
       formattedTime: formatTime(notice?.createdDate),
+      href: notice?.href,
     }));
   };
 
@@ -110,7 +111,7 @@ const useNotificationList = () => {
 
   useEffect(() => {
     if (data?.items) {
-      const hasUnread = data.items.some((notice: any) => !notice.isRead);
+      const hasUnread = data.items?.some((notice: any) => !notice?.isRead);
       dispatch(setHasUnreadNotification(hasUnread));
     }
   }, [data?.items, dispatch]);
@@ -131,7 +132,7 @@ const useNotificationList = () => {
     async (id: string) => {
       try {
         await triggerReadNotification(id).unwrap();
-        await refetch(); // Add this line to refetch the latest data
+        await refetch();
         setNotifications((prev) =>
           prev.map((notice) =>
             notice.id === id ? { ...notice, isRead: true } : notice,
@@ -200,6 +201,12 @@ const useNotificationList = () => {
     setIsFetchingData(false);
   }, []);
 
+  const handlePressNotification = useCallback((item: any) => {
+    if (item?.href) {
+      Linking.openURL(item.href);
+    }
+  }, []);
+
   return {
     state: {
       activeTab,
@@ -228,6 +235,7 @@ const useNotificationList = () => {
       handleOpenMore,
       handleDeleteNotice,
       handleRefetchNotice,
+      handlePressNotification,
     },
   };
 };

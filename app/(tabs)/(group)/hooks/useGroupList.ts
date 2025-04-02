@@ -1,11 +1,13 @@
+import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import useHideTabbar from "@/hooks/useHideTabbar";
 import { setCurrentGroup } from "@/redux/slices/groupSlice";
+import { setLoading } from "@/redux/slices/loadingSlice";
 import { setGroupTabHidden, setMainTabHidden } from "@/redux/slices/tabSlice";
-import { useGetGroupsQuery } from "@/services/group";
+import { useGetGroupDetailQuery, useGetGroupsQuery } from "@/services/group";
 import { GroupDetail } from "@/types/group.type";
 import { Camera } from "expo-camera";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ToastAndroid } from "react-native";
 import { Modalize } from "react-native-modalize";
@@ -25,6 +27,12 @@ const useGroupList = () => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [isFetchingData, setIsFetchingData] = useState(true);
   const [isRefetching, setIsRefetching] = useState(false);
+  const isScanningRef = useRef(false);
+  const [token, setToken] = useState("");
+  const { SYSTEM_ERROR } = COMMON_CONSTANT;
+  const { data: groupDetailPreview } = useGetGroupDetailQuery({ id: token });
+  console.log("checj token", token);
+  console.log("check groupDetailPreview", groupDetailPreview);
 
   const dispatch = useDispatch();
 
@@ -33,6 +41,11 @@ const useGroupList = () => {
     PageSize: pageSize,
   });
 
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(setMainTabHidden(true));
+    }, [dispatch]),
+  );
   useHideTabbar();
 
   const handleLoadMore = useCallback(() => {
@@ -129,10 +142,26 @@ const useGroupList = () => {
   };
 
   const handleScanSuccess = async (token: string) => {
+    if (isScanningRef.current) return;
+
     try {
-      console.log("check token", token);
+      if (token) {
+        setToken(token);
+        isScanningRef.current = true;
+        dispatch(setLoading(true));
+        setIsShowScanner(false);
+
+        if (groupDetailPreview?.data) {
+          dispatch(setLoading(false));
+          modalizeRef.current?.open();
+          // Reset scanning flag after showing modal
+          isScanningRef.current = false;
+        }
+      }
     } catch (error) {
-      ToastAndroid.show("Có lỗi xảy ra", ToastAndroid.SHORT);
+      ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
+      dispatch(setLoading(false));
+      isScanningRef.current = false;
     }
   };
 
@@ -157,6 +186,21 @@ const useGroupList = () => {
     }
   };
 
+  const handleJoinGroupByQR = useCallback(() => {
+    if (groupDetailPreview?.data) {
+      modalizeRef.current?.close();
+      router.navigate({
+        pathname: PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT as any,
+        params: { id: token },
+      });
+      dispatch(setCurrentGroup(groupDetailPreview?.data));
+      dispatch(setMainTabHidden(true));
+      dispatch(setGroupTabHidden(false));
+      ToastAndroid.show("Tham gia nhóm thành công", ToastAndroid.SHORT);
+      isScanningRef.current = false;
+    }
+  }, [dispatch, groupDetailPreview, token]);
+
   return {
     state: {
       groups,
@@ -172,6 +216,7 @@ const useGroupList = () => {
       isLogin,
       modalizeRef,
       memberCode,
+      groupDetailPreview: groupDetailPreview?.data,
     },
     handler: {
       handleLoadMore,
@@ -185,6 +230,7 @@ const useGroupList = () => {
       handleJoinGroup,
       handleScanQR,
       handleScanSuccess,
+      handleJoinGroupByQR,
       setMemberCode,
       setIsLogin,
       setIsShowScanner,
