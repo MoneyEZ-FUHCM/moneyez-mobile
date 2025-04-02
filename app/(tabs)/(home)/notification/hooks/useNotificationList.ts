@@ -13,6 +13,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ToastAndroid } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { useDispatch } from "react-redux";
+import { setHasUnreadNotification } from "@/redux/slices/systemSlice";
 import NOTIFICATION_CONSTANTS from "../NotificationList.const";
 import TEXT_TRANSLATE_NOTICE from "../NotificationList.translate";
 
@@ -103,6 +104,13 @@ const useNotificationList = () => {
     }
   }, [data?.items, isFetchingData]);
 
+  useEffect(() => {
+    if (data?.items) {
+      const hasUnread = data.items.some((notice: any) => !notice.isRead);
+      dispatch(setHasUnreadNotification(hasUnread));
+    }
+  }, [data?.items, dispatch]);
+
   const handleGoBack = () => {
     router.back();
     dispatch(setMainTabHidden(false));
@@ -115,29 +123,44 @@ const useNotificationList = () => {
     }
   }, [data?.items.length, isLoading, isLoadingMore, pageSize]);
 
-  const handleMarkAsRead = useCallback(async (id: string) => {
+  const handleMarkAsRead = useCallback(
+    async (id: string) => {
+      try {
+        await triggerReadNotification(id).unwrap();
+        await refetch(); // Add this line to refetch the latest data
+        setNotifications((prev) =>
+          prev.map((notice) =>
+            notice.id === id ? { ...notice, isRead: true } : notice,
+          ),
+        );
+
+        const remainingUnread = notifications.some(
+          (notice) => notice.id !== id && !notice.isRead,
+        );
+        dispatch(setHasUnreadNotification(remainingUnread));
+
+        ToastAndroid.show(
+          "Đánh dấu thông báo đã đọc thành công",
+          ToastAndroid.SHORT,
+        );
+        modalizeRef.current?.close();
+      } catch (err) {
+        ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
+      }
+    },
+    [notifications, dispatch, refetch],
+  );
+
+  const handleMarkAllAsRead = async () => {
     try {
-      await triggerReadNotification(id).unwrap();
+      await readAllNotification({}).unwrap();
       setNotifications((prev) =>
-        prev.map((notice) =>
-          notice.id === id ? { ...notice, isRead: true } : notice,
-        ),
+        prev.map((notice) => ({ ...notice, isRead: true })),
       );
-      ToastAndroid.show(
-        "Đánh dấu thông báo đã đọc thành công",
-        ToastAndroid.SHORT,
-      );
-      setTimeout(() => {
-        refetch();
-      }, 500);
-      modalizeRef.current?.close();
+      dispatch(setHasUnreadNotification(false));
     } catch (err) {
       ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
     }
-  }, []);
-
-  const handleMarkAllAsRead = async () => {
-    await readAllNotification({});
   };
 
   const handleDeleteNotice = useCallback(async (id: string) => {

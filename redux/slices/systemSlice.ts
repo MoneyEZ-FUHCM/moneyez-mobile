@@ -6,6 +6,7 @@ interface SystemState {
   status: CHATBOT_CONNECTION;
   isShowImageView: boolean;
   isThinking: boolean;
+  hasUnreadNotification: boolean;
 }
 
 const initialState: SystemState = {
@@ -13,6 +14,7 @@ const initialState: SystemState = {
   status: CHATBOT_CONNECTION.CONNECTING,
   isShowImageView: false,
   isThinking: false,
+  hasUnreadNotification: false,
 };
 
 const systemSlice = createSlice({
@@ -34,9 +36,18 @@ const systemSlice = createSlice({
     setIsThinking: (state, action) => {
       state.isThinking = action.payload;
     },
+    setHasUnreadNotification: (state, action: PayloadAction<boolean>) => {
+      state.hasUnreadNotification = action.payload;
+    },
   },
 });
 
-export const { setOtpCode, setConnectionStatus, setImageView, setIsThinking } =
-  systemSlice.actions;
+export const {
+  setOtpCode,
+  setConnectionStatus,
+  setImageView,
+  setIsThinking,
+  setHasUnreadNotification,
+} = systemSlice.actions;
+
 export default systemSlice.reducer;

@@ -16,6 +16,8 @@ import { FlatList, ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import HOME_SCREEN_CONSTANTS from "../../HomeScreen.const";
 import { GroupDetail } from "@/types/group.type";
+import { useGetNotificationQuery } from "@/services/notification";
+import { selectHasUnreadNotification } from "@/redux/hooks/systemSelector";
 
 interface ItemType {
   id: string;
@@ -37,6 +39,7 @@ const useHomeScreen = () => {
   const flatListRef = useRef<FlatList<ItemType>>(null);
   const userInfo = useSelector(selectUserInfo);
   const currentSpendingModel = useSelector(selectCurrentUserSpendingModel);
+  const hasUnreadNotification = useSelector(selectHasUnreadNotification);
   const dispatch = useDispatch();
   const { HOME } = PATH_NAME;
   const [updateFcmToken] = useUpdateFcmTokenMutation();
@@ -152,6 +155,7 @@ const useHomeScreen = () => {
       groupData,
       isGroupLoading,
       isShowGroupBalance,
+      hasUnreadNotification,
     },
     handler: {
       toggleVisibility,
