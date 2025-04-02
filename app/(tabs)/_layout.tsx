@@ -40,29 +40,6 @@ export default function TabLayout() {
     };
   }, []);
 
-  useEffect(() => {
-    const handleDeepLink = async (event: Linking.EventType) => {
-      const { url } = event;
-      if (url) {
-        if (url.includes(PATH_NAME.GROUP.GROUP_LIST)) {
-          router.replace(PATH_NAME.GROUP.GROUP_LIST as any);
-        }
-      }
-    };
-
-    const subscription = Linking.addEventListener("url", handleDeepLink);
-
-    Linking.getInitialURL().then((url) => {
-      if (url) {
-        handleDeepLink({ url });
-      }
-    });
-
-    return () => {
-      subscription.remove();
-    };
-  }, []);
-
   return (
     <Tabs
       tabBar={(props) => <TabBar {...props} type="main" />}

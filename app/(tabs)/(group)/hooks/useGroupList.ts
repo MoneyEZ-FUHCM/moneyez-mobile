@@ -54,6 +54,7 @@ const useGroupList = () => {
       dispatch(setMainTabHidden(true));
     }, [dispatch]),
   );
+
   useHideTabbar();
 
   const handleLoadMore = useCallback(() => {
