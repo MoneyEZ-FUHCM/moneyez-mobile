@@ -83,6 +83,14 @@ const groupApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Group"],
     }),
+    contributeGroup: builder.mutation({
+      query: (payload) => ({
+        url: `/groups/contribution`,
+        method: HTTP_METHOD.PUT,
+        body: payload,
+      }),
+      invalidatesTags: ["Group"],
+    }),
   }),
 });
 
@@ -97,6 +105,7 @@ export const {
   useGetMemberLogsQuery,
   useInviteMemberEmailMutation,
   useInviteMemberQRCodeMutation,
+  useContributeGroupMutation,
 } = groupApi;
 
 export default groupApi;

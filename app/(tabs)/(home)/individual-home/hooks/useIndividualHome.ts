@@ -1,3 +1,4 @@
+import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { formatCurrency } from "@/helpers/libs";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
@@ -14,6 +15,7 @@ import { useDispatch } from "react-redux";
 const useIndividualHome = () => {
   const { HOME } = PATH_NAME;
   const dispatch = useDispatch();
+  const { SYSTEM_ERROR } = COMMON_CONSTANT;
   const [isRefetching, setIsRefetching] = useState(false);
   const {
     data: currentUserSpendingModelChart,
@@ -119,7 +121,7 @@ const useIndividualHome = () => {
         refetchPersonalFinancialGoals(),
       ]);
     } catch (error) {
-      console.error("Error during refetch:", error);
+      ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
     } finally {
       setIsRefetching(false);
     }

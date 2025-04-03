@@ -26,7 +26,7 @@ const useCreateGroupScreen = () => {
   const bankSelectModalRef = useRef<Modalize>(null);
   const { BANK_LIST } = FUNCTION_BANK_ACCOUNT_CONSTANT;
   const formikRef = useRef<any>(null);
-  const { data: bankAccounts } = useGetBankAccountsQuery({
+  const { data: bankAccounts, refetch } = useGetBankAccountsQuery({
     PageIndex: 1,
     PageSize: 100,
   });
@@ -35,13 +35,21 @@ const useCreateGroupScreen = () => {
   const { HTTP_STATUS, SYSTEM_ERROR } = COMMON_CONSTANT;
   const { imageUrl, pickAndUploadImage } = useUploadImage();
 
-  const mappedAccounts = bankAccounts?.items?.map((account) => {
-    const bank = BANK_LIST.find((b) => b.shortName === account.bankShortName);
-    return {
-      ...account,
-      logo: bank ? bank.logo : null,
-    };
-  });
+  const mappedAccounts = useMemo(() => {
+    return bankAccounts?.items
+      ?.filter(
+        (account) => account.isHasGroup === false && account.isLinked === true,
+      )
+      .map((account) => {
+        const bank = BANK_LIST.find(
+          (b) => b.shortName === account.bankShortName,
+        );
+        return {
+          ...account,
+          logo: bank ? bank.logo : null,
+        };
+      });
+  }, [bankAccounts?.items]);
 
   useFocusEffect(
     useCallback(() => {
@@ -98,6 +106,8 @@ const useCreateGroupScreen = () => {
             SUCCESS_MESSAGES.GROUP_CREATED_SUCCESSFULLY,
             ToastAndroid.SHORT,
           );
+          // Force refetch bank accounts to get updated isHasGroup status
+          await refetch();
           router.replace({
             pathname: PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT as any,
             params: { id: res?.data?.id },
@@ -111,7 +121,7 @@ const useCreateGroupScreen = () => {
         dispatch(setLoading(false));
       }
     },
-    [createGroup, dispatch, imageUrl],
+    [createGroup, dispatch, imageUrl, refetch],
   );
 
   const handleScroll = (event: any) => {
@@ -132,7 +142,6 @@ const useCreateGroupScreen = () => {
   const handleSelectBank = useCallback(
     (bank: any, setFieldValue: (field: string, value: any) => void) => {
       if (!setFieldValue) {
-        console.log("Vui lòng chọn số tài khoản");
         return;
       }
 
@@ -161,7 +170,7 @@ const useCreateGroupScreen = () => {
 
   const handleNavigateCreateBankAccount = useCallback(() => {
     bankSelectModalRef.current?.close();
-    router.navigate(PATH_NAME.GROUP.CREATE_FUNCTION_BANK_ACCOUNT as any);
+    router.navigate(PATH_NAME.GROUP.BANK_ACCOUNT_LIST as any);
   }, []);
 
   return {

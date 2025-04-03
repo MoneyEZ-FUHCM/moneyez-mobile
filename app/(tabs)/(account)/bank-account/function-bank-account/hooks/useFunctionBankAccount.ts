@@ -1,4 +1,5 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
+import { setLoading } from "@/redux/slices/loadingSlice";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import {
   useCreateBankAccountMutation,
@@ -101,6 +102,7 @@ const useFunctionBankAccount = (params: any) => {
 
   const handleCreateBankAccount = useCallback(
     async (payload: CreateBankAccountPayload) => {
+      dispatch(setLoading(true));
       try {
         const res = await createBankAccount(payload).unwrap();
         if (res?.status === HTTP_STATUS.SUCCESS.CREATED) {
@@ -110,8 +112,19 @@ const useFunctionBankAccount = (params: any) => {
           );
           router.back();
         }
-      } catch (err) {
+      } catch (err: any) {
+        const error = err?.data;
+        if (error?.errorCode === ERROR_CODE.BANK_ACCOUNT_VALIDATION_FAILED) {
+          ToastAndroid.show(
+            TEXT_TRANSLATE_FUNCTION_BANK_ACCOUNT.MESSAGE_ERROR
+              .BANK_ACCOUNT_VALIDATION_FAILED,
+            ToastAndroid.SHORT,
+          );
+          return;
+        }
         ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
+      } finally {
+        dispatch(setLoading(false));
       }
     },
     [],
@@ -120,6 +133,7 @@ const useFunctionBankAccount = (params: any) => {
   const handleSubmit = useCallback(
     async (values: any) => {
       const payload = { ...values, id: bankAccountData?.id };
+      dispatch(setLoading(true));
       try {
         if (editMode && bankAccountData) {
           const res = await updateBankAccount(payload).unwrap();
@@ -143,8 +157,11 @@ const useFunctionBankAccount = (params: any) => {
           return;
         }
         ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
+      } finally {
+        dispatch(setLoading(false));
       }
     },
+
     [editMode, bankAccountData],
   );
 

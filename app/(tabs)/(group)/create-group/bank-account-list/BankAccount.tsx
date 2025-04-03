@@ -1,4 +1,3 @@
-import TEXT_TRANSLATE_ACCOUNT from "@/app/(tabs)/(account)/AccountScreen.translate";
 import {
   FlatListCustom,
   LoadingSectionWrapper,
@@ -17,10 +16,18 @@ import {
 } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  ScrollView,
+  Text,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import TEXT_TRANSLATE_BANK_ACCOUNT from "./BankAccount.translate";
 import useBankAccount from "./hooks/useBankAccount";
+import TEXT_TRANSLATE_ACCOUNT from "@/app/(tabs)/(account)/AccountScreen.translate";
 
 const BankAccount = () => {
   const { state, handler } = useBankAccount();
@@ -69,19 +76,19 @@ const BankAccount = () => {
                 <Text className="mr-1 text-gray-400">
                   {TEXT_TRANSLATE_BANK_ACCOUNT.TITLE.ACCOUNT_HOLDER}
                 </Text>{" "}
-                {item?.accountHolderName}
+                {item.accountHolderName}
               </Text>
               <View className="mt-2 flex-row items-center">
                 <View className="rounded-md bg-gray-100 px-2 py-1">
                   <Text className="text-sm font-medium text-gray-700">
-                    {item?.accountNumber}
+                    {item.accountNumber}
                   </Text>
                 </View>
                 <TouchableOpacity
                   className="ml-2 p-1"
                   onPress={(e) => {
                     e.stopPropagation();
-                    handler.handleCopyAccountNumber(item?.accountNumber);
+                    handler.handleCopyAccountNumber(item.accountNumber);
                   }}
                 >
                   <Feather name="copy" size={16} color="#609084" />

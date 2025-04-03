@@ -109,15 +109,24 @@ const Group = () => {
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
                   <TouchableOpacity
-                    className="mb-4 flex-row items-center rounded-2xl border border-gray-200 bg-white p-4 shadow-lg"
+                    className="mb-4 flex-row items-center rounded-2xl border border-gray-200 bg-white p-4"
                     onPress={handler.handleNavigateAndHideTabbar(item)}
                   >
-                    <Image
-                      src={item?.imageUrl}
-                      alt="star"
-                      className="h-14 w-14 rounded-full"
-                      resizeMode="cover"
-                    />
+                    {item.imageUrl ? (
+                      <Image
+                        src={item?.imageUrl}
+                        alt="star"
+                        className="h-14 w-14 rounded-full"
+                        resizeMode="cover"
+                      />
+                    ) : (
+                      <View className="h-14 w-14 items-center justify-center rounded-full bg-primary">
+                        <Text className="text-3xl font-medium uppercase text-white">
+                          {item?.name?.charAt(0)}
+                        </Text>
+                      </View>
+                    )}
+
                     <View className="ml-4 flex-1 space-y-1">
                       <Text className="text-lg font-semibold text-gray-900">
                         {item?.name}

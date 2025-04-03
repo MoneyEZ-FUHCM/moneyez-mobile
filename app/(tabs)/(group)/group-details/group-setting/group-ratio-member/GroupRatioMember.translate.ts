@@ -14,6 +14,9 @@ const TEXT_TRANSLATE_GROUP_RATIO_MEMBER = {
   LABEL: {
     YOU: "(bạn)",
   },
+  MESSAGE_SUCCESS: {
+    UPDATE_CONTRIBUTE_SUCCESS: "Cập nhật tỉ lệ đóng góp thành công",
+  },
 };
 
 export default TEXT_TRANSLATE_GROUP_RATIO_MEMBER;

@@ -1,5 +1,6 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
+import { isValidGUID } from "@/helpers/libs";
 import useHideTabbar from "@/hooks/useHideTabbar";
 import { setCurrentGroup } from "@/redux/slices/groupSlice";
 import { setLoading } from "@/redux/slices/loadingSlice";
@@ -11,14 +12,14 @@ import {
 } from "@/services/group";
 import { GroupDetail } from "@/types/group.type";
 import { Camera } from "expo-camera";
-import { router, useFocusEffect } from "expo-router";
+import { router } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ToastAndroid } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { useDispatch } from "react-redux";
 import TEXT_TRANSLATE_GROUP_LIST from "../GroupList.translate";
 
-const useGroupList = () => {
+const useGroupList = (hideTabbar = true) => {
   const pageSize = 10;
   const translate = TEXT_TRANSLATE_GROUP_LIST;
 
@@ -33,7 +34,10 @@ const useGroupList = () => {
   const isScanningRef = useRef(false);
   const [token, setToken] = useState("");
   const { SYSTEM_ERROR } = COMMON_CONSTANT;
-  const { data: groupDetailPreview } = useGetGroupDetailQuery({ id: token });
+  const { data: groupDetailPreview } = useGetGroupDetailQuery(
+    { id: token },
+    { skip: !token },
+  );
   const [inviteMemberByQRCode] = useInviteMemberQRCodeMutation();
   const [isShowScanner, setIsShowScanner] = useState(false);
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
@@ -41,7 +45,6 @@ const useGroupList = () => {
   const modalizeJoinGroupRef = useRef<Modalize>(null);
   const [memberCode, setMemberCode] = useState("");
   const [isLogin, setIsLogin] = useState(false);
-
   const dispatch = useDispatch();
 
   const { data, isLoading, refetch } = useGetGroupsQuery({
@@ -49,13 +52,9 @@ const useGroupList = () => {
     PageSize: pageSize,
   });
 
-  useFocusEffect(
-    useCallback(() => {
-      dispatch(setMainTabHidden(true));
-    }, [dispatch]),
-  );
-
-  useHideTabbar();
+  if (hideTabbar) {
+    useHideTabbar();
+  }
 
   const handleLoadMore = useCallback(() => {
     if (!isLoading && !isLoadingMore && data?.items.length === pageSize) {
@@ -90,7 +89,6 @@ const useGroupList = () => {
         pathname: PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT as any,
         params: { id: group?.id },
       });
-      dispatch(setCurrentGroup(group));
       dispatch(setMainTabHidden(true));
       dispatch(setGroupTabHidden(false));
     },
@@ -146,33 +144,48 @@ const useGroupList = () => {
 
   const handleScanSuccess = async (scannedToken: string) => {
     if (isScanningRef.current) return;
+    isScanningRef.current = true;
 
     try {
-      if (scannedToken) {
-        setToken(scannedToken);
-        isScanningRef.current = true;
-        dispatch(setLoading(true));
+      if (!scannedToken || !isValidGUID(scannedToken)) {
+        ToastAndroid.show("Dữ liệu không hợp lệ", ToastAndroid.SHORT);
         setIsShowScanner(false);
+        dispatch(setLoading(false));
+        isScanningRef.current = false;
+        return;
+      }
 
-        if (data?.items?.some((group) => group?.id === scannedToken)) {
-          ToastAndroid.show(
-            TEXT_TRANSLATE_GROUP_LIST.MESSAGE_ERROR.ALREADY_JOIN_GROUP,
-            ToastAndroid.SHORT,
-          );
-          dispatch(setLoading(false));
-          isScanningRef.current = false;
-          return;
-        }
+      setToken(scannedToken);
+      dispatch(setLoading(true));
+      setIsShowScanner(false);
 
-        if (groupDetailPreview?.data) {
-          dispatch(setLoading(false));
-          modalizeJoinGroupRef.current?.open();
-          isScanningRef.current = false;
-        }
+      if (data?.items?.some((group) => group?.id === scannedToken)) {
+        dispatch(setLoading(false));
+        isScanningRef.current = false;
+        router.navigate({
+          pathname: PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT as any,
+          params: { id: scannedToken },
+        });
+        ToastAndroid.show(
+          TEXT_TRANSLATE_GROUP_LIST.MESSAGE_ERROR.ALREADY_JOIN_GROUP,
+          ToastAndroid.SHORT,
+        );
+        return;
+      }
+
+      if (groupDetailPreview?.data) {
+        dispatch(setLoading(false));
+        modalizeJoinGroupRef.current?.open();
+      } else {
+        ToastAndroid.show("Dữ liệu nhóm không hợp lệ", ToastAndroid.SHORT);
+        setIsShowScanner(false);
       }
     } catch (error) {
       ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
       dispatch(setLoading(false));
+      setToken("");
+      setIsShowScanner(false);
+    } finally {
       isScanningRef.current = false;
     }
   };
@@ -207,7 +220,7 @@ const useGroupList = () => {
         pathname: PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT as any,
         params: { id: token },
       });
-
+      setToken("");
       dispatch(setCurrentGroup(groupDetailPreview.data));
       dispatch(setMainTabHidden(true));
       dispatch(setGroupTabHidden(false));
@@ -221,6 +234,7 @@ const useGroupList = () => {
     } finally {
       modalizeJoinGroupRef.current?.close();
       isScanningRef.current = false;
+      setToken("");
     }
   }, [dispatch, groupDetailPreview, token, router]);
 
@@ -260,6 +274,20 @@ const useGroupList = () => {
       setIsShowScanner,
     },
   };
+};
+
+export const useGroupListRefetch = () => {
+  const { refetch } = useGetGroupsQuery({
+    PageIndex: 1,
+    PageSize: 100,
+  });
+
+  const handleRefetchGrouplist = useCallback(async () => {
+    await refetch();
+    ToastAndroid.show("Danh sách đã được cập nhật", ToastAndroid.SHORT);
+  }, [refetch]);
+
+  return { handleRefetchGrouplist };
 };
 
 export default useGroupList;

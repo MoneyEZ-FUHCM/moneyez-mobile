@@ -18,6 +18,7 @@ import {
 import { ProgressBar } from "react-native-paper";
 import TEXT_TRANSLATE_GROUP_RATIO_MEMBER from "./GroupRatioMember.translate";
 import useGroupRatioMember from "./hooks/useGroupRatioMember";
+import { GroupMember } from "@/types/group.type";
 
 const SliderTooltip = ({ value }: { value: number }) => (
   <View
@@ -52,14 +53,6 @@ const SliderTooltip = ({ value }: { value: number }) => (
 
 const GroupRatioMemberPage = () => {
   const { state, handler } = useGroupRatioMember();
-  const {
-    members,
-    localSliderValues,
-    displayTotal,
-    localTotal,
-    tooltipValue,
-    isDragging,
-  } = state;
 
   return (
     <SafeAreaViewCustom rootClassName="flex-1 bg-[#f9f9f9]">
@@ -82,10 +75,9 @@ const GroupRatioMemberPage = () => {
       >
         <View className="p-4">
           <SectionComponent rootClassName="mb-4 rounded-lg bg-white p-5 shadow-sm">
-            <Text className="text-sm leading-5 text-gray-700">
-              <Text className="font-semibold text-[#609084]">* </Text>
-              {TEXT_TRANSLATE_GROUP_RATIO_MEMBER.NOTE?.slice(1) ||
-                "Adjust the contribution ratio for each member. The total must equal 100%."}
+            <Text className="text-base italic leading-5 text-gray-700">
+              <Text className="font-semibold text-red">* </Text>
+              Lưu ý: Tổng tỉ lệ đóng góp của các thành viên phải bằng 100%
             </Text>
           </SectionComponent>
 
@@ -102,103 +94,124 @@ const GroupRatioMemberPage = () => {
                     fontSize: 18,
                   }}
                 >
-                  {displayTotal}%
+                  {state.displayTotal}%
                 </Text>
               </View>
             </View>
             <ProgressBar
-              progress={localTotal / 100}
+              progress={state.localTotal / 100}
               color={handler.getTotalColor()}
               className="mt-3 h-2 rounded-full"
             />
           </SectionComponent>
-          <SectionComponent rootClassName="rounded-lg bg-white p-5 shadow-sm">
+          <SectionComponent rootClassName="rounded-lg bg-white px-5 py-2 shadow-sm">
             <Text className="mb-4 text-base font-semibold text-gray-800">
-              {TEXT_TRANSLATE_GROUP_RATIO_MEMBER.MEMBER_LIST_HEADER ||
-                "Member Contributions"}
+              Danh sách đóng góp {state?.groupMembersDetail?.length}
             </Text>
 
-            {members.map((member) => {
-              const currentValue = localSliderValues[member.id];
-              const displayValue = Math.round(currentValue);
-              const showTooltip = isDragging && tooltipValue.id === member.id;
+            {state.groupMembersDetail?.map(
+              (member: GroupMember, index: number) => {
+                const currentValue = state.localSliderValues[member?.userId];
+                const displayValue = Math.round(currentValue);
+                const showTooltip =
+                  state?.isDragging &&
+                  state?.tooltipValue?.id === member?.userId;
 
-              return (
-                <View
-                  key={member.id}
-                  className="mb-6 border-b border-gray-100 pb-4 last:border-b-0 last:pb-0"
-                >
-                  <View className="mb-3 flex-row items-center">
-                    <Image
-                      source={member.avatar || Admin}
-                      className="mr-3 h-12 w-12 rounded-full border border-gray-200"
-                      resizeMode="cover"
-                    />
-                    <View className="flex-1">
-                      <Text className="text-base font-semibold text-gray-800">
-                        {member.name} {member.isYou ? "(Bạn)" : ""}
-                      </Text>
-                    </View>
-                    <TextInput
-                      className="min-w-[60px] rounded-full bg-[#E8F5E9] px-3 py-1 text-center font-bold text-[#4CAF50]"
-                      value={displayValue.toString()}
-                      keyboardType="numeric"
-                      maxLength={3}
-                      onChangeText={(text) =>
-                        handler.handleInputChange(member.id, text)
-                      }
-                      selectTextOnFocus
-                    />
-                  </View>
-
-                  <View className="flex-row items-center">
-                    <Text className="w-8 text-xs text-gray-500">0%</Text>
-                    <View style={{ flex: 1, height: 40 }}>
-                      {showTooltip && (
-                        <SliderTooltip value={tooltipValue.value} />
+                return (
+                  <View
+                    key={member?.userId}
+                    className={`mb-6 pb-6 ${index === (state.groupMembersDetail?.length ?? 0) - 1 ? "mb-0 pb-0" : "border-b border-gray-100"}`}
+                  >
+                    <View className="mb-3 flex-row items-center">
+                      {member?.userInfo?.avatarUrl ? (
+                        <Image
+                          source={
+                            member?.userInfo?.avatarUrl
+                              ? { uri: member.userInfo.avatarUrl }
+                              : Admin
+                          }
+                          className="mr-3 h-12 w-12 rounded-full border border-gray-200"
+                          resizeMode="cover"
+                        />
+                      ) : (
+                        <View className="mr-3 h-12 w-12 items-center justify-center rounded-full bg-primary">
+                          <Text className="text-2xl font-medium uppercase text-white">
+                            {member?.userInfo?.fullName?.charAt(0)}
+                          </Text>
+                        </View>
                       )}
-                      <Slider
-                        style={{ width: "100%", height: "100%" }}
-                        minimumValue={0}
-                        maximumValue={100}
-                        step={1}
-                        value={currentValue}
-                        onSlidingStart={() =>
-                          handler.handleSliderStart(member.id)
+                      <View className="flex-1">
+                        <Text className="text-base font-semibold text-gray-800">
+                          {member?.userInfo?.fullName}{" "}
+                          {member?.userId === state?.userInfo?.id
+                            ? "(Bạn)"
+                            : ""}
+                        </Text>
+                      </View>
+                      <TextInput
+                        className="min-w-[60px] rounded-full bg-[#E8F5E9] px-3 py-1 text-center font-bold text-[#4CAF50]"
+                        value={
+                          state.editingId === member?.userId
+                            ? ""
+                            : displayValue.toString()
                         }
-                        onValueChange={(value) =>
-                          handler.handleSliderChange(member.id, value)
+                        keyboardType="numeric"
+                        maxLength={3}
+                        onChangeText={(text) =>
+                          handler.handleInputChange(member?.userId, text)
                         }
-                        onSlidingComplete={() =>
-                          handler.handleSliderComplete(member.id)
-                        }
-                        minimumTrackTintColor="#609084"
-                        maximumTrackTintColor="#d1d5db"
-                        thumbTintColor="#609084"
+                        onBlur={() => handler.handleInputBlur(member?.userId)}
+                        selectTextOnFocus
                       />
                     </View>
-                    <Text className="w-10 text-right text-xs text-gray-500">
-                      100%
-                    </Text>
+                    <View className="flex-row items-center">
+                      <Text className="w-8 text-xs text-gray-500">0%</Text>
+                      <View style={{ flex: 1, height: 40 }}>
+                        {showTooltip && (
+                          <SliderTooltip value={state?.tooltipValue?.value} />
+                        )}
+                        <Slider
+                          style={{ width: "100%", height: "100%" }}
+                          minimumValue={0}
+                          maximumValue={100}
+                          step={1}
+                          value={currentValue}
+                          onSlidingStart={() =>
+                            handler.handleSliderStart(member?.userId)
+                          }
+                          onValueChange={(value) =>
+                            handler.handleSliderChange(member?.userId, value)
+                          }
+                          onSlidingComplete={() =>
+                            handler.handleSliderComplete(member?.userId)
+                          }
+                          minimumTrackTintColor="#609084"
+                          maximumTrackTintColor="#d1d5db"
+                          thumbTintColor="#609084"
+                        />
+                      </View>
+                      <Text className="w-10 text-right text-xs text-gray-500">
+                        100%
+                      </Text>
+                    </View>
                   </View>
-                </View>
-              );
-            })}
+                );
+              },
+            )}
           </SectionComponent>
         </View>
       </ScrollViewCustom>
 
-      <View className="absolute bottom-0 left-0 right-0 border-t border-gray-200 bg-white px-6 py-4 shadow-lg">
+      <View className="absolute bottom-0 left-0 right-0 bg-white px-6 py-4 shadow-lg">
         <Pressable
           onPress={handler.handleUpdate}
           className={`${
-            displayTotal === 100 ? "bg-[#609084]" : "bg-gray-400"
-          } items-center rounded-lg py-4`}
-          disabled={displayTotal !== 100}
+            state?.displayTotal === 100 ? "bg-[#609084]" : "bg-gray-400"
+          } items-center rounded-lg py-3.5`}
+          disabled={state?.displayTotal !== 100}
         >
           <Text className="text-base font-semibold text-white">
-            {TEXT_TRANSLATE_GROUP_RATIO_MEMBER.BUTTON?.UPDATE ||
-              "Update Ratios"}
+            {TEXT_TRANSLATE_GROUP_RATIO_MEMBER.BUTTON?.UPDATE}
           </Text>
         </Pressable>
       </View>

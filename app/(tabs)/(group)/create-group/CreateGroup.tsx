@@ -5,7 +5,13 @@ import {
   SectionComponent,
 } from "@/components";
 import { TextAreaComponent } from "@/components/TextAreaComponent";
-import { AntDesign, Feather, MaterialIcons } from "@expo/vector-icons";
+import { Colors } from "@/helpers/constants/color";
+import {
+  AntDesign,
+  Feather,
+  FontAwesome,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { router } from "expo-router";
 import { Formik } from "formik";
 import React, { useMemo } from "react";
@@ -90,7 +96,11 @@ const CreateGroup = () => {
         ) : (
           <View className="flex-1 items-center justify-center p-6">
             <View className="mb-4 h-20 w-20 items-center justify-center rounded-full bg-gray-100">
-              <Feather name="credit-card" size={36} color="#609084" />
+              <FontAwesome
+                name="bank"
+                size={36}
+                color={Colors.colors.primary}
+              />
             </View>
             <Text className="mb-2 text-center text-lg font-semibold text-gray-700">
               {TEXT_TRANSLATE_BANK_ACCOUNT.TITLE.NO_BANK_ACCOUNT}
@@ -102,7 +112,9 @@ const CreateGroup = () => {
               className="my-5 rounded-lg bg-primary px-4 py-2"
               onPress={handler.handleNavigateCreateBankAccount}
             >
-              <Text className="font-semibold text-white">Tạo tài khoản</Text>
+              <Text className="font-semibold text-white">
+                Liên kết tài khoản
+              </Text>
             </TouchableOpacity>
           </View>
         )}

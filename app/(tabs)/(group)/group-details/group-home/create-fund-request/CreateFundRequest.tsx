@@ -5,7 +5,7 @@ import {
   SpaceComponent,
 } from "@/components";
 import { formatCurrency, formatCurrencyInput } from "@/helpers/libs";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Formik } from "formik";
 import React from "react";
 import { Pressable, Text, TouchableOpacity, View } from "react-native";
@@ -13,6 +13,7 @@ import * as Yup from "yup";
 import useCreateFundRequest from "./hooks/useCreateFundRequest";
 import TEXT_TRANSLATE_CREATE_FUND_REQUEST from "./CreateFundRequest.translate";
 import { TextAreaComponent } from "@/components/TextAreaComponent";
+import { Colors } from "@/helpers/constants/color";
 
 const { TITLE, LABELS, BUTTON, MESSAGE_VALIDATE } =
   TEXT_TRANSLATE_CREATE_FUND_REQUEST;
@@ -42,14 +43,26 @@ export default function CreateFundRequest() {
           <MaterialIcons name="arrow-back" size={24} />
         </TouchableOpacity>
         <Text className="text-lg font-bold">{TITLE.MAIN_TITLE}</Text>
-        <SpaceComponent width={24} />
       </SectionComponent>
 
-      <SectionComponent rootClassName="bg-white my-2 rounded-lg p-4 mx-5">
-        <Text className="text-sm text-gray-500">{TITLE.FUND_BALANCE}</Text>
-        <Text className="text-xl font-bold text-black">
-          {formatCurrency(fundBalance)}
-        </Text>
+      <SectionComponent rootClassName="mx-5 my-2 rounded-2xl border border-gray-100 bg-white p-5 shadow-xl">
+        <View className="flex-row items-center justify-between">
+          <View>
+            <Text className="mb-1 text-sm text-gray-500">
+              {TITLE.FUND_BALANCE}
+            </Text>
+            <Text className="text-2xl font-bold text-primary">
+              {formatCurrency(fundBalance)}
+            </Text>
+          </View>
+          <View className="rounded-full bg-light/50 p-3">
+            <Ionicons
+              name="wallet-outline"
+              size={30}
+              color={Colors.colors.primary}
+            />
+          </View>
+        </View>
       </SectionComponent>
 
       <Formik
@@ -63,7 +76,7 @@ export default function CreateFundRequest() {
       >
         {({ handleSubmit }) => (
           <>
-            <SectionComponent rootClassName="mt-5 mx-5">
+            <SectionComponent rootClassName="mt-5 rounded-2xl bg-white p-5 mx-5">
               <InputComponent
                 name="amount"
                 label={LABELS.AMOUNT}
