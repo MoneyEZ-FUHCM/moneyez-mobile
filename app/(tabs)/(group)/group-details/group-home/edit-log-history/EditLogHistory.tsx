@@ -38,14 +38,11 @@ const EditLogHistory = () => {
               />
             </View>
           ) : (
-            <LinearGradient
-              colors={["#609084", "#4A7A70"]}
-              className="h-14 w-14 items-center justify-center rounded-full shadow-md"
-            >
-              <Text className="text-3xl font-semibold uppercase text-white">
+            <View className="h-14 w-14 items-center justify-center rounded-full border-[4px] border-primary/20 bg-primary">
+              <Text className="text-2xl font-semibold uppercase text-white">
                 {item?.changedBy?.charAt(0)}
               </Text>
-            </LinearGradient>
+            </View>
           )}
           <View className="flex-1 pl-1">
             <View className="flex-row items-center">
