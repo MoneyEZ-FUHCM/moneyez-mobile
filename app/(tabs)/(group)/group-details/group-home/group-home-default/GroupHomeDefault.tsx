@@ -1,6 +1,5 @@
 import ArrowDown from "@/assets/icons/arrow-down-short-wide.png";
 import ArrowUp from "@/assets/icons/arrow-up-wide-short.png";
-import AdminAvatar from "@/assets/images/logo/avatar_admin.jpg";
 import { SafeAreaViewCustom } from "@/components";
 import { TRANSACTION_TYPE_TEXT } from "@/enums/globals";
 import { Colors } from "@/helpers/constants/color";
@@ -10,7 +9,12 @@ import {
   formatTime,
 } from "@/helpers/libs";
 import { GroupLogs } from "@/types/group.type";
-import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import {
+  AntDesign,
+  FontAwesome,
+  Ionicons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import React from "react";
@@ -167,7 +171,7 @@ const GroupHomeDefault = () => {
     </View>
   );
 
-  const TransactionItem = ({
+  const RecentActivityItem = ({
     activity,
     index,
   }: {
@@ -176,9 +180,7 @@ const GroupHomeDefault = () => {
   }) => (
     <View
       key={activity?.id || index}
-      className={`relative flex-row border-b border-gray-100 py-4 ${
-        index === 0 ? "border-t border-t-gray-100" : ""
-      }`}
+      className="relative mb-3 rounded-2xl bg-white p-2 shadow-sm"
     >
       <View className="flex-1">
         <View className="mb-2 flex-row items-center gap-x-2">
@@ -196,25 +198,31 @@ const GroupHomeDefault = () => {
             />
           </View>
           <Text
-            className={`${
-              activity?.type === TRANSACTION_TYPE_TEXT.INCOME
-                ? "text-green"
-                : "text-red"
-            } text-xs font-bold`}
+            className={`${activity?.type === TRANSACTION_TYPE_TEXT.INCOME ? "text-green" : "text-red"} text-xs font-bold`}
           >
             {activity?.type === TRANSACTION_TYPE_TEXT.INCOME
               ? "Góp quỹ"
               : "Rút quỹ"}
           </Text>
         </View>
+
         <View className="flex-row items-center justify-between">
           <View className="mr-4 flex-1 flex-row items-center space-x-3">
-            <Image
-              source={{
-                uri: activity.avatarUrl,
-              }}
-              className="h-12 w-12 rounded-full"
-            />
+            {activity?.avatarUrl ? (
+              <Image
+                source={{ uri: activity.avatarUrl }}
+                className="h-12 w-12 rounded-full"
+              />
+            ) : (
+              <LinearGradient
+                colors={["#609084", "#4A7A70"]}
+                className="h-12 w-12 items-center justify-center rounded-full shadow-md"
+              >
+                <Text className="text-2xl font-semibold uppercase text-white">
+                  {activity?.createdBy?.charAt(0)}
+                </Text>
+              </LinearGradient>
+            )}
             <View className="flex-1">
               <Text className="text-base font-bold">{activity?.createdBy}</Text>
               <Text className="text-gray-600" numberOfLines={2}>
@@ -235,53 +243,77 @@ const GroupHomeDefault = () => {
           </Text>
         </View>
       </View>
-      <View className="absolute bottom-1 right-0 flex-row rounded-full bg-gray-50 px-2 py-0.5">
-        <Text className="text-xs text-gray-500">
-          {formatTime(activity?.createdDate)} -{" "}
-          {formatDateMonthYear(activity?.createdDate)}
-        </Text>
-      </View>
-    </View>
-  );
-
-  const LogItem = ({
-    activity,
-    index,
-  }: {
-    activity: GroupLogs;
-    index: number;
-  }) => (
-    <View
-      key={activity?.id || index}
-      className={`relative flex-row items-center border-b border-gray-100 py-4 ${
-        index === 0 ? "border-t border-t-gray-100" : ""
-      }`}
-    >
-      <View className="flex-1 flex-row items-center space-x-3">
-        <Image
-          source={activity.imageUrl ? { uri: activity.imageUrl } : AdminAvatar}
-          className="h-12 w-12 rounded-full"
-        />
-        <View className="flex-1">
-          <Text className="text-base font-bold">
-            {activity?.changedBy}{" "}
-            <Text className="font-normal text-gray-600">
-              {activity?.changeDescription}
-            </Text>
+      <View className="mt-4 flex-row items-center justify-between border-t border-gray-100 pt-3">
+        <View className="flex-row items-center">
+          <Ionicons name="checkmark-circle" size={14} color="#609084" />
+          <Text className="ml-1 text-xs text-gray-500">Đã xác nhận</Text>
+        </View>
+        <View className="flex-row items-center rounded-full bg-gray-50 px-3 py-1.5">
+          <MaterialIcons name="access-time" size={12} color="#666" />
+          <Text className="ml-1 text-xs font-medium text-gray-600">
+            {formatTime(activity?.createdDate)} ·{" "}
+            {formatDateMonthYear(activity?.createdDate)}
           </Text>
         </View>
       </View>
-      <View className="absolute bottom-1 right-0 flex-row rounded-full bg-gray-50 px-2 py-0.5">
-        <Text className="text-xs text-gray-500">
-          {formatTime(activity?.createdDate)} -{" "}
-          {formatDateMonthYear(activity?.createdDate)}
-        </Text>
+    </View>
+  );
+
+  const LogItem = ({ activity }: { activity: GroupLogs }) => (
+    <View
+      key={activity?.id}
+      className="relative mb-3 rounded-2xl bg-white p-2 shadow-sm"
+    >
+      <View className="flex-row items-center space-x-3">
+        {activity?.imageUrl ? (
+          <View className="h-14 w-14 rounded-full border-2 border-primary/20 p-0.5">
+            <Image
+              source={{ uri: activity?.imageUrl }}
+              className="h-full w-full rounded-full"
+            />
+          </View>
+        ) : (
+          <LinearGradient
+            colors={["#609084", "#4A7A70"]}
+            className="h-14 w-14 items-center justify-center rounded-full shadow-md"
+          >
+            <Text className="text-3xl font-semibold uppercase text-white">
+              {activity?.changedBy?.charAt(0)}
+            </Text>
+          </LinearGradient>
+        )}
+        <View className="flex-1 pl-1">
+          <View className="flex-row items-center">
+            <Text className="text-base font-bold text-gray-800">
+              {activity?.changedBy}
+            </Text>
+          </View>
+          <Text className="mt-1 text-gray-600">
+            {activity?.changeDescription}
+          </Text>
+        </View>
+      </View>
+      <View className="mt-4 flex-row items-center justify-between border-t border-gray-100 pt-3">
+        <View className="flex-row items-center">
+          <Ionicons name="checkmark-circle" size={14} color="#609084" />
+          <Text className="ml-1 text-xs text-gray-500">Đã xác nhận</Text>
+        </View>
+        <View className="flex-row items-center rounded-full bg-gray-50 px-3 py-1.5">
+          <MaterialIcons name="access-time" size={12} color="#666" />
+          <Text className="ml-1 text-xs font-medium text-gray-600">
+            {formatTime(activity?.createdDate)} ·{" "}
+            {formatDateMonthYear(activity?.createdDate)}
+          </Text>
+        </View>
       </View>
     </View>
   );
 
-  const ViewAllButton = () => (
-    <TouchableOpacity className="mt-5 flex-row items-center justify-center rounded-full">
+  const ViewAllButton = ({ type }: { type: string }) => (
+    <TouchableOpacity
+      className="mt-1 flex-row items-center justify-center rounded-full"
+      onPress={() => handler.handlePress(type)}
+    >
       <Text className="pr-2 text-center font-bold text-primary">
         {BUTTON.VIEW_ALL}
       </Text>
@@ -302,6 +334,54 @@ const GroupHomeDefault = () => {
     </View>
   );
 
+  const RecentActivitiesSection = () => {
+    const totalTransactions = state.groupTransaction?.length ?? 0;
+    return (
+      <CardSection title={TEXT.RECENT_ACTIVITIES}>
+        {state.groupTransaction?.length === 0 ? (
+          <EmptyStateView />
+        ) : (
+          <>
+            {state.groupTransaction
+              ?.slice(0, 3)
+              ?.map((activity, index) => (
+                <RecentActivityItem
+                  key={activity?.id || index}
+                  activity={activity}
+                  index={totalTransactions - index}
+                />
+              ))}
+
+            {totalTransactions >= 3 && (
+              <ViewAllButton type={state.RECENT_ACTIVITIES} />
+            )}
+          </>
+        )}
+      </CardSection>
+    );
+  };
+
+  const EditLogSection = () => {
+    const totalLogs = state.groupLogs?.length ?? 0;
+    return (
+      <CardSection title={TEXT.EDIT_LOG}>
+        {state.groupLogs?.length === 0 ? (
+          <EmptyStateView />
+        ) : (
+          <>
+            {state.groupLogs
+              ?.slice(0, 3)
+              ?.map((activity, index) => (
+                <LogItem key={activity?.id || index} activity={activity} />
+              ))}
+
+            {totalLogs >= 3 && <ViewAllButton type={state.EDIT_LOGS} />}
+          </>
+        )}
+      </CardSection>
+    );
+  };
+
   return (
     <SafeAreaViewCustom>
       <HeaderSection />
@@ -319,44 +399,8 @@ const GroupHomeDefault = () => {
       >
         <GroupInfoSection />
         <QuickActionsSection />
-        <CardSection title={TEXT.RECENT_ACTIVITIES}>
-          {state.groupTransaction?.length === 0 ? (
-            <EmptyStateView />
-          ) : (
-            <>
-              {state.groupTransaction
-                ?.slice(0, 3)
-                ?.map((activity, index) => (
-                  <TransactionItem
-                    key={activity?.id || index}
-                    activity={activity}
-                    index={index}
-                  />
-                ))}
-
-              {(state.groupTransaction?.length ?? 0) >= 3 && <ViewAllButton />}
-            </>
-          )}
-        </CardSection>
-        <CardSection title={TEXT.EDIT_LOG}>
-          {state.groupLogs?.length === 0 ? (
-            <EmptyStateView />
-          ) : (
-            <>
-              {state.groupLogs
-                ?.slice(0, 3)
-                ?.map((activity, index) => (
-                  <LogItem
-                    key={activity?.id || index}
-                    activity={activity}
-                    index={index}
-                  />
-                ))}
-
-              {(state.groupLogs?.length ?? 0) >= 3 && <ViewAllButton />}
-            </>
-          )}
-        </CardSection>
+        <RecentActivitiesSection />
+        <EditLogSection />
         <View className="h-24" />
       </ScrollView>
     </SafeAreaViewCustom>

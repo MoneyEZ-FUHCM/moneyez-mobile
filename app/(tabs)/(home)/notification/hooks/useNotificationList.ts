@@ -78,13 +78,10 @@ const useNotificationList = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      setPageIndex(initialPageIndex);
+    if (notifications?.length > 0) {
       setNotifications([]);
-      await handleRefetchNotice();
-    };
-
-    fetchData();
+      setPageIndex(1);
+    }
   }, [activeTab]);
 
   useEffect(() => {

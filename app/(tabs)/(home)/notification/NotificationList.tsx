@@ -1,4 +1,3 @@
-import NoData from "@/assets/images/InviteMemberAssets/not-found-result.png";
 import {
   FlatListCustom,
   LoadingSectionWrapper,
@@ -12,7 +11,7 @@ import { Notification } from "@/types/notification.type";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { Bookmark, Forbidden2 } from "iconsax-react-native";
 import React from "react";
-import { Image, Pressable, Text, TouchableOpacity, View } from "react-native";
+import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import useNotificationList from "./hooks/useNotificationList";
 import { getNotificationIcon } from "./NotificationList.const";
