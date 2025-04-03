@@ -53,12 +53,16 @@ const groupApi = apiSlice.injectEndpoints({
       }),
     }),
     getGroupLogs: builder.query({
-      query: ({ groupId, PageIndex, PageSize }) => ({
-        url: `/groups/logs/${groupId}?PageIndex=${PageIndex}&PageSize=${PageSize}`,
-        method: HTTP_METHOD.GET,
-      }),
+      query: ({ PageIndex, PageSize, change_type, groupId }) => {
+        const url = `/groups/logs/${groupId}?PageIndex=${PageIndex}&PageSize=${PageSize}&sort_by=date&dir=desc&is_deleted=false`;
+        return {
+          url: change_type ? `${url}&change_type=${change_type}` : url,
+          method: HTTP_METHOD.GET,
+        };
+      },
       transformResponse: (response) =>
         transformCommonResponse<GroupLogs>(response),
+      providesTags: ["Group"],
     }),
     getMemberLogs: builder.query({
       query: ({ groupId, PageIndex, PageSize }) => ({

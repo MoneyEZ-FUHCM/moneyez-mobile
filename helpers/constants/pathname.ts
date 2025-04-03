@@ -70,6 +70,10 @@ const PATH_NAME = {
       "group-details/group-home/withdraw-fund-request/WithdrawFundRequest",
     GROUP_FUND_REMIND:
       "group-details/group-home/group-fund-remind/GroupFundRemind",
+    EDIT_LOG_HISTORY:
+      "group-details/group-home/edit-log-history/EditLogHistory",
+    ACTION_LOG_HISTORY:
+      "group-details/group-home/action-log-history/ActionLogHistory",
   },
   GROUP_SETTING: {
     GROUP_SETTING_DEFAULT:

@@ -10,6 +10,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 const useGroupHomeDefault = () => {
   const dispatch = useDispatch();
+  const RECENT_ACTIVITIES = "recent-activities";
+  const EDIT_LOGS = "edit-logs";
   const { id } = useLocalSearchParams();
   const { data: groupDetailInfo, refetch: refetchGroupDetail } =
     useGetGroupDetailQuery({ id }, { skip: !id });
@@ -65,12 +67,22 @@ const useGroupHomeDefault = () => {
     });
   }, [refetchGroupDetail, refetchGroupLogs, refetchGroupTransactions]);
 
+  const handlePress = (type: string) => {
+    if (type === RECENT_ACTIVITIES) {
+      router.navigate(PATH_NAME.GROUP_HOME.ACTION_LOG_HISTORY as any);
+    } else if (type === EDIT_LOGS) {
+      router.navigate(PATH_NAME.GROUP_HOME.EDIT_LOG_HISTORY as any);
+    }
+  };
+
   return {
     state: {
       groupDetail,
       groupLogs: groupLogs?.items,
       groupTransaction: groupTransaction?.items,
       refreshing: isRefetching,
+      RECENT_ACTIVITIES,
+      EDIT_LOGS,
     },
     handler: {
       handleCreateFundRequest,
@@ -78,6 +90,7 @@ const useGroupHomeDefault = () => {
       handleFundRemind,
       handleStatistic,
       handleRefetchData,
+      handlePress,
     },
   };
 };
