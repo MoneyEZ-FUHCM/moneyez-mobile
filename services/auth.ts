@@ -64,7 +64,15 @@ const authApi = apiSlice.injectEndpoints({
       query: (payload) => ({
         url: "/users/update-fcm-token",
         method: HTTP_METHOD.PUT,
-        body: payload
+        body: payload,
+      }),
+      invalidatesTags: ["User"],
+    }),
+    resentOtp: builder.mutation({
+      query: (payload) => ({
+        url: "/auth/verify-email/resend-otp",
+        method: HTTP_METHOD.POST,
+        body: payload,
       }),
       invalidatesTags: ["User"],
     }),
@@ -81,6 +89,7 @@ export const {
   useConfirmNewPasswordMutation,
   useGetInfoUserQuery,
   useUpdateFcmTokenMutation,
+  useResentOtpMutation,
 } = authApi;
 
 export default authApi;

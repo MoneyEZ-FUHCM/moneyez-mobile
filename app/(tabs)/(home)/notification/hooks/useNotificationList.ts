@@ -1,4 +1,5 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
+import { PATH_NAME } from "@/helpers/constants/pathname";
 import { formatDate, formatTime } from "@/helpers/libs";
 import useHideTabbar from "@/hooks/useHideTabbar";
 import { setHasUnreadNotification } from "@/redux/slices/systemSlice";
@@ -204,6 +205,7 @@ const useNotificationList = () => {
   const handlePressNotification = useCallback((item: any) => {
     if (item?.href) {
       Linking.openURL(item.href);
+      router.replace(PATH_NAME.HOME.HOME_DEFAULT as any);
     }
   }, []);
 

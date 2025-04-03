@@ -1,5 +1,5 @@
 import { PATH_NAME } from "@/helpers/constants/pathname";
-import { formatCurrency, formatDate } from "@/helpers/libs";
+import { formatCurrency, formatDate, formatTime } from "@/helpers/libs";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import {
   useGetCurrentUserSpendingModelChartDetailQuery,
@@ -12,17 +12,13 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 
 const formatTransaction = (item: TransactionViewModel) => {
-  const dateObj = new Date(item?.transactionDate);
   return {
     id: item?.id,
     subcategory: item?.description || "Không có mô tả",
     amount: item?.amount,
     type: item?.type?.toLowerCase() === "income" ? "income" : "expense",
-    date: dateObj?.toLocaleDateString("vi-VN"),
-    time: dateObj?.toLocaleTimeString("vi-VN", {
-      hour: "2-digit",
-      minute: "2-digit",
-    }),
+    date: formatDate(item?.transactionDate),
+    time: formatTime(item?.transactionDate),
     icon: item?.subcategoryIcon || "pending",
     description: item?.description,
   };

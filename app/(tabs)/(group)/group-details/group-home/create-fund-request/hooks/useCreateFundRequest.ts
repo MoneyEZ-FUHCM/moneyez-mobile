@@ -12,6 +12,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BackHandler, ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import TEXT_TRANSLATE_CREATE_FUND_REQUEST from "../CreateFundRequest.translate";
+import CREATE_FUND_REQUEST_CONSTANT from "../CreateFundRequest.constant";
 
 interface FundRequestForm {
   amount: string;
@@ -25,6 +26,7 @@ const useCreateFundRequest = () => {
   const [requestFund] = useRequestFundMutation();
   const { GROUP_HOME } = PATH_NAME;
   const { HTTP_STATUS, SYSTEM_ERROR } = COMMON_CONSTANT;
+  const { ERROR_CODE } = CREATE_FUND_REQUEST_CONSTANT;
   const dispatch = useDispatch();
   const { refetch } = useGetGroupDetailQuery({ id: id });
   const currentGroup = useSelector(selectCurrentGroup);
@@ -62,13 +64,13 @@ const useCreateFundRequest = () => {
     }, [handleBack]),
   );
 
-  // Handle form submission
   const handleCreateFundRequest = useCallback(
     async (values: FundRequestForm) => {
       dispatch(setLoading(true));
+      const numericAmount = parseInt(values.amount.replace(/\D/g, ""));
+
       try {
         setIsSubmitting(true);
-        const numericAmount = parseInt(values.amount.replace(/\D/g, ""));
 
         const response = await requestFund({
           groupId: currentGroup?.id,
@@ -97,6 +99,11 @@ const useCreateFundRequest = () => {
         }
       } catch (err: any) {
         const error = err?.data;
+
+        if (error.errorCode === ERROR_CODE.BANK_ACCOUNT_NOT_FOUND) {
+          ToastAndroid.show("Ngân hàng không tồn tại", ToastAndroid.SHORT);
+          return;
+        }
 
         ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
       } finally {

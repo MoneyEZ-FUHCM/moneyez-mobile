@@ -1,20 +1,22 @@
 import { PATH_NAME } from "@/helpers/constants/pathname";
-import { selectCurrentGroup } from "@/redux/slices/groupSlice";
+import { selectCurrentGroup, setCurrentGroup } from "@/redux/slices/groupSlice";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";
 import { useGetGroupDetailQuery, useGetGroupLogsQuery } from "@/services/group";
 import { useGetGroupTransactionQuery } from "@/services/transaction";
 import { router, useLocalSearchParams } from "expo-router";
-import { useCallback, useState } from "react";
+import { useCallback, useLayoutEffect, useState } from "react";
 import { ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 const useGroupHomeDefault = () => {
   const dispatch = useDispatch();
   const { id } = useLocalSearchParams();
-  const { refetch: refetchGroupDetail } = useGetGroupDetailQuery(
-    { id },
-    { skip: !id },
-  );
+  const { data: groupDetailInfo, refetch: refetchGroupDetail } =
+    useGetGroupDetailQuery({ id }, { skip: !id });
+
+  useLayoutEffect(() => {
+    dispatch(setCurrentGroup(groupDetailInfo?.data));
+  }, [dispatch]);
 
   const groupDetail = useSelector(selectCurrentGroup);
 

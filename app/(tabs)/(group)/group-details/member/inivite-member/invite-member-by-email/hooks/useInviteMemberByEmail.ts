@@ -11,6 +11,7 @@ import { useCallback, useEffect, useState } from "react";
 import { ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import INVITE_MEMBER_CONSTANTS from "../../InviteMember.constant";
+import { setLoading } from "@/redux/slices/loadingSlice";
 
 const INVITE_SUGGESTION = [
   {
@@ -95,13 +96,15 @@ const useInviteMemberByEmail = () => {
       emails: selectedForInvite,
       description: selectedTone.text(userInfoDetail?.fullName as string),
     };
-
+    dispatch(setLoading(true));
     try {
       await iniviteMemberByEmail(payload).unwrap();
       ToastAndroid.show("Mời thành viên thành công", ToastAndroid.SHORT);
       router.back();
     } catch (err) {
       ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 

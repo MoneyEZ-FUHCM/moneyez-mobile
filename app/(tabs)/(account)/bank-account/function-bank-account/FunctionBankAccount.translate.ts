@@ -16,6 +16,8 @@ const TEXT_TRANSLATE_FUNCTION_BANK_ACCOUNT = {
   },
   MESSAGE_ERROR: {
     BANK_ACCOUNT_NOT_FOUND: "Tài khoản ngân hàng không tồn tại",
+    BANK_ACCOUNT_VALIDATION_FAILED:
+      "Thông tin tài khoản ngân hàng không đúng. Vui lòng kiểm tra lại",
   },
 };
 

@@ -1,23 +1,26 @@
 import { PATH_NAME } from "@/helpers/constants/pathname";
+import { selectHasUnreadNotification } from "@/redux/hooks/systemSelector";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { selectUserInfo } from "@/redux/slices/userSlice";
 import { selectCurrentUserSpendingModel } from "@/redux/slices/userSpendingModelSlice";
-import {
-  useGetInfoUserQuery,
-  useUpdateFcmTokenMutation,
-} from "@/services/auth";
+import { RootState } from "@/redux/store";
+import { useUpdateFcmTokenMutation } from "@/services/auth";
 import { useGetGroupsQuery } from "@/services/group";
 import { useGetCurrentUserSpendingModelQuery } from "@/services/userSpendingModel";
+import { GroupDetail } from "@/types/group.type";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import dayjs from "dayjs";
 import { router } from "expo-router";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { FlatList, ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import HOME_SCREEN_CONSTANTS from "../../HomeScreen.const";
-import { GroupDetail } from "@/types/group.type";
-import { useGetNotificationQuery } from "@/services/notification";
-import { selectHasUnreadNotification } from "@/redux/hooks/systemSelector";
 
 interface ItemType {
   id: string;

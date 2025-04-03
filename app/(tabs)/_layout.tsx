@@ -5,8 +5,10 @@ import React, { useEffect } from "react";
 import "../../globals.css";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import * as Linking from "expo-linking";
+import { useGroupListRefetch } from "./(group)/hooks/useGroupList";
 
 export default function TabLayout() {
+  const { handleRefetchGrouplist } = useGroupListRefetch();
   const {
     BOTTOM_TAB_NAME: BOTTOM_TABLE_NAME,
     BOTTOM_TAB_TRANSLATE: BOTTOM_TABLE_TRANSLATE,
@@ -19,7 +21,8 @@ export default function TabLayout() {
       const { url } = event;
       if (url) {
         if (url.includes(PATH_NAME.GROUP.GROUP_LIST)) {
-          router.replace(PATH_NAME.GROUP.GROUP_LIST as any);
+          await handleRefetchGrouplist();
+          router.push(PATH_NAME.GROUP.GROUP_LIST as any);
         }
       }
     };
@@ -28,14 +31,14 @@ export default function TabLayout() {
 
     Linking.getInitialURL().then((url) => {
       if (url) {
-        handleDeepLink({ url });
+        handleDeepLink({ url } as Linking.EventType);
       }
     });
 
     return () => {
       subscription.remove();
     };
-  }, []);
+  }, [handleRefetchGrouplist]);
 
   return (
     <Tabs

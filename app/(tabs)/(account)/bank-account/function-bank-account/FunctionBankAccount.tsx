@@ -83,8 +83,8 @@ const FunctionBankAccount = () => {
           </TouchableOpacity>
           <Text className="text-lg font-bold">
             {state.editMode
-              ? "Chỉnh sửa tài khoản ngân hàng"
-              : "Thêm tài khoản ngân hàng"}
+              ? "Chỉnh sửa thông tin ngân hàng"
+              : "Liên kết ngân hàng"}
           </Text>
         </SectionComponent>
         <SectionComponent rootClassName="flex-1 p-6">
@@ -114,10 +114,9 @@ const FunctionBankAccount = () => {
                       labelClass="text-text-gray text-xs font-semibold"
                       inputClass="h-11 bg-gray-50 px-3 py-2  rounded-lg"
                       formatter={(value) => value.replace(/\D/g, "")}
-                      maxLength={50}
+                      maxLength={12}
                     />
                   </View>
-
                   <View className="">
                     <TouchableOpacity
                       className="rounded-lg"

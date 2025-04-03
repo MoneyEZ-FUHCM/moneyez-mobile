@@ -87,15 +87,14 @@ const useBankAccount = () => {
           MESSAGE_ERROR.BANK_ACCOUNT_NOT_FOUND,
           ToastAndroid.SHORT,
         );
-        return;
       }
       ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
     }
   }, [accountToDelete]);
 
   const handleEditBankAccount = (account: BankAccountType) => {
-    router.push({
-      pathname: PATH_NAME.ACCOUNT.FUNCTION_BANK_ACCOUNT as any,
+    router.navigate({
+      pathname: PATH_NAME.GROUP.CREATE_FUNCTION_BANK_ACCOUNT as any,
       params: {
         editMode: "true",
         bankAccount: JSON.stringify(account),

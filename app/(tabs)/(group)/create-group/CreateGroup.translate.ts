@@ -12,7 +12,7 @@ const TEXT_TRANSLATE_CREATE_GROUP = {
 
   // Button
   BUTTON: {
-    NEXT: "Tiếp Theo",
+    NEXT: "Xác nhận",
     CONTRIBUTE: "Góp quỹ",
     WITHDRAW: "Rút quỹ",
     ACTIVATE: "Kích hoạt",

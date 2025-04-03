@@ -27,6 +27,7 @@ const PATH_NAME = {
       "fund-contribution-request/FundContributionRequest",
     CREATE_FUNCTION_BANK_ACCOUNT:
       "create-group/function-bank-account/FunctionBankAccount",
+    BANK_ACCOUNT_LIST: "create-group/bank-account-list/BankAccount",
   },
   BOT: {
     CHATBOT: "chatbot/ChatBot",

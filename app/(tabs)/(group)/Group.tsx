@@ -45,15 +45,17 @@ const Group = () => {
     isShowScanner,
     modalizeRef,
     memberCode,
+    modalizeJoinGroupRef,
   } = state;
   const {
     handleLoadMore,
     handleScanQR,
     setIsShowScanner,
     handleScanSuccess,
-    handleJoinGroup,
     setMemberCode,
     handleSubmitJoinGroup,
+    handleJoinGroup,
+    handleJoinGroupByQR,
   } = handler;
   const [fadeAnim] = useState(new Animated.Value(0));
 
@@ -107,15 +109,24 @@ const Group = () => {
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
                   <TouchableOpacity
-                    className="mb-4 flex-row items-center rounded-2xl border border-gray-200 bg-white p-4 shadow-lg"
+                    className="mb-4 flex-row items-center rounded-2xl border border-gray-200 bg-white p-4"
                     onPress={handler.handleNavigateAndHideTabbar(item)}
                   >
-                    <Image
-                      src={item?.imageUrl}
-                      alt="star"
-                      className="h-14 w-14 rounded-full"
-                      resizeMode="cover"
-                    />
+                    {item.imageUrl ? (
+                      <Image
+                        src={item?.imageUrl}
+                        alt="star"
+                        className="h-14 w-14 rounded-full"
+                        resizeMode="cover"
+                      />
+                    ) : (
+                      <View className="h-14 w-14 items-center justify-center rounded-full bg-primary">
+                        <Text className="text-3xl font-medium uppercase text-white">
+                          {item?.name?.charAt(0)}
+                        </Text>
+                      </View>
+                    )}
+
                     <View className="ml-4 flex-1 space-y-1">
                       <Text className="text-lg font-semibold text-gray-900">
                         {item?.name}
@@ -165,7 +176,7 @@ const Group = () => {
                   <View className="w-full flex-row justify-between px-8">
                     <TouchableOpacity
                       className="flex-1 rounded-lg bg-primary/10 px-4 py-3"
-                      onPress={handleJoinGroup}
+                      onPress={handleJoinGroupByQR}
                     >
                       <Text className="text-center font-medium text-primary">
                         Tham gia nhóm
@@ -232,7 +243,7 @@ const Group = () => {
             </TouchableOpacity>
           </View>
         </ModalLizeComponent>
-        <ModalLizeComponent ref={modalizeRef} handlePosition="inside">
+        <ModalLizeComponent ref={modalizeJoinGroupRef} handlePosition="inside">
           {state.groupDetailPreview && (
             <View className="flex-1 rounded-3xl bg-gray-50">
               <View className="relative h-48 w-full overflow-hidden rounded-t-3xl">
@@ -268,7 +279,7 @@ const Group = () => {
                 </View>
                 <TouchableOpacity
                   className="absolute left-4 top-4 h-10 w-10 items-center justify-center rounded-full bg-black/30"
-                  onPress={() => modalizeRef.current?.close()}
+                  onPress={() => modalizeJoinGroupRef.current?.close()}
                 >
                   <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
                 </TouchableOpacity>

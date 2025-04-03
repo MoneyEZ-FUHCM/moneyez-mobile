@@ -68,6 +68,8 @@ const TEXT_TRANSLATE_AUTH = {
     LOGIN_SUCCESSFUL: "Đăng nhập thành công",
     REQUEST_PASSWORD_SUCCESSFUL:
       "Vui lòng kiểm tra hòm thư (hoặc Thư rác) để lấy mã OTP",
+    RESENT_OTP_SUCCESSFUL:
+      "Vui lòng kiểm tra hòm thư (hoặc Thư rác) để lấy mã OTP",
     CONFIRM_PASSWORD_SUCCESSFUL:
       "Cập nhật mật khẩu thành công. Vui lòng đăng nhập để vào hệ thống",
     REGISTER_SUCCESS:
