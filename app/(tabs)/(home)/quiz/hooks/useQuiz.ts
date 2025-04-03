@@ -1,110 +1,72 @@
-import {
-  SpendingModel,
-  spendingModels,
-} from "@/helpers/constants/spendingModels";
-import { setMainTabHidden } from "@/redux/slices/tabSlice";
-import { router, useFocusEffect } from "expo-router";
-import { useCallback, useState } from "react";
-import { BackHandler } from "react-native";
-import { useDispatch } from "react-redux";
+import { useGetActiveQuizQuery, useSubmitQuizMutation } from "@/services/quiz";
+import { useGetSpendingModelQuery } from "@/services/spendingModel";
+import { Quiz, QuizAnswer, QuizAnswerOption, QuizSubmitRequest, QuizSubmitResponse } from "@/types/quiz.types";
+import { useState } from "react";
+import { ToastAndroid } from "react-native";
 
-interface AnswerOption {
+// API model interface
+interface SpendingModelData {
   id: string;
-  content: string;
-}
-
-interface Question {
-  id: string;
-  content: string;
-  answerOptions: AnswerOption[];
-}
-
-interface Quiz {
-  id: string;
-  title: string;
+  name: string;
+  nameUnsign: string;
   description: string;
-  questions: Question[];
+  isTemplate: boolean;
+  spendingModelCategories: any[];
+}
+
+interface Answer {
+  option: QuizAnswerOption | null;
+  customAnswer: string;
+  isCustom: boolean;
 }
 
 interface AnswersState {
-  [questionId: string]: AnswerOption;
+  [questionId: string]: Answer;
 }
 
-interface QuizSubmissionPayload {
-  quizId: string;
-  answers: Array<{
-    questionId: string;
-    answerOptionId: string | null;
-    answerContent: string;
-  }>;
-  suggestedModel: SpendingModel | null;
-}
-
-const constantQuiz: Quiz = {
-  id: "250b830f-55a0-4041-d6d5-08dd6c7a2e2a",
-  title: "General Knowledge Quiz",
-  description: "A quiz about general knowledge.",
-  questions: [
-    {
-      id: "68b134ab-0aa5-4eec-dc4f-08dd6c7a2e34",
-      content: "What is the largest planet in our solar system?",
-      answerOptions: [
-        { id: "cee9e4b5-5598-46a1-6ffc-08dd6c7a2e3b", content: "Earth" },
-        { id: "938bb39a-d912-4b6c-6ffd-08dd6c7a2e3b", content: "Jupiter" },
-        { id: "0371808e-b1dd-49b1-6ffe-08dd6c7a2e3b", content: "Mars" },
-      ],
-    },
-    {
-      id: "84d30e7b-3f7d-4bb3-dc50-08dd6c7a2e34",
-      content: "Who wrote 'Hamlet'?",
-      answerOptions: [
-        {
-          id: "e693637f-9fd3-4621-6fff-08dd6c7a2e3b",
-          content: "Charles Dickens",
-        },
-        {
-          id: "95fb0902-eba1-4bb0-7000-08dd6c7a2e3b",
-          content: "William Shakespeare",
-        },
-      ],
-    },
-  ],
+const calculateTotalSteps = (quiz: Quiz | null) => {
+  if (!quiz) return 2;
+  return 1 + quiz.questions.length + 1;
 };
-
-// Total steps: 1 review + quiz questions + 1 suggestion page
-const totalSteps = 1 + constantQuiz.questions.length + 1;
 
 const useQuiz = () => {
   const [currentStep, setCurrentStep] = useState<number>(0);
-  // answers: { [questionId]: answerOption }
   const [answers, setAnswers] = useState<AnswersState>({});
-  const [suggestedModel, setSuggestedModel] = useState<SpendingModel | null>(
-    null,
-  );
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [customAnswers, setCustomAnswers] = useState<{[questionId: string]: string}>({});
+  const [suggestedModel, setSuggestedModel] = useState<SpendingModelData | null>(null);
+  const [quizSubmitResponse, setQuizSubmitResponse] = useState<QuizSubmitResponse | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  
+  const { data: quizData, isLoading, refetch: refetchQuiz } = useGetActiveQuizQuery({});
+  const { data: spendingModelsData } = useGetSpendingModelQuery({});
+  const [submitQuizMutation, { isLoading: isSubmitting }] = useSubmitQuizMutation();
+  
+  const quiz = quizData?.data || null;
+  const spendingModels = spendingModelsData?.items || [];
+  
+  const totalSteps = calculateTotalSteps(quiz);
 
-  // Simulate suggestion based on quiz answers - randomly select a model for demonstration
-  const computeSuggestion = (): SpendingModel => {
-    // Simulate a loading effect
-    setIsLoading(true);
-
-    // Random index between 0 and spendingModels.length - 1
-    const randomIndex = Math.floor(Math.random() * spendingModels.length);
-    return spendingModels[randomIndex];
+  const fetchActiveQuiz = () => {
+    setError(null);
+    refetchQuiz()
+      .unwrap()
+      .then(() => {
+      })
+      .catch((err) => {
+        console.log(err);
+        ToastAndroid.show("Có lỗi khi load quiz", ToastAndroid.SHORT);
+        setError("Có lỗi khi load quiz");
+      });
+  };
+  
+  const getModelFromRecommendation = (modelId: string): SpendingModelData | null => {
+    const model = spendingModels.find(m => m.id === modelId);
+    return model || null;
   };
 
   const nextStep = (): void => {
-    // When moving from last quiz question to suggestion page, compute suggestion.
-    if (currentStep === totalSteps - 2) {
-      setIsLoading(true);
-
-      // Simulate network delay for more realistic feel
-      setTimeout(() => {
-        const suggestion = computeSuggestion();
-        setSuggestedModel(suggestion);
-        setIsLoading(false);
-        setCurrentStep(currentStep + 1);
-      }, 1500);
+    if (quiz && currentStep === totalSteps - 2) {
+      handleQuizSubmission();
     } else if (currentStep < totalSteps - 1) {
       setCurrentStep(currentStep + 1);
     }
@@ -116,61 +78,98 @@ const useQuiz = () => {
     }
   };
 
-  const selectAnswer = (
-    questionId: string,
-    answerOption: AnswerOption,
-  ): void => {
+  const selectAnswer = (questionId: string, answerOption: QuizAnswerOption | null, isCustom: boolean = false, customValue: string = ""): void => {
     setAnswers({
       ...answers,
-      [questionId]: answerOption,
+      [questionId]: {
+        option: answerOption,
+        customAnswer: isCustom ? customValue : (answerOption?.content || ""),
+        isCustom
+      },
     });
+    
+    if (isCustom) {
+      setCustomAnswers({
+        ...customAnswers,
+        [questionId]: customValue
+      });
+    }
+  };
+  
+  const updateCustomAnswer = (questionId: string, value: string): void => {
+    setCustomAnswers({
+      ...customAnswers,
+      [questionId]: value
+    });
+    
+    if (answers[questionId]?.isCustom) {
+      setAnswers({
+        ...answers,
+        [questionId]: {
+          ...answers[questionId],
+          customAnswer: value
+        },
+      });
+    }
   };
 
-  const handleSubmit = (): void => {
-    // Prepare submission payload
-    const payload: QuizSubmissionPayload = {
-      quizId: constantQuiz.id,
-      answers: constantQuiz.questions.map((q) => ({
-        questionId: q.id,
-        answerOptionId: answers[q.id]?.id || null,
-        answerContent: answers[q.id]?.content || "",
-      })),
-      suggestedModel,
+  const handleQuizSubmission = async (): Promise<void> => {
+    if (!quiz) return;
+    
+    const payload: QuizSubmitRequest = {
+      quizId: quiz.id,
+      answers: Object.keys(answers).map((questionId): QuizAnswer => {
+        const answer = answers[questionId];
+        
+        return {
+          questionId,
+          answerOptionId: answer.isCustom ? null : answer.option?.id || null,
+          answerContent: answer.isCustom ? answer.customAnswer : (answer.option?.content || ""),
+        };
+      }),
     };
-    console.log("Submitting Quiz", payload);
-    alert("Quiz submitted successfully!");
+    
+    try {
+      const response = await submitQuizMutation(payload).unwrap();
+      if (response.status === 200 && response.data) {
+        setQuizSubmitResponse(response.data);
+        
+        const model = getModelFromRecommendation(response.data.recommendedModel);
+        setSuggestedModel(model);
+        
+        setCurrentStep(totalSteps - 1);
+        ToastAndroid.show("Đã hoàn thành quiz thành công", ToastAndroid.SHORT);
+      } else {
+        ToastAndroid.show("Lỗi khi submit quiz", ToastAndroid.SHORT);
+        console.log(response.message);
+      }
+    } catch (err) {
+      ToastAndroid.show("Lỗi khi submit quiz", ToastAndroid.SHORT);
+      console.log(err);
+    }
   };
-  const dispatch = useDispatch();
-
-  useFocusEffect(
-    useCallback(() => {
-      const onBackPress = () => {
-        router.back();
-        dispatch(setMainTabHidden(false));
-        return true;
-      };
-
-      BackHandler.addEventListener("hardwareBackPress", onBackPress);
-      return () =>
-        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
-    }, [dispatch]),
-  );
 
   return {
     state: {
       currentStep,
       totalSteps,
-      quiz: constantQuiz,
+      quiz,
       spendingModels,
       answers,
+      customAnswers,
       suggestedModel,
       isLoading,
+      isSubmitting,
+      error,
+      quizSubmitResponse,
     },
     handler: {
       nextStep,
       previousStep,
       selectAnswer,
-      handleSubmit,
+      updateCustomAnswer,
+      handleQuizSubmission,
+      fetchActiveQuiz,
     },
   };
 };

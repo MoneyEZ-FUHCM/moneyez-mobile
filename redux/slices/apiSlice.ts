@@ -107,6 +107,7 @@ const apiSlice = createApi({
     "User",
     "FinancialGoal",
     "bank-accounts",
+    "Quiz",
   ],
 });
 

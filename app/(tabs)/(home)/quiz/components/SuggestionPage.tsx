@@ -4,20 +4,61 @@ import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
 import { PieChart } from "react-native-gifted-charts";
 import TEXT_TRANSLATE_QUIZ from "../Quiz.translate";
-import { SpendingModel, chartData, examples, modelIcons } from "@/helpers/constants/spendingModels";
+import { QuizSubmitResponse } from "@/types/quiz.types";
+
+// API model interface
+interface SpendingModelCategory {
+  spendingModelId: string;
+  categoryId: string;
+  percentageAmount: number;
+  category: {
+    name: string;
+    nameUnsign: string;
+    description: string;
+    code: string;
+    icon: string;
+    type: string;
+    isSaving: boolean;
+    id: string;
+  }
+}
+
+interface SpendingModelData {
+  id: string;
+  name: string;
+  nameUnsign: string;
+  description: string;
+  isTemplate: boolean;
+  spendingModelCategories: SpendingModelCategory[];
+}
 
 interface SuggestionPageProps {
-  suggestedModel: SpendingModel | null;
-  onSubmit: () => void;
+  suggestedModel: SpendingModelData | null;
+  quizSubmitResponse?: QuizSubmitResponse | null;
+  onSubmit?: () => void;
   onNavigateModel: () => void;
   isButtonBelow?: boolean;
 }
 
-const ChartSection = memo(({ modelId }: { modelId: string }) => {
+const ChartSection = memo(({ model }: { model: SpendingModelData }) => {
+  // Generate chart data from model categories
+  const chartData = model.spendingModelCategories
+    .filter(category => category.percentageAmount > 0)
+    .map((category, index) => {
+      // Predefined colors for consistency
+      const colors = ["#FF9800", "#2196F3", "#4CAF50", "#F44336", "#9C27B0", "#FFEB3B"];
+      return {
+        value: category.percentageAmount,
+        color: colors[index % colors.length],
+        text: `${category.percentageAmount}%`,
+        label: category.category.name,
+      };
+    });
+
   return (
     <View className="items-center mb-4">
       <PieChart
-        data={chartData[modelId as keyof typeof chartData] || []}
+        data={chartData}
         donut
         showText
         textColor="black"
@@ -32,14 +73,32 @@ const ChartSection = memo(({ modelId }: { modelId: string }) => {
 });
 
 // Memoized ModelInfo component
-const ModelInfo = memo(({ model }: { model: SpendingModel }) => {
-  const icon = modelIcons[model.id] || "pie-chart";
+const ModelInfo = memo(({ model }: { model: SpendingModelData }) => {
+  // Select an appropriate icon based on the model name
+  const getIconName = () => {
+    const name = model.name.toLowerCase();
+    if (name.includes('jar')) return "account-balance-wallet";
+    if (name.includes('50-30-20')) return "pie-chart";
+    if (name.includes('80-20')) return "donut-large";
+    return "attach-money"; // Default icon
+  };
+  
+  // Clean HTML tags from description
+  const cleanDescription = model.description.replace(/<\/?[^>]+(>|$)/g, "");
+
+  // Generate example text based on model data
+  const generateExample = () => {
+    return `Ví dụ: Thu nhập 10 triệu VND → ${model.spendingModelCategories
+      .filter(category => category.percentageAmount > 0)
+      .map(category => `${category.percentageAmount / 10} triệu VND cho ${category.category.name.toLowerCase()}`)
+      .join(", ")}.`;
+  };
   
   return (
     <View className="bg-gray-50 rounded-xl p-5 mb-6">
       <View className="flex-row items-center mb-4">
         <MaterialIcons 
-          name={icon} 
+          name={getIconName() as any} 
           size={28} 
           color="#609084" 
           style={{ marginRight: 10 }}
@@ -50,14 +109,14 @@ const ModelInfo = memo(({ model }: { model: SpendingModel }) => {
       </View>
       
       <Text className="text-base text-gray-700 mb-4">
-        {model.description}
+        {cleanDescription}
       </Text>
       
-      <ChartSection modelId={model.id} />
+      <ChartSection model={model} />
       
       <View className="bg-gray-100 p-3 rounded-lg">
         <Text className="text-sm text-gray-700 italic">
-          {examples[model.id as keyof typeof examples] || ""}
+          {generateExample()}
         </Text>
       </View>
     </View>
@@ -66,6 +125,7 @@ const ModelInfo = memo(({ model }: { model: SpendingModel }) => {
 
 const SuggestionPage = memo(({ 
   suggestedModel, 
+  quizSubmitResponse,
   onNavigateModel,
   isButtonBelow = false
 }: SuggestionPageProps) => {
@@ -93,6 +153,33 @@ const SuggestionPage = memo(({
             {TEXT_TRANSLATE_QUIZ.BUTTON_SELECT_MODEL}
           </Text>
         </TouchableOpacity>
+      </View>
+    );
+  };
+
+  const renderResultDetails = () => {
+    if (!quizSubmitResponse) return null;
+    
+    return (
+      <View className="bg-[#EDF7F5] rounded-xl p-4 mb-5">
+        <Text className="text-sm text-gray-600 mb-2">
+          Kết quả đánh giá:
+        </Text>
+        
+        <View className="flex-row justify-between items-center">
+          <Text className="text-base font-medium text-gray-800">
+            Mô hình được đề xuất:
+          </Text>
+          <View className="bg-[#609084] py-1 px-3 rounded-full">
+            <Text className="text-white font-medium">
+              {suggestedModel?.name || quizSubmitResponse.recommendedModel}
+            </Text>
+          </View>
+        </View>
+        
+        <Text className="text-xs text-gray-500 mt-2 italic">
+          Hoàn thành vào: {new Date(quizSubmitResponse.takenAt).toLocaleString('vi-VN')}
+        </Text>
       </View>
     );
   };
@@ -127,6 +214,8 @@ const SuggestionPage = memo(({
           {TEXT_TRANSLATE_QUIZ.SUGGESTION_DESCRIPTION}
         </Text>
       </View>
+
+      {renderResultDetails()}
 
       {suggestedModel ? (
         <ModelInfo model={suggestedModel} />
