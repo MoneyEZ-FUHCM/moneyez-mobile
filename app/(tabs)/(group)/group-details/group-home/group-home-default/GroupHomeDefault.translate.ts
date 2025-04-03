@@ -17,6 +17,7 @@ const TEXT_TRANSLATE_GROUP_HOME_DEFAULT = {
     WITHDRAW: "Rút quỹ",
     ACTIVATE: "Kích hoạt",
     VIEW_ALL: "Xem tất cả",
+    FUND_FACILITIES: "Tiện ích quỹ",
   },
 
   // Placeholder

@@ -13,7 +13,7 @@ import { TRANSACTION_TYPE } from "@/enums/globals";
 import { Colors } from "@/helpers/constants/color";
 import { formatCurrency, formatDate, formatDateTime } from "@/helpers/libs";
 import { TransactionViewModelDetail } from "@/types/transaction.types";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Feather, MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import {
   ActivityIndicator,
@@ -249,12 +249,13 @@ export default function PeriodHistoryDetail() {
   );
 
   const renderEmptyList = () => (
-    <View className="mt-10 flex-1 items-center justify-start">
-      <Image
-        source={NoData}
-        className="h-[270px] w-[700px]"
-        resizeMode="contain"
-      />
+    <View className="mt-20 items-center justify-center p-6">
+      <View className="mb-4 h-20 w-20 items-center justify-center rounded-full bg-gray-100">
+        <Feather name="credit-card" size={32} color="#609084" />
+      </View>
+      <Text className="text-center text-lg text-gray-500">
+        {TEXT_TRANSLATE_PERIOD_HISTORY.TITLE.NO_DATA}
+      </Text>
     </View>
   );
 

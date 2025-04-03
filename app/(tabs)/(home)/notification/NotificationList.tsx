@@ -9,7 +9,7 @@ import {
 } from "@/components";
 import { Colors } from "@/helpers/constants/color";
 import { Notification } from "@/types/notification.type";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { Bookmark, Forbidden2 } from "iconsax-react-native";
 import React from "react";
 import { Image, Pressable, Text, TouchableOpacity, View } from "react-native";
@@ -147,12 +147,13 @@ export default function NotificationList() {
               onRefresh={handleRefetchNotice}
             />
           ) : (
-            <View className="mt-36 items-center justify-center px-5">
-              <Image
-                source={NoData}
-                className="h-[400px] w-full"
-                resizeMode="contain"
-              />
+            <View className="mt-20 items-center justify-center p-6">
+              <View className="mb-4 h-20 w-20 items-center justify-center rounded-full bg-gray-100">
+                <Feather name="credit-card" size={32} color="#609084" />
+              </View>
+              <Text className="text-center text-lg text-gray-500">
+                {TEXT_TRANSLATE_NOTICE.TITLE.NO_DATA}
+              </Text>
             </View>
           )}
         </LoadingSectionWrapper>

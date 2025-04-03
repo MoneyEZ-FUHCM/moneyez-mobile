@@ -19,6 +19,7 @@ const TEXT_TRANSLATE_PERIOD_HISTORY = {
     PAYMENT_METHOD: "Phương thức thanh toán",
     DESCRIPTION: "Mô tả",
     IMAGE_TRANSACTION: "Ảnh hóa đơn",
+    NO_DATA: "Không có dữ liệu",
   },
 
   // Labels
