@@ -3,7 +3,6 @@ import {
   LoadingSectionWrapper,
   SafeAreaViewCustom,
   SectionComponent,
-  SpaceComponent,
 } from "@/components";
 import { formatDateMonthYear, formatTime } from "@/helpers/libs";
 import { GroupLogs } from "@/types/group.type";
@@ -12,6 +11,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import React from "react";
 import { Image, Pressable, Text, View } from "react-native";
+import TEXT_TRANSLATE_EDIT_LOG_HISTORY from "./EditLogHistory.translate";
 import useEditLogs from "./hooks/useEditLogs";
 
 const EditLogHistory = () => {
@@ -29,7 +29,7 @@ const EditLogHistory = () => {
         key={item?.id || index}
         className="relative mb-3 rounded-2xl bg-white p-4 shadow-sm"
       >
-        <View className="flex-row items-center space-x-3">
+        <View className="flex-row items-center space-x-2">
           {item?.imageUrl ? (
             <View className="h-14 w-14 rounded-full border-2 border-primary/20 p-0.5">
               <Image
@@ -58,11 +58,12 @@ const EditLogHistory = () => {
             </Text>
           </View>
         </View>
-
         <View className="mt-4 flex-row items-center justify-between border-t border-gray-100 pt-3">
           <View className="flex-row items-center">
             <Ionicons name="checkmark-circle" size={14} color="#609084" />
-            <Text className="ml-1 text-xs text-gray-500">Đã xác nhận</Text>
+            <Text className="ml-1 text-xs text-gray-500">
+              {TEXT_TRANSLATE_EDIT_LOG_HISTORY.TITLE.CONFIRMED}
+            </Text>
           </View>
           <View className="flex-row items-center rounded-full bg-gray-50 px-3 py-1.5">
             <MaterialIcons name="access-time" size={12} color="#666" />
@@ -85,10 +86,9 @@ const EditLogHistory = () => {
         >
           <MaterialIcons name="arrow-back" size={24} />
         </Pressable>
-        <Text className="text-xl font-semibold text-black">
-          Nhật kí chỉnh sửa
+        <Text className="text-lg font-semibold text-black">
+          {TEXT_TRANSLATE_EDIT_LOG_HISTORY.TITLE.EDIT_LOG_HISTORY}
         </Text>
-        <SpaceComponent width={24} />
       </SectionComponent>
       <View className="flex-row bg-white">
         {state.TABS.map((tab) => (
@@ -133,8 +133,7 @@ const EditLogHistory = () => {
               <Feather name="credit-card" size={32} color="#609084" />
             </View>
             <Text className="text-center text-lg text-gray-500">
-              {/* {TEXT_TRANSLATE_NOTICE.TITLE.NO_DATA} */}
-              Không có dữ liệu
+              {TEXT_TRANSLATE_EDIT_LOG_HISTORY.TITLE.NO_DATA}
             </Text>
           </View>
         )}
