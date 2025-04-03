@@ -37,10 +37,15 @@ const transactionApi = apiSlice.injectEndpoints({
       }),
     }),
     getGroupTransaction: builder.query({
-      query: ({ id, PageIndex, PageSize }) => ({
-        url: `/transactions/groups?groupId=${id}&PageIndex=${PageIndex}&PageSize=${PageSize}`,
-        method: HTTP_METHOD.GET,
-      }),
+      query: ({ groupId, PageIndex, PageSize, status }) => {
+        const url = `/transactions/groups?groupId=${groupId}&PageIndex=${PageIndex}&PageSize=${PageSize}&status=${status}&sort_by=date&dir=desc&is_deleted=false`;
+        // const url = `/transactions/groups?groupId=${groupId}?PageIndex=${PageIndex}&PageSize=${PageSize}&sort_by=date&dir=desc&is_deleted=false`;
+        console.log("checkj url", url);
+        return {
+          url: url,
+          method: HTTP_METHOD.GET,
+        };
+      },
       transformResponse: (response) =>
         transformCommonResponse<GroupTransaction>(response),
     }),

@@ -1,10 +1,12 @@
+import { TRANSACTION_STATUS } from "@/enums/globals";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { selectCurrentGroup, setCurrentGroup } from "@/redux/slices/groupSlice";
+import { setLoading } from "@/redux/slices/loadingSlice";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";
 import { useGetGroupDetailQuery, useGetGroupLogsQuery } from "@/services/group";
 import { useGetGroupTransactionQuery } from "@/services/transaction";
 import { router, useLocalSearchParams } from "expo-router";
-import { useCallback, useLayoutEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -13,8 +15,11 @@ const useGroupHomeDefault = () => {
   const RECENT_ACTIVITIES = "recent-activities";
   const EDIT_LOGS = "edit-logs";
   const { id } = useLocalSearchParams();
-  const { data: groupDetailInfo, refetch: refetchGroupDetail } =
-    useGetGroupDetailQuery({ id }, { skip: !id });
+  const {
+    data: groupDetailInfo,
+    refetch: refetchGroupDetail,
+    isLoading: isLoadingGroupDetailInfo,
+  } = useGetGroupDetailQuery({ id }, { skip: !id });
 
   useLayoutEffect(() => {
     dispatch(setCurrentGroup(groupDetailInfo?.data));
@@ -22,15 +27,43 @@ const useGroupHomeDefault = () => {
 
   const groupDetail = useSelector(selectCurrentGroup);
 
-  const { data: groupLogs, refetch: refetchGroupLogs } = useGetGroupLogsQuery(
+  const {
+    data: groupLogs,
+    refetch: refetchGroupLogs,
+    isLoading: isLoadingGroupLogs,
+  } = useGetGroupLogsQuery(
     { groupId: id, PageIndex: 1, PageSize: 100 },
     { skip: !id },
   );
-  const { data: groupTransaction, refetch: refetchGroupTransactions } =
-    useGetGroupTransactionQuery(
-      { id: id, PageIndex: 1, PageSize: 100 },
-      { skip: !id },
-    );
+  const {
+    data: groupTransaction,
+    refetch: refetchGroupTransactions,
+    isLoading: isLoadingGroupTransactions,
+  } = useGetGroupTransactionQuery(
+    {
+      groupId: id,
+      PageIndex: 1,
+      PageSize: 100,
+      status: TRANSACTION_STATUS.APPROVED,
+    },
+    { skip: !id },
+  );
+
+  useEffect(() => {
+    if (
+      isLoadingGroupDetailInfo ||
+      isLoadingGroupLogs ||
+      isLoadingGroupTransactions
+    ) {
+      dispatch(setLoading(true));
+    } else {
+      dispatch(setLoading(false));
+    }
+  }, [
+    isLoadingGroupDetailInfo,
+    isLoadingGroupLogs,
+    isLoadingGroupTransactions,
+  ]);
 
   const handleCreateFundRequest = () => {
     dispatch(setGroupTabHidden(true));
@@ -83,6 +116,10 @@ const useGroupHomeDefault = () => {
       refreshing: isRefetching,
       RECENT_ACTIVITIES,
       EDIT_LOGS,
+      isLoading:
+        isLoadingGroupDetailInfo ||
+        isLoadingGroupLogs ||
+        isLoadingGroupTransactions,
     },
     handler: {
       handleCreateFundRequest,

@@ -40,7 +40,7 @@ const GroupHomeDefault = () => {
         onPress={() => router.back()}
         className="absolute left-4 h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow-sm"
       >
-        <AntDesign name="arrowleft" size={20} color={Colors.colors.primary} />
+        <AntDesign name="arrowleft" size={24} />
       </TouchableOpacity>
       <Text className="text-center text-lg font-bold">
         {state.groupDetail?.name}
@@ -264,7 +264,7 @@ const GroupHomeDefault = () => {
       key={activity?.id}
       className="relative mb-3 rounded-2xl bg-white p-2 shadow-sm"
     >
-      <View className="flex-row items-center space-x-3">
+      <View className="flex-row items-center space-x-2">
         {activity?.imageUrl ? (
           <View className="h-14 w-14 rounded-full border-2 border-primary/20 p-0.5">
             <Image
