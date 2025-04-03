@@ -8,18 +8,29 @@ import {
   SpaceComponent,
 } from "@/components";
 import VisibilityIcon from "@/components/GroupListCustom/VisibilityIcon";
+import { GROUP_MEMBER_STATUS, GROUP_ROLE, GROUP_STATUS } from "@/enums/globals";
 import { appInfo } from "@/helpers/constants/appInfos";
 import { Colors } from "@/helpers/constants/color";
 import { formatCurrency } from "@/helpers/libs";
+import { GroupMember } from "@/types/group.type";
 import {
   AntDesign,
   FontAwesome6,
+  Ionicons,
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
 import { Scan } from "iconsax-react-native";
-import React from "react";
-import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  Animated,
+  Image,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import TEXT_TRANSLATE_GROUP_LIST from "./GroupList.translate";
 import useGroupList from "./hooks/useGroupList";
@@ -34,16 +45,27 @@ const Group = () => {
     isShowScanner,
     modalizeRef,
     memberCode,
+    modalizeJoinGroupRef,
   } = state;
   const {
     handleLoadMore,
     handleScanQR,
     setIsShowScanner,
     handleScanSuccess,
-    handleJoinGroup,
     setMemberCode,
     handleSubmitJoinGroup,
+    handleJoinGroup,
+    handleJoinGroupByQR,
   } = handler;
+  const [fadeAnim] = useState(new Animated.Value(0));
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 800,
+      useNativeDriver: true,
+    }).start();
+  }, []);
 
   return (
     <GestureHandlerRootView>
@@ -145,7 +167,7 @@ const Group = () => {
                   <View className="w-full flex-row justify-between px-8">
                     <TouchableOpacity
                       className="flex-1 rounded-lg bg-primary/10 px-4 py-3"
-                      onPress={handleJoinGroup}
+                      onPress={handleJoinGroupByQR}
                     >
                       <Text className="text-center font-medium text-primary">
                         Tham gia nhóm
@@ -211,6 +233,206 @@ const Group = () => {
               </Text>
             </TouchableOpacity>
           </View>
+        </ModalLizeComponent>
+        <ModalLizeComponent ref={modalizeJoinGroupRef} handlePosition="inside">
+          {state.groupDetailPreview && (
+            <View className="flex-1 rounded-3xl bg-gray-50">
+              <View className="relative h-48 w-full overflow-hidden rounded-t-3xl">
+                <Image
+                  source={{ uri: state.groupDetailPreview?.imageUrl }}
+                  className="absolute h-full w-full"
+                  resizeMode="cover"
+                />
+                <View className="absolute h-full w-full bg-gradient-to-b from-black/10 via-black/30 to-black/80" />
+                <View className="absolute right-4 top-4">
+                  <View
+                    className={`rounded-full px-4 py-1.5 shadow ${
+                      state.groupDetailPreview?.visibility ===
+                      GROUP_STATUS.PRIVATE
+                        ? "bg-amber-100"
+                        : "bg-blue-100"
+                    }`}
+                  >
+                    <Text
+                      className={`font-semibold ${
+                        state.groupDetailPreview?.visibility ===
+                        GROUP_STATUS.PRIVATE
+                          ? "text-amber-800"
+                          : "text-blue-800"
+                      }`}
+                    >
+                      {state.groupDetailPreview?.visibility ===
+                      GROUP_STATUS.PRIVATE
+                        ? "🔒 Riêng tư"
+                        : "🌍 Công khai"}
+                    </Text>
+                  </View>
+                </View>
+                <TouchableOpacity
+                  className="absolute left-4 top-4 h-10 w-10 items-center justify-center rounded-full bg-black/30"
+                  onPress={() => modalizeJoinGroupRef.current?.close()}
+                >
+                  <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
+                </TouchableOpacity>
+                <View className="absolute bottom-0 left-0 right-0 p-6">
+                  <Text className="shadow-text text-3xl font-bold text-white">
+                    {state.groupDetailPreview?.name}
+                  </Text>
+                </View>
+              </View>
+              <View className="px-5 py-6">
+                <View className="mb-4 rounded-2xl bg-white p-5 shadow">
+                  <View className="mb-3 flex-row items-center">
+                    <Ionicons
+                      name="information-circle"
+                      size={24}
+                      color={Colors.colors.primary}
+                    />
+                    <Text className="ml-2 text-lg font-semibold text-gray-800">
+                      Mô tả
+                    </Text>
+                  </View>
+                  <Text className="leading-relaxed text-gray-700">
+                    {state.groupDetailPreview?.description || "Không có mô tả"}
+                  </Text>
+                </View>
+                <View className="mb-4 rounded-2xl bg-white p-5 shadow">
+                  <View className="mb-4 flex-row items-center justify-between">
+                    <View className="flex-row items-center">
+                      <Ionicons
+                        name="people"
+                        size={24}
+                        color={Colors.colors.primary}
+                      />
+                      <Text className="ml-2 text-lg font-semibold text-gray-800">
+                        Thành viên
+                      </Text>
+                    </View>
+                    <View className="rounded-full bg-gray-100 px-4 py-1">
+                      <Text className="font-semibold text-gray-800">
+                        {state.groupDetailPreview?.groupMembers?.length || 0}
+                      </Text>
+                    </View>
+                  </View>
+                  {state.groupDetailPreview?.groupMembers &&
+                    state.groupDetailPreview.groupMembers?.length > 0 && (
+                      <View className="mt-2">
+                        <ScrollView
+                          horizontal
+                          showsHorizontalScrollIndicator={false}
+                        >
+                          <View className="flex-row space-x-3">
+                            {state.groupDetailPreview?.groupMembers
+                              ?.slice(0, 10)
+                              ?.map((member: GroupMember, index: number) => (
+                                <View key={index} className="items-center">
+                                  <View className="h-16 w-16 overflow-hidden rounded-full">
+                                    {member?.userInfo?.avatarUrl ? (
+                                      <Image
+                                        source={{
+                                          uri: member?.userInfo?.avatarUrl,
+                                        }}
+                                        className="h-full w-full"
+                                        resizeMode="cover"
+                                      />
+                                    ) : (
+                                      <View className="h-full w-full items-center justify-center rounded-full bg-primary">
+                                        <Text className="text-4xl font-medium uppercase text-white">
+                                          {member?.userInfo?.fullName?.charAt(
+                                            0,
+                                          )}
+                                        </Text>
+                                      </View>
+                                    )}
+                                  </View>
+                                  {member?.role === GROUP_ROLE.LEADER && (
+                                    <View className="absolute right-2 top-0 h-5 w-5 items-center justify-center rounded-full border border-white bg-amber-500">
+                                      <Ionicons
+                                        name="star"
+                                        size={12}
+                                        color="#FFFFFF"
+                                      />
+                                    </View>
+                                  )}
+                                  <Text
+                                    className="mt-1 w-[100px] text-center text-xs text-gray-700"
+                                    numberOfLines={2}
+                                  >
+                                    {member?.userInfo?.fullName}
+                                  </Text>
+                                </View>
+                              ))}
+                            {state.groupDetailPreview?.groupMembers?.length >
+                              10 && (
+                              <View className="items-center justify-center">
+                                <View className="h-16 w-16 items-center justify-center rounded-full bg-gray-200">
+                                  <Text className="font-bold text-gray-700">
+                                    +
+                                    {state.groupDetailPreview?.groupMembers
+                                      ?.length - 10}
+                                  </Text>
+                                </View>
+                              </View>
+                            )}
+                          </View>
+                        </ScrollView>
+                      </View>
+                    )}
+                </View>
+                <View className="mb-4 flex-row space-x-4">
+                  <View className="flex-1 rounded-2xl bg-white p-4 shadow">
+                    <Ionicons
+                      name="shield"
+                      size={24}
+                      color={Colors.colors.primary}
+                    />
+                    <Text className="mt-1 text-sm text-gray-500">
+                      Trạng thái
+                    </Text>
+                    <Text className="text-base font-semibold text-gray-800">
+                      {state.groupDetailPreview?.status ===
+                      GROUP_MEMBER_STATUS.ACTIVE
+                        ? "Đang hoạt động"
+                        : "Tạm dừng"}
+                    </Text>
+                  </View>
+                  <View className="flex-1 rounded-2xl bg-white p-4 shadow">
+                    <Ionicons
+                      name="people"
+                      size={24}
+                      color={Colors.colors.primary}
+                    />
+                    <Text className="mt-1 text-sm text-gray-500">
+                      Trưởng nhóm
+                    </Text>
+                    <Text
+                      className="text-base font-semibold text-gray-800"
+                      numberOfLines={1}
+                    >
+                      {state.groupDetailPreview?.groupMembers?.find(
+                        (m: GroupMember) => m?.role === GROUP_ROLE.LEADER,
+                      )?.userInfo?.fullName || "Không có"}
+                    </Text>
+                  </View>
+                </View>
+                <TouchableOpacity
+                  className="mt-2 rounded-xl bg-primary py-3.5 shadow-lg"
+                  onPress={handler.handleJoinGroupByQR}
+                  disabled={
+                    state.groupDetailPreview.status !==
+                    GROUP_MEMBER_STATUS.ACTIVE
+                  }
+                >
+                  <View className="flex-row items-center justify-center">
+                    <Ionicons name="enter-outline" size={24} color="#FFFFFF" />
+                    <Text className="ml-2 text-center text-base font-bold text-white">
+                      Tham gia nhóm
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
         </ModalLizeComponent>
       </SafeAreaViewCustom>
     </GestureHandlerRootView>

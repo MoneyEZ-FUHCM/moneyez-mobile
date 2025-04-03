@@ -15,11 +15,13 @@ const TEXT_TRANSLATE_BANK_ACCOUNT = {
   BUTTON: {
     EDIT: "Chỉnh sửa",
     DELETE: "Xóa",
-    ADD_NEW_BANK_ACCOUNT: "Thêm tài khoản ngân hàng",
+    ADD_NEW_BANK_ACCOUNT: "Liên kết ngân hàng",
   },
   MESSAGE_SUCCESS: {
-    DELETE_BANK_ACCOUNT: "Xóa tài khoản ngân hàng thành công",
+    DELETE_BANK_ACCOUNT_SUCCESS: "Xóa tài khoản ngân hàng thành công",
     COPY_ACCOUNT_NUMBER_SUCCESS: "Đã sao chép số tài khoản",
+    LINK_BANK_ACCOUNT_SUCCESS: "Liên kết ngân hàng thành công",
+    UNLINK_BANK_ACCOUNT_SUCCESS: "Hủy liên kết ngân hàng thành công",
   },
   MESSAGE_ERROR: {
     BANK_ACCOUNT_NOT_FOUND: "Tài khoản ngân hàng không tồn tại",

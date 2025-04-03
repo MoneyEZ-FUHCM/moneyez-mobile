@@ -80,3 +80,8 @@ export enum CHAT_ROLE {
   USER,
   ADMIN,
 }
+
+export enum GROUP_STATUS {
+  PRIVATE = "PRIVATE",
+  PUBLIC = "PUBLIC",
+}

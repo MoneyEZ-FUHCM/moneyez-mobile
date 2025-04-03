@@ -7,6 +7,7 @@ import { RootState } from "@/redux/store";
 import {
   useConfirmOtpMutation,
   useGetInfoUserQuery,
+  useResentOtpMutation,
   useResetPasswordMutation,
   useVerifyMutation,
 } from "@/services/auth";
@@ -27,6 +28,7 @@ const useOtpScreen = () => {
   const [verify] = useVerifyMutation();
   const [confirmOtp] = useConfirmOtpMutation();
   const [resetPassword] = useResetPasswordMutation();
+  const [resentOtp] = useResentOtpMutation();
   const dispatch = useDispatch();
   const { mode } = useLocalSearchParams();
   const otpCode = useSelector(selectOtpCode);
@@ -89,11 +91,16 @@ const useOtpScreen = () => {
   const handleResendMail = async () => {
     dispatch(setLoading(true));
     try {
-      const res = await resetPassword(JSON.stringify(email)).unwrap();
+      const res =
+        mode === VERIFY_MODE
+          ? await resentOtp(JSON.stringify({ email })).unwrap()
+          : await resetPassword(JSON.stringify(email)).unwrap();
+
       if (res && res.status === HTTP_STATUS.SUCCESS.OK) {
-        router.navigate(AUTH.INPUT_OTP as any);
         ToastAndroid.show(
-          MESSAGE_SUCCESS.REQUEST_PASSWORD_SUCCESSFUL,
+          mode === VERIFY_MODE
+            ? MESSAGE_SUCCESS.RESENT_OTP_SUCCESSFUL
+            : MESSAGE_SUCCESS.REQUEST_PASSWORD_SUCCESSFUL,
           ToastAndroid.SHORT,
         );
       }
