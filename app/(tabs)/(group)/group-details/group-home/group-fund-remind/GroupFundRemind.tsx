@@ -67,7 +67,6 @@ export default function GroupRemindPage() {
                 <ProgressCircleComponent
                   value={state.groupCurrent / state.groupGoal}
                   size={60}
-                  color="#609084"
                   thickness={4}
                   showPercentage={true}
                 />
