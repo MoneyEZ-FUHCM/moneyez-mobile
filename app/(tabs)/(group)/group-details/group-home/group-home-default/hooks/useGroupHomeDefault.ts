@@ -49,7 +49,12 @@ const useGroupHomeDefault = () => {
     });
   };
 
-  const handleStatistic = () => {};
+  const handleStatistic = () => {
+    dispatch(setGroupTabHidden(true));
+    router.push({
+      pathname: PATH_NAME.GROUP_HOME.GROUP_STATISTIC as any,
+    });
+  };
   const [isRefetching, setIsRefetching] = useState(false);
 
   const handleRefetchData = useCallback(() => {
