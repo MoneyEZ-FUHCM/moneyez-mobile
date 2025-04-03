@@ -9,6 +9,7 @@ const TEXT_TRANSLATE_NOTICE = {
     POST: "Bài viết",
     HELLO: "Xin chào,",
     VISIBLE_DATA: "*****",
+    NO_DATA: "Không có dữ liệu",
   },
 
   // Label

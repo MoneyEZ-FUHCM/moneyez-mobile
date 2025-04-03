@@ -1,8 +1,12 @@
+import { GROUP_ROLE } from "@/enums/globals";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";
+import { selectUserInfo } from "@/redux/slices/userSlice";
 import { useGetGroupDetailQuery, useGetGroupLogsQuery } from "@/services/group";
 import { useGetGroupTransactionQuery } from "@/services/transaction";
+import { GroupMember } from "@/types/group.type";
+import { UserInfo } from "@/types/user.types";
 import { router, useLocalSearchParams } from "expo-router";
 import { useCallback, useState } from "react";
 import { ToastAndroid } from "react-native";
@@ -17,6 +21,14 @@ const useGroupHomeDefault = () => {
   );
 
   const groupDetail = useSelector(selectCurrentGroup);
+  const userInfo = useSelector(selectUserInfo);
+
+  const isLeader = Boolean(
+    groupDetail?.groupMembers?.some(
+      ({ userId, role }) =>
+        userId === userInfo?.id && role === GROUP_ROLE.LEADER,
+    ),
+  );
 
   const { data: groupLogs, refetch: refetchGroupLogs } = useGetGroupLogsQuery(
     { groupId: id, PageIndex: 1, PageSize: 100 },
@@ -69,6 +81,7 @@ const useGroupHomeDefault = () => {
       groupLogs: groupLogs?.items,
       groupTransaction: groupTransaction?.items,
       refreshing: isRefetching,
+      isLeader,
     },
     handler: {
       handleCreateFundRequest,
