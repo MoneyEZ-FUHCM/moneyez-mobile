@@ -4,7 +4,11 @@ import useHideTabbar from "@/hooks/useHideTabbar";
 import { setCurrentGroup } from "@/redux/slices/groupSlice";
 import { setLoading } from "@/redux/slices/loadingSlice";
 import { setGroupTabHidden, setMainTabHidden } from "@/redux/slices/tabSlice";
-import { useGetGroupDetailQuery, useGetGroupsQuery } from "@/services/group";
+import {
+  useGetGroupDetailQuery,
+  useGetGroupsQuery,
+  useInviteMemberQRCodeMutation,
+} from "@/services/group";
 import { GroupDetail } from "@/types/group.type";
 import { Camera } from "expo-camera";
 import { router, useFocusEffect } from "expo-router";
@@ -16,7 +20,6 @@ import TEXT_TRANSLATE_GROUP_LIST from "../GroupList.translate";
 
 const useGroupList = () => {
   const pageSize = 10;
-
   const translate = TEXT_TRANSLATE_GROUP_LIST;
 
   const [visibleItems, setVisibleItems] = useState<{ [key: string]: boolean }>(
@@ -31,8 +34,13 @@ const useGroupList = () => {
   const [token, setToken] = useState("");
   const { SYSTEM_ERROR } = COMMON_CONSTANT;
   const { data: groupDetailPreview } = useGetGroupDetailQuery({ id: token });
-  console.log("checj token", token);
-  console.log("check groupDetailPreview", groupDetailPreview);
+  const [inviteMemberByQRCode] = useInviteMemberQRCodeMutation();
+  const [isShowScanner, setIsShowScanner] = useState(false);
+  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+  const modalizeRef = useRef<Modalize>(null);
+  const modalizeJoinGroupRef = useRef<Modalize>(null);
+  const [memberCode, setMemberCode] = useState("");
+  const [isLogin, setIsLogin] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -122,12 +130,6 @@ const useGroupList = () => {
     });
   }, [refetch, isRefetching]);
 
-  const [isShowScanner, setIsShowScanner] = useState(false);
-  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
-  const modalizeRef = useRef<Modalize>(null);
-  const [memberCode, setMemberCode] = useState("");
-  const [isLogin, setIsLogin] = useState(false);
-
   const requestCameraPermission = async () => {
     const { status } = await Camera.requestCameraPermissionsAsync();
     setHasPermission(status === "granted");
@@ -141,20 +143,29 @@ const useGroupList = () => {
     }
   };
 
-  const handleScanSuccess = async (token: string) => {
+  const handleScanSuccess = async (scannedToken: string) => {
     if (isScanningRef.current) return;
 
     try {
-      if (token) {
-        setToken(token);
+      if (scannedToken) {
+        setToken(scannedToken);
         isScanningRef.current = true;
         dispatch(setLoading(true));
         setIsShowScanner(false);
 
+        if (data?.items?.some((group) => group?.id === scannedToken)) {
+          ToastAndroid.show(
+            TEXT_TRANSLATE_GROUP_LIST.MESSAGE_ERROR.ALREADY_JOIN_GROUP,
+            ToastAndroid.SHORT,
+          );
+          dispatch(setLoading(false));
+          isScanningRef.current = false;
+          return;
+        }
+
         if (groupDetailPreview?.data) {
           dispatch(setLoading(false));
-          modalizeRef.current?.open();
-          // Reset scanning flag after showing modal
+          modalizeJoinGroupRef.current?.open();
           isScanningRef.current = false;
         }
       }
@@ -186,20 +197,31 @@ const useGroupList = () => {
     }
   };
 
-  const handleJoinGroupByQR = useCallback(() => {
-    if (groupDetailPreview?.data) {
-      modalizeRef.current?.close();
+  const handleJoinGroupByQR = useCallback(async () => {
+    if (!token || !groupDetailPreview?.data) return;
+
+    try {
+      await inviteMemberByQRCode({ groupId: token });
       router.navigate({
         pathname: PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT as any,
         params: { id: token },
       });
-      dispatch(setCurrentGroup(groupDetailPreview?.data));
+
+      dispatch(setCurrentGroup(groupDetailPreview.data));
       dispatch(setMainTabHidden(true));
       dispatch(setGroupTabHidden(false));
-      ToastAndroid.show("Tham gia nhóm thành công", ToastAndroid.SHORT);
+
+      ToastAndroid.show(
+        TEXT_TRANSLATE_GROUP_LIST.MESSAGE_SUCCESS.JOIN_GROUP_SUCCESSFUL,
+        ToastAndroid.SHORT,
+      );
+    } catch (err: any) {
+      ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
+    } finally {
+      modalizeJoinGroupRef.current?.close();
       isScanningRef.current = false;
     }
-  }, [dispatch, groupDetailPreview, token]);
+  }, [dispatch, groupDetailPreview, token, router]);
 
   return {
     state: {
@@ -217,6 +239,7 @@ const useGroupList = () => {
       modalizeRef,
       memberCode,
       groupDetailPreview: groupDetailPreview?.data,
+      modalizeJoinGroupRef,
     },
     handler: {
       handleLoadMore,

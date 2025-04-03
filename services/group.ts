@@ -75,6 +75,14 @@ const groupApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Group"],
     }),
+    inviteMemberQRCode: builder.mutation({
+      query: (payload) => ({
+        url: `/groups/invite-member/qrcode`,
+        method: HTTP_METHOD.POST,
+        body: payload,
+      }),
+      invalidatesTags: ["Group"],
+    }),
   }),
 });
 
@@ -88,6 +96,7 @@ export const {
   useGetGroupLogsQuery,
   useGetMemberLogsQuery,
   useInviteMemberEmailMutation,
+  useInviteMemberQRCodeMutation,
 } = groupApi;
 
 export default groupApi;
