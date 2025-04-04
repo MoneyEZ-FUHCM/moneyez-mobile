@@ -198,55 +198,55 @@ export default function GroupRemindPage() {
                   </Pressable>
                 </View>
                 {state.members.map((member) => (
-                  <View
+                    <View
                     key={member.id}
-                    className="flex-row items-center justify-between py-2"
-                  >
+                    className="flex-row items-center py-2"
+                    >
                     <Image
                       source={member.avatar ? member.avatar : Admin}
-                      className="h-12 w-12 rounded-full"
+                      className="h-12 w-12 rounded-full mr-3"
                       resizeMode="cover"
                     />
-                    <View>
+                    <View className="flex-1">
                       <Text className="text-base font-semibold">
-                        {member.name}
+                      {member.name}
                       </Text>
                       <Text className="text-sm text-gray-500">
-                        {LABELS.CONTRIBUTE_RATIO}: {member.ratio}%
+                      {LABELS.CONTRIBUTE_RATIO}: {member.ratio}%
                       </Text>
                       <Text className="pt-1 text-sm">
-                        <Text className="text-[#848484]">
-                          {LABELS.CONTRIBUTED}:{" "}
-                        </Text>
-                        <Text className="text-base font-semibold text-[#609084]">
-                          {formatCurrency(member.contributed)}
-                        </Text>
-                        <Text className="text-[#848484]">
-                          {" "}
-                          / {formatCurrency(member.target)}
-                        </Text>
+                      <Text className="text-[#848484]">
+                        {LABELS.CONTRIBUTED}:{" "}
+                      </Text>
+                      <Text className="text-base font-semibold text-[#609084]">
+                        {formatCurrency(member.contributed)}
+                      </Text>
+                      <Text className="text-[#848484]">
+                        {" "}
+                        / {formatCurrency(member.target)}
+                      </Text>
                       </Text>
                     </View>
                     <Pressable
                       onPress={() => handler.handleToggleMember(member.id)}
                     >
                       <View className="h-6 w-6 items-center justify-center">
-                        {member.checked ? (
-                          <MaterialIcons
-                            name="check-box"
-                            size={24}
-                            color="#609084"
-                          />
-                        ) : (
-                          <MaterialIcons
-                            name="check-box-outline-blank"
-                            size={24}
-                            color="#d1d5db"
-                          />
-                        )}
+                      {member.checked ? (
+                        <MaterialIcons
+                        name="check-box"
+                        size={24}
+                        color="#609084"
+                        />
+                      ) : (
+                        <MaterialIcons
+                        name="check-box-outline-blank"
+                        size={24}
+                        color="#d1d5db"
+                        />
+                      )}
                       </View>
                     </Pressable>
-                  </View>
+                    </View>
                 ))}
               </SectionComponent>
             </>

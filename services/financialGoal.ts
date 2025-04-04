@@ -60,6 +60,12 @@ const financialGoalApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["FinancialGoal"],
     }),
+    getGroupFinancialGoal: builder.query({
+      query: ({ groupId }) => ({
+        url: `/financial-goals/group?GroupId=${groupId}`,
+        method: HTTP_METHOD.GET,
+      }),
+    }),
   }),
 });
 
@@ -71,6 +77,7 @@ export const {
   useGetPersonalLimitBudgetSubcategoryQuery,
   useGetPersonalFinancialGoalChartQuery,
   useUpdateFinancialGoalMutation,
+  useGetGroupFinancialGoalQuery,
 } = financialGoalApi;
 
 export default financialGoalApi;
