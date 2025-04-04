@@ -7,15 +7,37 @@ import {
 import { formatDateMonthYear, formatTime } from "@/helpers/libs";
 import { GroupLogs } from "@/types/group.type";
 import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import React from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import TEXT_TRANSLATE_EDIT_LOG_HISTORY from "./EditLogHistory.translate";
 import useEditLogs from "./hooks/useEditLogs";
+import { Colors } from "@/helpers/constants/color";
 
 const EditLogHistory = () => {
   const { state, handler } = useEditLogs();
+
+  const highlightAndBreakText = (text: string, highlightStyle: any) => {
+    if (!text) return null;
+    const parts = text.split(/(\[.*?\])/);
+    return parts.flatMap((part: string, index: number) => {
+      if (part.startsWith("[") && part.endsWith("]")) {
+        return (
+          <Text key={`bracket-${index}`} style={highlightStyle}>
+            {part.substring(1, part.length - 1)}
+          </Text>
+        );
+      } else {
+        const lines = part.split(/\\n|\n/);
+        return lines.map((line, lineIndex) => (
+          <React.Fragment key={`line-${index}-${lineIndex}`}>
+            {lineIndex > 0 && <Text>{"\n"}</Text>}
+            <Text>{line}</Text>
+          </React.Fragment>
+        ));
+      }
+    });
+  };
 
   const renderLogsItem = ({
     item,
@@ -51,7 +73,10 @@ const EditLogHistory = () => {
               </Text>
             </View>
             <Text className="mt-1 text-gray-600">
-              {item?.changeDescription}
+              {highlightAndBreakText(item?.changeDescription || "No Title", {
+                color: Colors.colors.primary,
+                fontWeight: "bold",
+              })}
             </Text>
           </View>
         </View>

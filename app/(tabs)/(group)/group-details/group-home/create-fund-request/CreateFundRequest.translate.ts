@@ -22,10 +22,12 @@ const TEXT_TRANSLATE_CREATE_FUND_REQUEST = {
 
   MESSAGE_ERROR: {
     CREATE_FAILED: "Có lỗi xảy ra khi gửi yêu cầu góp quỹ",
+    BANK_NOT_FOUND: "Ngân hàng không tồn tại",
   },
 
   MESSAGE_SUCCESS: {
     CREATE_SUCCESS: "Yêu cầu góp quỹ đã được gửi thành công",
+    CREATE_FUND_REQUEST_SUCCESSS: "Góp quỹ thành công",
   },
 
   MESSAGE_VALIDATE: {

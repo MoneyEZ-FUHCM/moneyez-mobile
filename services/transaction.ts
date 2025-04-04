@@ -39,8 +39,6 @@ const transactionApi = apiSlice.injectEndpoints({
     getGroupTransaction: builder.query({
       query: ({ groupId, PageIndex, PageSize, status }) => {
         const url = `/transactions/groups?groupId=${groupId}&PageIndex=${PageIndex}&PageSize=${PageSize}&status=${status}&sort_by=date&dir=desc&is_deleted=false`;
-        // const url = `/transactions/groups?groupId=${groupId}?PageIndex=${PageIndex}&PageSize=${PageSize}&sort_by=date&dir=desc&is_deleted=false`;
-        console.log("checkj url", url);
         return {
           url: url,
           method: HTTP_METHOD.GET,
@@ -48,6 +46,15 @@ const transactionApi = apiSlice.injectEndpoints({
       },
       transformResponse: (response) =>
         transformCommonResponse<GroupTransaction>(response),
+      providesTags: ["transaction"],
+    }),
+    updateGroupTransactionStatus: builder.mutation({
+      query: (payload) => ({
+        url: `/transactions/group/response`,
+        method: HTTP_METHOD.POST,
+        body: payload,
+      }),
+      invalidatesTags: ["transaction"],
     }),
   }),
 });
@@ -59,6 +66,7 @@ export const {
   useLazyGetTransactionDetailQuery,
   useGetTransactionDetailQuery,
   useGetGroupTransactionQuery,
+  useUpdateGroupTransactionStatusMutation,
 } = transactionApi;
 
 export default transactionApi;

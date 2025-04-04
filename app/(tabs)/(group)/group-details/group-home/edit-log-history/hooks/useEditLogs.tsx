@@ -31,7 +31,6 @@ const useEditLogs = () => {
       groupId: groupDetail?.id,
       PageIndex: pageIndex,
       PageSize: pageSize,
-      change_type: activeTab,
     },
     { skip: !groupDetail?.id },
   );

@@ -44,7 +44,7 @@ const useGroupHomeDefault = () => {
       groupId: id,
       PageIndex: 1,
       PageSize: 100,
-      status: TRANSACTION_STATUS.APPROVED,
+      status: TRANSACTION_STATUS.CONFIRMED,
     },
     { skip: !id },
   );

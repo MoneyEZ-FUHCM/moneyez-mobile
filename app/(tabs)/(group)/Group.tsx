@@ -20,6 +20,7 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { Scan } from "iconsax-react-native";
 import React, { useEffect, useState } from "react";
 import {
@@ -247,11 +248,24 @@ const Group = () => {
           {state.groupDetailPreview && (
             <View className="flex-1 rounded-3xl bg-gray-50">
               <View className="relative h-48 w-full overflow-hidden rounded-t-3xl">
-                <Image
-                  source={{ uri: state.groupDetailPreview?.imageUrl }}
-                  className="absolute h-full w-full"
-                  resizeMode="cover"
-                />
+                {state.groupDetailPreview?.imageUrl ? (
+                  <Image
+                    source={{ uri: state.groupDetailPreview?.imageUrl }}
+                    className="absolute h-full w-full"
+                    resizeMode="cover"
+                  />
+                ) : (
+                  <View className="h-60 w-full items-center justify-center bg-primary">
+                    <Text className="text-4xl font-medium uppercase text-white">
+                      {state.groupDetailPreview?.name?.charAt(0)}
+                    </Text>
+                    <LinearGradient
+                      colors={["transparent", "rgba(0,0,0,0.4)"]}
+                      className="absolute bottom-0 left-0 right-0 h-32"
+                    />
+                  </View>
+                )}
+
                 <View className="absolute h-full w-full bg-gradient-to-b from-black/10 via-black/30 to-black/80" />
                 <View className="absolute right-4 top-4">
                   <View
@@ -283,8 +297,8 @@ const Group = () => {
                 >
                   <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
                 </TouchableOpacity>
-                <View className="absolute bottom-0 left-0 right-0 p-6">
-                  <Text className="shadow-text text-3xl font-bold text-white">
+                <View className="absolute bottom-0 left-0 right-0 p-4">
+                  <Text className="shadow-text text-xl font-bold text-white">
                     {state.groupDetailPreview?.name}
                   </Text>
                 </View>

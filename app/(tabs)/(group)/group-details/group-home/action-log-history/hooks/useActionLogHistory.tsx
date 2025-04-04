@@ -1,33 +1,55 @@
-import { TRANSACTION_STATUS } from "@/enums/globals";
+import { GROUP_ROLE, TRANSACTION_STATUS } from "@/enums/globals";
 import useHideGroupTabbar from "@/hooks/useHideGroupTabbar";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
-import { useGetGroupTransactionQuery } from "@/services/transaction";
+import { selectUserInfo } from "@/redux/slices/userSlice";
+import {
+  useGetGroupTransactionQuery,
+  useUpdateGroupTransactionStatusMutation,
+} from "@/services/transaction";
 import { GroupTransaction } from "@/types/transaction.types";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ToastAndroid } from "react-native";
-import { useSelector } from "react-redux";
+import { Modalize } from "react-native-modalize";
+import { useDispatch, useSelector } from "react-redux";
 import ACTION_LOG_HISTORY_CONSTANT from "../ActionLogHistory.constant";
+import { COMMON_CONSTANT } from "@/helpers/constants/common";
+import { setLoading } from "@/redux/slices/loadingSlice";
+import TEXT_TRANSLATE_ACTION_LOG_HISTORY from "../ActionLogHistory.translate";
 
 type NotificationTabType =
-  | TRANSACTION_STATUS.APPROVED
+  | TRANSACTION_STATUS.CONFIRMED
   | TRANSACTION_STATUS.PENDING
   | TRANSACTION_STATUS.REJECTED;
 
 const useActionLogHistory = () => {
   const pageSize = 10;
-  const initialActiveTab: NotificationTabType = TRANSACTION_STATUS.APPROVED;
+  const initialActiveTab: NotificationTabType = TRANSACTION_STATUS.CONFIRMED;
   const { TABS } = ACTION_LOG_HISTORY_CONSTANT;
+  const { SYSTEM_ERROR } = COMMON_CONSTANT;
   const [activeTab, setActiveTab] =
     useState<NotificationTabType>(initialActiveTab);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [isRefetching, setIsRefetching] = useState(false);
   const [pageIndex, setPageIndex] = useState(1);
+  const detailModalizeRef = useRef<Modalize>(null);
+  const [selectedLog, setSelectedLog] = useState<GroupTransaction | null>(null);
   const [transactionActivities, setTransactionActivities] = useState<
     GroupTransaction[]
   >([]);
   const [isFetchingData, setIsFetchingData] = useState(true);
+  const [updateGroupTransactionStatus] =
+    useUpdateGroupTransactionStatusMutation();
+  const dispatch = useDispatch();
 
   const groupDetail = useSelector(selectCurrentGroup);
+  const userInfo = useSelector(selectUserInfo);
+
+  const isLeader = useMemo(() => {
+    return groupDetail?.groupMembers?.some(
+      (member) =>
+        member?.userId === userInfo?.id && member?.role === GROUP_ROLE.LEADER,
+    );
+  }, [groupDetail, userInfo]);
 
   const {
     data: groupTransaction,
@@ -100,13 +122,88 @@ const useActionLogHistory = () => {
     });
   }, [refetchGroupTransactions, isRefetching]);
 
-  const handleAcceptTransaction = useCallback((transactionId: string) => {
-    console.log("Accept", transactionId);
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<GroupTransaction | null>(null);
+  const [rejectReason, setRejectReason] = useState("");
+  const modalizeRef = useRef<Modalize>(null);
+
+  const handleOpenRejectModal = useCallback((transaction: GroupTransaction) => {
+    setSelectedTransaction(transaction);
+    setRejectReason("");
+    modalizeRef.current?.open();
   }, []);
 
-  const handleRejectTransaction = useCallback((transactionId: string) => {
-    console.log("Reject", transactionId);
-  }, []);
+  const handleAcceptTransaction = useCallback(
+    async (transactionId: string) => {
+      const payload = {
+        transactionId,
+        isApprove: true,
+        note: "",
+      };
+
+      dispatch(setLoading(true));
+      try {
+        await updateGroupTransactionStatus(payload).unwrap();
+        ToastAndroid.show(
+          TEXT_TRANSLATE_ACTION_LOG_HISTORY.MESSAGE_SUCCESS.ACCEPT,
+          ToastAndroid.SHORT,
+        );
+
+        if (activeTab === TRANSACTION_STATUS.PENDING) {
+          setTransactionActivities((prevActivities) =>
+            prevActivities.filter((item) => item.id !== transactionId),
+          );
+        }
+      } catch (err: any) {
+        const error = err?.data;
+        ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
+      } finally {
+        dispatch(setLoading(false));
+      }
+    },
+    [activeTab, refetchGroupTransactions],
+  );
+
+  const handleRejectTransaction = useCallback(
+    async (transactionId: string) => {
+      if (!rejectReason.trim()) {
+        ToastAndroid.show("Vui lòng nhập lý do từ chối", ToastAndroid.SHORT);
+        return;
+      }
+
+      const payload = {
+        transactionId,
+        isApprove: false,
+        note: rejectReason.trim(),
+      };
+      dispatch(setLoading(true));
+      try {
+        await updateGroupTransactionStatus(payload).unwrap();
+        ToastAndroid.show(
+          TEXT_TRANSLATE_ACTION_LOG_HISTORY.MESSAGE_SUCCESS.REJECT,
+          ToastAndroid.SHORT,
+        );
+
+        modalizeRef.current?.close();
+
+        if (activeTab === TRANSACTION_STATUS.PENDING) {
+          setTransactionActivities((prevActivities) =>
+            prevActivities.filter((item) => item.id !== transactionId),
+          );
+        }
+      } catch (err: any) {
+        ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
+      } finally {
+        dispatch(setLoading(false));
+      }
+    },
+    [activeTab, rejectReason],
+  );
+
+  const handleOpenDetailModal = (activity: GroupTransaction) => {
+    setSelectedLog(activity);
+    detailModalizeRef.current?.open();
+  };
 
   return {
     state: {
@@ -119,6 +216,12 @@ const useActionLogHistory = () => {
       pageSize,
       isLoadingMore,
       groupTransaction,
+      isLeader,
+      modalizeRef,
+      selectedTransaction,
+      rejectReason,
+      detailModalizeRef,
+      selectedLog,
     },
     handler: {
       setActiveTab,
@@ -126,6 +229,10 @@ const useActionLogHistory = () => {
       handleLoadMore,
       handleAcceptTransaction,
       handleRejectTransaction,
+      setRejectReason,
+      handleOpenRejectModal,
+      setSelectedLog,
+      handleOpenDetailModal,
     },
   };
 };
