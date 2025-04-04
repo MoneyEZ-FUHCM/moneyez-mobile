@@ -32,6 +32,7 @@ export interface GroupDetail {
   status: string;
   visibility: string;
   imageUrl: string;
+  isGoalActive: boolean;
   groupMembers: any[];
 }
 

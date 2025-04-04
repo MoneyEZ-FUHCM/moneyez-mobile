@@ -122,6 +122,14 @@ const groupApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Group"],
     }),
+    fundRaisingRemind: builder.mutation({
+      query: (payload) => ({
+        url: `/groups/fund-rasising/remind`,
+        method: HTTP_METHOD.POST,
+        body: payload,
+      }),
+      invalidatesTags: ["Group"],
+    }),
   }),
 });
 
@@ -141,6 +149,7 @@ export const {
   useWithDrawFundRequestMutation,
   useLeaveGroupMutation,
   useKickMemberMutation,
+  useFundRaisingRemindMutation,
 } = groupApi;
 
 export default groupApi;
