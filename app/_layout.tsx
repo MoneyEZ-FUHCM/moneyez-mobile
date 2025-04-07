@@ -5,14 +5,12 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { useMomentLocale } from "@/hooks/useMomentLocale";
 import { store } from "@/redux/store";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
-import messaging from "@react-native-firebase/messaging";
 import {
   DarkTheme,
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import * as Notifications from "expo-notifications";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";

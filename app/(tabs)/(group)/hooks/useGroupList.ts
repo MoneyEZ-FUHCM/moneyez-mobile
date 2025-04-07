@@ -283,18 +283,4 @@ const useGroupList = () => {
   };
 };
 
-export const useGroupListRefetch = () => {
-  const { refetch } = useGetGroupsQuery({
-    PageIndex: 1,
-    PageSize: 100,
-  });
-
-  const handleRefetchGrouplist = useCallback(async () => {
-    await refetch();
-    ToastAndroid.show("Danh sách đã được cập nhật", ToastAndroid.SHORT);
-  }, [refetch]);
-
-  return { handleRefetchGrouplist };
-};
-
 export default useGroupList;

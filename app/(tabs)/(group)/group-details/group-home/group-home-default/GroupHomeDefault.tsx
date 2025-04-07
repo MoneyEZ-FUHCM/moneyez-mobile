@@ -302,7 +302,7 @@ const GroupHomeDefault = () => {
     >
       <View className="flex-row items-center space-x-2">
         {activity?.imageUrl ? (
-          <View className="h-14 w-14 rounded-full border-2 border-primary/20 p-0.5">
+          <View className="h-12 w-12 rounded-full border-2 border-primary/20 p-0.5">
             <Image
               source={{ uri: activity?.imageUrl }}
               className="h-full w-full rounded-full"
@@ -311,7 +311,7 @@ const GroupHomeDefault = () => {
         ) : (
           <LinearGradient
             colors={["#609084", "#4A7A70"]}
-            className="h-14 w-14 items-center justify-center rounded-full shadow-md"
+            className="h-12 w-12 items-center justify-center rounded-full shadow-md"
           >
             <Text className="text-3xl font-semibold uppercase text-white">
               {activity?.changedBy?.charAt(0)}

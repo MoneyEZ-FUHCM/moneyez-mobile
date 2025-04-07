@@ -86,7 +86,7 @@ const GroupRatioMemberPage = () => {
               <Text className="text-base font-medium">
                 Tổng tỉ lệ đóng góp:
               </Text>
-              <View className="flex-row items-center">
+              <View className="flex-row items-center space-x-3">
                 <Text
                   style={{
                     color: handler.getTotalColor(),
@@ -105,9 +105,20 @@ const GroupRatioMemberPage = () => {
             />
           </SectionComponent>
           <SectionComponent rootClassName="rounded-lg bg-white px-5 py-2 shadow-sm">
-            <Text className="mb-4 text-base font-semibold text-gray-800">
-              Danh sách đóng góp {state?.groupMembersDetail?.length}
-            </Text>
+            <View className="mb-4 flex-row items-center justify-between">
+              <Text className="text-base font-semibold text-gray-800">
+                Danh sách đóng góp ({state?.groupMembersDetail?.length})
+              </Text>
+              <TouchableOpacity
+                onPress={handler.handleEqualShare}
+                className="flex-row items-center space-x-1 rounded-lg bg-[#E8F5E9] px-3 py-1.5"
+              >
+                <MaterialIcons name="swap-horiz" size={16} color="#4CAF50" />
+                <Text className="text-xs font-medium text-[#4CAF50]">
+                  Chia đều
+                </Text>
+              </TouchableOpacity>
+            </View>
 
             {state.groupMembersDetail?.map(
               (member: GroupMember, index: number) => {

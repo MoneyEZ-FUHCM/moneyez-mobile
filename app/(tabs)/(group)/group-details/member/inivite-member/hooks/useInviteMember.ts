@@ -42,14 +42,17 @@ const useInviteMember = () => {
   const pendingMembers: GroupMember[] = useMemo(
     () =>
       groupMembers.filter(
-        (member) => member.status !== GROUP_MEMBER_STATUS.ACTIVE,
+        (member) => member.status === GROUP_MEMBER_STATUS.PENDING,
       ),
     [groupMembers],
   );
 
-  const isLeader = !!groupMembers?.find(
-    (member) => member.id === userInfo?.id && member.role === GROUP_ROLE.LEADER,
-  );
+  const isLeader = useMemo(() => {
+    return groupDetail?.groupMembers?.some(
+      (member) =>
+        member?.userId === userInfo?.id && member?.role === GROUP_ROLE.LEADER,
+    );
+  }, [groupDetail, userInfo]);
 
   const handleBack = useCallback(() => {
     router.back();

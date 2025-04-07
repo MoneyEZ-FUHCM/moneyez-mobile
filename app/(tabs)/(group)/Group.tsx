@@ -113,7 +113,7 @@ const Group = () => {
                     className="mb-4 flex-row items-center rounded-2xl border border-gray-200 bg-white p-4"
                     onPress={handler.handleNavigateAndHideTabbar(item)}
                   >
-                    {item.imageUrl ? (
+                    {item?.imageUrl ? (
                       <Image
                         src={item?.imageUrl}
                         alt="star"

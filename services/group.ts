@@ -107,6 +107,12 @@ const groupApi = apiSlice.injectEndpoints({
         method: HTTP_METHOD.POST,
         body: payload,
       }),
+    }),
+    leaveGroup: builder.mutation({
+      query: (id) => ({
+        url: `/groups/members/leave?groupId=${id}`,
+        method: HTTP_METHOD.GET,
+      }),
       invalidatesTags: ["Group"],
     }),
   }),
@@ -126,6 +132,7 @@ export const {
   useContributeGroupMutation,
   useLazyInviteMemberQRCodeAcceptQuery,
   useWithDrawFundRequestMutation,
+  useLeaveGroupMutation,
 } = groupApi;
 
 export default groupApi;

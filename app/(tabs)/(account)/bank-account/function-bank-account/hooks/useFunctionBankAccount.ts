@@ -139,7 +139,6 @@ const useFunctionBankAccount = (params: any) => {
   );
 
   const handleSubmit = useCallback(async (values: any) => {
-    console.log("chec values", values);
     setCurrentValues(values);
     ruleModalRef.current?.open();
     setShowRuleModal(true);

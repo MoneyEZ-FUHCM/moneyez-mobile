@@ -26,7 +26,6 @@ const InviteMemberByQRCode = () => {
     state.groupDetail?.description || "default_value",
   );
 
-  // Shared Value để kiểm soát opacity
   const opacity = useSharedValue(1);
 
   useEffect(() => {
@@ -41,12 +40,10 @@ const InviteMemberByQRCode = () => {
     return () => clearInterval(interval);
   }, [state.groupDetail?.description]);
 
-  // Animated style cho hiệu ứng fade in
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
   }));
 
-  // Chia sẻ link qua ứng dụng khác
   const shareLink = async () => {
     try {
       await Share.share({ message: INVITE_LINK });
@@ -55,7 +52,6 @@ const InviteMemberByQRCode = () => {
     }
   };
 
-  // Tải ảnh QR
   const downloadQR = async () => {
     if (!QR_REF.current) return;
 

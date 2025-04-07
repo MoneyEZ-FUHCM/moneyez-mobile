@@ -126,8 +126,8 @@ const ActionLogHistory = () => {
               </View>
             ) : (
               <View className="flex-row items-center">
-                <MaterialIcons name="pending" size={14} color="#666" />
-                <Text className="ml-1 text-xs text-gray-500">Đang chờ</Text>
+                <MaterialIcons name="pending" size={14} color="#60a5fa" />
+                <Text className="ml-1 text-xs text-blue-400">Đang chờ</Text>
               </View>
             )
           ) : activity.status === TRANSACTION_STATUS.APPROVED ? (
@@ -344,9 +344,9 @@ const ActionLogHistory = () => {
                           <MaterialIcons
                             name="pending"
                             size={14}
-                            color="#666"
+                            color="#60a5fa"
                           />
-                          <Text className="ml-1 text-gray-500">Đang chờ</Text>
+                          <Text className="ml-1 text-blue-400">Đang chờ</Text>
                         </>
                       )}
                     </View>
