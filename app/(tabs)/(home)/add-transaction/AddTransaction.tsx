@@ -98,15 +98,16 @@ export default function AddTransaction() {
 
   return (
     <SafeAreaViewCustom rootClassName="bg-[#fafafa] relative">
-      <SectionComponent rootClassName="h-14 bg-white justify-center">
-        <View className="flex-row items-center justify-between px-5">
-          <Pressable onPress={handler.handleBack}>
+      <SectionComponent rootClassName="h-14 bg-white justify-center items-center relative">
+        <View className="relative h-full flex-row items-center px-5">
+          <Pressable onPress={handler.handleBack} className="absolute left-4">
             <MaterialIcons name="arrow-back" size={24} />
           </Pressable>
-          <Text className="text-lg font-bold">
-            {TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.ADD_EXPENSE_INCOME}
-          </Text>
-          <MaterialIcons name="camera-alt" size={24} />
+          <View className="flex-1 items-center">
+            <Text className="text-lg font-bold">
+              {TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.ADD_EXPENSE_INCOME}
+            </Text>
+          </View>
         </View>
       </SectionComponent>
       <Formik

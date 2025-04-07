@@ -2,13 +2,13 @@ import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { isValidGUID } from "@/helpers/libs";
 import useHideTabbar from "@/hooks/useHideTabbar";
-import { setCurrentGroup } from "@/redux/slices/groupSlice";
 import { setLoading } from "@/redux/slices/loadingSlice";
 import { setGroupTabHidden, setMainTabHidden } from "@/redux/slices/tabSlice";
 import {
   useGetGroupDetailQuery,
   useGetGroupsQuery,
   useInviteMemberQRCodeMutation,
+  useLazyInviteMemberQRCodeAcceptQuery,
 } from "@/services/group";
 import { GroupDetail } from "@/types/group.type";
 import { Camera } from "expo-camera";
@@ -19,7 +19,7 @@ import { Modalize } from "react-native-modalize";
 import { useDispatch } from "react-redux";
 import TEXT_TRANSLATE_GROUP_LIST from "../GroupList.translate";
 
-const useGroupList = (hideTabbar = true) => {
+const useGroupList = () => {
   const pageSize = 10;
   const translate = TEXT_TRANSLATE_GROUP_LIST;
 
@@ -34,11 +34,13 @@ const useGroupList = (hideTabbar = true) => {
   const isScanningRef = useRef(false);
   const [token, setToken] = useState("");
   const { SYSTEM_ERROR } = COMMON_CONSTANT;
-  const { data: groupDetailPreview } = useGetGroupDetailQuery(
+  const { data: groupDetailPreview, isFetching } = useGetGroupDetailQuery(
     { id: token },
     { skip: !token },
   );
   const [inviteMemberByQRCode] = useInviteMemberQRCodeMutation();
+  const [trigger] = useLazyInviteMemberQRCodeAcceptQuery();
+
   const [isShowScanner, setIsShowScanner] = useState(false);
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const modalizeRef = useRef<Modalize>(null);
@@ -52,9 +54,7 @@ const useGroupList = (hideTabbar = true) => {
     PageSize: pageSize,
   });
 
-  if (hideTabbar) {
-    useHideTabbar();
-  }
+  useHideTabbar();
 
   const handleLoadMore = useCallback(() => {
     if (!isLoading && !isLoadingMore && data?.items.length === pageSize) {
@@ -159,6 +159,10 @@ const useGroupList = (hideTabbar = true) => {
       dispatch(setLoading(true));
       setIsShowScanner(false);
 
+      while (isFetching) {
+        await new Promise((resolve) => setTimeout(resolve, 100));
+      }
+
       if (data?.items?.some((group) => group?.id === scannedToken)) {
         dispatch(setLoading(false));
         isScanningRef.current = false;
@@ -172,7 +176,6 @@ const useGroupList = (hideTabbar = true) => {
         );
         return;
       }
-
       if (groupDetailPreview?.data) {
         dispatch(setLoading(false));
         modalizeJoinGroupRef.current?.open();
@@ -187,6 +190,7 @@ const useGroupList = (hideTabbar = true) => {
       setIsShowScanner(false);
     } finally {
       isScanningRef.current = false;
+      dispatch(setLoading(false));
     }
   };
 
@@ -215,13 +219,12 @@ const useGroupList = (hideTabbar = true) => {
     if (!token || !groupDetailPreview?.data) return;
 
     try {
-      await inviteMemberByQRCode({ groupId: token });
+      await trigger(token).unwrap();
       router.navigate({
         pathname: PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT as any,
         params: { id: token },
       });
       setToken("");
-      dispatch(setCurrentGroup(groupDetailPreview.data));
       dispatch(setMainTabHidden(true));
       dispatch(setGroupTabHidden(false));
 
@@ -230,6 +233,10 @@ const useGroupList = (hideTabbar = true) => {
         ToastAndroid.SHORT,
       );
     } catch (err: any) {
+      if (err?.data?.statusCode === 400) {
+        ToastAndroid.show("Mã thành viên không hợp lệ", ToastAndroid.SHORT);
+        return;
+      }
       ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
     } finally {
       modalizeJoinGroupRef.current?.close();
@@ -274,20 +281,6 @@ const useGroupList = (hideTabbar = true) => {
       setIsShowScanner,
     },
   };
-};
-
-export const useGroupListRefetch = () => {
-  const { refetch } = useGetGroupsQuery({
-    PageIndex: 1,
-    PageSize: 100,
-  });
-
-  const handleRefetchGrouplist = useCallback(async () => {
-    await refetch();
-    ToastAndroid.show("Danh sách đã được cập nhật", ToastAndroid.SHORT);
-  }, [refetch]);
-
-  return { handleRefetchGrouplist };
 };
 
 export default useGroupList;

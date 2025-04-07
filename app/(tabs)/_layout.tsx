@@ -1,14 +1,14 @@
 import { TabBar } from "@/components";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
+import { PATH_NAME } from "@/helpers/constants/pathname";
+import * as Linking from "expo-linking";
 import { router, Tabs } from "expo-router";
 import React, { useEffect } from "react";
 import "../../globals.css";
-import { PATH_NAME } from "@/helpers/constants/pathname";
-import * as Linking from "expo-linking";
-import { useGroupListRefetch } from "./(group)/hooks/useGroupList";
+import messaging from "@react-native-firebase/messaging";
+import * as Notifications from "expo-notifications";
 
 export default function TabLayout() {
-  const { handleRefetchGrouplist } = useGroupListRefetch();
   const {
     BOTTOM_TAB_NAME: BOTTOM_TABLE_NAME,
     BOTTOM_TAB_TRANSLATE: BOTTOM_TABLE_TRANSLATE,
@@ -17,11 +17,40 @@ export default function TabLayout() {
   } = COMMON_CONSTANT;
 
   useEffect(() => {
+    const requestPermissions = async () => {
+      await Notifications.requestPermissionsAsync();
+    };
+
+    requestPermissions();
+
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+      }),
+    });
+
+    messaging().onMessage(async (remoteMessage) => {
+      const notification = remoteMessage.notification;
+
+      const title = notification?.title ?? "MoneyEz";
+      const body = notification?.body ?? "Bạn có thông báo mới";
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title,
+          body,
+        },
+        trigger: null,
+      });
+    });
+  }, []);
+
+  useEffect(() => {
     const handleDeepLink = async (event: Linking.EventType) => {
       const { url } = event;
       if (url) {
         if (url.includes(PATH_NAME.GROUP.GROUP_LIST)) {
-          await handleRefetchGrouplist();
           router.push(PATH_NAME.GROUP.GROUP_LIST as any);
         }
       }
@@ -38,7 +67,7 @@ export default function TabLayout() {
     return () => {
       subscription.remove();
     };
-  }, [handleRefetchGrouplist]);
+  }, []);
 
   return (
     <Tabs

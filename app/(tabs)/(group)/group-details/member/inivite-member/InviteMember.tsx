@@ -5,6 +5,7 @@ import {
   SectionComponent,
   SpaceComponent,
 } from "@/components";
+import { GROUP_MEMBER_STATUS } from "@/enums/globals";
 import { Colors } from "@/helpers/constants/color";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { GroupMember } from "@/types/group.type";
@@ -90,7 +91,7 @@ const InviteMember = () => {
       <View className="mx-4 mb-4 rounded-2xl bg-white p-4 shadow-md">
         <View className="flex-row items-center justify-between">
           <View
-            className={`${item.status === "ACTIVE" ? "flex-[0.6]" : ""} flex-row items-center space-x-3`}
+            className={`${item.status === GROUP_MEMBER_STATUS.ACTIVE ? "flex-[0.6]" : ""} flex-row items-center space-x-3`}
           >
             <Image
               source={
@@ -112,12 +113,12 @@ const InviteMember = () => {
               <Text className="text-sm text-gray-500">
                 {item?.userInfo?.email}
               </Text>
-              {item.status === "PENDING" && (
+              {item.status === GROUP_MEMBER_STATUS.PENDING && (
                 <CountdownDisplay createdDate={item.createdDate} />
               )}
             </View>
           </View>
-          {item.status === "ACTIVE" && (
+          {item.status === GROUP_MEMBER_STATUS.ACTIVE && (
             <View className="flex-[0.4] items-end">
               <Text className="mb-1 text-xs text-gray-500">Tỉ lệ đóng góp</Text>
               <Text className="text-base font-bold text-primary">
@@ -134,15 +135,15 @@ const InviteMember = () => {
     <View className="mx-4 mb-4 flex-row rounded-lg bg-gray-100 p-1">
       <TouchableOpacity
         onPress={() => {
-          handler.setActiveTab("ACTIVE");
+          handler.setActiveTab(GROUP_MEMBER_STATUS.ACTIVE);
         }}
         className={`flex-1 rounded-md py-1 ${
-          state.activeTab === "ACTIVE" ? "bg-white" : ""
+          state.activeTab === GROUP_MEMBER_STATUS.ACTIVE ? "bg-white" : ""
         }`}
       >
         <Text
           className={`text-center text-sm ${
-            state.activeTab === "ACTIVE"
+            state.activeTab === GROUP_MEMBER_STATUS.ACTIVE
               ? "font-bold text-primary"
               : "text-gray-500"
           }`}
@@ -152,15 +153,15 @@ const InviteMember = () => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
-          handler.setActiveTab("PENDING");
+          handler.setActiveTab(GROUP_MEMBER_STATUS.PENDING);
         }}
         className={`flex-1 rounded-md py-1 ${
-          state.activeTab === "PENDING" ? "bg-white" : ""
+          state.activeTab === GROUP_MEMBER_STATUS.PENDING ? "bg-white" : ""
         }`}
       >
         <Text
           className={`text-center text-sm ${
-            state.activeTab === "PENDING"
+            state.activeTab === GROUP_MEMBER_STATUS.PENDING
               ? "font-medium text-primary"
               : "text-gray-500"
           }`}
@@ -204,7 +205,7 @@ const InviteMember = () => {
           iconColor="#2196F3"
         />
       </View>
-      {state.activeTab === "ACTIVE" ? (
+      {state.activeTab === GROUP_MEMBER_STATUS.ACTIVE ? (
         <Text className="mb-3 ml-4 text-lg font-bold text-gray-900">
           {TEXT_TRANSLATE_INVITE_MEMBER.INVITE_MEMBER.MEMBER_LIST(
             state.activeMembers?.length,
@@ -217,13 +218,13 @@ const InviteMember = () => {
           )}
         </Text>
       )}
-      {!state.isLeader && <TabSelector />}
+      {state.isLeader && <TabSelector />}
       <FlatListCustom
         refreshing={state.isRefreshing}
         onRefresh={handler.handleRefresh}
         isBottomTab={true}
         data={
-          state.activeTab === "ACTIVE"
+          state.activeTab === GROUP_MEMBER_STATUS.ACTIVE
             ? state.activeMembers
             : state.pendingMembers
         }

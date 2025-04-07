@@ -10,6 +10,7 @@ import { BackHandler, ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import TEXT_TRANSLATE_GROUP_RATIO_MEMBER from "../GroupRatioMember.translate";
 import { setLoading } from "@/redux/slices/loadingSlice";
+import { GROUP_MEMBER_STATUS } from "@/enums/globals";
 
 export interface Member {
   id: number;
@@ -27,8 +28,12 @@ export default function useGroupRatioMember() {
   const [contributeGroup] = useContributeGroupMutation();
   const { SYSTEM_ERROR } = COMMON_CONSTANT;
 
+  const groupMembersDetailActive = (groupMembersDetail ?? []).filter(
+    ({ status }) => status === GROUP_MEMBER_STATUS.ACTIVE,
+  );
+
   const initialValuesRef = useRef<Record<string, number>>(
-    groupMembersDetail?.reduce(
+    groupMembersDetailActive?.reduce(
       (acc, member: GroupMember) => {
         acc[member.userId] = member.contributionPercentage;
         return acc;
@@ -38,7 +43,7 @@ export default function useGroupRatioMember() {
   );
 
   const tempValuesRef = useRef<Record<string, number>>(
-    groupMembersDetail?.reduce(
+    groupMembersDetailActive?.reduce(
       (acc, member: GroupMember) => {
         acc[member.userId] = member.contributionPercentage;
         return acc;
@@ -133,6 +138,7 @@ export default function useGroupRatioMember() {
       groupId: groupDetail?.id,
       memberContributions: result,
     };
+
     dispatch(setLoading(true));
     try {
       await contributeGroup(payload).unwrap();
@@ -166,6 +172,25 @@ export default function useGroupRatioMember() {
     router.back();
   }, []);
 
+  const handleEqualShare = useCallback(() => {
+    const memberCount = groupMembersDetailActive.length;
+    if (memberCount === 0) return;
+
+    const equalShare = Math.floor(100 / memberCount);
+    const remainder = 100 % memberCount;
+
+    const newValues = groupMembersDetailActive.reduce(
+      (acc, member, index) => {
+        acc[member.userId] = index === 0 ? equalShare + remainder : equalShare;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
+
+    setLocalSliderValues(newValues);
+    tempValuesRef.current = newValues;
+  }, [groupMembersDetailActive]);
+
   useFocusEffect(
     useCallback(() => {
       const onBackPress = () => {
@@ -186,7 +211,7 @@ export default function useGroupRatioMember() {
       localTotal,
       tooltipValue,
       isDragging,
-      groupMembersDetail,
+      groupMembersDetail: groupMembersDetailActive ?? [],
       userInfo,
       editingId,
     },
@@ -199,6 +224,7 @@ export default function useGroupRatioMember() {
       handleSliderChange,
       handleSliderComplete,
       handleInputBlur,
+      handleEqualShare,
     },
   };
 }

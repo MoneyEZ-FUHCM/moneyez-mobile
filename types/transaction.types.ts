@@ -52,6 +52,7 @@ export interface TransactionPreviewPayload extends TransactionPayload {
 }
 
 export interface GroupTransaction {
+  note: string;
   groupId: string;
   userId: string;
   amount: number;

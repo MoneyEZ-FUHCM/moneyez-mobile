@@ -95,6 +95,26 @@ const groupApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Group"],
     }),
+    inviteMemberQRCodeAccept: builder.query({
+      query: (payload) => ({
+        url: `/groups/invite-member/qrcode/accept?token=${payload}`,
+        method: HTTP_METHOD.GET,
+      }),
+    }),
+    withDrawFundRequest: builder.mutation({
+      query: (payload) => ({
+        url: `/groups/fund-withdraw/request`,
+        method: HTTP_METHOD.POST,
+        body: payload,
+      }),
+    }),
+    leaveGroup: builder.mutation({
+      query: (id) => ({
+        url: `/groups/members/leave?groupId=${id}`,
+        method: HTTP_METHOD.GET,
+      }),
+      invalidatesTags: ["Group"],
+    }),
   }),
 });
 
@@ -110,6 +130,9 @@ export const {
   useInviteMemberEmailMutation,
   useInviteMemberQRCodeMutation,
   useContributeGroupMutation,
+  useLazyInviteMemberQRCodeAcceptQuery,
+  useWithDrawFundRequestMutation,
+  useLeaveGroupMutation,
 } = groupApi;
 
 export default groupApi;

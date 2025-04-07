@@ -54,6 +54,7 @@ export enum PERIOD_UNIT {
 
 export enum TRANSACTION_STATUS {
   APPROVED = "APPROVED",
+  CONFIRMED = "confirmed",
   PENDING = "PENDING",
   REJECTED = "REJECTED",
 }

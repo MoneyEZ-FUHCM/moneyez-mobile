@@ -1,8 +1,10 @@
+import { GROUP_ROLE } from "@/enums/globals";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { setLoading } from "@/redux/slices/loadingSlice";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";
+import { selectUserInfo } from "@/redux/slices/userSlice";
 import {
   useGetGroupDetailQuery,
   useRequestFundMutation,
@@ -11,8 +13,8 @@ import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BackHandler, ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import TEXT_TRANSLATE_CREATE_FUND_REQUEST from "../CreateFundRequest.translate";
 import CREATE_FUND_REQUEST_CONSTANT from "../CreateFundRequest.constant";
+import TEXT_TRANSLATE_CREATE_FUND_REQUEST from "../CreateFundRequest.translate";
 
 interface FundRequestForm {
   amount: string;
@@ -32,6 +34,15 @@ const useCreateFundRequest = () => {
   const currentGroup = useSelector(selectCurrentGroup);
   const fundBalance = currentGroup?.currentBalance || 0;
   const formikRef = useRef<any>(null);
+  const groupDetail = useSelector(selectCurrentGroup);
+  const userInfo = useSelector(selectUserInfo);
+
+  const isLeader = useMemo(() => {
+    return groupDetail?.groupMembers?.some(
+      (member) =>
+        member?.userId === userInfo?.id && member?.role === GROUP_ROLE.LEADER,
+    );
+  }, [groupDetail, userInfo]);
 
   useFocusEffect(
     useCallback(() => {
@@ -92,16 +103,21 @@ const useCreateFundRequest = () => {
               description: values?.description,
             },
           });
-          ToastAndroid.show(
-            TEXT_TRANSLATE_CREATE_FUND_REQUEST.MESSAGE_SUCCESS.CREATE_SUCCESS,
-            ToastAndroid.SHORT,
-          );
+          const successMessage = isLeader
+            ? TEXT_TRANSLATE_CREATE_FUND_REQUEST.MESSAGE_SUCCESS
+                .CREATE_FUND_REQUEST_SUCCESSS
+            : TEXT_TRANSLATE_CREATE_FUND_REQUEST.MESSAGE_SUCCESS.CREATE_SUCCESS;
+
+          ToastAndroid.show(successMessage, ToastAndroid.SHORT);
         }
       } catch (err: any) {
         const error = err?.data;
 
         if (error.errorCode === ERROR_CODE.BANK_ACCOUNT_NOT_FOUND) {
-          ToastAndroid.show("Ngân hàng không tồn tại", ToastAndroid.SHORT);
+          ToastAndroid.show(
+            TEXT_TRANSLATE_CREATE_FUND_REQUEST.MESSAGE_ERROR.BANK_NOT_FOUND,
+            ToastAndroid.SHORT,
+          );
           return;
         }
 

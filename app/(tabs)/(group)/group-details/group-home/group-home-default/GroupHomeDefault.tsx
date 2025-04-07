@@ -1,7 +1,7 @@
 import ArrowDown from "@/assets/icons/arrow-down-short-wide.png";
 import ArrowUp from "@/assets/icons/arrow-up-wide-short.png";
 import { SafeAreaViewCustom } from "@/components";
-import { TRANSACTION_TYPE_TEXT } from "@/enums/globals";
+import { TRANSACTION_STATUS, TRANSACTION_TYPE_TEXT } from "@/enums/globals";
 import { Colors } from "@/helpers/constants/color";
 import {
   formatCurrency,
@@ -33,6 +33,28 @@ import useGroupHomeDefault from "./hooks/useGroupHomeDefault";
 const GroupHomeDefault = () => {
   const { BUTTON, TEXT } = TEXT_TRANSLATE_GROUP_HOME_DEFAULT;
   const { state, handler } = useGroupHomeDefault();
+
+  const highlightAndBreakText = (text: string, highlightStyle: any) => {
+    if (!text) return null;
+    const parts = text.split(/(\[.*?\])/);
+    return parts.flatMap((part: string, index: number) => {
+      if (part.startsWith("[") && part.endsWith("]")) {
+        return (
+          <Text key={`bracket-${index}`} style={highlightStyle}>
+            {part.substring(1, part.length - 1)}
+          </Text>
+        );
+      } else {
+        const lines = part.split(/\\n|\n/);
+        return lines.map((line, lineIndex) => (
+          <React.Fragment key={`line-${index}-${lineIndex}`}>
+            {lineIndex > 0 && <Text>{"\n"}</Text>}
+            <Text>{line}</Text>
+          </React.Fragment>
+        ));
+      }
+    });
+  };
 
   const HeaderSection = () => (
     <View className="relative z-10 h-14 items-center justify-center bg-white shadow-sm">
@@ -68,10 +90,6 @@ const GroupHomeDefault = () => {
           <Text className="text-4xl font-medium uppercase text-white">
             {state.groupDetail?.name?.charAt(0)}
           </Text>
-          <LinearGradient
-            colors={["transparent", "rgba(0,0,0,0.4)"]}
-            className="absolute bottom-0 left-0 right-0 h-32"
-          />
         </View>
       )}
 
@@ -244,17 +262,35 @@ const GroupHomeDefault = () => {
         </View>
       </View>
       <View className="mt-4 flex-row items-center justify-between border-t border-gray-100 pt-3">
-        <View className="flex-row items-center">
-          <Ionicons name="checkmark-circle" size={14} color="#609084" />
-          <Text className="ml-1 text-xs text-gray-500">Đã xác nhận</Text>
-        </View>
-        <View className="flex-row items-center rounded-full bg-gray-50 px-3 py-1.5">
-          <MaterialIcons name="access-time" size={12} color="#666" />
-          <Text className="ml-1 text-xs font-medium text-gray-600">
-            {formatTime(activity?.createdDate)} ·{" "}
-            {formatDateMonthYear(activity?.createdDate)}
-          </Text>
-        </View>
+        {activity?.status === TRANSACTION_STATUS.APPROVED ? (
+          <>
+            <View className="flex-row items-center">
+              <Ionicons name="checkmark-circle" size={14} color="#609084" />
+              <Text className="ml-1 text-xs text-gray-500">Đã xác nhận</Text>
+            </View>
+            <View className="flex-row items-center rounded-full bg-gray-50 px-3 py-1.5">
+              <MaterialIcons name="access-time" size={12} color="#666" />
+              <Text className="ml-1 text-xs font-medium text-gray-600">
+                {formatTime(activity?.createdDate)} ·{" "}
+                {formatDateMonthYear(activity?.createdDate)}
+              </Text>
+            </View>
+          </>
+        ) : (
+          <>
+            <View className="flex-row items-center">
+              <Ionicons name="close-circle" size={14} color="#F43F5E" />
+              <Text className="ml-1 text-xs text-gray-500">Đã từ chối</Text>
+            </View>
+            <View className="flex-row items-center rounded-full bg-gray-50 px-3 py-1.5">
+              <MaterialIcons name="access-time" size={12} color="#666" />
+              <Text className="ml-1 text-xs font-medium text-gray-600">
+                {formatTime(activity?.createdDate)} ·{" "}
+                {formatDateMonthYear(activity?.createdDate)}
+              </Text>
+            </View>
+          </>
+        )}
       </View>
     </View>
   );
@@ -266,7 +302,7 @@ const GroupHomeDefault = () => {
     >
       <View className="flex-row items-center space-x-2">
         {activity?.imageUrl ? (
-          <View className="h-14 w-14 rounded-full border-2 border-primary/20 p-0.5">
+          <View className="h-12 w-12 rounded-full border-2 border-primary/20 p-0.5">
             <Image
               source={{ uri: activity?.imageUrl }}
               className="h-full w-full rounded-full"
@@ -275,7 +311,7 @@ const GroupHomeDefault = () => {
         ) : (
           <LinearGradient
             colors={["#609084", "#4A7A70"]}
-            className="h-14 w-14 items-center justify-center rounded-full shadow-md"
+            className="h-12 w-12 items-center justify-center rounded-full shadow-md"
           >
             <Text className="text-3xl font-semibold uppercase text-white">
               {activity?.changedBy?.charAt(0)}
@@ -289,7 +325,10 @@ const GroupHomeDefault = () => {
             </Text>
           </View>
           <Text className="mt-1 text-gray-600">
-            {activity?.changeDescription}
+            {highlightAndBreakText(activity?.changeDescription || "No Title", {
+              color: Colors.colors.primary,
+              fontWeight: "bold",
+            })}
           </Text>
         </View>
       </View>
@@ -352,7 +391,7 @@ const GroupHomeDefault = () => {
                 />
               ))}
 
-            {totalTransactions >= 3 && (
+            {totalTransactions >= 1 && (
               <ViewAllButton type={state.RECENT_ACTIVITIES} />
             )}
           </>

@@ -1,17 +1,25 @@
+import { GROUP_MEMBER_STATUS } from "@/enums/globals";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import useDebounce from "@/hooks/useDebounce";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
+import { setLoading } from "@/redux/slices/loadingSlice";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";
 import { selectUserInfo } from "@/redux/slices/userSlice";
 import { useInviteMemberEmailMutation } from "@/services/group";
 import { useGetUsersQuery } from "@/services/user";
 import { GroupMember } from "@/types/group.type";
+import { UserInfo } from "@/types/user.types";
 import { router } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import INVITE_MEMBER_CONSTANTS from "../../InviteMember.constant";
-import { setLoading } from "@/redux/slices/loadingSlice";
+
+type InviteStatus = {
+  type: "MESSAGE" | "COUNTDOWN" | "INVITABLE";
+  message?: string;
+  createdDate?: string;
+};
 
 const INVITE_SUGGESTION = [
   {
@@ -108,6 +116,77 @@ const useInviteMemberByEmail = () => {
     }
   };
 
+  const isUserInvitable = useCallback(
+    (user: any) => {
+      if (user?.id === userInfoDetail?.id) return false;
+
+      const isMember = groupMembers?.some(
+        (member) =>
+          member?.userInfo?.id === user?.id &&
+          member?.status === GROUP_MEMBER_STATUS.ACTIVE,
+      );
+      if (isMember) return false;
+
+      const pendingInvite = groupMembers?.find(
+        (member) =>
+          member?.userInfo?.email === user?.email &&
+          member?.status === GROUP_MEMBER_STATUS.PENDING,
+      );
+
+      if (pendingInvite) {
+        const inviteTime = new Date(pendingInvite.createdDate).getTime();
+        const now = Date.now();
+        const hoursDiff = (now - inviteTime) / (1000 * 60 * 60);
+        return hoursDiff >= 24;
+      }
+
+      return true;
+    },
+    [groupMembers, userInfoDetail],
+  );
+
+  const getInviteStatus = useCallback(
+    (user: UserInfo): InviteStatus => {
+      if (user?.id === userInfoDetail?.id) {
+        return {
+          type: "MESSAGE",
+          message: "Không thể tự mời bản thân",
+        };
+      }
+
+      const activeMember = groupMembers?.find(
+        (member) =>
+          member?.userInfo?.id === user?.id &&
+          member?.status === GROUP_MEMBER_STATUS.ACTIVE,
+      );
+      if (activeMember) {
+        return {
+          type: "MESSAGE",
+          message: "Đã là thành viên",
+        };
+      }
+
+      const pendingMember = groupMembers?.find(
+        (member) =>
+          member?.userInfo?.email?.toLowerCase() ===
+            user?.email?.toLowerCase() &&
+          member?.status === GROUP_MEMBER_STATUS.PENDING,
+      );
+
+      if (pendingMember) {
+        return {
+          type: "COUNTDOWN",
+          createdDate: pendingMember.createdDate,
+        };
+      }
+
+      return {
+        type: "INVITABLE",
+      };
+    },
+    [groupMembers, userInfoDetail],
+  );
+
   return {
     state: {
       members,
@@ -119,6 +198,8 @@ const useInviteMemberByEmail = () => {
       selectedForInvite,
       selectedTone,
       inviteSuggestions: INVITE_SUGGESTION,
+      isUserInvitable,
+      getInviteStatus,
     },
     handler: {
       handleSearch,

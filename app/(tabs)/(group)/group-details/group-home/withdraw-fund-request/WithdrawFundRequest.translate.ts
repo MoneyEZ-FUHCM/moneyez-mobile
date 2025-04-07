@@ -1,4 +1,4 @@
-const TEXT_TRANSLATE_WITHDRAW_FUND_REQUEST = {
+const TEXT_TRANSLATE_WITH_DRAW_FUND_REQUEST = {
   // Title
   TITLE: {
     MAIN_TITLE: "Tạo yêu cầu rút quỹ",
@@ -21,11 +21,14 @@ const TEXT_TRANSLATE_WITHDRAW_FUND_REQUEST = {
   },
 
   MESSAGE_ERROR: {
-    CREATE_FAILED: "Có lỗi xảy ra khi gửi yêu cầu góp quỹ",
+    CREATE_FAILED: "Có lỗi xảy ra khi gửi yêu cầu rút quỹ",
+    BANK_NOT_FOUND: "Ngân hàng không tồn tại",
+    INVALID_AMOUNT: "Số tiền rút quỹ không được vượt quá số dư quỹ",
   },
 
   MESSAGE_SUCCESS: {
-    CREATE_SUCCESS: "Yêu cầu góp quỹ đã được gửi thành công",
+    CREATE_SUCCESS: "Yêu cầu rút quỹ đã được gửi thành công",
+    WITH_DRAW_FUND_REQUEST_SUCCESSS: "Rút quỹ thành công",
   },
 
   MESSAGE_VALIDATE: {
@@ -36,4 +39,4 @@ const TEXT_TRANSLATE_WITHDRAW_FUND_REQUEST = {
   },
 };
 
-export default TEXT_TRANSLATE_WITHDRAW_FUND_REQUEST;
+export default TEXT_TRANSLATE_WITH_DRAW_FUND_REQUEST;
