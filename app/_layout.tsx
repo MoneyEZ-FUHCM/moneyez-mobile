@@ -35,36 +35,6 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    const requestPermissions = async () => {
-      await Notifications.requestPermissionsAsync();
-    };
-
-    requestPermissions();
-
-    Notifications.setNotificationHandler({
-      handleNotification: async () => ({
-        shouldShowAlert: true,
-        shouldPlaySound: true,
-        shouldSetBadge: true,
-      }),
-    });
-
-    messaging().onMessage(async (remoteMessage) => {
-      const notification = remoteMessage.notification;
-
-      const title = notification?.title ?? "MoneyEz";
-      const body = notification?.body ?? "Bạn có thông báo mới";
-      await Notifications.scheduleNotificationAsync({
-        content: {
-          title,
-          body,
-        },
-        trigger: null,
-      });
-    });
-  }, []);
-
-  useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
     }

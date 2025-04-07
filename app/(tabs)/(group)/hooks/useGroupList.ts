@@ -19,7 +19,7 @@ import { Modalize } from "react-native-modalize";
 import { useDispatch } from "react-redux";
 import TEXT_TRANSLATE_GROUP_LIST from "../GroupList.translate";
 
-const useGroupList = (hideTabbar = true) => {
+const useGroupList = () => {
   const pageSize = 10;
   const translate = TEXT_TRANSLATE_GROUP_LIST;
 
@@ -54,9 +54,7 @@ const useGroupList = (hideTabbar = true) => {
     PageSize: pageSize,
   });
 
-  if (hideTabbar) {
-    useHideTabbar();
-  }
+  useHideTabbar();
 
   const handleLoadMore = useCallback(() => {
     if (!isLoading && !isLoadingMore && data?.items.length === pageSize) {

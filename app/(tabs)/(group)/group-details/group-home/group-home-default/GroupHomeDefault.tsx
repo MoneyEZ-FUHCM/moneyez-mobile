@@ -391,7 +391,7 @@ const GroupHomeDefault = () => {
                 />
               ))}
 
-            {totalTransactions >= 3 && (
+            {totalTransactions >= 1 && (
               <ViewAllButton type={state.RECENT_ACTIVITIES} />
             )}
           </>

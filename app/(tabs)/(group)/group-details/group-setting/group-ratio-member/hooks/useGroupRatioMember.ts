@@ -10,6 +10,7 @@ import { BackHandler, ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import TEXT_TRANSLATE_GROUP_RATIO_MEMBER from "../GroupRatioMember.translate";
 import { setLoading } from "@/redux/slices/loadingSlice";
+import { GROUP_MEMBER_STATUS } from "@/enums/globals";
 
 export interface Member {
   id: number;
@@ -26,6 +27,12 @@ export default function useGroupRatioMember() {
   const userInfo = useSelector(selectUserInfo);
   const [contributeGroup] = useContributeGroupMutation();
   const { SYSTEM_ERROR } = COMMON_CONSTANT;
+
+  const groupMembersDetailActive = groupMembersDetail?.filter(
+    (member: GroupMember) => member.status === GROUP_MEMBER_STATUS.ACTIVE,
+  );
+
+  console.log("check groupMembersDetailActive", groupMembersDetailActive);
 
   const initialValuesRef = useRef<Record<string, number>>(
     groupMembersDetail?.reduce(
@@ -186,7 +193,7 @@ export default function useGroupRatioMember() {
       localTotal,
       tooltipValue,
       isDragging,
-      groupMembersDetail,
+      groupMembersDetail: groupMembersDetailActive ?? [],
       userInfo,
       editingId,
     },
