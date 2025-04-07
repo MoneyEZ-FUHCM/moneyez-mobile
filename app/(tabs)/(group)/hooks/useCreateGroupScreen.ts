@@ -85,9 +85,9 @@ const useCreateGroupScreen = () => {
     currentBalance: Yup.string()
       .trim()
       .required(MESSAGE_VALIDATE.CURRENT_BALANCE_REQUIRED),
-    accountBankId: Yup.string()
-      .trim()
-      .required(MESSAGE_VALIDATE.ACCOUNT_BANKING_REQUIRED),
+    // accountBankId: Yup.string()
+    //   .trim()
+    //   .required(MESSAGE_VALIDATE.ACCOUNT_BANKING_REQUIRED),
   });
 
   const handleCreateGroup = useCallback(
