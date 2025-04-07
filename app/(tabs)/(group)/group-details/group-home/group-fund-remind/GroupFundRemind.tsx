@@ -57,45 +57,47 @@ export default function GroupRemindPage() {
         contentContainerStyle={{ paddingBottom: 40 }}
       >
         <View className="p-4">
-          {/* Group Target Info */}
-          <SectionComponent rootClassName="rounded-2 bg-white p-4 shadow-sm">
-            <Text className="text-base font-semibold">
-              {LABELS.GROUP_TARGET} ({state.members.length} thành viên)
-            </Text>
-            <View className="mt-2 flex-row items-center space-x-3">
-              <View>
-                <ProgressCircleComponent
-                  value={state.groupCurrent / state.groupGoal}
-                  size={60}
-                  thickness={4}
-                  showPercentage={true}
-                />
+          {/* Group Target Info - Only show if group has a financial goal */}
+          {state.isGoalActive && state.hasFinancialGoal && (
+            <SectionComponent rootClassName="rounded-2 bg-white p-4 shadow-sm">
+              <Text className="text-base font-semibold">
+                {LABELS.GROUP_TARGET} ({state.members.length} thành viên)
+              </Text>
+              <View className="mt-2 flex-row items-center space-x-3">
+                <View>
+                  <ProgressCircleComponent
+                    value={state.groupCurrent / state.groupGoal}
+                    size={60}
+                    thickness={4}
+                    showPercentage={true}
+                  />
+                </View>
+                <View className="gap-1">
+                  <Text>
+                    <Text className="text-lg font-semibold text-[#609084]">
+                      {formatCurrency(state.groupCurrent)}
+                    </Text>
+                    <Text className="text-sm text-gray-500">
+                      {" / "}
+                      {formatCurrency(state.groupGoal)}
+                    </Text>
+                  </Text>
+                  <Text className="text-sm text-[#848484]">
+                    {LABELS.REMAINING}: {formatCurrency(state.remain)}
+                  </Text>
+                  <Text className="text-sm">
+                    <Text className="font-semibold text-gray-500">
+                      {LABELS.DUE_DATE}: {state.dueDate}
+                    </Text>
+                    <Text className="text-gray-500">
+                      {" "}
+                      (còn lại {state.remainDays} ngày)
+                    </Text>
+                  </Text>
+                </View>
               </View>
-              <View className="gap-1">
-                <Text>
-                  <Text className="text-lg font-semibold text-[#609084]">
-                    {formatCurrency(state.groupCurrent)}
-                  </Text>
-                  <Text className="text-sm text-gray-500">
-                    {" / "}
-                    {formatCurrency(state.groupGoal)}
-                  </Text>
-                </Text>
-                <Text className="text-sm text-[#848484]">
-                  {LABELS.REMAINING}: {formatCurrency(state.remain)}
-                </Text>
-                <Text className="text-sm">
-                  <Text className="font-semibold text-gray-500">
-                    {LABELS.DUE_DATE}: {state.dueDate}
-                  </Text>
-                  <Text className="text-gray-500">
-                    {" "}
-                    (còn lại {state.remainDays} ngày)
-                  </Text>
-                </Text>
-              </View>
-            </View>
-          </SectionComponent>
+            </SectionComponent>
+          )}
 
           {/* Tabs */}
           <View className="mt-4 flex-row overflow-hidden rounded-lg bg-white">
@@ -191,62 +193,73 @@ export default function GroupRemindPage() {
                   </Text>
                   <Pressable onPress={handler.handleToggleAll}>
                     <Text className="text-sm font-semibold text-[#609084]">
-                      {state.members.every((member) => member.checked)
+                      {state.members.filter((m) => !m.disabled).every((member) => member.checked)
                         ? TEXT_TRANSLATE_GROUP_REMIND.BUTTON.UNSELECT_ALL
                         : TEXT_TRANSLATE_GROUP_REMIND.BUTTON.SELECT_ALL}
                     </Text>
                   </Pressable>
                 </View>
                 {state.members.map((member) => (
-                    <View
-                    key={member.id}
-                    className="flex-row items-center py-2"
-                    >
+                  <View key={member.id} className="flex-row items-center py-2">
                     <Image
                       source={member.avatar ? member.avatar : Admin}
                       className="h-12 w-12 rounded-full mr-3"
                       resizeMode="cover"
                     />
                     <View className="flex-1">
-                      <Text className="text-base font-semibold">
-                      {member.name}
-                      </Text>
-                      <Text className="text-sm text-gray-500">
-                      {LABELS.CONTRIBUTE_RATIO}: {member.ratio}%
-                      </Text>
+                      <View className="flex-row items-center">
+                        <Text className="text-base font-semibold">
+                          {member.name}
+                        </Text>
+                        {member.disabled && state.isGoalActive && state.hasFinancialGoal && (
+                          <View className="ml-2 px-2 py-0.5 bg-[#E6F2EF] rounded-md">
+                            <Text className="text-xs text-[#609084] font-medium">
+                              {LABELS.FUNDED}
+                            </Text>
+                          </View>
+                        )}
+                      </View>
+                      {state.isGoalActive && state.hasFinancialGoal && (
+                        <Text className="text-sm text-gray-500">
+                          {LABELS.CONTRIBUTE_RATIO}: {member.ratio}%
+                        </Text>
+                      )}
                       <Text className="pt-1 text-sm">
-                      <Text className="text-[#848484]">
-                        {LABELS.CONTRIBUTED}:{" "}
-                      </Text>
-                      <Text className="text-base font-semibold text-[#609084]">
-                        {formatCurrency(member.contributed)}
-                      </Text>
-                      <Text className="text-[#848484]">
-                        {" "}
-                        / {formatCurrency(member.target)}
-                      </Text>
+                        <Text className="text-[#848484]">
+                          {LABELS.CONTRIBUTED}:{" "}
+                        </Text>
+                        <Text className="text-base font-semibold text-[#609084]">
+                          {formatCurrency(member.contributed)}
+                        </Text>
+                        {state.isGoalActive && state.hasFinancialGoal && (
+                          <Text className="text-[#848484]">
+                            {" "}
+                            / {formatCurrency(member.target)}
+                          </Text>
+                        )}
                       </Text>
                     </View>
                     <Pressable
                       onPress={() => handler.handleToggleMember(member.id)}
+                      disabled={member.disabled}
                     >
                       <View className="h-6 w-6 items-center justify-center">
-                      {member.checked ? (
-                        <MaterialIcons
-                        name="check-box"
-                        size={24}
-                        color="#609084"
-                        />
-                      ) : (
-                        <MaterialIcons
-                        name="check-box-outline-blank"
-                        size={24}
-                        color="#d1d5db"
-                        />
-                      )}
+                        {member.checked ? (
+                          <MaterialIcons
+                            name="check-box"
+                            size={24}
+                            color="#609084"
+                          />
+                        ) : (
+                          <MaterialIcons
+                            name="check-box-outline-blank"
+                            size={24}
+                            color={member.disabled ? "#e5e7eb" : "#d1d5db"}
+                          />
+                        )}
                       </View>
                     </Pressable>
-                    </View>
+                  </View>
                 ))}
               </SectionComponent>
             </>

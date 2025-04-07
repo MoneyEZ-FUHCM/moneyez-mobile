@@ -17,6 +17,7 @@ const TEXT_TRANSLATE_GROUP_REMIND = {
     CONTRIBUTE_RATIO: "Tỷ lệ đóng góp",
     CONTRIBUTED: "Đã góp",
     ADD_REMIND: "Tạo lời nhắc",
+    FUNDED: "Đã góp đủ",
   },
 
   TABS: {

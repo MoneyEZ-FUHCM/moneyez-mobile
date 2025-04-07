@@ -9,10 +9,14 @@ const TEXT_TRANSLATE_GROUP_STATISTIC = {
     MEMBER_LIST: 'Thống kê theo thành viên',
     CONTRIBUTE_RATIO: 'Tỉ lệ đóng góp',
     CONTRIBUTED: 'Đã đóng góp',
+    FUNDED: 'Đã góp đủ',
   },
   TABS: {
     OVERVIEW: 'Tổng quan',
     HISTORY: 'Lịch sử',
+  },
+  MESSAGE_ERROR: {
+    FETCH_FAILED: "Có lỗi xảy ra khi tải thông tin thống kê",
   },
 };
 
