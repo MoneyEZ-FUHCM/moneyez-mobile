@@ -145,6 +145,7 @@ const useGroupList = () => {
   const handleScanSuccess = async (scannedToken: string) => {
     if (isScanningRef.current) return;
     isScanningRef.current = true;
+    const { groupId, qrCode } = scannedToken;
 
     try {
       if (!scannedToken || !isValidGUID(scannedToken)) {

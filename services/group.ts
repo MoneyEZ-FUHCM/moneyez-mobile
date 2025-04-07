@@ -40,7 +40,7 @@ const groupApi = apiSlice.injectEndpoints({
     }),
     requestFund: builder.mutation({
       query: (payload) => ({
-        url: `/groups/fund-rasising/request`,
+        url: `/groups/fund-raising/request`,
         method: HTTP_METHOD.POST,
         body: payload,
       }),
@@ -115,6 +115,13 @@ const groupApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Group"],
     }),
+    kickMember: builder.mutation({
+      query: ({ groupId, memberId }) => ({
+        url: `/groups/${groupId}/members/${memberId}`,
+        method: HTTP_METHOD.GET,
+      }),
+      invalidatesTags: ["Group"],
+    }),
   }),
 });
 
@@ -133,6 +140,7 @@ export const {
   useLazyInviteMemberQRCodeAcceptQuery,
   useWithDrawFundRequestMutation,
   useLeaveGroupMutation,
+  useKickMemberMutation,
 } = groupApi;
 
 export default groupApi;

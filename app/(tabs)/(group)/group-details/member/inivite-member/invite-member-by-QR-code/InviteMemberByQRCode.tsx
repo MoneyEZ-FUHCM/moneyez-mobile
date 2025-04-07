@@ -1,4 +1,8 @@
-import { SafeAreaViewCustom, SectionComponent } from "@/components";
+import {
+  SafeAreaViewCustom,
+  SectionComponent,
+  SpaceComponent,
+} from "@/components";
 import useHideGroupTabbar from "@/hooks/useHideGroupTabbar";
 import AntDesign from "@expo/vector-icons/build/AntDesign";
 import * as FileSystem from "expo-file-system";
@@ -23,22 +27,20 @@ const InviteMemberByQRCode = () => {
   const INVITE_LINK = "https://ezmoney.com.vn/daylalinhthamgianhom";
 
   const [qrValue, setQrValue] = useState(
-    state.groupDetail?.description || "default_value",
+    JSON.stringify(state.QrData) || "default_value",
   );
 
   const opacity = useSharedValue(1);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      opacity.value = 0;
-      setTimeout(() => {
-        setQrValue(`${state.groupDetail?.description}?time=${Date.now()}`);
-        opacity.value = withTiming(1, { duration: 500 });
-      }, 200);
-    }, 5 * 60000);
+    if (!state.QrData) return;
 
-    return () => clearInterval(interval);
-  }, [state.groupDetail?.description]);
+    opacity.value = 0;
+    setTimeout(() => {
+      setQrValue(JSON.stringify(state.QrData));
+      opacity.value = withTiming(1, { duration: 500 });
+    }, 200);
+  }, [state.QrData]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
@@ -112,14 +114,7 @@ const InviteMemberByQRCode = () => {
           <Text className="mb-2 text-center text-xs text-gray-500">
             {TEXT_TRANSLATE_INVITE_MEMBER_BY_QR_CODE.QR_CODE_REFRESH}
           </Text>
-          <TouchableOpacity className="mb-6 rounded-xl bg-gray-50 p-4">
-            <Text
-              className="text-center font-medium text-primary"
-              numberOfLines={1}
-            >
-              {INVITE_LINK}
-            </Text>
-          </TouchableOpacity>
+          <SpaceComponent height={20}></SpaceComponent>
           <View className="flex-row justify-between px-4">
             <TouchableOpacity className="items-center">
               <View className="mb-2 h-14 w-14 items-center justify-center rounded-full bg-primary/10">
