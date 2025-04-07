@@ -1,4 +1,4 @@
-import { PATH_NAME } from "@/helpers/constants/pathname";
+import { formatDate } from "@/helpers/libs";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";
 import { useGetGroupFinancialGoalQuery } from "@/services/financialGoal";
@@ -6,10 +6,9 @@ import { useFundRaisingRemindMutation } from "@/services/group";
 import { router } from "expo-router";
 import moment from "moment";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Alert, ToastAndroid } from "react-native";
+import { ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import TEXT_TRANSLATE_GROUP_REMIND from "../GroupFundRemind.translate";
-import { formatDate } from "@/helpers/libs";
 
 export interface MemberData {
   id: string;
@@ -20,13 +19,13 @@ export interface MemberData {
   target: number;
   checked: boolean;
   userId: string;
+  disabled: boolean;
 }
 
 export default function useGroupRemind() {
   const [selectedTab, setSelectedTab] = useState<"add" | "history">("add");
   const formikRef = useRef<any>(null);
   const handleSubmitRef = useRef<() => void>(() => { });
-  const { GROUP_HOME } = PATH_NAME;
   const dispatch = useDispatch();
 
   const groupDetail = useSelector(selectCurrentGroup);
@@ -38,22 +37,27 @@ export default function useGroupRemind() {
     groupId: groupDetail?.id || ''
   }, { skip: !groupDetail?.id || !isGoalActive });
 
-  const groupGoal = financialGoalData?.data?.[0]?.targetAmount || 0;
-  const groupCurrent = financialGoalData?.data?.[0]?.currentAmount || groupDetail?.currentBalance || 0;
-  const deadlineDate = financialGoalData?.data?.[0]?.deadline;
+  const hasFinancialGoal = financialGoalData?.data && financialGoalData.data.length > 0;
 
-  const dueDate = formatDate(deadlineDate, 'DD.MM.YYYY')
+  const groupGoal = hasFinancialGoal ? financialGoalData?.data?.[0]?.targetAmount || 0 : 0;
+  const groupCurrent = hasFinancialGoal ? financialGoalData?.data?.[0]?.currentAmount || groupDetail?.currentBalance || 0 : 0;
+  const deadlineDate = hasFinancialGoal ? financialGoalData?.data?.[0]?.deadline : null;
 
-  const remainDays = moment(deadlineDate).diff(moment(), 'days')
+  const dueDate = deadlineDate ? formatDate(deadlineDate, 'DD.MM.YYYY') : '';
+  const remainDays = deadlineDate ? moment(deadlineDate).diff(moment(), 'days') : 0;
+
   const [members, setMembers] = useState<MemberData[]>([]);
   const isLoading = isRemindLoading || isGoalLoading;
 
   useEffect(() => {
     if (groupDetail?.groupMembers) {
       const mappedMembers = groupDetail.groupMembers.map(member => {
-        const target = isGoalActive && groupGoal > 0
+        const target = isGoalActive && hasFinancialGoal && groupGoal > 0
           ? (member.contributionPercentage / 100) * groupGoal
           : 0;
+
+        // Determine if this member has already funded enough
+        const hasFundedEnough = hasFinancialGoal && target > 0 && member.totalContribution >= target;
 
         return {
           id: member.id,
@@ -62,13 +66,14 @@ export default function useGroupRemind() {
           ratio: member.contributionPercentage,
           contributed: member.totalContribution,
           target: target,
-          checked: true,
-          userId: member.userId
+          checked: !hasFundedEnough, // Only check members who haven't funded enough
+          userId: member.userId,
+          disabled: hasFundedEnough // Disable selection for members who have funded enough
         };
       });
       setMembers(mappedMembers);
     }
-  }, [groupDetail, isGoalActive, groupGoal]);
+  }, [groupDetail, isGoalActive, groupGoal, hasFinancialGoal]);
 
   const handleSelectTab = useCallback((tab: "add" | "history") => {
     setSelectedTab(tab);
@@ -76,13 +81,18 @@ export default function useGroupRemind() {
 
   const handleToggleMember = useCallback((id: string) => {
     setMembers((prev) =>
-      prev.map((m) => (m.id === id ? { ...m, checked: !m.checked } : m)),
+      prev.map((m) => (m.id === id && !m.disabled ? { ...m, checked: !m.checked } : m)),
     );
   }, []);
 
   const handleToggleAll = useCallback(() => {
-    const allChecked = members.every((m) => m.checked);
-    setMembers((prev) => prev.map((m) => ({ ...m, checked: !allChecked })));
+    const allAvailableChecked = members
+      .filter(m => !m.disabled)
+      .every((m) => m.checked);
+
+    setMembers((prev) =>
+      prev.map((m) => (m.disabled ? m : { ...m, checked: !allAvailableChecked }))
+    );
   }, [members]);
 
   const handleCreateRemind = useCallback(async (values: { amount: string, description: string }) => {
@@ -103,7 +113,7 @@ export default function useGroupRemind() {
       const memberData = checkedMembers.map(member => {
         let finalAmount = amount;
 
-        if (isGoalActive) {
+        if (isGoalActive && hasFinancialGoal) {
           const remaining = member.target - member.contributed;
           if (finalAmount > remaining && remaining > 0) {
             finalAmount = remaining;
@@ -127,24 +137,21 @@ export default function useGroupRemind() {
       const response = await fundRaisingRemind(payload).unwrap();
 
       if (response) {
-        Alert.alert(
-          "Thành công",
-          TEXT_TRANSLATE_GROUP_REMIND.MESSAGE_SUCCESS.CREATE_SUCCESS,
-          [{ text: "OK", onPress: () => router.replace(GROUP_HOME.GROUP_HOME_DEFAULT as any) }]
-        );
+        ToastAndroid.show(TEXT_TRANSLATE_GROUP_REMIND.MESSAGE_SUCCESS.CREATE_SUCCESS, ToastAndroid.SHORT);
+        router.back();
       }
     } catch (error) {
       console.error("Fund raising remind error:", error);
-      Alert.alert("Lỗi", TEXT_TRANSLATE_GROUP_REMIND.MESSAGE_ERROR.CREATE_FAILED);
+      ToastAndroid.show(TEXT_TRANSLATE_GROUP_REMIND.MESSAGE_ERROR.CREATE_FAILED, ToastAndroid.SHORT);
     }
-  }, [members, groupDetail, isGoalActive]);
+  }, [members, groupDetail, isGoalActive, hasFinancialGoal]);
 
   const handleGoBack = useCallback(() => {
     router.back();
     dispatch(setGroupTabHidden(false));
   }, []);
 
-  const remain = isGoalActive ? (groupGoal - groupCurrent > 0 ? groupGoal - groupCurrent : 0) : 0;
+  const remain = isGoalActive && hasFinancialGoal ? (groupGoal - groupCurrent > 0 ? groupGoal - groupCurrent : 0) : 0;
 
   return {
     state: {
@@ -157,7 +164,7 @@ export default function useGroupRemind() {
       remainDays,
       members,
       isLoading,
-      hasFinancialGoal: !!financialGoalData?.data?.[0]
+      hasFinancialGoal
     },
     refState: {
       formikRef,

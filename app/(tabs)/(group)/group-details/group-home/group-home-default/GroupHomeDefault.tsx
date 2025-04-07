@@ -124,43 +124,47 @@ const GroupHomeDefault = () => {
     </>
   );
 
-  const QuickActionsSection = () => (
-    <View className="mx-4 mt-5 rounded-3xl bg-white p-4 shadow-lg">
-      <Text className="mb-4 text-lg font-bold">{BUTTON.FUND_FACILITIES}</Text>
-      <View className="w-full flex-row justify-around">
-        <TouchableOpacity
-          className="mx-2 flex-1 items-center justify-center"
-          onPress={handler.handleFundRemind}
-        >
-          <View className="mb-3 rounded-full bg-primary/10 p-4">
-            <MaterialIcons
-              name="trending-up"
-              size={28}
-              color={Colors.colors.primary}
-            />
-          </View>
-          <Text className="text-sm font-bold text-primary">
-            {TEXT.REMIND_CONTRIBUTE}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          className="mx-2 flex-1 items-center justify-center"
-          onPress={handler.handleStatistic}
-        >
-          <View className="mb-3 rounded-full bg-primary/10 p-4">
-            <MaterialIcons
-              name="bar-chart"
-              size={28}
-              color={Colors.colors.primary}
-            />
-          </View>
-          <Text className="text-sm font-bold text-primary">
-            {TEXT.STATISTICS}
-          </Text>
-        </TouchableOpacity>
+  const QuickActionsSection = () => {
+    if (!state.isLeader) return null;
+    
+    return (
+      <View className="mx-4 mt-5 rounded-3xl bg-white p-4 shadow-lg">
+        <Text className="mb-4 text-lg font-bold">{BUTTON.FUND_FACILITIES}</Text>
+        <View className="w-full flex-row justify-around">
+          <TouchableOpacity
+            className="mx-2 flex-1 items-center justify-center"
+            onPress={handler.handleFundRemind}
+          >
+            <View className="mb-3 rounded-full bg-primary/10 p-4">
+              <MaterialIcons
+                name="trending-up"
+                size={28}
+                color={Colors.colors.primary}
+              />
+            </View>
+            <Text className="text-sm font-bold text-primary">
+              {TEXT.REMIND_CONTRIBUTE}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="mx-2 flex-1 items-center justify-center"
+            onPress={handler.handleStatistic}
+          >
+            <View className="mb-3 rounded-full bg-primary/10 p-4">
+              <MaterialIcons
+                name="bar-chart"
+                size={28}
+                color={Colors.colors.primary}
+              />
+            </View>
+            <Text className="text-sm font-bold text-primary">
+              {TEXT.STATISTICS}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
-  );
+    );
+  };
 
   const EmptyStateView = ({ message = "Không có lịch sử" }) => (
     <View className="items-center py-8">
