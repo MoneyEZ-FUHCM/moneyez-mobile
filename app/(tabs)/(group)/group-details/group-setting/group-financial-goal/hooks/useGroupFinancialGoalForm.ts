@@ -47,8 +47,8 @@ export default function useGroupFinancialGoalForm() {
   const isSubmitting = isCreating || isUpdating;
   const isLoading = isLoadingGoal;
 
-  const financialGoal = groupFinancialGoalData?.data?.length > 0 
-    ? groupFinancialGoalData.data[0] 
+  const financialGoal = groupFinancialGoalData?.data
+    ? groupFinancialGoalData.data.filter((goal: { isDeleted: boolean }) => goal.isDeleted === false)[0] || null
     : null;
 
   useEffect(() => {

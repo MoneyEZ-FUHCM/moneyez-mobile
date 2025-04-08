@@ -70,6 +70,30 @@ export default function GroupSettingsDefault() {
                   />
                 </Pressable>
               </SectionComponent>
+              <SpaceComponent height={10} />
+              <SectionComponent rootClassName="bg-white rounded-xl shadow-sm">
+                <Pressable
+                  onPress={handler.handleFinancialGoal}
+                  className="flex-row items-center px-4 py-3"
+                >
+                    <View className="mr-4 h-10 w-10 items-center justify-center rounded-full">
+                    <MaterialIcons name="flag" size={20} color="#609084" />
+                    </View>
+                  <View className="flex-1">
+                    <Text className="text-base font-medium">
+                      {
+                        TEXT_TRANSLATE_GROUP_SETTINGS.OPTION
+                          .GROUP_FINANCIAL_GOAL
+                      }
+                    </Text>
+                  </View>
+                  <MaterialIcons
+                    name="chevron-right"
+                    size={20}
+                    color="#9e9e9e"
+                  />
+                </Pressable>
+              </SectionComponent>
             </>
           )}
           <SpaceComponent height={10} />
