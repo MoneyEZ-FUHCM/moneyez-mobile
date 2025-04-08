@@ -1,5 +1,5 @@
 const TEXT_TRANSLATE_INVITE_MEMBER = {
-  HEADER: "Mời thành viên",
+  HEADER: "Thành viên",
   INVITE_BY_EMAIL: "Mời bạn bè qua Email",
   INVITE_BY_QR_CODE: "QR tham gia nhóm",
   MEMBER_LIST: (count: number) => `Danh sách thành viên (${count})`,

@@ -34,6 +34,14 @@
           "resizeMode": "cover",
           "backgroundColor": "#ffffff"
         }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow MoneyEZ to access your photos to save QR codes.",
+          "savePhotosPermission": "Allow MoneyEZ to save QR codes to your photos.",
+          "isAccessMediaLocationEnabled": true
+        }
       ]
     ],
     "experiments": {
