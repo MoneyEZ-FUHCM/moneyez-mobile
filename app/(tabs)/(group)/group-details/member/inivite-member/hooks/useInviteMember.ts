@@ -93,7 +93,20 @@ const useInviteMember = () => {
         }).unwrap();
         await refetch();
         handleCloseModal();
-      } catch (error) {
+      } catch (err: any) {
+        const error = err?.data;
+        if (error.errorCode === "GroupMemberNotFound") {
+          ToastAndroid.show("Thành viên không tồn tại", ToastAndroid.SHORT);
+          return;
+        }
+        if (error.errorCode === "GroupMemberHaveTransaction") {
+          ToastAndroid.show(
+            "Thành viên đã có đóng góp. Không được xóa",
+            ToastAndroid.SHORT,
+          );
+          return;
+        }
+
         ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
       }
     },

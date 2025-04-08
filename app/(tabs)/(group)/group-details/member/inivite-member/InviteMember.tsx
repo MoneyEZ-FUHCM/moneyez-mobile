@@ -327,7 +327,7 @@ const InviteMember = () => {
               <TouchableOpacity
                 className="flex-1 rounded-lg bg-red py-3"
                 onPress={() =>
-                  handler.handleRemoveMember(state.selectedMember?.id)
+                  handler.handleRemoveMember(state.selectedMember?.userId)
                 }
               >
                 <Text className="text-center font-medium text-white">Xóa</Text>

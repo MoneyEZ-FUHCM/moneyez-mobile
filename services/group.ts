@@ -118,7 +118,7 @@ const groupApi = apiSlice.injectEndpoints({
     kickMember: builder.mutation({
       query: ({ groupId, memberId }) => ({
         url: `/groups/${groupId}/members/${memberId}`,
-        method: HTTP_METHOD.GET,
+        method: HTTP_METHOD.DELETE,
       }),
       invalidatesTags: ["Group"],
     }),
