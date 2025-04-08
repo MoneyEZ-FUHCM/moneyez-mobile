@@ -14,10 +14,12 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { memo, useEffect, useRef, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
-import { Modalize } from "react-native-modalize";
+import {
+  GestureHandlerRootView,
+  Swipeable,
+} from "react-native-gesture-handler";
 import TEXT_TRANSLATE_INVITE_MEMBER from "./InviteMember.translate";
 import useInviteMember from "./hooks/useInviteMember";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const CountdownDisplay = memo(({ createdDate }: { createdDate: string }) => {
   const [countdown, setCountdown] = useState("");
@@ -90,56 +92,91 @@ const InviteMember = () => {
   );
 
   const MemberItem = memo(({ item }: { item: GroupMember }) => {
-    return (
-      <View className="mx-4 mb-4 rounded-2xl bg-white p-4 shadow-md">
-        <View className="flex-row items-center justify-between">
-          <View
-            className={`${item.status === GROUP_MEMBER_STATUS.ACTIVE ? "flex-[0.6]" : ""} flex-row items-center space-x-3`}
-          >
-            <Image
-              source={
-                item?.userInfo?.avatarUrl
-                  ? { uri: item.userInfo.avatarUrl }
-                  : AdminAvatar
-              }
-              className="h-12 w-12 rounded-full"
-            />
-            <View>
-              {item.role === "LEADER" && (
-                <Text className="text-xs font-medium text-primary">
-                  {TEXT_TRANSLATE_INVITE_MEMBER.INVITE_MEMBER.OWNER}
-                </Text>
-              )}
-              <Text className="text-base font-bold text-gray-900">
-                {item?.userInfo?.fullName}
-              </Text>
-              <Text className="text-sm text-gray-500">
-                {item?.userInfo?.email}
-              </Text>
-              {item.status === GROUP_MEMBER_STATUS.PENDING && (
-                <CountdownDisplay createdDate={item.createdDate} />
-              )}
-            </View>
-          </View>
-          {item.status === GROUP_MEMBER_STATUS.ACTIVE && (
-            <View className="flex-[0.4] items-end">
-              <Text className="mb-1 text-xs text-gray-500">Tỉ lệ đóng góp</Text>
-              <Text className="text-base font-bold text-primary">
-                {item?.contributionPercentage}%
-              </Text>
-            </View>
-          )}
-          {item.status === GROUP_MEMBER_STATUS.ACTIVE &&
-            state.isLeader &&
-            item.role !== GROUP_ROLE.LEADER && (
-              <TouchableOpacity
-                onPress={() => handler.handleOpenModalRemoveMember(item)}
-                className="ml-2 p-2"
-              >
-                <MaterialIcons name="remove-circle" size={24} color="#b62d2d" />
-              </TouchableOpacity>
-            )}
+    const swipeRef = useRef<Swipeable>(null);
+
+    const renderRightActions = () => {
+      if (
+        !(
+          item.status === GROUP_MEMBER_STATUS.ACTIVE &&
+          state.isLeader &&
+          item.role !== GROUP_ROLE.LEADER
+        )
+      ) {
+        return null;
+      }
+
+      return (
+        <View className="flex h-full w-20 items-center justify-center bg-red">
+          <MaterialIcons name="delete" size={24} color="white" />
         </View>
+      );
+    };
+
+    const handleSwipeOpen = () => {
+      if (swipeRef.current) {
+        swipeRef.current.close();
+      }
+      handler.handleOpenModalRemoveMember(item);
+    };
+
+    const memberContent = (
+      <View className="flex-row items-center justify-between bg-white p-4">
+        <View
+          className={`${item.status === GROUP_MEMBER_STATUS.ACTIVE ? "flex-[0.6]" : ""} flex-row items-center space-x-3`}
+        >
+          <Image
+            source={
+              item?.userInfo?.avatarUrl
+                ? { uri: item.userInfo.avatarUrl }
+                : AdminAvatar
+            }
+            className="h-12 w-12 rounded-full"
+          />
+          <View>
+            {item.role === "LEADER" && (
+              <Text className="text-xs font-medium text-primary">
+                {TEXT_TRANSLATE_INVITE_MEMBER.INVITE_MEMBER.OWNER}
+              </Text>
+            )}
+            <Text className="text-base font-bold text-gray-900">
+              {item?.userInfo?.fullName}
+            </Text>
+            <Text className="text-sm text-gray-500">
+              {item?.userInfo?.email}
+            </Text>
+            {item.status === GROUP_MEMBER_STATUS.PENDING && (
+              <CountdownDisplay createdDate={item.createdDate} />
+            )}
+          </View>
+        </View>
+        {item.status === GROUP_MEMBER_STATUS.ACTIVE && (
+          <View className="flex-[0.4] items-end">
+            <Text className="mb-1 text-xs text-gray-500">Tỉ lệ đóng góp</Text>
+            <Text className="text-base font-bold text-primary">
+              {item?.contributionPercentage}%
+            </Text>
+          </View>
+        )}
+      </View>
+    );
+
+    return (
+      <View className="mx-4 mb-4 overflow-hidden rounded-2xl shadow-md">
+        {item.status === GROUP_MEMBER_STATUS.ACTIVE &&
+        state.isLeader &&
+        item.role !== GROUP_ROLE.LEADER ? (
+          <Swipeable
+            ref={swipeRef}
+            renderRightActions={renderRightActions}
+            rightThreshold={40}
+            onSwipeableOpen={handleSwipeOpen}
+            overshootRight={false}
+          >
+            {memberContent}
+          </Swipeable>
+        ) : (
+          memberContent
+        )}
       </View>
     );
   });
@@ -265,7 +302,7 @@ const InviteMember = () => {
         />
         <ModalLizeComponent
           ref={state.modalizeRef}
-          onClose={handler.handleCloseModal}
+          onClose={handler.handleOpenGroupTab}
         >
           <View className="p-6">
             <Text className="mb-4 text-center text-lg font-bold text-gray-900">
@@ -281,7 +318,7 @@ const InviteMember = () => {
             <View className="flex-row gap-4">
               <TouchableOpacity
                 className="flex-1 rounded-lg border border-gray-200 py-3"
-                onPress={() => handler.handleCloseModal}
+                onPress={() => handler.handleCloseModal()}
               >
                 <Text className="text-center font-medium text-gray-700">
                   Hủy

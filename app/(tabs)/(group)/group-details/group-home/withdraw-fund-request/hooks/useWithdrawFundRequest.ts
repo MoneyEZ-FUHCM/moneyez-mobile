@@ -103,6 +103,7 @@ const useWithdrawFundRequest = () => {
               bankName: response?.data?.bankAccount?.bankName,
               accountHolderName: response?.data?.bankAccount?.accountHolderName,
               description: values?.description,
+              mode: "WITHDRAW",
             },
           });
           const successMessage = isLeader

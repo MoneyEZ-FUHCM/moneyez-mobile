@@ -1,4 +1,5 @@
 import { GROUP_MEMBER_STATUS, GROUP_ROLE } from "@/enums/globals";
+import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";
 import { selectUserInfo } from "@/redux/slices/userSlice";
@@ -9,9 +10,10 @@ import {
 import { GroupMember } from "@/types/group.type";
 import { router } from "expo-router";
 import { useCallback, useMemo, useRef, useState } from "react";
+import { ToastAndroid } from "react-native";
+import { Modalize } from "react-native-modalize";
 import { useDispatch, useSelector } from "react-redux";
 import INVITE_MEMBER_CONSTANTS from "../InviteMember.constant";
-import { Modalize } from "react-native-modalize";
 
 const MEMBER_TABS = {
   ACTIVE: "active",
@@ -28,6 +30,7 @@ const useInviteMember = () => {
   const [selectedMember, setSelectedMember] = useState<GroupMember | null>(
     null,
   );
+  const { SYSTEM_ERROR } = COMMON_CONSTANT;
   const groupDetail = useSelector(selectCurrentGroup);
   const { refetch, isFetching } = useGetGroupDetailQuery(
     {
@@ -91,7 +94,7 @@ const useInviteMember = () => {
         await refetch();
         handleCloseModal();
       } catch (error) {
-        console.error("Failed to remove member:", error);
+        ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
       }
     },
     [groupDetail?.id, removeMember, refetch],
@@ -111,6 +114,10 @@ const useInviteMember = () => {
     setSelectedMember(null);
     dispatch(setGroupTabHidden(false));
   }, [dispatch]);
+
+  const handleOpenGroupTab = useCallback(() => {
+    dispatch(setGroupTabHidden(false));
+  }, []);
 
   return {
     state: {
@@ -136,6 +143,7 @@ const useInviteMember = () => {
       setSelectedMember,
       handleOpenModalRemoveMember,
       handleCloseModal,
+      handleOpenGroupTab,
     },
   };
 };
