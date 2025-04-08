@@ -1,5 +1,14 @@
+import ArrowDown from "@/assets/icons/arrow-down-short-wide.png";
+import ArrowUp from "@/assets/icons/arrow-up-wide-short.png";
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
-import { AntDesign, MaterialIcons } from "@expo/vector-icons";
+import { TRANSACTION_TYPE } from "@/enums/globals";
+import { Colors } from "@/helpers/constants/color";
+import {
+  formatCurrency,
+  formatDateMonthYear,
+  formatTime,
+} from "@/helpers/libs";
+import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
 import {
@@ -10,50 +19,54 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import RECENT_ACTIVITIES from "./GroupHomeDefault.constant";
 import TEXT_TRANSLATE_GROUP_HOME_DEFAULT from "./GroupHomeDefault.translate";
 import useGroupHomeDefault from "./hooks/useGroupHomeDefault";
 
 const GroupHomeDefault = () => {
   const { TITLE, BUTTON, TEXT } = TEXT_TRANSLATE_GROUP_HOME_DEFAULT;
-  const recentActivities = RECENT_ACTIVITIES;
   const { state, handler } = useGroupHomeDefault();
 
   return (
     <SafeAreaViewCustom>
-      <SectionComponent rootClassName="flex-row justify-between items-center h-14 px-4">
+      <SectionComponent rootClassName="flex-row bg-white justify-between items-center h-14 px-4">
         <TouchableOpacity onPress={router.back}>
           <AntDesign name="arrowleft" size={24} color="#000000" />
         </TouchableOpacity>
         <View className="flex-row items-center gap-1">
           <Text className="text-lg font-bold text-black">
-            {TITLE.GROUP_FUNDS}
+            {state.groupDetail?.name}
           </Text>
         </View>
         <TouchableOpacity></TouchableOpacity>
       </SectionComponent>
-      <ScrollView className="flex-1 bg-gray-100">
+      <ScrollView
+        className="flex-1 bg-gray-100"
+        showsVerticalScrollIndicator={false}
+      >
         {/* Header */}
         <ImageBackground
           source={{
-            uri: "https://static.tnex.com.vn/uploads/2022/12/word-image-11078-6.jpeg",
+            uri: state.groupDetail?.imageUrl,
           }}
           className="relative h-52 w-full"
-        ></ImageBackground>
-
-        {/* Fund Overview Card */}
+          resizeMode="stretch"
+        />
         <View className="mx-4 mt-8 rounded-2xl bg-white p-4 shadow-md">
-          <Text className="text-lg font-bold">{TEXT.FUND_OVERVIEW}</Text>
-          <Text className="text-2xl font-bold text-gray-800">
-            {TEXT.FUND_AMOUNT}
+          <Text className="text-lg font-bold">
+            💰 {state.groupDetail?.name}
           </Text>
-          <Text className="text-gray-500">{TEXT.FUND_GOAL}</Text>
+          <Text className="text-2xl font-bold text-gray-800">
+            {formatCurrency(state.groupDetail?.currentBalance as number)}
+          </Text>
+          <Text className="mt-1 text-gray-500">
+            {state.groupDetail?.description}
+          </Text>
           <View className="mt-4 flex-row justify-between">
             <TouchableOpacity
-              className="mx-1 flex-1 flex-row items-center justify-center rounded-full bg-thirdly/70 px-4 py-2 "
+              className="mx-1 flex-1 flex-row items-center justify-center rounded-full bg-thirdly/70 px-4 py-2"
               onPress={handler.handleCreateFundRequest}
             >
-              <AntDesign name="plus" size={16} color="#609084" />
+              <AntDesign name="plus" size={16} color={Colors.colors.primary} />
               <Text className="ml-2 text-base font-bold text-[#609084]">
                 {BUTTON.CONTRIBUTE}
               </Text>
@@ -62,7 +75,7 @@ const GroupHomeDefault = () => {
               className="mx-1 flex-1 flex-row items-center justify-center rounded-full bg-thirdly/70 px-4 py-2"
               onPress={handler.handleCreateWithdrawRequest}
             >
-              <AntDesign name="swap" size={16} color="#609084" />
+              <AntDesign name="swap" size={16} color={Colors.colors.primary} />
               <Text className="ml-2 text-base font-bold text-[#609084]">
                 {BUTTON.WITHDRAW}
               </Text>
@@ -71,21 +84,33 @@ const GroupHomeDefault = () => {
         </View>
 
         {/* Quick Actions */}
-        <SectionComponent rootClassName="mt-4 rounded-xl bg-white p-4 shadow-sm">
-          <View className="flex-row w-full">
+        <SectionComponent rootClassName="mt-4 bg-white p-4 shadow-sm">
+          <View className="w-full flex-row">
             <TouchableOpacity
               className="flex-1 items-center justify-center"
               onPress={handler.handleFundRemind}
             >
-              <MaterialIcons name="trending-up" size={32} color="#609084" />
-              <Text className="text-[#609084] text-base font-bold mt-2">{TEXT.REMIND_CONTRIBUTE}</Text>
+              <MaterialIcons
+                name="trending-up"
+                size={32}
+                color={Colors.colors.primary}
+              />
+              <Text className="mt-2 text-base font-bold text-primary">
+                {TEXT.REMIND_CONTRIBUTE}
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               className="flex-1 items-center justify-center"
               onPress={handler.handleStatistic}
             >
-              <MaterialIcons name="bar-chart" size={32} color="#609084" />
-              <Text className="text-[#609084] text-base font-bold mt-2">{TEXT.STATISTICS}</Text>
+              <MaterialIcons
+                name="bar-chart"
+                size={32}
+                color={Colors.colors.primary}
+              />
+              <Text className="mt-2 text-base font-bold text-primary">
+                {TEXT.STATISTICS}
+              </Text>
             </TouchableOpacity>
           </View>
         </SectionComponent>
@@ -96,65 +121,152 @@ const GroupHomeDefault = () => {
             <Text className="mb-4 text-lg font-bold">
               {TEXT.RECENT_ACTIVITIES}
             </Text>
-            {recentActivities.map((activity, index) => (
-              <View
-                key={index}
-                className="flex-row border-b border-gray-200 py-2"
-              >
-                <Image
-                  source={{ uri: activity.avatar }}
-                  className="h-10 w-10 rounded-full"
-                />
-                <View className="ml-4 flex-1">
-                  <Text className="font-bold text-[#609084]">
-                    {activity.type}
-                  </Text>
-                  <Text className="font-bold">{activity.name}</Text>
-                  <Text className="text-gray-600">{activity.comment}</Text>
+            {state.groupTransaction?.length === 0 ? (
+              <View className="mb-1 items-center">
+                <View className="rounded-[100%] bg-gray-100 p-3">
+                  <FontAwesome
+                    name="inbox"
+                    size={32}
+                    color={Colors.colors.primary}
+                  />
                 </View>
-                <View className="items-end">
-                  <Text className="text-xs text-gray-500">{activity.date}</Text>
-                  <Text className="font-bold">{activity.amount}</Text>
-                </View>
+                <Text className="mt-2 text-gray-500">Không có lịch sử</Text>
               </View>
-            ))}
-            <TouchableOpacity className="mt-4 flex-row items-center justify-center">
-              <Text className="pr-3 text-center font-bold text-[#609084]">
-                {BUTTON.VIEW_ALL}
-              </Text>
-              <AntDesign name="right" size={16} color="#609084" />
-            </TouchableOpacity>
+            ) : (
+              <>
+                {state.groupTransaction?.slice(0, 3)?.map((activity, index) => (
+                  <View
+                    key={activity?.id || index}
+                    className={`relative flex-row items-center border-b border-gray-200 pb-6 pt-2 ${index === 0 && "border-t"}`}
+                  >
+                    <View>
+                      <View className="my-1 flex-row items-center gap-x-1">
+                        <Image
+                          source={
+                            activity?.type === TRANSACTION_TYPE.INCOME
+                              ? ArrowDown
+                              : ArrowUp
+                          }
+                          className="h-5 w-5"
+                          resizeMode="contain"
+                        />
+                        <Text
+                          className={`${activity?.type === TRANSACTION_TYPE.INCOME ? "text-green" : "text-red"} text-xs font-bold`}
+                        >
+                          {activity?.type === TRANSACTION_TYPE.INCOME
+                            ? "Góp quỹ"
+                            : "Rút quỹ"}
+                        </Text>
+                      </View>
+                      <View className="w-full flex-1 flex-row items-center justify-between">
+                        <View className="flex-row space-x-3">
+                          <Image
+                            source={{ uri: activity.avatarUrl }}
+                            className="h-9 w-9 rounded-full"
+                          />
+                          <View>
+                            <Text className="flex-1 text-sm font-bold">
+                              {activity?.createdBy}{" "}
+                            </Text>
+                            <Text>"{activity?.description}"</Text>
+                          </View>
+                        </View>
+                        <View>
+                          <Text
+                            className={`text-base font-bold ${
+                              activity?.type === TRANSACTION_TYPE.INCOME
+                                ? "text-green"
+                                : "text-red"
+                            }`}
+                          >
+                            {activity?.type === TRANSACTION_TYPE.INCOME
+                              ? `+ ${formatCurrency(activity?.amount)}`
+                              : `- ${formatCurrency(activity?.amount)}`}
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                    <View className="absolute bottom-1 right-0 flex-row">
+                      <Text className="text-xs text-text-gray">
+                        {formatTime(activity?.createdDate)} - {""}
+                      </Text>
+                      <Text className="text-xs text-text-gray">
+                        {formatDateMonthYear(activity?.createdDate)}
+                      </Text>
+                    </View>
+                  </View>
+                ))}
+                {(state.groupTransaction?.length ?? 0) >= 3 && (
+                  <TouchableOpacity className="mt-4 flex-row items-center justify-center">
+                    <Text className="pr-3 text-center font-bold text-[#609084]">
+                      {BUTTON.VIEW_ALL}
+                    </Text>
+                    <AntDesign
+                      name="right"
+                      size={16}
+                      color={Colors.colors.primary}
+                    />
+                  </TouchableOpacity>
+                )}
+              </>
+            )}
           </View>
-          {/* Recent Activities */}
           <View className="z-10 mx-4 mb-24 mt-4 rounded-2xl bg-white p-4 shadow-md">
             <Text className="mb-4 text-lg font-bold">{TEXT.EDIT_LOG}</Text>
-            {recentActivities.map((activity, index) => (
-              <View
-                key={index}
-                className="flex-row border-b border-gray-200 py-2"
-              >
-                <Image
-                  source={{ uri: activity.avatar }}
-                  className="h-10 w-10 rounded-full"
-                />
-                <View className="ml-4 flex-1">
-                  <View className="flex-row">
-                    <Text className="mt-3 font-bold">{activity.name}</Text>
-                    <Text className="mt-3"> {TEXT.LEFT_GROUP}</Text>
-                  </View>
+            {state.groupLogs?.length === 0 ? (
+              <View className="mb-1 items-center">
+                <View className="rounded-[100%] bg-gray-100 p-3">
+                  <FontAwesome
+                    name="inbox"
+                    size={32}
+                    color={Colors.colors.primary}
+                  />
                 </View>
-                <View className="items-end">
-                  <Text className="text-xs text-gray-500">{activity.date}</Text>
-                  <Text className="text-xs text-gray-500">20:00</Text>
-                </View>
+                <Text className="mt-2 text-gray-500">Không có lịch sử</Text>
               </View>
-            ))}
-            <TouchableOpacity className="mt-4 flex-row items-center justify-center">
-              <Text className="pr-3 text-center font-bold text-[#609084]">
-                {BUTTON.VIEW_ALL}
-              </Text>
-              <AntDesign name="right" size={16} color="#609084" />
-            </TouchableOpacity>
+            ) : (
+              <>
+                {state.groupLogs?.slice(0, 3)?.map((activity, index) => (
+                  <View
+                    key={activity?.id || index}
+                    className={`relative flex-row items-center border-b border-gray-200 pb-6 pt-2 ${index === 0 && "border-t"}`}
+                  >
+                    <View className="flex-1 flex-row items-center space-x-3">
+                      <Image
+                        source={{ uri: activity.imageUrl }}
+                        className="h-9 w-9 rounded-full"
+                      />
+                      <Text className="flex-1 text-sm font-bold">
+                        {activity?.changedBy}{" "}
+                        <Text className="font-normal">
+                          {activity.changeDescription}
+                        </Text>
+                      </Text>
+                    </View>
+                    <View className="absolute bottom-1 right-0 flex-row">
+                      <Text className="text-xs text-text-gray">
+                        {formatTime(activity?.createdDate)} - {""}
+                      </Text>
+                      <Text className="text-xs text-text-gray">
+                        {formatDateMonthYear(activity?.createdDate)}
+                      </Text>
+                    </View>
+                  </View>
+                ))}
+                {(state.groupLogs?.length ?? 0) >= 3 && (
+                  <TouchableOpacity className="mt-4 flex-row items-center justify-center">
+                    <Text className="pr-3 text-center font-bold text-[#609084]">
+                      {BUTTON.VIEW_ALL}
+                    </Text>
+                    <AntDesign
+                      name="right"
+                      size={16}
+                      color={Colors.colors.primary}
+                    />
+                  </TouchableOpacity>
+                )}
+              </>
+            )}
           </View>
         </SectionComponent>
       </ScrollView>

@@ -3,6 +3,7 @@ import { TransactionType } from "./invidual.types";
 
 export interface Transaction {
   [x: string]: any;
+  [x: string]: any;
   id: string;
   groupId: string | null;
   userId: string;
@@ -61,5 +62,40 @@ export interface MarkedDates {
       dotColor?: string;
       selected?: boolean;
       selectedColor?: string;
+  };
+}
+
+export interface GroupTransaction {
+  groupId: string;
+  userId: string;
+  amount: number;
+  type: number;
+  transactionDate: string;
+  description: string;
+  images: string[];
+  status: "PENDING" | "APPROVED" | "REJECTED";
+  approvalRequired: boolean;
+  requestCode: string | null;
+  insertType: "MANUAL" | "AUTO";
+  avatarUrl: string;
+  id: string;
+  createdDate: string;
+  createdBy: string;
+  updatedDate: string | null;
+  updatedBy: string | null;
+  isDeleted: boolean;
+}
+
+export type GroupTransactionList = GroupTransaction[];
+export interface TransactionsByDate {
+  [date: string]: Transaction[];
+}
+
+export interface MarkedDates {
+  [date: string]: {
+    marked?: boolean;
+    dotColor?: string;
+    selected?: boolean;
+    selectedColor?: string;
   };
 }

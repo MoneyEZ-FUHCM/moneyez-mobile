@@ -8,6 +8,7 @@ import systemReducer from "./slices/systemSlice";
 import userSpendingModelReducer from "./slices/userSpendingModelSlice";
 import transactionReducer from "./slices/transactionSlice";
 import groupReducer from "./slices/groupSlice";
+import apiSlice from "./slices/apiSlice";
 
 const rootReducer = combineReducers({
   [authApi.reducerPath]: authApi.reducer,
@@ -23,7 +24,7 @@ const rootReducer = combineReducers({
 export const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(authApi.middleware),
+    getDefaultMiddleware().concat(apiSlice.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

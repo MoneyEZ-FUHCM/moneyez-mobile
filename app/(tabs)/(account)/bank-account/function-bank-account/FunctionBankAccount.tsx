@@ -184,7 +184,7 @@ const FunctionBankAccount = () => {
             onScroll: handler.handleScroll,
             scrollEventThrottle: 16,
           }}
-          modalStyle={{ minHeight: 796 }}
+          modalStyle={{ minHeight: 500 }}
           ref={state.bankSelectModalRef}
           onOverlayPress={handler.handleCloseModal}
           HeaderComponent={

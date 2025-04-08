@@ -4,28 +4,22 @@ import {
   ProgressCircleComponent,
   SafeAreaViewCustom,
   SectionComponent,
-  SpaceComponent
+  SpaceComponent,
 } from "@/components";
 import { TextAreaComponent } from "@/components/TextAreaComponent";
 import { formatCurrency, formatCurrencyInput } from "@/helpers/libs";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Formik } from "formik";
 import React from "react";
-import {
-  Image,
-  Pressable,
-  ScrollView,
-  Text,
-  View
-} from "react-native";
+import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import * as Yup from "yup";
 import TEXT_TRANSLATE_GROUP_REMIND from "./GroupFundRemind.translate";
 import useGroupRemind from "./hooks/useGroupFundRemind";
 
 export default function GroupRemindPage() {
   const { state, refState, handler } = useGroupRemind();
-  const { LABELS, BUTTON, TABS, MESSAGE_VALIDATE } = TEXT_TRANSLATE_GROUP_REMIND;
-
+  const { LABELS, BUTTON, TABS, MESSAGE_VALIDATE } =
+    TEXT_TRANSLATE_GROUP_REMIND;
 
   const FundRequestSchema = Yup.object().shape({
     amount: Yup.string()
@@ -40,7 +34,7 @@ export default function GroupRemindPage() {
       ),
     description: Yup.string()
       .required(MESSAGE_VALIDATE.DESCRIPTION_REQUIRED)
-      .min(5, MESSAGE_VALIDATE.DESCRIPTION_MIN_LENGTH)
+      .min(5, MESSAGE_VALIDATE.DESCRIPTION_MIN_LENGTH),
   });
 
   return (
@@ -68,32 +62,36 @@ export default function GroupRemindPage() {
             <Text className="text-base font-semibold">
               {LABELS.GROUP_TARGET} ({state.members.length} thành viên)
             </Text>
-            <View className="flex-row items-center mt-2">
-              <ProgressCircleComponent
-                value={state.groupCurrent / state.groupGoal}
-                size={60}
-                color="#609084"
-                thickness={4}
-                showPercentage={true}
-              />
-              <View className="ml-4 gap-1">
+            <View className="mt-2 flex-row items-center space-x-3">
+              <View>
+                <ProgressCircleComponent
+                  value={state.groupCurrent / state.groupGoal}
+                  size={60}
+                  color="#609084"
+                  thickness={4}
+                  showPercentage={true}
+                />
+              </View>
+              <View className="gap-1">
                 <Text>
                   <Text className="text-lg font-semibold text-[#609084]">
                     {formatCurrency(state.groupCurrent)}
                   </Text>
                   <Text className="text-sm text-gray-500">
-                    {" / "}{formatCurrency(state.groupGoal)}
+                    {" / "}
+                    {formatCurrency(state.groupGoal)}
                   </Text>
                 </Text>
                 <Text className="text-sm text-[#848484]">
                   {LABELS.REMAINING}: {formatCurrency(state.remain)}
                 </Text>
                 <Text className="text-sm">
-                  <Text className="text-gray-500 font-semibold">
+                  <Text className="font-semibold text-gray-500">
                     {LABELS.DUE_DATE}: {state.dueDate}
                   </Text>
                   <Text className="text-gray-500">
-                    {" "}(còn lại {state.remainDays} ngày)
+                    {" "}
+                    (còn lại {state.remainDays} ngày)
                   </Text>
                 </Text>
               </View>
@@ -101,31 +99,37 @@ export default function GroupRemindPage() {
           </SectionComponent>
 
           {/* Tabs */}
-          <View className="mt-4 flex-row bg-white rounded-lg overflow-hidden">
+          <View className="mt-4 flex-row overflow-hidden rounded-lg bg-white">
             <Pressable
               onPress={() => handler.handleSelectTab("add")}
-              className={`flex-1 items-center py-3 ${state.selectedTab === "add" ? "border-b-4 border-[#609084]" : ""
-                }`}
+              className={`flex-1 items-center py-3 ${
+                state.selectedTab === "add" ? "border-b-4 border-[#609084]" : ""
+              }`}
             >
               <Text
-                className={`text-sm ${state.selectedTab === "add"
-                  ? "text-[#609084] font-semibold"
-                  : "text-black"
-                  }`}
+                className={`text-sm ${
+                  state.selectedTab === "add"
+                    ? "font-semibold text-[#609084]"
+                    : "text-black"
+                }`}
               >
                 {TABS.ADD}
               </Text>
             </Pressable>
             <Pressable
               onPress={() => handler.handleSelectTab("history")}
-              className={`flex-1 items-center py-3 ${state.selectedTab === "history" ? "border-b-4 border-[#609084]" : ""
-                }`}
+              className={`flex-1 items-center py-3 ${
+                state.selectedTab === "history"
+                  ? "border-b-4 border-[#609084]"
+                  : ""
+              }`}
             >
               <Text
-                className={`text-sm ${state.selectedTab === "history"
-                  ? "text-[#609084] font-semibold"
-                  : "text-black"
-                  }`}
+                className={`text-sm ${
+                  state.selectedTab === "history"
+                    ? "font-semibold text-[#609084]"
+                    : "text-black"
+                }`}
               >
                 {TABS.HISTORY}
               </Text>
@@ -135,25 +139,24 @@ export default function GroupRemindPage() {
           {/* Tab Content: Tạo mới */}
           {state.selectedTab === "add" && (
             <>
-              <SectionComponent rootClassName="rounded-2 bg-white shadow-sm">
-                <Text className="text-base font-semibold py-4">
+              <SectionComponent rootClassName="rounded-2 bg-white shadow-sm px-3 pb-5">
+                <Text className="py-4 text-base font-semibold">
                   {LABELS.ADD_REMIND}
                 </Text>
                 <Formik
                   initialValues={{
                     amount: "",
-                    description: ""
+                    description: "",
                   }}
                   validationSchema={FundRequestSchema}
                   innerRef={(ref) => (refState.formikRef.current = ref)}
                   onSubmit={(values) => {
-                    handler.handleCreateRemind(values)
+                    handler.handleCreateRemind(values);
                   }}
                 >
                   {({ handleSubmit }) => {
                     handler.handleSubmitRef.current = handleSubmit;
                     return (
-
                       <>
                         <SectionComponent>
                           <InputComponent
@@ -176,24 +179,24 @@ export default function GroupRemindPage() {
                           />
                         </SectionComponent>
                       </>
-                    )
+                    );
                   }}
                 </Formik>
               </SectionComponent>
 
               {/* Members List */}
               <SectionComponent rootClassName=" mt-4 rounded-[10px] bg-white p-4 shadow-sm">
-                <View className="flex-row items-center justify-between mb-2">
+                <View className="mb-2 flex-row items-center justify-between">
                   <Text className="text-base font-semibold">
                     {LABELS.MEMBER_LIST}
                   </Text>
-                    <Pressable onPress={handler.handleToggleAll}>
+                  <Pressable onPress={handler.handleToggleAll}>
                     <Text className="text-sm font-semibold text-[#609084]">
-                      {state.members.every(member => member.checked) 
-                      ? TEXT_TRANSLATE_GROUP_REMIND.BUTTON.UNSELECT_ALL 
-                      : TEXT_TRANSLATE_GROUP_REMIND.BUTTON.SELECT_ALL}
+                      {state.members.every((member) => member.checked)
+                        ? TEXT_TRANSLATE_GROUP_REMIND.BUTTON.UNSELECT_ALL
+                        : TEXT_TRANSLATE_GROUP_REMIND.BUTTON.SELECT_ALL}
                     </Text>
-                    </Pressable>
+                  </Pressable>
                 </View>
                 {state.members.map((member) => (
                   <View
@@ -201,11 +204,7 @@ export default function GroupRemindPage() {
                     className="flex-row items-center justify-between py-2"
                   >
                     <Image
-                      source={
-                        member.avatar
-                          ? member.avatar
-                          : Admin
-                      }
+                      source={member.avatar ? member.avatar : Admin}
                       className="h-12 w-12 rounded-full"
                       resizeMode="cover"
                     />
@@ -216,20 +215,35 @@ export default function GroupRemindPage() {
                       <Text className="text-sm text-gray-500">
                         {LABELS.CONTRIBUTE_RATIO}: {member.ratio}%
                       </Text>
-                      <Text className="text-sm pt-1">
-                        <Text className="text-[#848484]">{LABELS.CONTRIBUTED}: </Text>
+                      <Text className="pt-1 text-sm">
+                        <Text className="text-[#848484]">
+                          {LABELS.CONTRIBUTED}:{" "}
+                        </Text>
                         <Text className="text-base font-semibold text-[#609084]">
                           {formatCurrency(member.contributed)}
                         </Text>
-                        <Text className="text-[#848484]"> / {formatCurrency(member.target)}</Text>
+                        <Text className="text-[#848484]">
+                          {" "}
+                          / {formatCurrency(member.target)}
+                        </Text>
                       </Text>
                     </View>
-                    <Pressable onPress={() => handler.handleToggleMember(member.id)}>
-                      <View className="w-6 h-6 items-center justify-center">
+                    <Pressable
+                      onPress={() => handler.handleToggleMember(member.id)}
+                    >
+                      <View className="h-6 w-6 items-center justify-center">
                         {member.checked ? (
-                          <MaterialIcons name="check-box" size={24} color="#609084" />
+                          <MaterialIcons
+                            name="check-box"
+                            size={24}
+                            color="#609084"
+                          />
                         ) : (
-                          <MaterialIcons name="check-box-outline-blank" size={24} color="#d1d5db" />
+                          <MaterialIcons
+                            name="check-box-outline-blank"
+                            size={24}
+                            color="#d1d5db"
+                          />
                         )}
                       </View>
                     </Pressable>
@@ -242,7 +256,7 @@ export default function GroupRemindPage() {
           {/* Tab Content */}
           {state.selectedTab === "history" && (
             <SectionComponent rootClassName=" mt-4 rounded-[10px] bg-white p-4 shadow-sm">
-              <Text className="text-base font-semibold mb-2">
+              <Text className="mb-2 text-base font-semibold">
                 Lịch sử lời nhắc
               </Text>
               <Text className="text-sm text-gray-500">

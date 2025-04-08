@@ -10,6 +10,7 @@ import { useDispatch } from "react-redux";
 import TEXT_TRANSLATE_GROUP_LIST from "../GroupList.translate";
 import { Camera } from "expo-camera";
 import { Modalize } from "react-native-modalize";
+import { GroupDetail } from "@/types/group.type";
 
 const useGroupList = () => {
   const pageSize = 10;
@@ -20,7 +21,7 @@ const useGroupList = () => {
     {},
   );
   const [pageIndex, setPageIndex] = useState(1);
-  const [groups, setGroups] = useState<Group[]>([]);
+  const [groups, setGroups] = useState<GroupDetail[]>([]);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [isFetchingData, setIsFetchingData] = useState(true);
   const [isRefetching, setIsRefetching] = useState(false);
@@ -57,8 +58,11 @@ const useGroupList = () => {
   }, [data?.items]);
 
   const handleNavigateAndHideTabbar = useCallback(
-    (group: Group) => () => {
-      router.navigate(PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT as any);
+    (group: GroupDetail) => () => {
+      router.navigate({
+        pathname: PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT as any,
+        params: { id: group?.id },
+      });
       dispatch(setCurrentGroup(group));
       dispatch(setMainTabHidden(true));
       dispatch(setGroupTabHidden(false));

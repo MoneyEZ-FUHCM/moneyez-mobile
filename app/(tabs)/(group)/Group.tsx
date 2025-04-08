@@ -39,7 +39,6 @@ const Group = () => {
     setMemberCode,
     handleSubmitJoinGroup,
   } = handler;
-  const PRIMARY_COLOR = "#609084";
 
   return (
     <GestureHandlerRootView>
@@ -55,21 +54,12 @@ const Group = () => {
             <Text className="text-lg font-bold">
               {TEXT_TRANSLATE_GROUP_LIST.TITLE.GROUP_FUND}
             </Text>
-            {groups && groups?.length > 0 ? (
-              <TouchableOpacity
-                onPress={handler.handleRefetchGrouplist}
-                className="absolute right-3 rounded-full p-2"
-              >
-                <AntDesign name="reload1" size={24} />
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                onPress={handleScanQR}
-                className="absolute right-3 rounded-full p-2"
-              >
-                <Scan size="24" />
-              </TouchableOpacity>
-            )}
+            <TouchableOpacity
+              onPress={handleScanQR}
+              className="absolute right-3 rounded-full p-2"
+            >
+              <Scan size="24" />
+            </TouchableOpacity>
           </SectionComponent>
         )}
         {isShowScanner ? (
@@ -78,7 +68,9 @@ const Group = () => {
             onScanSuccess={handleScanSuccess}
           />
         ) : (
-          <LoadingSectionWrapper isLoading={isFetchingData}>
+          <LoadingSectionWrapper
+            isLoading={isFetchingData || state.isRefetching}
+          >
             {groups && groups?.length > 0 ? (
               <FlatListCustom
                 className="mx-5 pt-5"
@@ -97,7 +89,7 @@ const Group = () => {
                       src={item?.imageUrl}
                       alt="star"
                       className="h-14 w-14 rounded-full"
-                      resizeMode="contain"
+                      resizeMode="cover"
                     />
                     <View className="ml-4 flex-1 space-y-1">
                       <Text className="text-lg font-semibold text-gray-900">
@@ -118,6 +110,8 @@ const Group = () => {
                   </TouchableOpacity>
                 )}
                 onLoadMore={handleLoadMore}
+                refreshing={state.isRefetching}
+                onRefresh={handler.handleRefetchGrouplist}
               />
             ) : (
               <View
