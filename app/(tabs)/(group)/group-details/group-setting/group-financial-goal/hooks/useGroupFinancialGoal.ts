@@ -89,6 +89,7 @@ export default function useGroupFinancialGoal() {
           ToastAndroid.SHORT
         );
         handleCloseDeleteModal();
+        dispatch(setGroupTabHidden(false));
         router.back();
         refetch();
       }
