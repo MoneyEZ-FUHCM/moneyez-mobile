@@ -64,7 +64,7 @@ export default function GroupStatisticPage() {
             {/* Group Target Info */}
             <SectionComponent rootClassName="rounded-2 bg-white p-4 shadow-sm">
               <Text className="text-base font-semibold">
-                {LABELS.GROUP_TARGET} ({state.members.length} thành viên)
+                {LABELS.GROUP_TARGET}: {state.goalName} ({state.members.length} thành viên)
               </Text>
               <View className="mt-2 flex-row items-center space-x-3">
                 <View>

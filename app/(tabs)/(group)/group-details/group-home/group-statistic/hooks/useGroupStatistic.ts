@@ -31,9 +31,15 @@ export default function useGroupStatistic() {
 
   const [members, setMembers] = useState<StatisticMemberData[]>([]);
   
-  const groupGoal = financialGoalData?.data?.[0]?.targetAmount || 0;
-  const groupCurrent = financialGoalData?.data?.[0]?.currentAmount || groupDetail?.currentBalance || 0;
-  const deadlineDate = financialGoalData?.data?.[0]?.deadline;
+  const hasFinancialGoal = financialGoalData?.data && financialGoalData.data.length > 0;
+
+  const activeFinancialGoals = hasFinancialGoal ? financialGoalData?.data?.filter((goal: { isDeleted: boolean }) => !goal.isDeleted) || [] : [];
+  const activeFinancialGoal = activeFinancialGoals.length > 0 ? activeFinancialGoals[0] : null;
+  
+  const goalName = activeFinancialGoal?.name
+  const groupGoal = activeFinancialGoal?.targetAmount || 0;
+  const groupCurrent = activeFinancialGoal?.currentAmount || groupDetail?.currentBalance || 0;
+  const deadlineDate = activeFinancialGoal?.deadline || null;
 
   const dueDate = formatDate(deadlineDate, 'DD.MM.YYYY');
   const remainDays = moment(deadlineDate).diff(moment(), 'days');
@@ -77,6 +83,7 @@ export default function useGroupStatistic() {
 
   return {
     state: {
+      goalName,
       groupGoal,
       groupCurrent,
       remain,

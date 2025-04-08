@@ -61,7 +61,7 @@ export default function GroupRemindPage() {
           {state.isGoalActive && state.hasFinancialGoal && (
             <SectionComponent rootClassName="rounded-2 bg-white p-4 shadow-sm">
               <Text className="text-base font-semibold">
-                {LABELS.GROUP_TARGET} ({state.members.length} thành viên)
+                {LABELS.GROUP_TARGET}: {state.goalName} ({state.members.length} thành viên)
               </Text>
               <View className="mt-2 flex-row items-center space-x-3">
                 <View>
@@ -103,34 +103,30 @@ export default function GroupRemindPage() {
           <View className="mt-4 flex-row overflow-hidden rounded-lg bg-white">
             <Pressable
               onPress={() => handler.handleSelectTab("add")}
-              className={`flex-1 items-center py-3 ${
-                state.selectedTab === "add" ? "border-b-4 border-[#609084]" : ""
-              }`}
+              className={`flex-1 items-center py-3 ${state.selectedTab === "add" ? "border-b-4 border-[#609084]" : ""
+                }`}
             >
               <Text
-                className={`text-sm ${
-                  state.selectedTab === "add"
+                className={`text-sm ${state.selectedTab === "add"
                     ? "font-semibold text-[#609084]"
                     : "text-black"
-                }`}
+                  }`}
               >
                 {TABS.ADD}
               </Text>
             </Pressable>
             <Pressable
               onPress={() => handler.handleSelectTab("history")}
-              className={`flex-1 items-center py-3 ${
-                state.selectedTab === "history"
+              className={`flex-1 items-center py-3 ${state.selectedTab === "history"
                   ? "border-b-4 border-[#609084]"
                   : ""
-              }`}
+                }`}
             >
               <Text
-                className={`text-sm ${
-                  state.selectedTab === "history"
+                className={`text-sm ${state.selectedTab === "history"
                     ? "font-semibold text-[#609084]"
                     : "text-black"
-                }`}
+                  }`}
               >
                 {TABS.HISTORY}
               </Text>

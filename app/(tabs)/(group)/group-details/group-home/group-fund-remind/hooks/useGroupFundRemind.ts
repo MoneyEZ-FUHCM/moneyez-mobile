@@ -39,9 +39,13 @@ export default function useGroupRemind() {
 
   const hasFinancialGoal = financialGoalData?.data && financialGoalData.data.length > 0;
 
-  const groupGoal = hasFinancialGoal ? financialGoalData?.data?.[0]?.targetAmount || 0 : 0;
-  const groupCurrent = hasFinancialGoal ? financialGoalData?.data?.[0]?.currentAmount || groupDetail?.currentBalance || 0 : 0;
-  const deadlineDate = hasFinancialGoal ? financialGoalData?.data?.[0]?.deadline : null;
+  const activeFinancialGoals = hasFinancialGoal ? financialGoalData?.data?.filter((goal: { isDeleted: boolean }) => !goal.isDeleted) || [] : [];
+  const activeFinancialGoal = activeFinancialGoals.length > 0 ? activeFinancialGoals[0] : null;
+  
+  const goalName = activeFinancialGoal?.name
+  const groupGoal = activeFinancialGoal?.targetAmount || 0;
+  const groupCurrent = activeFinancialGoal?.currentAmount || groupDetail?.currentBalance || 0;
+  const deadlineDate = activeFinancialGoal?.deadline || null;
 
   const dueDate = deadlineDate ? formatDate(deadlineDate, 'DD.MM.YYYY') : '';
   const remainDays = deadlineDate ? moment(deadlineDate).diff(moment(), 'days') : 0;
@@ -157,6 +161,7 @@ export default function useGroupRemind() {
     state: {
       selectedTab,
       isGoalActive,
+      goalName,
       groupGoal,
       groupCurrent,
       remain,
