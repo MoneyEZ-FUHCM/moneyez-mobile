@@ -60,6 +60,36 @@ const financialGoalApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["FinancialGoal"],
     }),
+    getGroupFinancialGoal: builder.query({
+      query: ({ groupId }) => ({
+        url: `/financial-goals/group?GroupId=${groupId}`,
+        method: HTTP_METHOD.GET,
+      }),
+      providesTags: ["FinancialGoal"],
+    }),
+    createGroupFinancialGoal: builder.mutation({
+      query: (payload) => ({
+        url: `/financial-goals/group`,
+        method: HTTP_METHOD.POST,
+        body: payload,
+      }),
+      invalidatesTags: ["FinancialGoal"],
+    }),
+    updateGroupFinancialGoal: builder.mutation({
+      query: (payload) => ({
+        url: `/financial-goals/group`,
+        method: HTTP_METHOD.PUT,
+        body: payload,
+      }),
+      invalidatesTags: ["FinancialGoal"],
+    }),
+    deleteGroupFinancialGoal: builder.mutation({
+      query: ({ id }) => ({
+        url: `/financial-goals/group/${id}`,
+        method: HTTP_METHOD.DELETE,
+      }),
+      invalidatesTags: ["FinancialGoal"],
+    }),
   }),
 });
 
@@ -71,6 +101,10 @@ export const {
   useGetPersonalLimitBudgetSubcategoryQuery,
   useGetPersonalFinancialGoalChartQuery,
   useUpdateFinancialGoalMutation,
+  useGetGroupFinancialGoalQuery,
+  useCreateGroupFinancialGoalMutation,
+  useUpdateGroupFinancialGoalMutation,
+  useDeleteGroupFinancialGoalMutation,
 } = financialGoalApi;
 
 export default financialGoalApi;

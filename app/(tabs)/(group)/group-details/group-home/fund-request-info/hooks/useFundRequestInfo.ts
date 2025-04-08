@@ -78,10 +78,17 @@ const useFundRequestInfo = () => {
   };
 
   const handleCreateFundRequest = useCallback(() => {
-    router.replace({
-      pathname: GROUP_HOME.CREATE_FUND_REQUEST as any,
-      params: { id: fundRequest?.id },
-    });
+    if (mode === "WITHDRAW") {
+      router.replace({
+        pathname: GROUP_HOME.WITHDRAW_FUND_REQUEST as any,
+        params: { id: fundRequest?.id },
+      });
+    } else {
+      router.replace({
+        pathname: GROUP_HOME.CREATE_FUND_REQUEST as any,
+        params: { id: fundRequest?.id },
+      });
+    }
   }, []);
 
   const getSuccessMessage = useCallback(() => {
