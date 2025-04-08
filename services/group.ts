@@ -124,7 +124,7 @@ const groupApi = apiSlice.injectEndpoints({
     }),
     fundRaisingRemind: builder.mutation({
       query: (payload) => ({
-        url: `/groups/fund-rasising/remind`,
+        url: `/groups/fund-raising/remind`,
         method: HTTP_METHOD.POST,
         body: payload,
       }),

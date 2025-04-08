@@ -83,6 +83,10 @@ const PATH_NAME = {
       "group-details/group-setting/group-setting-default/GroupSettingDefault",
     GROUP_RATIO_MEMBER:
       "group-details/group-setting/group-ratio-member/GroupRatioMember",
+    GROUP_FINANCIAL_GOAL:
+      "group-details/group-setting/group-financial-goal/GroupFinancialGoal",
+    GROUP_FINANCIAL_GOAL_FORM:
+      "group-details/group-setting/group-financial-goal/GroupFinancialGoalForm",
   },
   MEMBER: {
     GROUP_MEMBER: "group-details/member/group-member/GroupMember",
