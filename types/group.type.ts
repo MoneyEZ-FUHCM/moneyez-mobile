@@ -67,5 +67,5 @@ export type MemberLogsList = MemberLogs[];
 
 export interface QrData {
   groupId: string;
-  inviteCode: string;
+  qrCode: string;
 }

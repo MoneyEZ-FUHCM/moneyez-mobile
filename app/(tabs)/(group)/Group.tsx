@@ -298,7 +298,7 @@ const Group = () => {
                   <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
                 </TouchableOpacity>
                 <View className="absolute bottom-0 left-0 right-0 p-4">
-                  <Text className="shadow-text text-xl font-bold text-white">
+                  <Text className="shadow-text text-2xl font-bold text-white">
                     {state.groupDetailPreview?.name}
                   </Text>
                 </View>
@@ -338,69 +338,75 @@ const Group = () => {
                     </View>
                   </View>
                   {state.groupDetailPreview?.groupMembers &&
-                    state.groupDetailPreview.groupMembers?.length > 0 && (
-                      <View className="mt-2">
-                        <ScrollView
-                          horizontal
-                          showsHorizontalScrollIndicator={false}
-                        >
-                          <View className="flex-row space-x-3">
-                            {state.groupDetailPreview?.groupMembers
-                              ?.slice(0, 10)
-                              ?.map((member: GroupMember, index: number) => (
-                                <View key={index} className="items-center">
-                                  <View className="h-16 w-16 overflow-hidden rounded-full">
-                                    {member?.userInfo?.avatarUrl ? (
-                                      <Image
-                                        source={{
-                                          uri: member?.userInfo?.avatarUrl,
-                                        }}
-                                        className="h-full w-full"
-                                        resizeMode="cover"
-                                      />
-                                    ) : (
-                                      <View className="h-full w-full items-center justify-center rounded-full bg-primary">
-                                        <Text className="text-4xl font-medium uppercase text-white">
-                                          {member?.userInfo?.fullName?.charAt(
-                                            0,
-                                          )}
-                                        </Text>
+                    (() => {
+                      const activeMembers =
+                        state.groupDetailPreview?.groupMembers;
+                      const visibleMembers = activeMembers.slice(0, 4);
+                      const remainingCount =
+                        activeMembers.length - visibleMembers.length;
+
+                      return activeMembers.length > 0 ? (
+                        <View className="mt-2">
+                          <ScrollView
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                          >
+                            <View className="flex-row space-x-3">
+                              {visibleMembers.map(
+                                (member: GroupMember, index: number) => (
+                                  <View key={index} className="items-center">
+                                    <View className="h-16 w-16 overflow-hidden rounded-full">
+                                      {member?.userInfo?.avatarUrl ? (
+                                        <Image
+                                          source={{
+                                            uri: member?.userInfo?.avatarUrl,
+                                          }}
+                                          className="h-full w-full"
+                                          resizeMode="cover"
+                                        />
+                                      ) : (
+                                        <View className="h-full w-full items-center justify-center rounded-full bg-primary">
+                                          <Text className="text-4xl font-medium uppercase text-white">
+                                            {member?.userInfo?.fullName?.charAt(
+                                              0,
+                                            )}
+                                          </Text>
+                                        </View>
+                                      )}
+                                    </View>
+                                    {member?.role === GROUP_ROLE.LEADER && (
+                                      <View className="absolute right-2 top-0 h-5 w-5 items-center justify-center rounded-full border border-white bg-amber-500">
+                                        <Ionicons
+                                          name="star"
+                                          size={12}
+                                          color="#FFFFFF"
+                                        />
                                       </View>
                                     )}
+                                    <Text
+                                      className="mt-1 w-[100px] text-center text-xs text-gray-700"
+                                      numberOfLines={2}
+                                    >
+                                      {member?.userInfo?.fullName}
+                                    </Text>
                                   </View>
-                                  {member?.role === GROUP_ROLE.LEADER && (
-                                    <View className="absolute right-2 top-0 h-5 w-5 items-center justify-center rounded-full border border-white bg-amber-500">
-                                      <Ionicons
-                                        name="star"
-                                        size={12}
-                                        color="#FFFFFF"
-                                      />
-                                    </View>
-                                  )}
-                                  <Text
-                                    className="mt-1 w-[100px] text-center text-xs text-gray-700"
-                                    numberOfLines={2}
-                                  >
-                                    {member?.userInfo?.fullName}
-                                  </Text>
+                                ),
+                              )}
+
+                              {remainingCount > 0 && (
+                                <View className="items-center justify-center">
+                                  <View className="h-16 w-16 items-center justify-center rounded-full bg-gray-200">
+                                    <Text className="font-bold text-gray-700">
+                                      +{remainingCount}
+                                    </Text>
+                                  </View>
                                 </View>
-                              ))}
-                            {state.groupDetailPreview?.groupMembers?.length >
-                              10 && (
-                              <View className="items-center justify-center">
-                                <View className="h-16 w-16 items-center justify-center rounded-full bg-gray-200">
-                                  <Text className="font-bold text-gray-700">
-                                    +
-                                    {state.groupDetailPreview?.groupMembers
-                                      ?.length - 10}
-                                  </Text>
-                                </View>
-                              </View>
-                            )}
-                          </View>
-                        </ScrollView>
-                      </View>
-                    )}
+                              )}
+                            </View>
+                          </ScrollView>
+                        </View>
+                      ) : null;
+                    })()}
                 </View>
                 <View className="mb-4 flex-row space-x-4">
                   <View className="flex-1 rounded-2xl bg-white p-4 shadow">

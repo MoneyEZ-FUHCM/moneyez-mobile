@@ -7,10 +7,9 @@ import { setGroupTabHidden, setMainTabHidden } from "@/redux/slices/tabSlice";
 import {
   useGetGroupDetailQuery,
   useGetGroupsQuery,
-  useInviteMemberQRCodeMutation,
   useLazyInviteMemberQRCodeAcceptQuery,
 } from "@/services/group";
-import { GroupDetail } from "@/types/group.type";
+import { GroupDetail, GroupMember } from "@/types/group.type";
 import { Camera } from "expo-camera";
 import { router } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -18,6 +17,7 @@ import { ToastAndroid } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { useDispatch } from "react-redux";
 import TEXT_TRANSLATE_GROUP_LIST from "../GroupList.translate";
+import { GROUP_MEMBER_STATUS } from "@/enums/globals";
 
 const useGroupList = () => {
   const pageSize = 10;
@@ -32,13 +32,12 @@ const useGroupList = () => {
   const [isFetchingData, setIsFetchingData] = useState(true);
   const [isRefetching, setIsRefetching] = useState(false);
   const isScanningRef = useRef(false);
-  const [token, setToken] = useState("");
-  const { SYSTEM_ERROR } = COMMON_CONSTANT;
-  const { data: groupDetailPreview, isFetching } = useGetGroupDetailQuery(
-    { id: token },
-    { skip: !token },
-  );
-  const [inviteMemberByQRCode] = useInviteMemberQRCodeMutation();
+  const [groupId, setGroupId] = useState("");
+  const [qrCode, setQrCode] = useState("");
+  const { SYSTEM_ERROR, HTTP_STATUS } = COMMON_CONSTANT;
+  const { data: groupDetailPreview, isFetching } = useGetGroupDetailQuery({
+    id: groupId,
+  });
   const [trigger] = useLazyInviteMemberQRCodeAcceptQuery();
 
   const [isShowScanner, setIsShowScanner] = useState(false);
@@ -142,21 +141,39 @@ const useGroupList = () => {
     }
   };
 
+  const cleanupStates = useCallback(() => {
+    setGroupId("");
+    setQrCode("");
+    setIsShowScanner(false);
+    isScanningRef.current = false;
+    dispatch(setLoading(false));
+  }, [dispatch]);
+
   const handleScanSuccess = async (scannedToken: string) => {
     if (isScanningRef.current) return;
     isScanningRef.current = true;
-    const { groupId, qrCode } = scannedToken;
+
+    let parsedData: any;
+    try {
+      parsedData = JSON.parse(scannedToken);
+    } catch (err) {
+      ToastAndroid.show("Mã QR không hợp lệ", ToastAndroid.SHORT);
+      cleanupStates();
+      isScanningRef.current = false;
+      return;
+    }
 
     try {
-      if (!scannedToken || !isValidGUID(scannedToken)) {
+      const { groupId: scannedGroupId, qrCode: scannedQrCode } = parsedData;
+
+      if (!scannedToken || !isValidGUID(scannedGroupId)) {
         ToastAndroid.show("Dữ liệu không hợp lệ", ToastAndroid.SHORT);
-        setIsShowScanner(false);
-        dispatch(setLoading(false));
-        isScanningRef.current = false;
+        cleanupStates();
         return;
       }
 
-      setToken(scannedToken);
+      setGroupId(scannedGroupId);
+      setQrCode(scannedQrCode);
       dispatch(setLoading(true));
       setIsShowScanner(false);
 
@@ -164,12 +181,11 @@ const useGroupList = () => {
         await new Promise((resolve) => setTimeout(resolve, 100));
       }
 
-      if (data?.items?.some((group) => group?.id === scannedToken)) {
-        dispatch(setLoading(false));
-        isScanningRef.current = false;
+      if (data?.items?.some((group) => group?.id === scannedGroupId)) {
+        cleanupStates();
         router.navigate({
           pathname: PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT as any,
-          params: { id: scannedToken },
+          params: { id: scannedGroupId },
         });
         ToastAndroid.show(
           TEXT_TRANSLATE_GROUP_LIST.MESSAGE_ERROR.ALREADY_JOIN_GROUP,
@@ -177,21 +193,19 @@ const useGroupList = () => {
         );
         return;
       }
+
       if (groupDetailPreview?.data) {
-        dispatch(setLoading(false));
         modalizeJoinGroupRef.current?.open();
       } else {
         ToastAndroid.show("Dữ liệu nhóm không hợp lệ", ToastAndroid.SHORT);
-        setIsShowScanner(false);
+        cleanupStates();
       }
     } catch (error) {
       ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
-      dispatch(setLoading(false));
-      setToken("");
-      setIsShowScanner(false);
+      cleanupStates();
     } finally {
-      isScanningRef.current = false;
       dispatch(setLoading(false));
+      isScanningRef.current = false;
     }
   };
 
@@ -217,15 +231,16 @@ const useGroupList = () => {
   };
 
   const handleJoinGroupByQR = useCallback(async () => {
-    if (!token || !groupDetailPreview?.data) return;
+    if (!groupId || !qrCode || !groupDetailPreview?.data) return;
 
     try {
-      await trigger(token).unwrap();
+      await trigger(qrCode).unwrap();
+      await refetch();
       router.navigate({
         pathname: PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT as any,
-        params: { id: token },
+        params: { id: groupId },
       });
-      setToken("");
+
       dispatch(setMainTabHidden(true));
       dispatch(setGroupTabHidden(false));
 
@@ -234,17 +249,19 @@ const useGroupList = () => {
         ToastAndroid.SHORT,
       );
     } catch (err: any) {
-      if (err?.data?.statusCode === 400) {
-        ToastAndroid.show("Mã thành viên không hợp lệ", ToastAndroid.SHORT);
+      if (err?.data?.status === HTTP_STATUS.CLIENT_ERROR.BAD_REQUEST) {
+        ToastAndroid.show(
+          "Mã mời không hợp lệ hoặc đã hết hạn",
+          ToastAndroid.SHORT,
+        );
         return;
       }
       ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
     } finally {
       modalizeJoinGroupRef.current?.close();
-      isScanningRef.current = false;
-      setToken("");
+      cleanupStates();
     }
-  }, [dispatch, groupDetailPreview, token, router]);
+  }, [dispatch, groupDetailPreview, groupId, qrCode, router, cleanupStates]);
 
   return {
     state: {
@@ -261,8 +278,18 @@ const useGroupList = () => {
       isLogin,
       modalizeRef,
       memberCode,
-      groupDetailPreview: groupDetailPreview?.data,
+      groupDetailPreview: groupDetailPreview?.data
+        ? {
+            ...groupDetailPreview.data,
+            groupMembers: groupDetailPreview.data.groupMembers?.filter(
+              (member: GroupMember) =>
+                member.status === GROUP_MEMBER_STATUS.ACTIVE,
+            ),
+          }
+        : null,
       modalizeJoinGroupRef,
+      groupId,
+      qrCode,
     },
     handler: {
       handleLoadMore,

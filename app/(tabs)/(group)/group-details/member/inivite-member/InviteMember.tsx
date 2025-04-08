@@ -200,25 +200,30 @@ const InviteMember = () => {
           </Text>
           <View className="w-8" />
         </SectionComponent>
-        <View className="mx-4 my-5 flex-row space-x-4">
-          <InviteMethodButton
-            label={TEXT_TRANSLATE_INVITE_MEMBER.INVITE_MEMBER.INVITE_BY_EMAIL}
-            routePath={PATH_NAME.MEMBER.INVITE_MEMBER_BY_EMAIL}
-            icon={({ size, color }) => (
-              <MaterialIcons name="email" size={size} color={color} />
-            )}
-            iconColor={Colors.colors.green}
-          />
-          <SpaceComponent width={12} />
-          <InviteMethodButton
-            label={TEXT_TRANSLATE_INVITE_MEMBER.INVITE_MEMBER.INVITE_BY_QR_CODE}
-            routePath={PATH_NAME.MEMBER.INVITE_MEMBER_BY_QR_CODE}
-            icon={({ size, color }) => (
-              <Ionicons name="qr-code" size={size} color={color} />
-            )}
-            iconColor="#2196F3"
-          />
-        </View>
+        {state.isLeader && (
+          <View className="mx-4 my-5 flex-row space-x-4">
+            <InviteMethodButton
+              label={TEXT_TRANSLATE_INVITE_MEMBER.INVITE_MEMBER.INVITE_BY_EMAIL}
+              routePath={PATH_NAME.MEMBER.INVITE_MEMBER_BY_EMAIL}
+              icon={({ size, color }) => (
+                <MaterialIcons name="email" size={size} color={color} />
+              )}
+              iconColor={Colors.colors.green}
+            />
+            <SpaceComponent width={12} />
+            <InviteMethodButton
+              label={
+                TEXT_TRANSLATE_INVITE_MEMBER.INVITE_MEMBER.INVITE_BY_QR_CODE
+              }
+              routePath={PATH_NAME.MEMBER.INVITE_MEMBER_BY_QR_CODE}
+              icon={({ size, color }) => (
+                <Ionicons name="qr-code" size={size} color={color} />
+              )}
+              iconColor="#2196F3"
+            />
+          </View>
+        )}
+
         {state.activeTab === GROUP_MEMBER_STATUS.ACTIVE ? (
           <Text className="mb-3 ml-4 text-lg font-bold text-gray-900">
             {TEXT_TRANSLATE_INVITE_MEMBER.INVITE_MEMBER.MEMBER_LIST(
