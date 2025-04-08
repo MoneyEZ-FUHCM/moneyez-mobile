@@ -9,6 +9,7 @@ import userSpendingModelReducer from "./slices/userSpendingModelSlice";
 import transactionReducer from "./slices/transactionSlice";
 import groupReducer from "./slices/groupSlice";
 import budgetReducer from "./slices/budgetSlice";
+import notificationReducer from "./slices/notificationSlice";
 import apiSlice from "./slices/apiSlice";
 
 const rootReducer = combineReducers({
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   transaction: transactionReducer,
   group: groupReducer,
   budget: budgetReducer,
+  notification: notificationReducer,
 });
 
 export const store = configureStore({

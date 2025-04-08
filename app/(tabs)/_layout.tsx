@@ -7,8 +7,11 @@ import React, { useEffect } from "react";
 import "../../globals.css";
 import messaging from "@react-native-firebase/messaging";
 import * as Notifications from "expo-notifications";
+import { useDispatch } from "react-redux";
+import { addNewNotification } from "@/redux/slices/notificationSlice";
 
 export default function TabLayout() {
+  const dispatch = useDispatch();
   const {
     BOTTOM_TAB_NAME: BOTTOM_TABLE_NAME,
     BOTTOM_TAB_TRANSLATE: BOTTOM_TABLE_TRANSLATE,
@@ -36,6 +39,18 @@ export default function TabLayout() {
 
       const title = notification?.title ?? "MoneyEz";
       const body = notification?.body ?? "Bạn có thông báo mới";
+
+      dispatch(
+        addNewNotification({
+          id: remoteMessage.messageId,
+          title,
+          message: body,
+          type: "all",
+          isRead: false,
+          createdDate: new Date().toISOString(),
+        }),
+      );
+
       await Notifications.scheduleNotificationAsync({
         content: {
           title,
@@ -44,7 +59,7 @@ export default function TabLayout() {
         trigger: null,
       });
     });
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const handleDeepLink = async (event: Linking.EventType) => {

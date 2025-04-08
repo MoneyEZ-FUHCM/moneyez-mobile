@@ -4,6 +4,7 @@ import { formatDate, formatTime } from "@/helpers/libs";
 import useHideTabbar from "@/hooks/useHideTabbar";
 import { setHasUnreadNotification } from "@/redux/slices/systemSlice";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
+import { RootState } from "@/redux/store";
 import {
   useDeleteNotificationMutation,
   useGetNotificationQuery,
@@ -14,7 +15,7 @@ import { router } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Linking, ToastAndroid } from "react-native";
 import { Modalize } from "react-native-modalize";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import NOTIFICATION_CONSTANTS from "../NotificationList.const";
 import TEXT_TRANSLATE_NOTICE from "../NotificationList.translate";
 
@@ -61,6 +62,10 @@ const useNotificationList = () => {
     error,
     isFetching: isRefetching,
   } = useGetNotificationQuery(queryParams);
+
+  const newNotifications = useSelector(
+    (state: RootState) => state.notification.newNotifications,
+  );
 
   useHideTabbar();
 
@@ -113,6 +118,19 @@ const useNotificationList = () => {
       dispatch(setHasUnreadNotification(hasUnread));
     }
   }, [data?.items, dispatch]);
+
+  useEffect(() => {
+    if (newNotifications?.length > 0) {
+      setNotifications((prev) => {
+        const formattedNewNotifications = formatNotifications(newNotifications);
+        const uniqueNewNotifications = formattedNewNotifications?.filter(
+          (newNotice) =>
+            !prev.some((existingNotice) => existingNotice.id === newNotice.id),
+        );
+        return [...uniqueNewNotifications, ...prev];
+      });
+    }
+  }, [newNotifications]);
 
   const handleGoBack = () => {
     router.back();
