@@ -55,26 +55,27 @@ export default function useGroupRemind() {
 
   useEffect(() => {
     if (groupDetail?.groupMembers) {
-      const mappedMembers = groupDetail.groupMembers.map(member => {
-        const target = isGoalActive && hasFinancialGoal && groupGoal > 0
-          ? (member.contributionPercentage / 100) * groupGoal
-          : 0;
+      const mappedMembers = groupDetail.groupMembers
+        .filter(member => member.status === "ACTIVE")
+        .map(member => {
+          const target = isGoalActive && hasFinancialGoal && groupGoal > 0
+            ? (member.contributionPercentage / 100) * groupGoal
+            : 0;
 
-        // Determine if this member has already funded enough
-        const hasFundedEnough = hasFinancialGoal && target > 0 && member.totalContribution >= target;
+          const hasFundedEnough = hasFinancialGoal && target > 0 && member.totalContribution >= target;
 
-        return {
-          id: member.id,
-          avatar: undefined,
-          name: member.userInfo.fullName,
-          ratio: member.contributionPercentage,
-          contributed: member.totalContribution,
-          target: target,
-          checked: !hasFundedEnough, // Only check members who haven't funded enough
-          userId: member.userId,
-          disabled: hasFundedEnough // Disable selection for members who have funded enough
-        };
-      });
+          return {
+            id: member.id,
+            avatar: undefined,
+            name: member.userInfo.fullName,
+            ratio: member.contributionPercentage,
+            contributed: member.totalContribution,
+            target: target,
+            checked: !hasFundedEnough, 
+            userId: member.userId,
+            disabled: hasFundedEnough 
+          };
+        });
       setMembers(mappedMembers);
     }
   }, [groupDetail, isGoalActive, groupGoal, hasFinancialGoal]);

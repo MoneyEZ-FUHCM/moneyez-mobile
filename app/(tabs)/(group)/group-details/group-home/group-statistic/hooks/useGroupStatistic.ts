@@ -53,25 +53,26 @@ export default function useGroupStatistic() {
 
   useEffect(() => {
     if (groupDetail?.groupMembers) {
-      const mappedMembers = groupDetail.groupMembers.map(member => {
-        const target = isGoalActive && groupGoal > 0
-          ? (member.contributionPercentage / 100) * groupGoal
-          : 0;
-        
-        // Determine if this member has already funded enough
-        const hasFundedEnough = member.totalContribution >= target && target > 0;
+      const mappedMembers = groupDetail.groupMembers
+        .filter(member => member.status === "ACTIVE")
+        .map(member => {
+          const target = isGoalActive && groupGoal > 0
+            ? (member.contributionPercentage / 100) * groupGoal
+            : 0;
+          
+          const hasFundedEnough = member.totalContribution >= target && target > 0;
 
-        return {
-          id: member.id,
-          avatar: undefined,
-          name: member.userInfo.fullName,
-          ratio: member.contributionPercentage,
-          contributed: member.totalContribution,
-          target: target,
-          userId: member.userId,
-          hasFundedEnough: hasFundedEnough
-        };
-      });
+          return {
+            id: member.id,
+            avatar: undefined,
+            name: member.userInfo.fullName,
+            ratio: member.contributionPercentage,
+            contributed: member.totalContribution,
+            target: target,
+            userId: member.userId,
+            hasFundedEnough: hasFundedEnough
+          };
+        });
       setMembers(mappedMembers);
     }
   }, [groupDetail, isGoalActive, groupGoal]);
