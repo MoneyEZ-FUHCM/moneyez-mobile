@@ -101,6 +101,7 @@ const useCreateFundRequest = () => {
               bankName: response?.data?.bankAccount?.bankName,
               accountHolderName: response?.data?.bankAccount?.accountHolderName,
               description: values?.description,
+              mode: "FUND",
             },
           });
           const successMessage = isLeader
