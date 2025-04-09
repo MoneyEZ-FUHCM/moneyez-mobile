@@ -89,11 +89,11 @@ export default function GroupFinancialGoal() {
           <Text className="text-lg font-semibold flex-1">{state.financialGoal?.name}</Text>
 
           <TouchableOpacity
-            onPress={toggleOptions}
+            onPress={handler.handleOpenDeleteModal}
             className="p-3.5"
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <Feather name="more-vertical" size={26} color="#666" />
+            <AntDesign name="delete" size={20} color="#dd6b55" />
           </TouchableOpacity>
 
           {showOptions && (
@@ -104,24 +104,6 @@ export default function GroupFinancialGoal() {
                 className="absolute inset-0 z-10"
                 style={{ top: -100, left: -100, right: -100, bottom: -500 }}
               />
-              <View
-                className="absolute bg-white shadow-lg rounded-lg z-20 right-0 top-10"
-                style={{
-                  minWidth: 180,
-                  elevation: 5
-                }}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    setShowOptions(false);
-                    handler.handleOpenDeleteModal();
-                  }}
-                  className="flex-row items-center py-4 px-6"
-                >
-                  <AntDesign name="delete" size={20} color="#dd6b55" />
-                  <Text className="ml-3.5 text-[#dd6b55] font-medium text-base">{BUTTON.DELETE}</Text>
-                </TouchableOpacity>
-              </View>
             </>
           )}
         </View>
@@ -223,7 +205,6 @@ export default function GroupFinancialGoal() {
         <ModalLizeComponent
           ref={state.modalizeRef}
           adjustToContentHeight
-          onClose={handler.handleCloseDeleteModal}
         >
           <View className="p-6">
             <View className="items-center mb-4">
@@ -237,7 +218,7 @@ export default function GroupFinancialGoal() {
 
             <View className="flex-row gap-4 mt-4">
               <TouchableOpacity
-                onPress={handler.handleCloseDeleteModal}
+                onPress={() => handler.handleCloseDeleteModal()}
                 className="flex-1 rounded-lg border border-gray-200 py-3"
                 activeOpacity={0.7}
               >

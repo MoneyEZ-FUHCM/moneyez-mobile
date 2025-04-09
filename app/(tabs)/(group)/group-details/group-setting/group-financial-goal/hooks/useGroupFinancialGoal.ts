@@ -33,10 +33,10 @@ export default function useGroupFinancialGoal() {
   const modalizeRef = useRef<Modalize>(null);
 
   // API Hooks
-  const { 
-    data: groupFinancialGoalData, 
-    isLoading, 
-    refetch 
+  const {
+    data: groupFinancialGoalData,
+    isLoading,
+    refetch
   } = useGetGroupFinancialGoalQuery(
     { groupId },
     { skip: !groupId }
@@ -44,21 +44,21 @@ export default function useGroupFinancialGoal() {
 
   const [deleteGroupFinancialGoal, { isLoading: isDeleting }] = useDeleteGroupFinancialGoalMutation();
 
-  const financialGoal: FinancialGoal = useMemo(() => 
+  const financialGoal: FinancialGoal = useMemo(() =>
     groupFinancialGoalData?.data?.filter((goal: FinancialGoal) => goal.isDeleted === false)[0],
-  [groupFinancialGoalData]);
-  
+    [groupFinancialGoalData]);
+
   const hasExistingGoal = !!financialGoal;
 
-  const daysLeft = useMemo(() => 
+  const daysLeft = useMemo(() =>
     financialGoal
       ? Math.max(0, moment(financialGoal.deadline).diff(moment(), "days"))
       : 0,
-  [financialGoal]);
+    [financialGoal]);
 
-  const isGoalCompleted = useMemo(() => 
+  const isGoalCompleted = useMemo(() =>
     (financialGoal?.currentAmount) >= (financialGoal?.targetAmount),
-  [financialGoal]);
+    [financialGoal]);
 
   // Navigation handlers
   const handleNavigateToCreate = useCallback(() => {
@@ -79,15 +79,13 @@ export default function useGroupFinancialGoal() {
     }
   }, [dispatch, financialGoal]);
 
-  const handleOpenDeleteModal = useCallback(() => {
+  const handleOpenDeleteModal = () => {
     modalizeRef.current?.open();
-    dispatch(setGroupTabHidden(true));
-  }, [dispatch]);
+  };
 
-  const handleCloseDeleteModal = useCallback(() => {
+  const handleCloseDeleteModal = () => {
     modalizeRef.current?.close();
-    dispatch(setGroupTabHidden(false));
-  }, [dispatch]);
+  };
 
   const handleDelete = useCallback(async () => {
     try {
@@ -98,7 +96,6 @@ export default function useGroupFinancialGoal() {
           ToastAndroid.SHORT
         );
         modalizeRef.current?.close();
-        dispatch(setGroupTabHidden(false));
         router.back();
         refetch();
       }

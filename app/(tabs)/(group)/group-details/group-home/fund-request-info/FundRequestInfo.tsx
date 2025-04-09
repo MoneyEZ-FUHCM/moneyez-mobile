@@ -71,7 +71,9 @@ export default function FundRequestInfoPage() {
 
       <SectionComponent rootClassName="mx-4 mt-4 rounded-xl bg-white p-5 shadow-sm">
         <Text className="mb-4 text-lg font-semibold text-gray-800">
-          {TITLE.INFO_TITLE}
+          {state.mode === "WITHDRAW"
+            ? "Thông tin rút quỹ"
+            : "Thông tin góp quỹ"}
         </Text>
         {renderInfoRow(
           LABELS.AMOUNT,

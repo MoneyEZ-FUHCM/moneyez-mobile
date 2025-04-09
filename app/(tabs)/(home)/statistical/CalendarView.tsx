@@ -65,7 +65,7 @@ const CalendarView: React.FC = () => {
           <Text className="mb-1 text-sm font-semibold text-gray-600">
             {TEXT_TRANSLATE_STATISTICAL.LABELS.INCOME}
           </Text>
-          <Text className="text-base font-bold text-blue-600">
+          <Text className="text-base font-bold text-emerald-600">
             {formatCurrency(state.totalIncome)}
           </Text>
         </View>
@@ -84,7 +84,7 @@ const CalendarView: React.FC = () => {
           <Text
             className={`text-base font-bold ${
               state.totalIncome - state.totalExpense >= 0
-                ? "text-blue-600"
+                ? "text-emerald-600"
                 : "text-red"
             }`}
           >
