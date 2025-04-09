@@ -62,9 +62,13 @@ export interface GroupTransaction {
   images: string[];
   status: "PENDING" | "APPROVED" | "REJECTED";
   approvalRequired: boolean;
-  requestCode: string | null;
+  requestCode: string;
   insertType: "MANUAL" | "AUTO";
   avatarUrl: string;
+  accountBankNumber: string | null;
+  accountBankName: string | null;
+  bankTransactionId: string | null;
+  bankTransactionDate: string | null;
   id: string;
   createdDate: string;
   createdBy: string;
