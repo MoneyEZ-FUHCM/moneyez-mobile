@@ -15,7 +15,6 @@ import { formatCurrency } from "@/helpers/libs";
 import { GroupMember } from "@/types/group.type";
 import {
   AntDesign,
-  FontAwesome6,
   Ionicons,
   MaterialCommunityIcons,
   MaterialIcons,
@@ -55,8 +54,6 @@ const Group = () => {
     handleScanSuccess,
     setMemberCode,
     handleSubmitJoinGroup,
-    handleJoinGroup,
-    handleJoinGroupByQR,
   } = handler;
   const [fadeAnim] = useState(new Animated.Value(0));
 
@@ -177,7 +174,7 @@ const Group = () => {
                   <View className="w-full flex-row justify-between px-8">
                     <TouchableOpacity
                       className="flex-1 rounded-lg bg-primary/10 px-4 py-3"
-                      onPress={handleJoinGroupByQR}
+                      onPress={handleScanQR}
                     >
                       <Text className="text-center font-medium text-primary">
                         Tham gia nhóm

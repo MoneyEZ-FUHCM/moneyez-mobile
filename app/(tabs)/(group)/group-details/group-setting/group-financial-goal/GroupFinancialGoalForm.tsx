@@ -2,7 +2,7 @@ import {
   InputComponent,
   LoadingSectionWrapper,
   SafeAreaViewCustom,
-  SectionComponent
+  SectionComponent,
 } from "@/components";
 import { DatePickerFinancialGoalComponent } from "@/components/GroupComponentCustom/DatePickerFinancialGoalComponent";
 import { ScrollViewCustom } from "@/components/ScrollViewCustom";
@@ -11,7 +11,7 @@ import { setGroupTabHidden } from "@/redux/slices/tabSlice";
 import { MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { Formik } from "formik";
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import { Pressable, Text, View } from "react-native";
 import { useDispatch } from "react-redux";
 import TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL from "./GroupFinancialGoal.translate";
@@ -48,7 +48,6 @@ export default function GroupFinancialGoalForm() {
         </View>
       </SectionComponent>
 
-
       <LoadingSectionWrapper isLoading={state.isLoading}>
         <ScrollViewCustom
           showsVerticalScrollIndicator={false}
@@ -68,11 +67,14 @@ export default function GroupFinancialGoalForm() {
 
               const handleTargetAmountBlur = () => {
                 if (!state.isCreateMode && state.financialGoal) {
-                  const targetAmount = parseInt(values.targetAmount.replace(/\D/g, ""), 10) || 0;
+                  const targetAmount =
+                    parseInt(values.targetAmount.replace(/\D/g, ""), 10) || 0;
                   const currentAmount = state.financialGoal.currentAmount || 0;
-                  
+
                   if (targetAmount < currentAmount) {
-                    const formattedCurrentAmount = formatCurrencyInput(currentAmount.toString());
+                    const formattedCurrentAmount = formatCurrencyInput(
+                      currentAmount.toString(),
+                    );
                     setFieldValue("targetAmount", formattedCurrentAmount);
                   }
                 }
@@ -80,16 +82,19 @@ export default function GroupFinancialGoalForm() {
 
               return (
                 <SectionComponent rootClassName="rounded-[10px] bg-white p-4 shadow-sm">
-                  <View className="space-y-4">
+                  <View>
                     {!state.isCreateMode && (
-                      <View className="rounded-md bg-superlight p-4 mb-4">
-                        <Text className="text-sm text-gray-500">{LABELS.CURRENT_AMOUNT}</Text>
+                      <View className="mb-4 rounded-md bg-superlight p-4">
+                        <Text className="text-sm text-gray-500">
+                          {LABELS.CURRENT_AMOUNT}
+                        </Text>
                         <Text className="text-xl font-bold text-[#609084]">
-                          {formatCurrencyInput(state.initialValues.currentAmount || "0")}
+                          {formatCurrencyInput(
+                            state.initialValues.currentAmount || "0",
+                          )}
                         </Text>
                       </View>
                     )}
-
                     <InputComponent
                       name="name"
                       label={LABELS.GOAL_NAME}
@@ -131,7 +136,9 @@ export default function GroupFinancialGoalForm() {
           className="h-12 items-center justify-center rounded-lg bg-primary"
         >
           {state.isSubmitting ? (
-            <Text className="text-base font-semibold text-white">Loading...</Text>
+            <Text className="text-base font-semibold text-white">
+              Loading...
+            </Text>
           ) : (
             <Text className="text-base font-semibold text-white">
               {state.isCreateMode ? BUTTON.CREATE : BUTTON.UPDATE}

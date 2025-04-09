@@ -12,6 +12,7 @@ import { useCallback, useMemo, useRef } from "react";
 import { ToastAndroid } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { useDispatch, useSelector } from "react-redux";
+import GROUP_SETTING_DEFAULT_CONSTANTS from "../GroupSettingDefault.constant";
 
 export default function useGroupSettings() {
   const { GROUP_SETTING } = PATH_NAME;
@@ -22,6 +23,7 @@ export default function useGroupSettings() {
   const { SYSTEM_ERROR } = COMMON_CONSTANT;
   const navigation = useNavigation();
   const userInfo = useSelector(selectUserInfo);
+  const { ERROR_CODE } = GROUP_SETTING_DEFAULT_CONSTANTS;
 
   const isLeader = useMemo(() => {
     return groupDetail?.groupMembers?.some(
@@ -61,9 +63,30 @@ export default function useGroupSettings() {
         dispatch(setMainTabHidden(false));
         ToastAndroid.show("Rời nhóm thành công", ToastAndroid.SHORT);
       }, 2500);
-    } catch (err) {
+    } catch (err: any) {
+      const error = err?.data;
+      if (error?.errorCode === ERROR_CODE.MEMBER_NOT_FOUND) {
+        ToastAndroid.show("Thành viên không tồn tại", ToastAndroid.SHORT);
+        return;
+      }
+      if (error?.errorCode === ERROR_CODE.MEMBER_HAVE_CONTRIBUTION) {
+        ToastAndroid.show(
+          "Bạn đã có đóng góp trong nhóm, không được rời nhóm",
+          ToastAndroid.SHORT,
+        );
+        return;
+      }
+      if (error?.errorCode === ERROR_CODE.MEMBER_HAVE_TRANSACTION) {
+        ToastAndroid.show(
+          "Bạn đã có đóng góp trong nhóm, không được rời nhóm",
+          ToastAndroid.SHORT,
+        );
+        return;
+      }
       ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
+    } finally {
       dispatch(setLoading(false));
+      modalizeRef.current?.close();
     }
   }, []);
 
@@ -86,7 +109,7 @@ export default function useGroupSettings() {
       handleCloseGroupFund,
       handleOpenModal,
       handleCloseModal,
-      handleFinancialGoal
+      handleFinancialGoal,
     },
   };
 }
