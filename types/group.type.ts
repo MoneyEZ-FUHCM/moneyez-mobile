@@ -10,6 +10,8 @@ export interface CreateGroupPayload {
   image: string;
 }
 export interface GroupMember {
+  transactionCount: unknown;
+  totalContribution: any;
   groupId: string;
   userId: string;
   contributionPercentage: number;

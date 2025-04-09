@@ -1,7 +1,5 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
-import { setLoading } from "@/redux/slices/loadingSlice";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
-import { setOtpCode } from "@/redux/slices/systemSlice";
 import {
   useCreateBankAccountMutation,
   useUpdateBankAccountMutation,
@@ -15,26 +13,20 @@ import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ScrollView, ToastAndroid } from "react-native";
 import { Modalize } from "react-native-modalize";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 import FUNCTION_BANK_ACCOUNT_CONSTANT from "../FunctionBankAccount.constant";
 import TEXT_TRANSLATE_FUNCTION_BANK_ACCOUNT from "../FunctionBankAccount.translate";
-import { selectOtpCode } from "@/redux/hooks/systemSelector";
 
 const useFunctionBankAccount = (params: any) => {
   const [selectedBank, setSelectedBank] = useState(null);
   const [searchText, setSearchText] = useState<string>("");
   const [isAtTop, setIsAtTop] = useState(true);
-  const [showRuleModal, setShowRuleModal] = useState(false);
-  const [showOtpModal, setShowOtpModal] = useState(false);
-  const [currentValues, setCurrentValues] = useState<any>(null);
 
   const bankSelectModalRef = useRef<Modalize>(null);
   const scrollRef = useRef<ScrollView>(null);
   const formikRef = useRef<any>(null);
   const handleSubmitRef = useRef<() => void>(() => {});
-  const ruleModalRef = useRef<Modalize>(null);
-  const otpModalRef = useRef<Modalize>(null);
 
   const { SYSTEM_ERROR, HTTP_STATUS } = COMMON_CONSTANT;
   const { BANK_LIST, ERROR_CODE, FORM_NAME } = FUNCTION_BANK_ACCOUNT_CONSTANT;
@@ -48,7 +40,6 @@ const useFunctionBankAccount = (params: any) => {
 
   const [createBankAccount] = useCreateBankAccountMutation();
   const [updateBankAccount] = useUpdateBankAccountMutation();
-  const otpCode = useSelector(selectOtpCode);
 
   useFocusEffect(
     useCallback(() => {
@@ -76,7 +67,8 @@ const useFunctionBankAccount = (params: any) => {
 
   const validationSchema = Yup.object().shape({
     accountNumber: Yup.string()
-      .length(12, "Số tài khoản phải có đúng 12 số")
+      .min(5, "Số tài khoản phải có ít nhất 5 số")
+      .max(50, "Số tài khoản không được quá 50 số")
       .required("Số tài khoản là bắt buộc"),
     bankName: Yup.string().required("Vui lòng chọn ngân hàng"),
     accountHolderName: Yup.string().required("Tên chủ tài khoản là bắt buộc"),
@@ -110,7 +102,6 @@ const useFunctionBankAccount = (params: any) => {
 
   const handleCreateBankAccount = useCallback(
     async (payload: CreateBankAccountPayload) => {
-      dispatch(setLoading(true));
       try {
         const res = await createBankAccount(payload).unwrap();
         if (res?.status === HTTP_STATUS.SUCCESS.CREATED) {
@@ -120,64 +111,43 @@ const useFunctionBankAccount = (params: any) => {
           );
           router.back();
         }
-      } catch (err: any) {
-        const error = err?.data;
-        if (error?.errorCode === ERROR_CODE.BANK_ACCOUNT_VALIDATION_FAILED) {
-          ToastAndroid.show(
-            TEXT_TRANSLATE_FUNCTION_BANK_ACCOUNT.MESSAGE_ERROR
-              .BANK_ACCOUNT_VALIDATION_FAILED,
-            ToastAndroid.SHORT,
-          );
-          return;
-        }
+      } catch (err) {
         ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
-      } finally {
-        dispatch(setLoading(false));
       }
     },
     [],
   );
 
-  const handleSubmit = useCallback(async (values: any) => {
-    setCurrentValues(values);
-    ruleModalRef.current?.open();
-    setShowRuleModal(true);
-  }, []);
-
-  const handleAcceptRules = useCallback(async () => {
-    ruleModalRef.current?.close();
-    setShowRuleModal(false);
-    otpModalRef.current?.open();
-    setShowOtpModal(true);
-
-    // Send OTP request
-    try {
-      // await resentOtp(JSON.stringify({ email })).unwrap();
-    } catch (err) {
-      ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
-    }
-  }, []);
-
-  const handleVerifyOtp = useCallback(async () => {
-    if (otpCode.length !== 5 || !/^[0-9]+$/.test(otpCode)) {
-      ToastAndroid.show("OTP phải có đúng 5 số", ToastAndroid.SHORT);
-      return;
-    }
-
-    // Verify OTP first
-    try {
-      // const payload = { email, otpCode };
-      // const res = await verify(JSON.stringify(payload)).unwrap();
-      // if (res?.status === HTTP_STATUS.SUCCESS.OK) {
-      //   // OTP valid, proceed with bank account creation
-      //   otpModalRef.current?.close();
-      //   setShowOtpModal(false);
-      //   await handleCreateBankAccount(currentValues);
-      // }
-    } catch (err) {
-      ToastAndroid.show("OTP không hợp lệ", ToastAndroid.SHORT);
-    }
-  }, [otpCode, currentValues]);
+  const handleSubmit = useCallback(
+    async (values: any) => {
+      const payload = { ...values, id: bankAccountData?.id };
+      try {
+        if (editMode && bankAccountData) {
+          const res = await updateBankAccount(payload).unwrap();
+          if (res?.status === HTTP_STATUS.SUCCESS.OK) {
+            ToastAndroid.show(
+              MESSAGE_SUCCESS.UPDATE_BANK_ACCOUNT_SUCCESS,
+              ToastAndroid.SHORT,
+            );
+            router.back();
+          }
+        } else {
+          await handleCreateBankAccount(values);
+        }
+      } catch (err: any) {
+        const error = err?.data;
+        if (error?.errorCode === ERROR_CODE.BANK_ACCOUNT_NOT_FOUND) {
+          ToastAndroid.show(
+            MESSAGE_ERROR.BANK_ACCOUNT_NOT_FOUND,
+            ToastAndroid.SHORT,
+          );
+          return;
+        }
+        ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
+      }
+    },
+    [editMode, bankAccountData],
+  );
 
   const filteredBanks = BANK_LIST.filter(
     (bank) =>
@@ -197,11 +167,6 @@ const useFunctionBankAccount = (params: any) => {
       BANK_LIST,
       editMode,
       FORM_NAME,
-      showRuleModal,
-      showOtpModal,
-      ruleModalRef,
-      otpModalRef,
-      otpCode,
     },
     handler: {
       handleScroll,
@@ -212,9 +177,6 @@ const useFunctionBankAccount = (params: any) => {
       handleSubmitRef,
       setSearchText,
       validationSchema,
-      handleAcceptRules,
-      handleVerifyOtp,
-      setOtpCode: (value: string) => dispatch(setOtpCode(value)),
     },
   };
 };

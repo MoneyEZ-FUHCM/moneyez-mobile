@@ -22,11 +22,12 @@ const MEMBER_TABS = {
 
 const useInviteMember = () => {
   const dispatch = useDispatch();
-  const [members, setMembers] = useState(INVITE_MEMBER_CONSTANTS.MEMBERS);
+  const { ERROR_CODE } = INVITE_MEMBER_CONSTANTS;
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [activeTab, setActiveTab] =
     useState<keyof typeof MEMBER_TABS>("ACTIVE");
   const modalizeKickMemberRef = useRef<Modalize>(null);
+  const memberDetailsModalRef = useRef<Modalize>(null);
   const [selectedMember, setSelectedMember] = useState<GroupMember | null>(
     null,
   );
@@ -91,22 +92,28 @@ const useInviteMember = () => {
           groupId: groupDetail.id,
           memberId,
         }).unwrap();
-        await refetch();
+        ToastAndroid.show("Xóa thành viên thành công", ToastAndroid.SHORT);
         handleCloseModal();
       } catch (err: any) {
         const error = err?.data;
-        if (error.errorCode === "GroupMemberNotFound") {
+        if (error?.errorCode === ERROR_CODE.MEMBER_NOT_FOUND) {
           ToastAndroid.show("Thành viên không tồn tại", ToastAndroid.SHORT);
           return;
         }
-        if (error.errorCode === "GroupMemberHaveTransaction") {
+        if (error?.errorCode === ERROR_CODE.MEMBER_HAVE_CONTRIBUTION) {
           ToastAndroid.show(
             "Thành viên đã có đóng góp. Không được xóa",
             ToastAndroid.SHORT,
           );
           return;
         }
-
+        if (error?.errorCode === ERROR_CODE.MEMBER_HAVE_TRANSACTION) {
+          ToastAndroid.show(
+            "Thành viên đã có đóng góp. Không được xóa",
+            ToastAndroid.SHORT,
+          );
+          return;
+        }
         ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
       }
     },
@@ -128,13 +135,24 @@ const useInviteMember = () => {
     dispatch(setGroupTabHidden(false));
   }, [dispatch]);
 
-  const handleOpenGroupTab = useCallback(() => {
+  const handleOpenMemberDetails = (member: GroupMember) => {
+    setSelectedMember(member);
+    memberDetailsModalRef.current?.open();
+    dispatch(setGroupTabHidden(true));
+  };
+
+  const handleCloseMemberDetails = useCallback(() => {
+    memberDetailsModalRef.current?.close();
+    setSelectedMember(null);
     dispatch(setGroupTabHidden(false));
   }, []);
 
+  const handleCloseModalDetail = useCallback(() => {
+    dispatch(setGroupTabHidden(false));
+  }, [dispatch]);
+
   return {
     state: {
-      members,
       groupDetail,
       groupMembers,
       activeMembers,
@@ -145,9 +163,9 @@ const useInviteMember = () => {
       activeTab,
       modalizeRef: modalizeKickMemberRef,
       selectedMember,
+      memberDetailsModalRef,
     },
     handler: {
-      setMembers,
       handleBack,
       handleBackInviteByEmail,
       handleRefresh,
@@ -156,7 +174,9 @@ const useInviteMember = () => {
       setSelectedMember,
       handleOpenModalRemoveMember,
       handleCloseModal,
-      handleOpenGroupTab,
+      handleOpenMemberDetails,
+      handleCloseMemberDetails,
+      handleCloseModalDetail,
     },
   };
 };

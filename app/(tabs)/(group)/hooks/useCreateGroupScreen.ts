@@ -136,6 +136,7 @@ const useCreateGroupScreen = () => {
         ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
       } finally {
         dispatch(setLoading(false));
+        ruleModalRef.current?.close();
       }
     },
     [createGroup, dispatch, imageUrl, refetch],
@@ -225,6 +226,7 @@ const useCreateGroupScreen = () => {
       ruleModalRef,
       otpModalRef,
       otpCode,
+      currentValues,
     },
     handler: {
       validationSchema,
@@ -239,6 +241,7 @@ const useCreateGroupScreen = () => {
       handleAcceptRules,
       handleVerifyOtp,
       setOtpCode: (value: string) => dispatch(setOtpCode(value)),
+      handleProcessCreateGroup,
     },
   };
 };

@@ -20,12 +20,6 @@ export default function TabLayout() {
   } = COMMON_CONSTANT;
 
   useEffect(() => {
-    const requestPermissions = async () => {
-      await Notifications.requestPermissionsAsync();
-    };
-
-    requestPermissions();
-
     Notifications.setNotificationHandler({
       handleNotification: async () => ({
         shouldShowAlert: true,
@@ -39,17 +33,6 @@ export default function TabLayout() {
 
       const title = notification?.title ?? "MoneyEz";
       const body = notification?.body ?? "Bạn có thông báo mới";
-
-      dispatch(
-        addNewNotification({
-          id: remoteMessage.messageId,
-          title,
-          message: body,
-          type: "all",
-          isRead: false,
-          createdDate: new Date().toISOString(),
-        }),
-      );
 
       await Notifications.scheduleNotificationAsync({
         content: {

@@ -26,7 +26,6 @@ import {
   View,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { OtpInput } from "react-native-otp-entry";
 import TEXT_TRANSLATE_BANK_ACCOUNT from "../../(account)/bank-account/bank-account-list/BankAccount.translate";
 import useCreateGroupScreen from "../hooks/useCreateGroupScreen";
 import TEXT_TRANSLATE_CREATE_GROUP from "./CreateGroup.translate";
@@ -256,87 +255,91 @@ const CreateGroup = () => {
           />
         </ModalLizeComponent>
 
-        {/* Rule Modal */}
         <ModalLizeComponent
           ref={state.ruleModalRef}
           adjustToContentHeight
           HeaderComponent={
             <View className="border-b border-gray-200 p-4">
-              <Text className="text-lg font-bold">Điều khoản & Điều kiện</Text>
+              <Text className="text-lg font-bold text-gray-900">
+                Điều khoản & Điều kiện
+              </Text>
             </View>
           }
         >
           <View className="p-4">
-            <Text className="mb-4 text-base">
-              Bằng việc xác nhận, bạn đồng ý với các điều khoản sau:
+            <Text className="mb-2 font-semibold text-primary">
+              Khi Tạo Nhóm (Dành cho trưởng nhóm)
             </Text>
-            <Text className="mb-2">• Bạn sẽ là người quản lý nhóm này</Text>
-            <Text className="mb-2">
-              • Chịu trách nhiệm về các giao dịch của nhóm
+            <Text className="mb-1 text-gray-700">
+              • Sử dụng{" "}
+              <Text className="font-medium text-primary">
+                tài khoản quản lý riêng
+              </Text>{" "}
+              để quản lý quỹ nhóm, không dùng tài khoản cá nhân.
             </Text>
-            <Text className="mb-4">
-              • Tuân thủ quy định của ứng dụng về quản lý nhóm
+            <Text className="mb-1 text-gray-700">
+              • Có{" "}
+              <Text className="font-medium text-primary">
+                quyền quản lý toàn quyền
+              </Text>{" "}
+              các giao dịch thu - chi trên tài khoản quỹ nhóm.
+            </Text>
+            <Text className="mb-1 text-gray-700">
+              • Ứng dụng{" "}
+              <Text className="font-medium text-primary">không can thiệp</Text>{" "}
+              vào tranh chấp phát sinh giữa các thành viên. Điều này được ghi rõ
+              trong điều khoản khi tạo nhóm.
+            </Text>
+            <Text className="mb-4 text-gray-700">
+              • Mọi giao dịch{" "}
+              <Text className="font-medium text-primary">nạp / rút quỹ</Text>{" "}
+              được xác nhận qua hệ thống open banking (webhook).
             </Text>
 
-            <TouchableOpacity
-              onPress={handler.handleAcceptRules}
-              className="rounded-lg bg-primary p-3"
-            >
-              <Text className="text-center font-semibold text-white">
-                Tôi đồng ý
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </ModalLizeComponent>
+            <Text className="mb-2 font-semibold text-primary">
+              Khi Thành Viên Tham Gia Nhóm
+            </Text>
+            <Text className="mb-1 text-gray-700">
+              • Việc tham gia nhóm đồng nghĩa với việc{" "}
+              <Text className="font-medium text-primary">
+                đồng ý toàn bộ điều khoản
+              </Text>{" "}
+              do trưởng nhóm đề ra.
+            </Text>
+            <Text className="mb-1 text-gray-700">
+              • Thành viên{" "}
+              <Text className="font-medium text-primary">
+                cam kết miễn trách nhiệm
+              </Text>{" "}
+              cho ứng dụng trong các tranh chấp nội bộ.
+            </Text>
+            <Text className="mb-4 text-gray-700">
+              • Giao dịch nạp / rút quỹ được xác nhận thông qua hệ thống{" "}
+              <Text className="font-medium text-primary">open banking</Text> để
+              đảm bảo minh bạch.
+            </Text>
 
-        {/* OTP Modal */}
-        <ModalLizeComponent
-          ref={state.otpModalRef}
-          adjustToContentHeight
-          HeaderComponent={
-            <View className="border-b border-gray-200 p-4">
-              <Text className="text-lg font-bold">Xác thực OTP</Text>
+            <View className="mt-2 flex-row gap-4">
+              <TouchableOpacity
+                className="flex-1 rounded-lg border border-gray-300 py-3"
+                onPress={() => state.ruleModalRef.current?.close()}
+              >
+                <Text className="text-center font-medium text-gray-700">
+                  Hủy
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="flex-1 rounded-lg bg-primary py-3"
+                onPress={() => {
+                  state.ruleModalRef.current?.close();
+                  handler.handleProcessCreateGroup(state.currentValues);
+                }}
+              >
+                <Text className="text-center font-medium text-white">
+                  Tôi đồng ý
+                </Text>
+              </TouchableOpacity>
             </View>
-          }
-        >
-          <View className="p-4">
-            <Text className="mb-4 text-base">
-              Vui lòng nhập mã OTP được gửi đến email của bạn
-            </Text>
-
-            <OtpInput
-              numberOfDigits={5}
-              focusColor="green"
-              focusStickBlinkingDuration={400}
-              onTextChange={(text) => handler.setOtpCode(text)}
-              theme={{
-                containerStyle: {
-                  width: "100%",
-                  padding: 0,
-                },
-                pinCodeContainerStyle: {
-                  width: 50,
-                  borderColor: "#E1E1E1",
-                  borderWidth: 2,
-                },
-                pinCodeTextStyle: {
-                  color: Colors.colors.primary,
-                },
-                filledPinCodeContainerStyle: {
-                  borderColor: Colors.colors.primary,
-                  borderWidth: 2,
-                },
-              }}
-            />
-
-            <TouchableOpacity
-              onPress={handler.handleVerifyOtp}
-              className="mt-4 rounded-lg bg-primary p-3"
-            >
-              <Text className="text-center font-semibold text-white">
-                Xác nhận
-              </Text>
-            </TouchableOpacity>
           </View>
         </ModalLizeComponent>
       </SafeAreaViewCustom>
