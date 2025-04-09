@@ -159,7 +159,6 @@ export default function useGroupFinancialGoalForm() {
   };
 
   const handleGoBack = () => {
-    dispatch(setGroupTabHidden(false));
     router.back();
   };
 

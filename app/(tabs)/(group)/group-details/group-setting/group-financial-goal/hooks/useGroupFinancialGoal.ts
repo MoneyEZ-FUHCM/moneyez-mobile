@@ -8,8 +8,9 @@ import {
 } from "@/services/financialGoal";
 import { router } from "expo-router";
 import moment from "moment";
-import { useRef, useState } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { ToastAndroid } from "react-native";
+import { Modalize } from "react-native-modalize";
 import { useDispatch, useSelector } from "react-redux";
 import TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL from "../GroupFinancialGoal.translate";
 
@@ -20,67 +21,73 @@ interface FinancialGoal {
   targetAmount: number;
   deadline: string;
   status: number;
+  approvalStatus: number;
+  createdDate: string;
+  name: string;
 }
 
 export default function useGroupFinancialGoal() {
   const dispatch = useDispatch();
   const groupDetail = useSelector(selectCurrentGroup);
-  const groupId = groupDetail?.id || '';
-
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-  const [formMode, setFormMode] = useState<"create" | "update">("create");
-
-  const cancelRef = useRef(null);
+  const groupId = useMemo(() => groupDetail?.id || '', [groupDetail]);
+  const modalizeRef = useRef<Modalize>(null);
 
   // API Hooks
-  const { data: groupFinancialGoalData, isLoading, refetch } = useGetGroupFinancialGoalQuery(
+  const {
+    data: groupFinancialGoalData,
+    isLoading,
+    refetch
+  } = useGetGroupFinancialGoalQuery(
     { groupId },
     { skip: !groupId }
   );
 
   const [deleteGroupFinancialGoal, { isLoading: isDeleting }] = useDeleteGroupFinancialGoalMutation();
 
-  const isSubmitting = isDeleting;
-  
-  const financialGoal = groupFinancialGoalData?.data?.filter((goal: FinancialGoal) => goal.isDeleted === false)[0];
+  const financialGoal: FinancialGoal = useMemo(() =>
+    groupFinancialGoalData?.data?.filter((goal: FinancialGoal) => goal.isDeleted === false)[0],
+    [groupFinancialGoalData]);
+
   const hasExistingGoal = !!financialGoal;
 
-  const daysLeft = financialGoal
-    ? Math.max(0, moment(financialGoal.deadline).diff(moment(), "days"))
-    : 0;
+  const daysLeft = useMemo(() =>
+    financialGoal
+      ? Math.max(0, moment(financialGoal.deadline).diff(moment(), "days"))
+      : 0,
+    [financialGoal]);
 
-  const isGoalCompleted = financialGoal?.currentAmount >= financialGoal?.targetAmount;
+  const isGoalCompleted = useMemo(() =>
+    (financialGoal?.currentAmount) >= (financialGoal?.targetAmount),
+    [financialGoal]);
 
   // Navigation handlers
-  const handleNavigateToCreate = () => {
-    setFormMode("create");
+  const handleNavigateToCreate = useCallback(() => {
     dispatch(setGroupTabHidden(true));
     router.push({
       pathname: PATH_NAME.GROUP_SETTING.GROUP_FINANCIAL_GOAL_FORM as any,
       params: { mode: "create" }
     });
-  };
+  }, [dispatch]);
 
-  const handleNavigateToUpdate = () => {
+  const handleNavigateToUpdate = useCallback(() => {
     if (financialGoal?.id) {
-      setFormMode("update");
       dispatch(setGroupTabHidden(true));
       router.push({
         pathname: PATH_NAME.GROUP_SETTING.GROUP_FINANCIAL_GOAL_FORM as any,
         params: { mode: "update", goalId: financialGoal.id }
       });
     }
-  };
+  }, [dispatch, financialGoal]);
 
   const handleOpenDeleteModal = () => {
-    setIsDeleteModalVisible(true);
+    modalizeRef.current?.open();
   };
 
   const handleCloseDeleteModal = () => {
-    setIsDeleteModalVisible(false);
+    modalizeRef.current?.close();
   };
 
-  const handleDelete = async () => {
+  const handleDelete = useCallback(async () => {
     try {
       if (financialGoal?.id) {
         await deleteGroupFinancialGoal({ id: financialGoal.id }).unwrap();
@@ -88,8 +95,7 @@ export default function useGroupFinancialGoal() {
           TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.MESSAGE_SUCCESS.DELETE_SUCCESS,
           ToastAndroid.SHORT
         );
-        handleCloseDeleteModal();
-        dispatch(setGroupTabHidden(false));
+        modalizeRef.current?.close();
         router.back();
         refetch();
       }
@@ -100,23 +106,23 @@ export default function useGroupFinancialGoal() {
         ToastAndroid.SHORT
       );
     }
-  };
+  }, [deleteGroupFinancialGoal, financialGoal, dispatch, refetch]);
 
-  const handleGoBack = () => {
+  const handleGoBack = useCallback(() => {
     dispatch(setGroupTabHidden(false));
     router.back();
-  };
+  }, [dispatch]);
 
-  const getStatusText = (status: number) => {
+  const getStatusText = useCallback((status: number) => {
     switch (status) {
       case 1:
         return TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.STATUS.ACTIVE;
       default:
         return TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.STATUS.INACTIVE;
     }
-  };
+  }, []);
 
-  const getApprovalStatusText = (status: number) => {
+  const getApprovalStatusText = useCallback((status: number) => {
     switch (status) {
       case 1:
         return TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.STATUS.APPROVED;
@@ -127,21 +133,17 @@ export default function useGroupFinancialGoal() {
       default:
         return TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.STATUS.PENDING;
     }
-  };
+  }, []);
 
   return {
     state: {
       isLoading,
-      isSubmitting,
+      isSubmitting: isDeleting,
       financialGoal,
       hasExistingGoal,
       daysLeft,
       isGoalCompleted,
-      isDeleteModalVisible,
-      formMode,
-    },
-    refState: {
-      cancelRef,
+      modalizeRef,
     },
     handler: {
       handleNavigateToCreate,
@@ -154,6 +156,7 @@ export default function useGroupFinancialGoal() {
       getApprovalStatusText,
       formatCurrency,
       formatDate,
+      refetch,
     },
   };
 }

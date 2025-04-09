@@ -155,8 +155,8 @@ const ActionLogHistory = () => {
           <View className="flex-row items-center rounded-full bg-gray-50 px-3 py-1.5">
             <MaterialIcons name="access-time" size={12} color="#666" />
             <Text className="ml-1 text-xs font-medium text-gray-600">
-              {formatTime(activity?.transactionDate)} ·{" "}
-              {formatDateMonthYear(activity?.transactionDate)}
+              {formatTime(activity?.createdDate)} ·{" "}
+              {formatDateMonthYear(activity?.createdDate)}
             </Text>
           </View>
         </View>
@@ -232,8 +232,6 @@ const ActionLogHistory = () => {
           adjustToContentHeight
           modalStyle={{
             padding: 20,
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
           }}
         >
           <View className="pb-6">
@@ -259,7 +257,7 @@ const ActionLogHistory = () => {
                   )}
                   <View className="ml-4">
                     <Text className="text-lg font-bold">
-                      {state.selectedLog.createdBy}
+                      {state.selectedLog?.createdBy}
                     </Text>
                     <View className="flex-row items-center">
                       <MaterialIcons
@@ -281,7 +279,7 @@ const ActionLogHistory = () => {
                     </View>
                   </View>
                 </View>
-                <View className="space-y-2 rounded-lg bg-gray-50 p-4">
+                <View className="space-y-5 rounded-lg bg-gray-50 p-4">
                   <View className="flex-row justify-between">
                     <Text className="text-gray-600">Loại giao dịch:</Text>
                     <Text
@@ -309,6 +307,36 @@ const ActionLogHistory = () => {
                       {state.selectedLog?.type === TRANSACTION_TYPE_TEXT.INCOME
                         ? `+ ${formatCurrency(state.selectedLog?.amount)}`
                         : `- ${formatCurrency(state.selectedLog?.amount)}`}
+                    </Text>
+                  </View>
+                  {state.selectedLog?.accountBankName && (
+                    <View className="flex-row justify-between">
+                      <Text className="text-gray-600">Ngân hàng:</Text>
+                      <Text className="font-medium">
+                        {state.selectedLog.accountBankName}
+                      </Text>
+                    </View>
+                  )}
+                  {state.selectedLog?.accountBankNumber && (
+                    <View className="flex-row justify-between">
+                      <Text className="text-gray-600">Số tài khoản:</Text>
+                      <Text className="font-medium">
+                        {state.selectedLog.accountBankNumber}
+                      </Text>
+                    </View>
+                  )}
+                  {state.selectedLog?.bankTransactionDate && (
+                    <View className="flex-row justify-between">
+                      <Text className="text-gray-600">Ngày giao dịch:</Text>
+                      <Text className="font-medium">
+                        {state.selectedLog.bankTransactionDate}
+                      </Text>
+                    </View>
+                  )}
+                  <View className="flex-row justify-between">
+                    <Text className="text-gray-600">Nội dung:</Text>
+                    <Text className="font-medium">
+                      {state.selectedLog?.requestCode}
                     </Text>
                   </View>
 

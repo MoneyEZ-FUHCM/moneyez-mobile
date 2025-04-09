@@ -130,6 +130,18 @@ const groupApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Group"],
     }),
+    getPendingRequest: builder.query({
+      query: ({ id, PageIndex, PageSize }) => ({
+        url: `/groups/pending-requests?groupId=${id}&PageIndex=${PageIndex}&PageSize=${PageSize}`,
+        method: HTTP_METHOD.GET,
+      }),
+    }),
+    getPendingRequestById: builder.query({
+      query: ({ id }) => ({
+        url: `/groups/pending-requests/${id}`,
+        method: HTTP_METHOD.GET,
+      }),
+    }),
   }),
 });
 
@@ -150,6 +162,8 @@ export const {
   useLeaveGroupMutation,
   useKickMemberMutation,
   useFundRaisingRemindMutation,
+  useGetPendingRequestQuery,
+  useGetPendingRequestByIdQuery,
 } = groupApi;
 
 export default groupApi;
