@@ -206,12 +206,12 @@ const Group = () => {
             >
               <AntDesign name="addusergroup" size={24} color="white" />
             </TouchableOpacity>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               className="h-14 w-14 items-center justify-center rounded-full bg-primary shadow-lg shadow-gray-400"
               onPress={handler.handleJoinGroup}
             >
               <FontAwesome6 name="people-group" size={24} color="white" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         )}
         <ModalLizeComponent ref={modalizeRef}>

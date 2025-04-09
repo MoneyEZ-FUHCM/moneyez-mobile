@@ -317,60 +317,81 @@ const BankAccount = () => {
             </View>
           </View>
         </ModalLizeComponent>
-        <ModalLizeComponent ref={state.linkModalRef}>
+        <ModalLizeComponent
+          ref={state.linkModalRef}
+          HeaderComponent={
+            <View className="border-b border-gray-200 p-4">
+              <Text className="text-lg font-bold">
+                Quy tắc liên kết tài khoản ngân hàng qua API Open Banking
+              </Text>
+            </View>
+          }
+        >
           <View className="p-6">
-            <Text className="mb-4 text-center text-lg font-bold text-gray-900">
-              Quy tắc liên kết tài khoản ngân hàng với nhóm
-            </Text>
             <View className="mb-6 space-y-4">
               <View>
-                <Text className="mb-2 font-medium text-red">
-                  Chấp nhận liên kết
+                <Text className="mb-2 font-medium text-primary">
+                  Mục Đích Liên Kết
                 </Text>
                 <View className="space-y-2">
                   <Text className="text-gray-600">
-                    • Khi bạn chấp nhận liên kết tài khoản ngân hàng với nhóm,
-                    MoneyEz sẽ tự động theo dõi toàn bộ giao dịch trên tài khoản
-                    ngân hàng này
-                  </Text>
-                  <Text className="text-gray-600">
-                    • Các giao dịch sẽ được ghi lại vào lịch sử giao dịch của
-                    nhóm
+                    • Liên kết tài khoản ngân hàng nhằm ghi nhận giao dịch một
+                    cách tự động và chính xác trên ứng dụng EzMoney
                   </Text>
                 </View>
               </View>
 
               <View>
-                <Text className="mb-2 font-medium text-red">
-                  Phân tách giao dịch
+                <Text className="mb-2 font-medium text-primary">
+                  Cấp Quyền Truy Cập
                 </Text>
                 <View className="space-y-2">
                   <Text className="text-gray-600">
-                    • Bạn sẽ không thể nhận các giao dịch từ tài khoản ngân hàng
-                    này vào lịch sử giao dịch cá nhân của mình
-                  </Text>
-                  <Text className="text-gray-600">
-                    • Mọi giao dịch liên quan đến tài khoản liên kết sẽ chỉ hiển
-                    thị trong nhóm
+                    • Người dùng cần cho phép API truy cập thông tin giao dịch
+                    từ ngân hàng để hệ thống tự động cập nhật
                   </Text>
                 </View>
               </View>
 
               <View>
-                <Text className="mb-2 font-medium text-red">
-                  Không thể xoá giao dịch
+                <Text className="mb-2 font-medium text-primary">
+                  Xác Nhận Giao Dịch
                 </Text>
                 <View className="space-y-2">
                   <Text className="text-gray-600">
-                    • Các giao dịch được ghi lại vào lịch sử giao dịch của nhóm
-                    là cố định
-                  </Text>
-                  <Text className="text-gray-600">
-                    • Người dùng không thể chỉnh sửa hoặc xoá giao dịch này để
-                    đảm bảo tính minh bạch
+                    • Giao dịch sẽ được xác nhận qua webhook từ ngân hàng, đảm
+                    bảo dữ liệu được đồng bộ và minh bạch
                   </Text>
                 </View>
               </View>
+              <View>
+                <Text className="mb-2 font-medium text-primary">
+                  Bảo Mật Thông Tin
+                </Text>
+                <View className="space-y-2">
+                  <Text className="text-gray-600">
+                    • Người dùng có trách nhiệm bảo vệ thông tin đăng nhập và dữ
+                    liệu cá nhân; EzMoney cam kết sử dụng thông tin chỉ cho mục
+                    đích theo dõi giao dịch
+                  </Text>
+                </View>
+              </View>
+              <View>
+                <Text className="mb-2 font-medium text-primary">
+                  Tự Động Hóa Giao Dịch
+                </Text>
+                <View className="space-y-2">
+                  <Text className="text-gray-600">
+                    • Mọi giao dịch nạp, rút sẽ được cập nhật tự động vào ứng
+                    dụng sau khi được xác thực qua API
+                  </Text>
+                </View>
+              </View>
+              <Text className="italic">
+                <Text className="text-primary">* </Text>
+                Các quy tắc này giúp đảm bảo quá trình liên kết diễn ra nhanh
+                chóng, an toàn và minh bạch đối với người dùng.
+              </Text>
             </View>
 
             <View className="flex-row gap-4">
@@ -387,7 +408,7 @@ const BankAccount = () => {
                 onPress={handler.handleConfirmLink}
               >
                 <Text className="text-center font-medium text-white">
-                  Xác nhận
+                  Tôi dồng ý
                 </Text>
               </TouchableOpacity>
             </View>

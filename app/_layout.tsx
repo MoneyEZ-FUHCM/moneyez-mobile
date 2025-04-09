@@ -11,6 +11,7 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
+import * as Notifications from "expo-notifications";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
@@ -31,6 +32,14 @@ export default function RootLayout() {
     // Inter: require("@/assets/fonts/Inter-VariableFont_opsz,wght.ttf"),
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
+
+  useEffect(() => {
+    const requestPermissions = async () => {
+      await Notifications.requestPermissionsAsync();
+    };
+
+    requestPermissions();
+  }, []);
 
   useEffect(() => {
     if (loaded) {

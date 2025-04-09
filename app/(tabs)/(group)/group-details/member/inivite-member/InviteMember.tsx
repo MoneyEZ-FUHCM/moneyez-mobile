@@ -9,11 +9,19 @@ import {
 import { GROUP_MEMBER_STATUS, GROUP_ROLE } from "@/enums/globals";
 import { Colors } from "@/helpers/constants/color";
 import { PATH_NAME } from "@/helpers/constants/pathname";
+import { formatCurrency, formatDate } from "@/helpers/libs";
 import { GroupMember } from "@/types/group.type";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { memo, useEffect, useRef, useState } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  Linking,
+  Text,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import {
   GestureHandlerRootView,
   Swipeable,
@@ -120,7 +128,10 @@ const InviteMember = () => {
     };
 
     const memberContent = (
-      <View className="flex-row items-center justify-between bg-white p-4">
+      <TouchableOpacity
+        onPress={() => handler.handleOpenMemberDetails(item)}
+        className="flex-row items-center justify-between bg-white p-4"
+      >
         <View
           className={`${item.status === GROUP_MEMBER_STATUS.ACTIVE ? "flex-[0.6]" : ""} flex-row items-center space-x-3`}
         >
@@ -157,7 +168,7 @@ const InviteMember = () => {
             </Text>
           </View>
         )}
-      </View>
+      </TouchableOpacity>
     );
 
     return (
@@ -219,6 +230,205 @@ const InviteMember = () => {
           Đang chờ
         </Text>
       </TouchableOpacity>
+    </View>
+  );
+
+  const MemberDetailsContent = () => {
+    const member = state.selectedMember;
+    if (!member) return null;
+
+    return (
+      <View className="rounded-3xl bg-white p-4">
+        <View className="mb-5 flex-row">
+          <View className="relative mr-4">
+            <Image
+              source={
+                member?.userInfo?.avatarUrl
+                  ? { uri: member.userInfo.avatarUrl }
+                  : AdminAvatar
+              }
+              className="h-20 w-20 rounded-full border-2 border-primary"
+            />
+            {member.role === GROUP_ROLE.LEADER && (
+              <View className="absolute -right-1 top-0 h-6 w-6 items-center justify-center rounded-full border border-white bg-amber-500">
+                <Ionicons name="star" size={12} color="#FFFFFF" />
+              </View>
+            )}
+          </View>
+
+          <View className="flex-1 justify-center">
+            <Text className="mb-1 text-xl font-bold text-gray-900">
+              {member?.userInfo?.fullName}
+            </Text>
+
+            <View className="mb-1 flex-row items-center">
+              <Feather name="mail" size={12} color="#6B7280" className="w-4" />
+              <Text
+                className="ml-1 text-xs text-gray-600"
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {member?.userInfo?.email}
+              </Text>
+            </View>
+
+            <View className="flex-row items-center">
+              <Feather name="phone" size={12} color="#6B7280" className="w-4" />
+              <Text className="ml-1 text-xs text-gray-600">
+                {member?.userInfo?.phoneNumber || "Chưa cập nhật"}
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        <View className="mb-4 flex-row">
+          <View className="flex-1 rounded-xl border border-gray-200 bg-gray-50 p-3">
+            <View className="mb-2 flex-row items-center">
+              <Feather name="users" size={14} color={Colors.colors.primary} />
+              <Text className="ml-1 text-sm font-semibold text-gray-800">
+                Thông tin nhóm
+              </Text>
+            </View>
+            <CompactInfoRow
+              label="Vai trò"
+              value={
+                member.role === GROUP_ROLE.LEADER ? "Trưởng nhóm" : "Thành viên"
+              }
+              valueStyle={
+                member.role === GROUP_ROLE.LEADER
+                  ? "text-primary"
+                  : "text-gray-900"
+              }
+            />
+            <CompactInfoRow
+              label="Trạng thái"
+              value={
+                member.status === GROUP_MEMBER_STATUS.ACTIVE
+                  ? "Đang hoạt động"
+                  : "Đang chờ"
+              }
+              valueStyle={
+                member.status === GROUP_MEMBER_STATUS.ACTIVE
+                  ? "text-green-600"
+                  : "text-amber-600"
+              }
+            />
+            <CompactInfoRow
+              label="Ngày tham gia"
+              value={formatDate(member?.createdDate)}
+            />
+          </View>
+          <SpaceComponent width={10} />
+          <View className="flex-1 rounded-xl border border-gray-200 bg-gray-50 p-3">
+            <View className="mb-2 flex-row items-center">
+              <Feather name="info" size={14} color={Colors.colors.primary} />
+              <Text className="ml-1 text-sm font-semibold text-gray-800">
+                Thông tin khác
+              </Text>
+            </View>
+            <CompactInfoRow
+              label="Địa chỉ"
+              value={member?.userInfo?.address || "Chưa cập nhật"}
+            />
+            <CompactInfoRow
+              label="Ngày sinh"
+              value={
+                member?.userInfo?.dob
+                  ? formatDate(member?.userInfo?.dob)
+                  : "Chưa cập nhật"
+              }
+            />
+            <CompactInfoRow
+              label="Số giao dịch"
+              value={member.transactionCount as string}
+            />
+          </View>
+        </View>
+        <View className="mb-4 rounded-xl border border-gray-200 bg-gray-50 p-3">
+          <View className="mb-3 flex-row items-center justify-between">
+            <View className="flex-row items-center">
+              <Feather
+                name="dollar-sign"
+                size={14}
+                color={Colors.colors.primary}
+              />
+              <Text className="ml-1 text-sm font-semibold text-gray-800">
+                Đóng góp
+              </Text>
+            </View>
+            <Text className="text-sm font-bold text-primary">
+              {member.contributionPercentage}%
+            </Text>
+          </View>
+          <View className="mb-3 h-2 overflow-hidden rounded-full bg-gray-200">
+            <View
+              className="h-full rounded-full bg-primary"
+              style={{ width: `${member.contributionPercentage}%` }}
+            />
+          </View>
+          <View className="flex-row items-center justify-between">
+            <Text className="text-xs text-gray-600">Tổng đóng góp:</Text>
+            <Text className="text-sm font-bold text-primary">
+              {formatCurrency(member?.totalContribution)}
+            </Text>
+          </View>
+        </View>
+        <View className="flex-row">
+          <TouchableOpacity
+            className="flex-1 rounded-lg bg-gray-100 py-3"
+            onPress={handler.handleCloseMemberDetails}
+          >
+            <Text className="text-center text-sm font-medium text-gray-700">
+              Đóng
+            </Text>
+          </TouchableOpacity>
+          <SpaceComponent width={10} />
+          <TouchableOpacity
+            className="flex-1 rounded-lg bg-primary py-3 shadow-sm"
+            onPress={() => {
+              const phone = member?.userInfo?.phoneNumber;
+              if (phone) {
+                Linking.openURL(`tel:${phone}`).catch(() =>
+                  ToastAndroid.show(
+                    "Không thể mở ứng dụng điện thoại",
+                    ToastAndroid.SHORT,
+                  ),
+                );
+              } else {
+                ToastAndroid.show(
+                  "Số điện thoại chưa được cập nhật",
+                  ToastAndroid.SHORT,
+                );
+              }
+            }}
+          >
+            <Text className="text-center text-sm font-semibold text-white">
+              Liên hệ
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
+
+  const CompactInfoRow = ({
+    label,
+    value,
+    valueStyle = "text-gray-900",
+  }: {
+    label: string;
+    value: string | number;
+    valueStyle?: string;
+  }) => (
+    <View className="mb-1 flex-row items-center justify-between">
+      <Text className="text-xs text-gray-600">{label}:</Text>
+      <Text
+        className={`text-xs font-medium ${valueStyle}`}
+        numberOfLines={1}
+        ellipsizeMode="tail"
+      >
+        {value}
+      </Text>
     </View>
   );
 
@@ -300,9 +510,11 @@ const InviteMember = () => {
             </View>
           }
         />
+
+        {/* delete */}
         <ModalLizeComponent
           ref={state.modalizeRef}
-          onClose={handler.handleOpenGroupTab}
+          onClose={handler.handleCloseModalDetail}
         >
           <View className="p-6">
             <Text className="mb-4 text-center text-lg font-bold text-gray-900">
@@ -334,6 +546,14 @@ const InviteMember = () => {
               </TouchableOpacity>
             </View>
           </View>
+        </ModalLizeComponent>
+
+        {/* detail */}
+        <ModalLizeComponent
+          ref={state.memberDetailsModalRef}
+          onClose={handler.handleCloseModalDetail}
+        >
+          <MemberDetailsContent />
         </ModalLizeComponent>
       </SafeAreaViewCustom>
     </GestureHandlerRootView>

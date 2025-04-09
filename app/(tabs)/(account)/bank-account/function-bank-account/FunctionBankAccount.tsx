@@ -4,7 +4,7 @@ import {
   SafeAreaViewCustom,
   SectionComponent,
 } from "@/components";
-import { AntDesign, Feather, MaterialIcons } from "@expo/vector-icons";
+import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { Formik } from "formik";
 import React from "react";
@@ -17,10 +17,8 @@ import {
   View,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { OtpInput } from "react-native-otp-entry";
 import TEXT_TRANSLATE_FUNCTION_BANK_ACCOUNT from "./FunctionBankAccount.translate";
 import useFunctionBankAccount from "./hooks/useFunctionBankAccount";
-import { Colors } from "@/helpers/constants/color";
 
 const FunctionBankAccount = () => {
   const params = useLocalSearchParams();
@@ -85,8 +83,8 @@ const FunctionBankAccount = () => {
           </TouchableOpacity>
           <Text className="text-lg font-bold">
             {state.editMode
-              ? "Chỉnh sửa thông tin ngân hàng"
-              : "Liên kết ngân hàng"}
+              ? "Chỉnh sửa tài khoản ngân hàng"
+              : "Thêm tài khoản ngân hàng"}
           </Text>
         </SectionComponent>
         <SectionComponent rootClassName="flex-1 p-6">
@@ -116,9 +114,10 @@ const FunctionBankAccount = () => {
                       labelClass="text-text-gray text-xs font-semibold"
                       inputClass="h-11 bg-gray-50 px-3 py-2  rounded-lg"
                       formatter={(value) => value.replace(/\D/g, "")}
-                      maxLength={12}
+                      maxLength={50}
                     />
                   </View>
+
                   <View className="">
                     <TouchableOpacity
                       className="rounded-lg"
@@ -225,92 +224,6 @@ const FunctionBankAccount = () => {
             </Text>
           </Pressable>
         </SectionComponent>
-
-        {/* Rule Modal */}
-        <ModalLizeComponent
-          ref={state.ruleModalRef}
-          adjustToContentHeight
-          HeaderComponent={
-            <View className="border-b border-gray-200 p-4">
-              <Text className="text-lg font-bold">Điều khoản & Điều kiện</Text>
-            </View>
-          }
-        >
-          <View className="p-4">
-            <Text className="mb-4 text-base">
-              Bằng việc xác nhận, bạn đồng ý với các điều khoản sau:
-            </Text>
-            <Text className="mb-2">
-              • Thông tin tài khoản ngân hàng là chính xác
-            </Text>
-            <Text className="mb-2">
-              • Chịu trách nhiệm về các giao dịch phát sinh
-            </Text>
-            <Text className="mb-4">
-              • Tuân thủ quy định của ngân hàng và ứng dụng
-            </Text>
-
-            <TouchableOpacity
-              onPress={handler.handleAcceptRules}
-              className="rounded-lg bg-primary p-3"
-            >
-              <Text className="text-center font-semibold text-white">
-                Tôi đồng ý
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </ModalLizeComponent>
-
-        {/* OTP Modal */}
-        <ModalLizeComponent
-          ref={state.otpModalRef}
-          adjustToContentHeight
-          HeaderComponent={
-            <View className="border-b border-gray-200 p-4">
-              <Text className="text-lg font-bold">Xác thực OTP</Text>
-            </View>
-          }
-        >
-          <View className="p-4">
-            <Text className="mb-4 text-base">
-              Vui lòng nhập mã OTP được gửi đến email của bạn
-            </Text>
-
-            <OtpInput
-              numberOfDigits={5}
-              focusColor="green"
-              focusStickBlinkingDuration={400}
-              onTextChange={(text) => handler.setOtpCode(text)}
-              theme={{
-                containerStyle: {
-                  width: "100%",
-                  padding: 0,
-                },
-                pinCodeContainerStyle: {
-                  width: 50,
-                  borderColor: "#E1E1E1",
-                  borderWidth: 2,
-                },
-                pinCodeTextStyle: {
-                  color: Colors.colors.primary,
-                },
-                filledPinCodeContainerStyle: {
-                  borderColor: Colors.colors.primary,
-                  borderWidth: 2,
-                },
-              }}
-            />
-
-            <TouchableOpacity
-              onPress={handler.handleVerifyOtp}
-              className="mt-4 rounded-lg bg-primary p-3"
-            >
-              <Text className="text-center font-semibold text-white">
-                Xác nhận
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </ModalLizeComponent>
       </SafeAreaViewCustom>
     </GestureHandlerRootView>
   );
