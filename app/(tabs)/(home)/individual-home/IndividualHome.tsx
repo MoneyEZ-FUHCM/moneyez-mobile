@@ -24,6 +24,7 @@ import useIndividualHome from "./hooks/useIndividualHome";
 import SpendingBudgetComponent from "@/components/SpendingBudgetComponent";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { router } from "expo-router";
+import { formatCurrency } from "@/helpers/libs";
 
 export default function IndividualHome() {
   const { state, handler } = useIndividualHome();
@@ -175,13 +176,10 @@ export default function IndividualHome() {
               onPressButton2={() => {}}
               summaryText={
                 <>
-                  Tháng này bạn đã chi{" "}
-                  <Text className="font-medium text-red">7859$</Text> cho dịch
-                  vụ 1, <Text className="font-medium text-red">1,123$</Text> cho
-                  dịch vụ 2.{" "}
-                  <Text className="font-medium text-red">Tăng 3%</Text> so với
-                  tháng trước, bạn nên chi tiêu cho dịch vụ 1 này cân nhắc hơn
-                  để không vượt quá mục tiêu chi tiêu.
+                  {"Chào bạn mình là MewMo. Số dư hiện tại của bạn là"}{" "}
+                  <Text className="font-medium text-green">
+                    {state.currentUserSpendingModelData?.totalSpent}.
+                  </Text>
                 </>
               }
             />

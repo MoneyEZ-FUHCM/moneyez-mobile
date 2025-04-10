@@ -97,9 +97,9 @@ const useSpendingBudget = () => {
             });
           }
 
-          const section = sectionMap.get(categoryCode);
+          const section = sectionMap?.get(categoryCode);
           if (section) {
-            section.items?.push({
+            section?.items?.push({
               id: goal?.id,
               name: goal?.name,
               remaining:
@@ -110,7 +110,7 @@ const useSpendingBudget = () => {
               targetAmount: goal?.targetAmount,
               isSaving: goal?.isSaving,
               icon:
-                (subcategory.icon as keyof typeof MaterialIcons.glyphMap) ||
+                (subcategory?.icon as keyof typeof MaterialIcons.glyphMap) ||
                 "account-balance",
               subcategoryId: goal?.subcategoryId,
             });
@@ -118,7 +118,7 @@ const useSpendingBudget = () => {
         }
       });
 
-      setBudgetSections(Array.from(sectionMap.values()));
+      setBudgetSections(Array.from(sectionMap?.values()));
       setIsLoading(false);
     }
   }, [financialGoalsData, categoriesData, isLoadingGoals, isLoadingCategories]);

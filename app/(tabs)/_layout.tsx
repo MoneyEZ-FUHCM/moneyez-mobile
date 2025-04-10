@@ -19,7 +19,7 @@ export default function TabLayout() {
     CONDITION,
     ANIMATION_NAVIGATE_TAB,
   } = COMMON_CONSTANT;
-  const { handler } = useNotificationList();
+  const { handler } = useNotificationList(true);
 
   useEffect(() => {
     Notifications.setNotificationHandler({

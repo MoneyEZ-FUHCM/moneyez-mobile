@@ -67,12 +67,12 @@ export default function SpendingBudget() {
       <SectionComponent rootClassName="bg-white p-4 mt-2.5">
         <View className="mb-2">
           <Text className="text-base font-semibold">
-            Chu kỳ {cycleInfo.cycle}
+            Chu kỳ {cycleInfo?.cycle}
           </Text>
         </View>
         <View className="flex-row items-center justify-between">
           <Text className="text-sm text-gray-500">
-            Còn {cycleInfo.remainingDays} ngày nữa hết chu kỳ
+            Còn {cycleInfo?.remainingDays} ngày nữa hết chu kỳ
           </Text>
           <Pressable
             onPress={handleAddBudget}
@@ -99,7 +99,7 @@ export default function SpendingBudget() {
         {/* Budget Sections */}
         <View className="m-4">
           {budgetSections &&
-            budgetSections.length > 0 &&
+            budgetSections?.length > 0 &&
             budgetSections?.map((section) => (
               <SectionComponent
                 key={section?.id}
@@ -147,7 +147,7 @@ export default function SpendingBudget() {
                           </View>
                           <View className="gap-y-1">
                             <Text className="text-base font-bold text-black">
-                              {item.name}
+                              {item?.name}
                             </Text>
                             <View className="flex-col gap-0.5">
                               <View className="flex-row items-center space-x-1">

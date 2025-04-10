@@ -90,6 +90,15 @@ const financialGoalApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["FinancialGoal"],
     }),
+    getPersonalFinancialGoalUserSpendingModel: builder.query({
+      query: ({ id }) => ({
+        url: `/financial-goals/personal/user-spending-model/${id}`,
+        method: HTTP_METHOD.GET,
+      }),
+      transformResponse: (response) =>
+        transformCommonResponse<FinancialGoal>(response),
+      providesTags: ["FinancialGoal"],
+    }),
   }),
 });
 
@@ -105,6 +114,7 @@ export const {
   useCreateGroupFinancialGoalMutation,
   useUpdateGroupFinancialGoalMutation,
   useDeleteGroupFinancialGoalMutation,
+  useGetPersonalFinancialGoalUserSpendingModelQuery,
 } = financialGoalApi;
 
 export default financialGoalApi;

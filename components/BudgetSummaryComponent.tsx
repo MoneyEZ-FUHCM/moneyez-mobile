@@ -9,6 +9,7 @@ interface BudgetSummaryProps {
   button2Text: string;
   onPressButton1: () => void;
   onPressButton2: () => void;
+  isButton?: boolean;
 }
 
 const BudgetSummaryComponent = ({
@@ -17,6 +18,7 @@ const BudgetSummaryComponent = ({
   button2Text,
   onPressButton1,
   onPressButton2,
+  isButton = false,
 }: BudgetSummaryProps) => {
   return (
     <SectionComponent rootClassName="mb-5 justify-center rounded-xl border border-primary bg-thirdly p-4">
@@ -33,21 +35,23 @@ const BudgetSummaryComponent = ({
         <Text>{summaryText}</Text>
       </View>
       <View className="h-[10px]" />
-      <View className="flex-row">
-        <Pressable
-          className="w-1/2 flex-1 rounded-lg border border-primary bg-white p-2"
-          onPress={onPressButton1}
-        >
-          <Text>{button1Text}</Text>
-        </Pressable>
-        <View className="w-[17px]" />
-        <Pressable
-          className="w-1/2 flex-1 rounded-lg border border-primary bg-white p-2"
-          onPress={onPressButton2}
-        >
-          <Text>{button2Text}</Text>
-        </Pressable>
-      </View>
+      {isButton && (
+        <View className="flex-row">
+          <Pressable
+            className="w-1/2 flex-1 rounded-lg border border-primary bg-white p-2"
+            onPress={onPressButton1}
+          >
+            <Text>{button1Text}</Text>
+          </Pressable>
+          <View className="w-[17px]" />
+          <Pressable
+            className="w-1/2 flex-1 rounded-lg border border-primary bg-white p-2"
+            onPress={onPressButton2}
+          >
+            <Text>{button2Text}</Text>
+          </Pressable>
+        </View>
+      )}
     </SectionComponent>
   );
 };

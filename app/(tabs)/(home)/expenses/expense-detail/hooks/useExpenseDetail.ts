@@ -92,19 +92,29 @@ const useExpenseDetail = () => {
 
   useEffect(() => {
     if (getPersonalTransactionFinancialGoals?.items) {
-      setPersonalTransactionFinancialGoals((prevTransactions: any) => {
-        const existingIds = new Set(
-          prevTransactions?.length > 0 &&
-            prevTransactions?.map(
-              (item: PersonalTransactionFinancialGoals) => item?.id,
-            ),
-        );
-        const newItems = getPersonalTransactionFinancialGoals?.items?.filter(
-          (item: PersonalTransactionFinancialGoals) =>
-            !existingIds.has(item?.id),
-        );
-        return [...prevTransactions, ...newItems];
-      });
+      setPersonalTransactionFinancialGoals(
+        (prevTransactions: PersonalTransactionFinancialGoals[]) => {
+          const existingArray = Array.isArray(prevTransactions)
+            ? prevTransactions
+            : [];
+
+          const existingIds = new Set();
+          if (existingArray.length > 0) {
+            existingArray.forEach((item) => {
+              if (item && item.id) {
+                existingIds.add(item.id);
+              }
+            });
+          }
+
+          const newItems = getPersonalTransactionFinancialGoals?.items?.filter(
+            (item: PersonalTransactionFinancialGoals) =>
+              item && !existingIds.has(item.id),
+          );
+
+          return [...existingArray, ...(newItems || [])];
+        },
+      );
 
       setIsFetchingData(false);
       setIsLoadingMore(false);
