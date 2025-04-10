@@ -22,7 +22,7 @@ const BarChartExpenseCustom = React.memo(
       return amount.toString();
     };
 
-    const maxAmount = Math.max(...data.map((item) => item?.amount || 0));
+    const maxAmount = Math.max(...data?.map((item) => item?.amount || 0));
     const adjustedMaxValue =
       maxAmount >= 1000 ? maxAmount * 1.1 : maxAmount + 100;
     const yAxisValues = Array.from(
