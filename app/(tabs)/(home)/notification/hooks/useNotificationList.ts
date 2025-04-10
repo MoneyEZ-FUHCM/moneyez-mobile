@@ -1,7 +1,6 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { formatDate, formatTime } from "@/helpers/libs";
-import useHideTabbar from "@/hooks/useHideTabbar";
 import { setHasUnreadNotification } from "@/redux/slices/systemSlice";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import {
@@ -10,9 +9,9 @@ import {
   useLazyReadNotificationQuery,
   useReadAllNotificationMutation,
 } from "@/services/notification";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Linking, ToastAndroid } from "react-native";
+import { BackHandler, Linking, ToastAndroid } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { useDispatch } from "react-redux";
 import NOTIFICATION_CONSTANTS from "../NotificationList.const";
@@ -30,7 +29,7 @@ const initialPageIndex = 1;
 const pageSize = 10;
 const tabs = NOTIFICATION_CONSTANTS.TABS;
 
-const useNotificationList = () => {
+const useNotificationList = (isHidden: boolean = false) => {
   const [activeTab, setActiveTab] =
     useState<NotificationTabType>(initialActiveTab);
   const [pageIndex, setPageIndex] = useState(initialPageIndex);
@@ -62,7 +61,13 @@ const useNotificationList = () => {
     isFetching: isRefetching,
   } = useGetNotificationQuery(queryParams);
 
-  useHideTabbar();
+  useFocusEffect(
+    useCallback(() => {
+      if (!isHidden) {
+        dispatch(setMainTabHidden(true));
+      }
+    }, [dispatch]),
+  );
 
   const formatNotifications = (items: any[]) => {
     return items?.map((notice: any) => ({
@@ -118,6 +123,19 @@ const useNotificationList = () => {
     router.back();
     dispatch(setMainTabHidden(false));
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        handleGoBack();
+        return true;
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [handleGoBack]),
+  );
 
   const loadMoreData = useCallback(() => {
     if (!isLoading && !isLoadingMore && data?.items?.length === pageSize) {

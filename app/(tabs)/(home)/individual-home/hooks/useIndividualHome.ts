@@ -2,7 +2,10 @@ import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { formatCurrency } from "@/helpers/libs";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
-import { useGetPersonalFinancialGoalsQuery } from "@/services/financialGoal";
+import {
+  useGetPersonalFinancialGoalsQuery,
+  useGetPersonalFinancialGoalUserSpendingModelQuery,
+} from "@/services/financialGoal";
 import {
   useGetCurrentUserSpendingModelChartQuery,
   useGetCurrentUserSpendingModelQuery,
@@ -30,7 +33,9 @@ const useIndividualHome = () => {
   const {
     data: personalFinancialGoals,
     refetch: refetchPersonalFinancialGoals,
-  } = useGetPersonalFinancialGoalsQuery({ PageIndex: 1, PageSize: 100 });
+  } = useGetPersonalFinancialGoalUserSpendingModelQuery({
+    id: currentUserSpendingModel?.data?.id,
+  });
 
   useFocusEffect(
     useCallback(() => {
