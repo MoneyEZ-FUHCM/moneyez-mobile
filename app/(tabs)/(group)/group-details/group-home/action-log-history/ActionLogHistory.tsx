@@ -198,34 +198,38 @@ const ActionLogHistory = () => {
             state.isLoading || state.isFetchingData || state.isRefetching
           }
         >
-          {state?.transactionActivities &&
-          state.transactionActivities?.length > 0 ? (
-            <FlatListCustom
-              isBottomTab={true}
-              isLoading={state.isLoadingMore}
-              className="mx-3 mt-5 rounded-2xl"
-              data={state.transactionActivities ?? []}
-              renderItem={renderRecentActivities}
-              keyExtractor={(item) => item?.id.toString()}
-              onLoadMore={handler.handleLoadMore}
-              hasMore={state.groupTransaction?.items?.length === state.pageSize}
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={{
-                paddingBottom: 110,
-              }}
-              refreshing={state.isFetchingData}
-              onRefresh={handler.handleRefetchActivities}
-            />
-          ) : (
-            <View className="mt-20 items-center justify-center p-6">
-              <View className="mb-4 h-20 w-20 items-center justify-center rounded-full bg-gray-100">
-                <Feather name="credit-card" size={32} color="#609084" />
+          <FlatListCustom
+            isBottomTab={true}
+            isLoading={state.isLoadingMore}
+            className="mx-3 mt-5 rounded-2xl"
+            data={state.transactionActivities ?? []}
+            renderItem={renderRecentActivities}
+            keyExtractor={(item) => item?.id.toString()}
+            onLoadMore={handler.handleLoadMore}
+            hasMore={state.groupTransaction?.items?.length === state.pageSize}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingBottom: 110,
+              ...((!state.transactionActivities ||
+                state.transactionActivities?.length === 0) && {
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }),
+            }}
+            refreshing={state.isFetchingData}
+            onRefresh={handler.handleRefetchActivities}
+            ListEmptyComponent={() => (
+              <View className="items-center justify-center p-6">
+                <View className="mb-4 h-20 w-20 items-center justify-center rounded-full bg-gray-100">
+                  <Feather name="credit-card" size={32} color="#609084" />
+                </View>
+                <Text className="text-center text-lg text-gray-500">
+                  {TEXT_TRANSLATE_ACTION_LOG_HISTORY.TITLE.NO_DATA}
+                </Text>
               </View>
-              <Text className="text-center text-lg text-gray-500">
-                {TEXT_TRANSLATE_ACTION_LOG_HISTORY.TITLE.NO_DATA}
-              </Text>
-            </View>
-          )}
+            )}
+          />
         </LoadingSectionWrapper>
         <ModalLizeComponent
           ref={state.detailModalizeRef}
