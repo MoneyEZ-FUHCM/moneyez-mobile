@@ -76,9 +76,9 @@ export default function GroupSettingsDefault() {
                   onPress={handler.handleFinancialGoal}
                   className="flex-row items-center px-4 py-3"
                 >
-                    <View className="mr-4 h-10 w-10 items-center justify-center rounded-full">
+                  <View className="mr-4 h-10 w-10 items-center justify-center rounded-full">
                     <MaterialIcons name="flag" size={20} color="#609084" />
-                    </View>
+                  </View>
                   <View className="flex-1">
                     <Text className="text-base font-medium">
                       {
@@ -130,15 +130,15 @@ export default function GroupSettingsDefault() {
                 <MaterialIcons name="warning" size={30} color="white" />
               </View>
               <Text className="text-xl font-bold text-gray-900">
-                Xác nhận đóng quỹ nhóm
+                Xác nhận rời nhóm
               </Text>
             </View>
 
             <View className="rounded-lg bg-orange-50 p-4">
               <Text className="text-center text-base leading-6 text-gray-700">
-                Khi đóng quỹ nhóm, toàn bộ số tiền bạn đã đóng trong thời gian
-                qua sẽ không được hoàn trả.
-                {"\n\n"}Bạn có chắc chắn muốn đóng quỹ nhóm?
+                Khi rời nhóm, toàn bộ số tiền bạn đã đóng trong thời gian qua sẽ
+                không được hoàn trả.
+                {"\n\n"}Bạn có chắc chắn muốn rời nhóm?
               </Text>
             </View>
 

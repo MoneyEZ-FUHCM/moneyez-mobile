@@ -22,7 +22,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Checkbox } from "react-native-paper";
 import Animated, { FadeInDown, FadeOut, Layout } from "react-native-reanimated";
 import AUTH_SCREEN_CONSTANTS from "../AuthScreen.const";
 import TEXT_TRANSLATE_AUTH from "../AuthScreen.translate";
@@ -100,18 +99,7 @@ const Login = () => {
                         <Pressable
                           className="flex-row items-center"
                           onPress={() => handler.setIsChecked(!state.isChecked)}
-                        >
-                          <Checkbox
-                            status={state.isChecked ? "checked" : "unchecked"}
-                            onPress={() =>
-                              handler.setIsChecked(!state.isChecked)
-                            }
-                            color="#609084"
-                          />
-                          <Text className="mx-2 text-[12px] text-text-gray">
-                            {BUTTON.REMEMBER_ME}
-                          </Text>
-                        </Pressable>
+                        ></Pressable>
                         <TouchableOpacity
                           onPress={() =>
                             router.navigate(AUTH.CONFIRM_EMAIL as any)
