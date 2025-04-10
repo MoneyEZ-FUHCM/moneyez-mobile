@@ -45,6 +45,12 @@ const PATH_NAME = {
     EXPENSES_DETAIL: "expenses/expense-detail/ExpenseDetail",
     UPDATE_EXPENSE: "expenses/update-expense/UpdateExpense",
     STATISTICAL: "statistical/Statistical",
+    CategoryYearReport: "category-year-report/CategoryYearReport",
+    AllTimeReport: "all-time-report/AllTimeReport",
+    CategoryAllTime: "category-all-time/CategoryAllTime",
+    BalanceReport: "balance-report/BalanceReport",
+    YearReport: "year-report/YearReport",
+    RecurringTransactionsCalendar: "recurring-transactions-calendar/RecurringTransactionsCalendar",
   },
   ACCOUNT: {
     ACCOUNT_SETTING: "setting/AccountSetting",

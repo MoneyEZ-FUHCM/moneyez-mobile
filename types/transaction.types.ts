@@ -3,7 +3,6 @@ import { TransactionType } from "./invidual.types";
 
 export interface Transaction {
   [x: string]: any;
-  [x: string]: any;
   id: string;
   groupId: string | null;
   userId: string;
@@ -52,19 +51,6 @@ export interface TransactionPreviewPayload extends TransactionPayload {
   subCategoryName: string;
 }
 
-export interface TransactionsByDate {
-  [date: string]: Transaction[];
-}
-
-export interface MarkedDates {
-  [date: string]: {
-      marked?: boolean;
-      dotColor?: string;
-      selected?: boolean;
-      selectedColor?: string;
-  };
-}
-
 export interface GroupTransaction {
   groupId: string;
   userId: string;
@@ -98,4 +84,63 @@ export interface MarkedDates {
     selected?: boolean;
     selectedColor?: string;
   };
+}
+
+export interface TransactionsReportMonthlyData {
+  month: string;
+  amount: number;
+}
+
+export interface TransactionsReportYearlyData {
+  year: number;
+  type: number;
+  total: number;
+  average: number;
+  monthlyData: TransactionsReportMonthlyData[];
+}
+
+export interface TransactionsReportCategoryItem {
+  name: string;
+  amount: number;
+  percentage: number;
+  icon: string;
+}
+
+export interface TransactionsReportCategoryYear {
+  year: number;
+  type: number;
+  total: number;
+  categories: TransactionsReportCategoryItem[];
+}
+
+export interface TransactionsReportAllTime {
+  income: number;
+  expense: number;
+  total: number;
+  initialBalance: number;
+  cumulation: number;
+}
+
+export interface TransactionsReportCategoryItem {
+  name: string;
+  amount: number;
+  percentage: number;
+  icon: string;
+  color?: string
+}
+
+export interface TransactionsReportCategoryAllTime {
+  type: number;
+  total: number;
+  categories: TransactionsReportCategoryItem[];
+}
+
+export interface TransactionsReportMonthlyBalance {
+  month: string;
+  balance: number;
+}
+
+export interface TransactionsReportYearlyBalance {
+  year: number;
+  balances: TransactionsReportMonthlyBalance[];
 }

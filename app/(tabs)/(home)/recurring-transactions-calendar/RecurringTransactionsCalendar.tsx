@@ -2,18 +2,18 @@ import React from "react";
 import { View, Text, Pressable, ScrollView } from "react-native";
 import { MaterialIcons, EvilIcons } from "@expo/vector-icons";
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
-import TEXT_TRANSLATE_STATISTICAL from "./Statistical.translate";
-import useStatistical from "./hooks/useStatistical";
+import useStatistical from "./hooks/useRecurringTransactionsCalendar";
 import CalendarView from "./CalendarView";
 import { formatCurrency } from "@/helpers/libs";
 import { Transaction } from "@/types/transaction.types";
+import TEXT_TRANSLATE_RECURRING_TRANSACTIONS from "./RecurringTransactionsCalendar.translate";
 
-export default function Statistical() {
+export default function RecurringTransactionsCalendar() {
     const { state, handler } = useStatistical();
 
     const renderTransactionList = () => (
         <View className="mt-4 px-4">
-            <Text className="text-xl font-bold text-gray-800 mb-3">{TEXT_TRANSLATE_STATISTICAL.LABELS.RECENT_TRANSACTIONS}</Text>
+            <Text className="text-xl font-bold text-gray-800 mb-3">{TEXT_TRANSLATE_RECURRING_TRANSACTIONS.LABELS.RECENT_TRANSACTIONS}</Text>
             {Object.entries(state.transactionsByDate).map(([date, transactions]) => {
                 const transactionData = handler.getTransaction(transactions);
                 const netAmount = transactionData.income - transactionData.expense;
@@ -70,7 +70,7 @@ export default function Statistical() {
                         <MaterialIcons name="arrow-back" size={24} color="black" />
                     </Pressable>
                     <Text className="text-lg font-bold text-gray-900">
-                        {TEXT_TRANSLATE_STATISTICAL.TITLE.STATISTICAL}
+                        {TEXT_TRANSLATE_RECURRING_TRANSACTIONS.TITLE.RECURRING_TRANSACTIONS}
                     </Text>
                     <Pressable className="p-2">
                         <EvilIcons name="search" size={24} color="black" />

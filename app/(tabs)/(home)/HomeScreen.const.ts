@@ -1,16 +1,17 @@
 import LogoDeer from "@/assets/images/logo/logo_deer.png";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import {
-  Alarm,
   Bookmark,
-  Card,
   Category,
   Coin1,
   Eye,
   EyeSlash,
-  Profile2User,
   WalletAdd1,
   Activity,
+  Graph,
+  Calendar,
+  TrendUp,
+  CalendarEdit,
 } from "iconsax-react-native";
 
 const { HOME } = PATH_NAME;
@@ -25,11 +26,16 @@ const HOME_SCREEN_CONSTANTS = {
       url: HOME.SPENDING_MODEL_HISTORY,
     },
     { label: "Thống kê", icon: Activity, url: HOME.STATISTICAL },
-    { label: "Tính năng 4", icon: Alarm },
-    { label: "Tính năng 5", icon: Bookmark },
-    { label: "Tính năng 6", icon: Card },
-    { label: "Tính năng 7", icon: Category },
-    { label: "Tính năng 8", icon: Profile2User },
+    { label: "Báo cáo số dư", icon: Graph, url: HOME.BalanceReport },
+    { label: "Danh mục theo năm", icon: Bookmark, url: HOME.CategoryYearReport },
+    { label: "Tổng quan mọi thời gian", icon: Calendar, url: HOME.AllTimeReport },
+    { label: "Tổng quan danh mục", icon: Category, url: HOME.CategoryAllTime },
+    { label: "Báo cáo theo năm", icon: TrendUp, url: HOME.YearReport },
+    {
+      label: "Lịch giao dịch định kỳ",
+      icon: CalendarEdit,
+      url: HOME.RecurringTransactionsCalendar
+    },
   ],
   POST_DATAS: [
     {
