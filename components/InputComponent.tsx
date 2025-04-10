@@ -24,6 +24,7 @@ interface CommonInputProps {
   inputClass?: string;
   errorTextClass?: string;
   formatter?: (value: string) => string;
+  onValidationChange?: (isValid: boolean) => void;
   [key: string]: any;
 }
 
@@ -41,14 +42,25 @@ const InputComponent = ({
   inputClass = "",
   errorTextClass = "",
   formatter,
+  onValidationChange,
   ...props
 }: CommonInputProps) => {
   const [field, meta, helpers] = useField(name);
   const [isPasswordVisible, setIsPasswordVisible] = useState(!isPrivate);
+  const [localError, setLocalError] = useState<string | undefined>();
 
   const handleChangeText = (text: string) => {
     const formattedText = formatter ? formatter(text) : text;
     helpers.setValue(formattedText);
+
+    if (name === "amount") {
+      const numericValue = Number(text.replace(/\./g, ""));
+      if (numericValue > 0 && numericValue < 10000) {
+        helpers.setError("Giá trị thấp nhất là 10.000đ");
+      } else {
+        helpers.setError(undefined);
+      }
+    }
   };
 
   return (
@@ -57,7 +69,7 @@ const InputComponent = ({
         {isRequired && <Text className="mr-1 text-red">*</Text>}
         <Text
           className={`${labelClass} ${
-            meta.touched && meta.error ? "text-red" : ""
+            (meta.touched && meta.error) || localError ? "text-red" : ""
           }`}
         >
           {label}
@@ -68,7 +80,9 @@ const InputComponent = ({
           className={`h-10 rounded-md border px-3 ${
             icon ? "pl-10" : "pl-3"
           } ${isPrivate || rightIcon ? "pr-10" : "pr-3"} ${
-            meta.touched && meta.error ? "border-red" : "border-gray-300"
+            (meta.touched && meta.error) || localError
+              ? "border-red"
+              : "border-gray-300"
           } ${inputClass}`}
           placeholder={placeholder}
           secureTextEntry={!isPasswordVisible && isPrivate}
@@ -98,11 +112,11 @@ const InputComponent = ({
           )
         )}
 
-        {meta.touched && meta.error && (
+        {((meta.touched && meta.error) || localError) && (
           <Text
             className={`${errorTextClass} absolute -bottom-5 mt-2 text-[12px] text-red`}
           >
-            {meta.error}
+            {localError || meta.error}
           </Text>
         )}
       </View>

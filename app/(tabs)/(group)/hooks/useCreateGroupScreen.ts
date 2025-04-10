@@ -4,7 +4,7 @@ import { router, useFocusEffect } from "expo-router";
 import * as Yup from "yup";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import TEXT_TRANSLATE_CREATE_GROUP from "../create-group/CreateGroup.translate";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useCreateGroupMutation } from "@/services/group";
 import { setLoading } from "@/redux/slices/loadingSlice";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
@@ -15,6 +15,8 @@ import FUNCTION_BANK_ACCOUNT_CONSTANT from "../../(account)/bank-account/functio
 import { useGetBankAccountsQuery } from "@/services/bankAccounts";
 import useDebounce from "@/hooks/useDebounce";
 import { CreateGroupPayload } from "@/types/group.type";
+import { setOtpCode } from "@/redux/slices/systemSlice";
+import { selectOtpCode } from "@/redux/hooks/systemSelector";
 
 const useCreateGroupScreen = () => {
   const { MESSAGE_VALIDATE, SUCCESS_MESSAGES } = TEXT_TRANSLATE_CREATE_GROUP;
@@ -26,7 +28,7 @@ const useCreateGroupScreen = () => {
   const bankSelectModalRef = useRef<Modalize>(null);
   const { BANK_LIST } = FUNCTION_BANK_ACCOUNT_CONSTANT;
   const formikRef = useRef<any>(null);
-  const { data: bankAccounts } = useGetBankAccountsQuery({
+  const { data: bankAccounts, refetch } = useGetBankAccountsQuery({
     PageIndex: 1,
     PageSize: 100,
   });
@@ -34,14 +36,28 @@ const useCreateGroupScreen = () => {
   const [createGroup] = useCreateGroupMutation();
   const { HTTP_STATUS, SYSTEM_ERROR } = COMMON_CONSTANT;
   const { imageUrl, pickAndUploadImage } = useUploadImage();
+  const [showRuleModal, setShowRuleModal] = useState(false);
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [currentValues, setCurrentValues] = useState<any>(null);
+  const ruleModalRef = useRef<Modalize>(null);
+  const otpModalRef = useRef<Modalize>(null);
+  const otpCode = useSelector(selectOtpCode);
 
-  const mappedAccounts = bankAccounts?.items?.map((account) => {
-    const bank = BANK_LIST.find((b) => b.shortName === account.bankShortName);
-    return {
-      ...account,
-      logo: bank ? bank.logo : null,
-    };
-  });
+  const mappedAccounts = useMemo(() => {
+    return bankAccounts?.items
+      ?.filter(
+        (account) => account.isHasGroup === false && account.isLinked === true,
+      )
+      .map((account) => {
+        const bank = BANK_LIST.find(
+          (b) => b.shortName === account.bankShortName,
+        );
+        return {
+          ...account,
+          logo: bank ? bank.logo : null,
+        };
+      });
+  }, [bankAccounts?.items]);
 
   useFocusEffect(
     useCallback(() => {
@@ -77,27 +93,38 @@ const useCreateGroupScreen = () => {
     currentBalance: Yup.string()
       .trim()
       .required(MESSAGE_VALIDATE.CURRENT_BALANCE_REQUIRED),
-    accountBankId: Yup.string()
-      .trim()
-      .required(MESSAGE_VALIDATE.ACCOUNT_BANKING_REQUIRED),
   });
 
-  const handleCreateGroup = useCallback(
-    async (payload: CreateGroupPayload) => {
+  const handleCreateGroup = useCallback(async (values: CreateGroupPayload) => {
+    setCurrentValues(values);
+    ruleModalRef.current?.open();
+    setShowRuleModal(true);
+  }, []);
+
+  const handleAcceptRules = useCallback(async () => {
+    ruleModalRef.current?.close();
+    setShowRuleModal(false);
+    otpModalRef.current?.open();
+    setShowOtpModal(true);
+  }, []);
+
+  const handleProcessCreateGroup = useCallback(
+    async (values: CreateGroupPayload) => {
       dispatch(setLoading(true));
-      const updatePayload = {
-        ...payload,
-        image: imageUrl,
-        currentBalance: 0,
-        accountBankId: payload.accountBankId,
-      };
       try {
+        const updatePayload = {
+          ...values,
+          image: imageUrl,
+          currentBalance: 0,
+          accountBankId: values.accountBankId,
+        };
         const res = await createGroup(updatePayload).unwrap();
-        if (res && res.status === HTTP_STATUS.SUCCESS.CREATED) {
+        if (res?.status === HTTP_STATUS.SUCCESS.CREATED) {
           ToastAndroid.show(
             SUCCESS_MESSAGES.GROUP_CREATED_SUCCESSFULLY,
             ToastAndroid.SHORT,
           );
+          await refetch();
           router.replace({
             pathname: PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT as any,
             params: { id: res?.data?.id },
@@ -105,14 +132,34 @@ const useCreateGroupScreen = () => {
           dispatch(setMainTabHidden(true));
           dispatch(setGroupTabHidden(false));
         }
-      } catch (err: any) {
+      } catch (err) {
         ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
       } finally {
         dispatch(setLoading(false));
+        ruleModalRef.current?.close();
       }
     },
-    [createGroup, dispatch, imageUrl],
+    [createGroup, dispatch, imageUrl, refetch],
   );
+
+  const handleVerifyOtp = useCallback(async () => {
+    if (otpCode.length !== 5 || !/^[0-9]+$/.test(otpCode)) {
+      ToastAndroid.show("OTP phải có đúng 5 số", ToastAndroid.SHORT);
+      return;
+    }
+
+    try {
+      // const payload = { email, otpCode };
+      // const res = await verify(JSON.stringify(payload)).unwrap();
+      // if (res?.status === HTTP_STATUS.SUCCESS.OK) {
+      //   otpModalRef.current?.close();
+      //   setShowOtpModal(false);
+      //   await handleProcessCreateGroup(currentValues);
+      // }
+    } catch (err) {
+      ToastAndroid.show("OTP không hợp lệ", ToastAndroid.SHORT);
+    }
+  }, [otpCode, currentValues]);
 
   const handleScroll = (event: any) => {
     setIsAtTop(event.nativeEvent.contentOffset.y <= 0);
@@ -132,7 +179,6 @@ const useCreateGroupScreen = () => {
   const handleSelectBank = useCallback(
     (bank: any, setFieldValue: (field: string, value: any) => void) => {
       if (!setFieldValue) {
-        console.log("Vui lòng chọn số tài khoản");
         return;
       }
 
@@ -159,6 +205,11 @@ const useCreateGroupScreen = () => {
       bank.accountNumber?.toLowerCase().includes(searchText.toLowerCase()),
   );
 
+  const handleNavigateCreateBankAccount = useCallback(() => {
+    bankSelectModalRef.current?.close();
+    router.navigate(PATH_NAME.GROUP.BANK_ACCOUNT_LIST as any);
+  }, []);
+
   return {
     state: {
       isKeyboardVisible,
@@ -170,6 +221,12 @@ const useCreateGroupScreen = () => {
       bankAccounts: bankAccounts?.items,
       mappedAccounts: filteredAccounts,
       selectedBank,
+      showRuleModal,
+      showOtpModal,
+      ruleModalRef,
+      otpModalRef,
+      otpCode,
+      currentValues,
     },
     handler: {
       validationSchema,
@@ -180,6 +237,11 @@ const useCreateGroupScreen = () => {
       handleCloseModal,
       handleSelectBank,
       setSearchText,
+      handleNavigateCreateBankAccount,
+      handleAcceptRules,
+      handleVerifyOtp,
+      setOtpCode: (value: string) => dispatch(setOtpCode(value)),
+      handleProcessCreateGroup,
     },
   };
 };

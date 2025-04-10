@@ -34,7 +34,11 @@ const useRegisterScreen = () => {
     password: Yup.string()
       .trim()
       .required(MESSAGE_VALIDATE.PASSWORD_REQUIRED)
-      .min(8, MESSAGE_VALIDATE.PASSWORD_8_CHARACTERS),
+      .min(8, MESSAGE_VALIDATE.PASSWORD_8_CHARACTERS)
+      .matches(/[\W_]/, MESSAGE_VALIDATE.PASSWORD_SPECIAL_CHAR)
+      .matches(/[a-zA-Z]/, MESSAGE_VALIDATE.PASSWORD_LETTERS)
+      .matches(/^\S*$/, MESSAGE_VALIDATE.PASSWORD_NO_WHITESPACE)
+      .matches(/[A-Z]/, MESSAGE_VALIDATE.PASSWORD_UPPERCASE),
     confirmPassword: Yup.string()
       .trim()
       .required(MESSAGE_VALIDATE.CONFIRM_PASSWORD_REQUIRED)

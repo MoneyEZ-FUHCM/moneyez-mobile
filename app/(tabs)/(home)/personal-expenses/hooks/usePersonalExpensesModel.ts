@@ -5,7 +5,7 @@ import { useGetSpendingModelQuery } from "@/services/spendingModel";
 import { useCreateUserSpendingModelMutation } from "@/services/userSpendingModel";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
-import { ToastAndroid } from "react-native";
+import { BackHandler, ToastAndroid } from "react-native";
 import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 import PERSONAL_EXPENSES_MODEL_CONSTANTS, {
@@ -67,6 +67,19 @@ const usePersonalExpensesModel = () => {
     router.back();
     dispatch(setMainTabHidden(false));
   }, [dispatch]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        handleBack();
+        return true;
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [handleBack]),
+  );
 
   const handleSetStep = (newStep: number) => {
     if (newStep === 3 && (!startDate || !selectedTime)) {

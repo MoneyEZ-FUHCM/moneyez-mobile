@@ -98,15 +98,16 @@ export default function AddTransaction() {
 
   return (
     <SafeAreaViewCustom rootClassName="bg-[#fafafa] relative">
-      <SectionComponent rootClassName="h-14 bg-white justify-center">
-        <View className="flex-row items-center justify-between px-5">
-          <Pressable onPress={handler.handleBack}>
+      <SectionComponent rootClassName="h-14 bg-white justify-center items-center relative">
+        <View className="relative h-full flex-row items-center px-5">
+          <Pressable onPress={handler.handleBack} className="absolute left-4">
             <MaterialIcons name="arrow-back" size={24} />
           </Pressable>
-          <Text className="text-lg font-bold">
-            {TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.ADD_EXPENSE_INCOME}
-          </Text>
-          <MaterialIcons name="camera-alt" size={24} />
+          <View className="flex-1 items-center">
+            <Text className="text-lg font-bold">
+              {TEXT_TRANSLATE_ADD_TRANSACTION.TITLE.ADD_EXPENSE_INCOME}
+            </Text>
+          </View>
         </View>
       </SectionComponent>
       <Formik
@@ -138,7 +139,6 @@ export default function AddTransaction() {
                 <View className="mx-3 my-2 flex-row items-center">
                   <FlatList
                     ref={state.flatListRef}
-                    removeClippedSubviews={false}
                     horizontal
                     data={state.uniqueCategories ?? []}
                     keyExtractor={(item) => item.code}
@@ -218,6 +218,24 @@ export default function AddTransaction() {
                   labelClass="text-text-gray text-[12px] font-bold"
                   formatter={formatCurrencyInput}
                 />
+                <View className="flex-row flex-wrap gap-2">
+                  {[50000, 100000, 200000, 500000].map((amount) => (
+                    <Pressable
+                      key={amount}
+                      onPress={() => {
+                        state.formikRef.current?.setFieldValue(
+                          "amount",
+                          formatCurrencyInput(amount.toString()),
+                        );
+                      }}
+                      className="rounded-full bg-thirdly px-3 py-0.5 text-primary"
+                    >
+                      <Text className="text-xs text-gray-700">
+                        {formatCurrencyInput(amount.toString())}
+                      </Text>
+                    </Pressable>
+                  ))}
+                </View>
                 <SpaceComponent height={10} />
                 <DatePickerTransactionComponent
                   isRequired

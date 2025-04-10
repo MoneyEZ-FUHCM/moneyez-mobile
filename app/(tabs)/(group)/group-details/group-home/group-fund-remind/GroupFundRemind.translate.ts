@@ -17,6 +17,7 @@ const TEXT_TRANSLATE_GROUP_REMIND = {
     CONTRIBUTE_RATIO: "Tỷ lệ đóng góp",
     CONTRIBUTED: "Đã góp",
     ADD_REMIND: "Tạo lời nhắc",
+    FUNDED: "Đã góp đủ",
   },
 
   TABS: {
@@ -42,8 +43,10 @@ const TEXT_TRANSLATE_GROUP_REMIND = {
   MESSAGE_VALIDATE: {
     AMOUNT_REQUIRED: "Vui lòng nhập số tiền",
     AMOUNT_MUST_GREATER_THAN_ZERO: "Số tiền phải lớn hơn 0",
+    MIN_TEN: "Giá trị thấp nhất là 10.000đ",
     DESCRIPTION_REQUIRED: "Vui lòng nhập mô tả",
     DESCRIPTION_MIN_LENGTH: "Mô tả phải có ít nhất 5 ký tự",
+    SELECT_MEMBER_MIN: "Vui lòng chọn ít nhất một thành viên",
   },
 };
 

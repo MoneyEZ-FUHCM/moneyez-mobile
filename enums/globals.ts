@@ -54,6 +54,7 @@ export enum PERIOD_UNIT {
 
 export enum TRANSACTION_STATUS {
   APPROVED = "APPROVED",
+  CONFIRMED = "confirmed",
   PENDING = "PENDING",
   REJECTED = "REJECTED",
 }
@@ -79,4 +80,9 @@ export enum CHAT_ROLE {
   BOT,
   USER,
   ADMIN,
+}
+
+export enum GROUP_STATUS {
+  PRIVATE = "PRIVATE",
+  PUBLIC = "PUBLIC",
 }

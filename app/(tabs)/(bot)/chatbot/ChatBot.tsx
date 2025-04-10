@@ -90,7 +90,8 @@ const ChatBot: React.FC = () => {
               size={32}
               color={
                 state.isSending ||
-                signalR.connectionStatus !== CHATBOT_CONNECTION.CONNECTED
+                signalR.connectionStatus !== CHATBOT_CONNECTION.CONNECTED ||
+                !state.input.trim()
                   ? "#A0A0A0"
                   : "#609084"
               }

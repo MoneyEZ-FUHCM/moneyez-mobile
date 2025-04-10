@@ -1,17 +1,17 @@
 {
   "expo": {
     "jsEngine": "hermes",
-    "name": "moneyez-mobile",
+    "name": "MoneyEasy",
     "slug": "moneyez-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/logo/logo_app.png",
+    "icon": "./assets/images/logo/logo_apk.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/logo/logo_app.png",
+        "foregroundImage": "./assets/images/logo/logo_apk.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.ezmoney",
@@ -33,6 +33,14 @@
           "image": "./assets/images/logo/logo_app_splash.png",
           "resizeMode": "cover",
           "backgroundColor": "#ffffff"
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow MoneyEZ to access your photos to save QR codes.",
+          "savePhotosPermission": "Allow MoneyEZ to save QR codes to your photos.",
+          "isAccessMediaLocationEnabled": true
         }
       ]
     ],

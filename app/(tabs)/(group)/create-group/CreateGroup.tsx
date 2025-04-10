@@ -5,7 +5,13 @@ import {
   SectionComponent,
 } from "@/components";
 import { TextAreaComponent } from "@/components/TextAreaComponent";
-import { AntDesign, Feather, MaterialIcons } from "@expo/vector-icons";
+import { Colors } from "@/helpers/constants/color";
+import {
+  AntDesign,
+  Feather,
+  FontAwesome,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { router } from "expo-router";
 import { Formik } from "formik";
 import React, { useMemo } from "react";
@@ -20,10 +26,9 @@ import {
   View,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import TEXT_TRANSLATE_BANK_ACCOUNT from "../../(account)/bank-account/bank-account-list/BankAccount.translate";
 import useCreateGroupScreen from "../hooks/useCreateGroupScreen";
 import TEXT_TRANSLATE_CREATE_GROUP from "./CreateGroup.translate";
-import TEXT_TRANSLATE_BANK_ACCOUNT from "../../(account)/bank-account/bank-account-list/BankAccount.translate";
-import { PATH_NAME } from "@/helpers/constants/pathname";
 
 const CreateGroup = () => {
   const { TITLE, STEPS, BUTTON, TEXT, PLACEHOLDER } =
@@ -73,17 +78,17 @@ const CreateGroup = () => {
             >
               <View className="mr-4 h-12 w-12 items-center justify-center rounded-full bg-gray-50">
                 <Image
-                  source={{ uri: item.logo ?? undefined }}
+                  source={{ uri: item?.logo ?? undefined }}
                   className="h-full w-full rounded-full"
                   resizeMode="contain"
                 />
               </View>
               <View className="flex-1">
                 <Text className="text-base font-semibold text-gray-800">
-                  {item.accountHolderName}
+                  {item?.accountHolderName}
                 </Text>
                 <Text className="text-sm text-gray-600">
-                  {item.accountNumber}
+                  {item?.accountNumber}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -91,14 +96,26 @@ const CreateGroup = () => {
         ) : (
           <View className="flex-1 items-center justify-center p-6">
             <View className="mb-4 h-20 w-20 items-center justify-center rounded-full bg-gray-100">
-              <Feather name="credit-card" size={36} color="#609084" />
+              <FontAwesome
+                name="bank"
+                size={36}
+                color={Colors.colors.primary}
+              />
             </View>
             <Text className="mb-2 text-center text-lg font-semibold text-gray-700">
               {TEXT_TRANSLATE_BANK_ACCOUNT.TITLE.NO_BANK_ACCOUNT}
             </Text>
-            <Text className="text-center text-base text-gray-500">
-              Vui lòng tạo tài khoản trước khi tạo nhóm
+            <Text className="text-center text-gray-500">
+              Nhấn nút bên dưới để thêm tài khoản mới
             </Text>
+            <TouchableOpacity
+              className="my-5 rounded-lg bg-primary px-4 py-2"
+              onPress={handler.handleNavigateCreateBankAccount}
+            >
+              <Text className="font-semibold text-white">
+                Liên kết tài khoản
+              </Text>
+            </TouchableOpacity>
           </View>
         )}
       </View>
@@ -143,7 +160,6 @@ const CreateGroup = () => {
               </Text>
 
               <View className="rounded-lg bg-white p-5 shadow-md">
-                {/* Nhập thông tin nhóm */}
                 <InputComponent
                   name="name"
                   label={TEXT.GROUP_NAME}
@@ -154,7 +170,7 @@ const CreateGroup = () => {
                   inputClass="text-sm text-gray-800"
                 />
                 <TouchableOpacity
-                  className="rounded-lg bg-gray-50"
+                  className="rounded-lg"
                   onPress={handler.handleOpenBankSelect}
                 >
                   <InputComponent
@@ -202,7 +218,6 @@ const CreateGroup = () => {
             </KeyboardAvoidingView>
           )}
         </Formik>
-
         <ModalLizeComponent
           panGestureEnabled={state.isAtTop}
           scrollViewProps={{
@@ -238,6 +253,94 @@ const CreateGroup = () => {
           <BankSelectModal
             setFieldValue={state.formikRef?.current?.setFieldValue}
           />
+        </ModalLizeComponent>
+
+        <ModalLizeComponent
+          ref={state.ruleModalRef}
+          adjustToContentHeight
+          HeaderComponent={
+            <View className="border-b border-gray-200 p-4">
+              <Text className="text-lg font-bold text-gray-900">
+                Điều khoản & Điều kiện
+              </Text>
+            </View>
+          }
+        >
+          <View className="p-4">
+            <Text className="mb-2 font-semibold text-primary">
+              Khi Tạo Nhóm (Dành cho trưởng nhóm)
+            </Text>
+            <Text className="mb-1 text-gray-700">
+              • Sử dụng{" "}
+              <Text className="font-medium text-primary">
+                tài khoản quản lý riêng
+              </Text>{" "}
+              để quản lý quỹ nhóm, không dùng tài khoản cá nhân.
+            </Text>
+            <Text className="mb-1 text-gray-700">
+              • Có{" "}
+              <Text className="font-medium text-primary">
+                quyền quản lý toàn quyền
+              </Text>{" "}
+              các giao dịch thu - chi trên tài khoản quỹ nhóm.
+            </Text>
+            <Text className="mb-1 text-gray-700">
+              • Ứng dụng{" "}
+              <Text className="font-medium text-primary">không can thiệp</Text>{" "}
+              vào tranh chấp phát sinh giữa các thành viên. Điều này được ghi rõ
+              trong điều khoản khi tạo nhóm.
+            </Text>
+            <Text className="mb-4 text-gray-700">
+              • Mọi giao dịch{" "}
+              <Text className="font-medium text-primary">nạp / rút quỹ</Text>{" "}
+              được xác nhận qua hệ thống open banking (webhook).
+            </Text>
+
+            <Text className="mb-2 font-semibold text-primary">
+              Khi Thành Viên Tham Gia Nhóm
+            </Text>
+            <Text className="mb-1 text-gray-700">
+              • Việc tham gia nhóm đồng nghĩa với việc{" "}
+              <Text className="font-medium text-primary">
+                đồng ý toàn bộ điều khoản
+              </Text>{" "}
+              do trưởng nhóm đề ra.
+            </Text>
+            <Text className="mb-1 text-gray-700">
+              • Thành viên{" "}
+              <Text className="font-medium text-primary">
+                cam kết miễn trách nhiệm
+              </Text>{" "}
+              cho ứng dụng trong các tranh chấp nội bộ.
+            </Text>
+            <Text className="mb-4 text-gray-700">
+              • Giao dịch nạp / rút quỹ được xác nhận thông qua hệ thống{" "}
+              <Text className="font-medium text-primary">open banking</Text> để
+              đảm bảo minh bạch.
+            </Text>
+
+            <View className="mt-2 flex-row gap-4">
+              <TouchableOpacity
+                className="flex-1 rounded-lg border border-gray-300 py-3"
+                onPress={() => state.ruleModalRef.current?.close()}
+              >
+                <Text className="text-center font-medium text-gray-700">
+                  Hủy
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="flex-1 rounded-lg bg-primary py-3"
+                onPress={() => {
+                  state.ruleModalRef.current?.close();
+                  handler.handleProcessCreateGroup(state.currentValues);
+                }}
+              >
+                <Text className="text-center font-medium text-white">
+                  Tôi đồng ý
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </ModalLizeComponent>
       </SafeAreaViewCustom>
     </GestureHandlerRootView>

@@ -55,14 +55,14 @@ const useUploadImage = () => {
         result = await ImagePicker.launchCameraAsync({
           mediaTypes: "images",
           allowsEditing: true,
-          aspect: [4, 3],
+          aspect: undefined,
           quality: 1,
         });
       } else {
         result = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: "images",
           allowsEditing: true,
-          aspect: [4, 3],
+          aspect: undefined,
           quality: 1,
         });
       }

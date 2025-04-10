@@ -1,11 +1,10 @@
+import { formatCurrency, formatDateMonth } from "@/helpers/libs";
+import { ChartDataItem } from "@/types/financialGoal.type";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { BarChart } from "react-native-gifted-charts";
 import { SectionComponent } from "../SectionComponent";
 import { useBarChart } from "./hooks/useBarChart";
-import { ChartDataItem, Goal } from "@/types/financialGoal.type";
-import { formatCurrency, formatDateMonth } from "@/helpers/libs";
-import { formatCurrencyCompact } from "@/helpers/formatCurrency";
 
 interface GenericBarChartProps {
   data: ChartDataItem[];
@@ -23,7 +22,7 @@ const BarChartExpenseCustom = React.memo(
       return amount.toString();
     };
 
-    const maxAmount = Math.max(...data.map((item) => item?.amount || 0));
+    const maxAmount = Math.max(...data?.map((item) => item?.amount || 0));
     const adjustedMaxValue =
       maxAmount >= 1000 ? maxAmount * 1.1 : maxAmount + 100;
     const yAxisValues = Array.from(

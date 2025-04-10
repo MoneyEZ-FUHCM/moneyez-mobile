@@ -40,7 +40,7 @@ const groupApi = apiSlice.injectEndpoints({
     }),
     requestFund: builder.mutation({
       query: (payload) => ({
-        url: `/groups/fund-rasising/request`,
+        url: `/groups/fund-raising/request`,
         method: HTTP_METHOD.POST,
         body: payload,
       }),
@@ -53,12 +53,16 @@ const groupApi = apiSlice.injectEndpoints({
       }),
     }),
     getGroupLogs: builder.query({
-      query: ({ groupId, PageIndex, PageSize }) => ({
-        url: `/groups/logs/${groupId}?PageIndex=${PageIndex}&PageSize=${PageSize}`,
-        method: HTTP_METHOD.GET,
-      }),
+      query: ({ PageIndex, PageSize, change_type, groupId }) => {
+        const url = `/groups/logs/${groupId}?PageIndex=${PageIndex}&PageSize=${PageSize}&sort_by=date&dir=desc&is_deleted=false`;
+        return {
+          url: change_type ? `${url}&change_type=${change_type}` : url,
+          method: HTTP_METHOD.GET,
+        };
+      },
       transformResponse: (response) =>
         transformCommonResponse<GroupLogs>(response),
+      providesTags: ["Group"],
     }),
     getMemberLogs: builder.query({
       query: ({ groupId, PageIndex, PageSize }) => ({
@@ -75,6 +79,69 @@ const groupApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Group"],
     }),
+    inviteMemberQRCode: builder.mutation({
+      query: (payload) => ({
+        url: `/groups/invite-member/qrcode`,
+        method: HTTP_METHOD.POST,
+        body: payload,
+      }),
+      invalidatesTags: ["Group"],
+    }),
+    contributeGroup: builder.mutation({
+      query: (payload) => ({
+        url: `/groups/contribution`,
+        method: HTTP_METHOD.PUT,
+        body: payload,
+      }),
+      invalidatesTags: ["Group"],
+    }),
+    inviteMemberQRCodeAccept: builder.query({
+      query: (payload) => ({
+        url: `/groups/invite-member/qrcode/accept?token=${payload}`,
+        method: HTTP_METHOD.GET,
+      }),
+    }),
+    withDrawFundRequest: builder.mutation({
+      query: (payload) => ({
+        url: `/groups/fund-withdraw/request`,
+        method: HTTP_METHOD.POST,
+        body: payload,
+      }),
+    }),
+    leaveGroup: builder.mutation({
+      query: (id) => ({
+        url: `/groups/members/leave?groupId=${id}`,
+        method: HTTP_METHOD.GET,
+      }),
+      invalidatesTags: ["Group"],
+    }),
+    kickMember: builder.mutation({
+      query: ({ groupId, memberId }) => ({
+        url: `/groups/${groupId}/members/${memberId}`,
+        method: HTTP_METHOD.DELETE,
+      }),
+      invalidatesTags: ["Group"],
+    }),
+    fundRaisingRemind: builder.mutation({
+      query: (payload) => ({
+        url: `/groups/fund-raising/remind`,
+        method: HTTP_METHOD.POST,
+        body: payload,
+      }),
+      invalidatesTags: ["Group"],
+    }),
+    getPendingRequest: builder.query({
+      query: ({ id, PageIndex, PageSize }) => ({
+        url: `/groups/pending-requests?groupId=${id}&PageIndex=${PageIndex}&PageSize=${PageSize}`,
+        method: HTTP_METHOD.GET,
+      }),
+    }),
+    getPendingRequestById: builder.query({
+      query: ({ id }) => ({
+        url: `/groups/pending-requests/${id}`,
+        method: HTTP_METHOD.GET,
+      }),
+    }),
   }),
 });
 
@@ -88,6 +155,15 @@ export const {
   useGetGroupLogsQuery,
   useGetMemberLogsQuery,
   useInviteMemberEmailMutation,
+  useInviteMemberQRCodeMutation,
+  useContributeGroupMutation,
+  useLazyInviteMemberQRCodeAcceptQuery,
+  useWithDrawFundRequestMutation,
+  useLeaveGroupMutation,
+  useKickMemberMutation,
+  useFundRaisingRemindMutation,
+  useGetPendingRequestQuery,
+  useGetPendingRequestByIdQuery,
 } = groupApi;
 
 export default groupApi;

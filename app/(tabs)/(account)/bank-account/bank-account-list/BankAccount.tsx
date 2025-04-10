@@ -1,3 +1,4 @@
+import TEXT_TRANSLATE_ACCOUNT from "@/app/(tabs)/(account)/AccountScreen.translate";
 import {
   FlatListCustom,
   LoadingSectionWrapper,
@@ -8,12 +9,16 @@ import {
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { formatDate } from "@/helpers/libs";
 import { BankCardProps } from "@/types/bankAccount.types";
-import { AntDesign, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  AntDesign,
+  Feather,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import TEXT_TRANSLATE_ACCOUNT from "../../AccountScreen.translate";
 import TEXT_TRANSLATE_BANK_ACCOUNT from "./BankAccount.translate";
 import useBankAccount from "./hooks/useBankAccount";
 
@@ -37,32 +42,46 @@ const BankAccount = () => {
                 <Text className="text-base font-bold text-gray-900">
                   {item?.bankName}
                 </Text>
-                {item?.isLinked && (
-                  <View className="flex-row items-center rounded-full bg-primary/10 px-2 py-1">
-                    <View className="mr-1 h-1.5 w-1.5 rounded-full bg-primary" />
-                    <Text className="text-xs font-medium text-primary">
-                      Đã liên kết
-                    </Text>
-                  </View>
-                )}
+                {(() => {
+                  if (item?.isHasGroup) {
+                    return (
+                      <View className="flex-row items-center rounded-full bg-orange-100 px-2 py-1">
+                        <View className="mr-1 h-1.5 w-1.5 rounded-full bg-orange-500" />
+                        <Text className="text-xs font-medium text-orange-500">
+                          Đã tạo nhóm
+                        </Text>
+                      </View>
+                    );
+                  } else if (item?.isLinked) {
+                    return (
+                      <View className="flex-row items-center rounded-full bg-primary/10 px-2 py-1">
+                        <View className="mr-1 h-1.5 w-1.5 rounded-full bg-primary" />
+                        <Text className="text-xs font-medium text-primary">
+                          Đã liên kết
+                        </Text>
+                      </View>
+                    );
+                  }
+                  return null;
+                })()}
               </View>
               <Text className="mt-1 flex-row items-center text-sm text-gray-600">
                 <Text className="mr-1 text-gray-400">
                   {TEXT_TRANSLATE_BANK_ACCOUNT.TITLE.ACCOUNT_HOLDER}
                 </Text>{" "}
-                {item.accountHolderName}
+                {item?.accountHolderName}
               </Text>
               <View className="mt-2 flex-row items-center">
                 <View className="rounded-md bg-gray-100 px-2 py-1">
                   <Text className="text-sm font-medium text-gray-700">
-                    {item.accountNumber}
+                    {item?.accountNumber}
                   </Text>
                 </View>
                 <TouchableOpacity
                   className="ml-2 p-1"
                   onPress={(e) => {
                     e.stopPropagation();
-                    handler.handleCopyAccountNumber(item.accountNumber);
+                    handler.handleCopyAccountNumber(item?.accountNumber);
                   }}
                 >
                   <Feather name="copy" size={16} color="#609084" />
@@ -81,7 +100,7 @@ const BankAccount = () => {
           </View>
         </TouchableOpacity>
         <View className="flex-row border-t border-gray-100">
-          <TouchableOpacity
+          {/* <TouchableOpacity
             className="flex-1 flex-row items-center justify-center py-3"
             onPress={(e) => {
               e.stopPropagation();
@@ -92,14 +111,14 @@ const BankAccount = () => {
             <Text className="ml-2 text-sm font-medium text-gray-700">
               {TEXT_TRANSLATE_BANK_ACCOUNT.BUTTON.EDIT}
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <View className="w-px bg-gray-100" />
           {!item?.isLinked ? (
             <TouchableOpacity
               className="flex-1 flex-row items-center justify-center py-3"
               onPress={(e) => {
                 e.stopPropagation();
-                handler.handleLinkAccount(item?.id as string);
+                handler.handleWebhook(item?.id as string, false);
               }}
             >
               <Feather name="link" size={16} color="#FF9900" />
@@ -107,12 +126,12 @@ const BankAccount = () => {
                 Liên kết
               </Text>
             </TouchableOpacity>
-          ) : (
+          ) : item?.isHasGroup ? null : (
             <TouchableOpacity
               className="flex-1 flex-row items-center justify-center py-3"
               onPress={(e) => {
                 e.stopPropagation();
-                // handler.handleLinkAccount(item?.id as string);
+                handler.handleWebhook(item?.id as string, true);
               }}
             >
               <AntDesign name="disconnect" size={16} color="#FF9900" />
@@ -121,13 +140,14 @@ const BankAccount = () => {
               </Text>
             </TouchableOpacity>
           )}
-          {item?.isLinked && (
+
+          {!item?.isLinked && (
             <>
               <View className="w-px bg-gray-100" />
               <TouchableOpacity
                 className="flex-1 flex-row items-center justify-center py-3"
                 onPress={(e) => {
-                  handler.handleDeleteAccount(item?.id as string);
+                  handler.handleOpenModalDelete(item?.id as string);
                 }}
               >
                 <Feather name="trash-2" size={16} color="#FF6B6B" />
@@ -158,14 +178,25 @@ const BankAccount = () => {
           <Text className="text-center text-xl font-bold text-gray-900">
             {state.selectedAccount?.bankName}
           </Text>
-          {state.selectedAccount?.isLinked && (
-            <View className="mt-2 flex-row items-center rounded-full bg-primary/10 px-3 py-1.5">
-              <View className="mr-1.5 h-2 w-2 rounded-full bg-primary" />
-              <Text className="text-sm font-medium text-primary">
-                Đã liên kết
-              </Text>
-            </View>
-          )}
+          <View className="flex-row space-x-2">
+            {state.selectedAccount?.isHasGroup ? (
+              <View className="mt-2 flex-row items-center rounded-full bg-orange-100 px-3 py-1.5">
+                <View className="mr-1.5 h-2 w-2 rounded-full bg-orange-500" />
+                <Text className="text-sm font-medium text-orange-500">
+                  Đã tạo nhóm
+                </Text>
+              </View>
+            ) : (
+              state.selectedAccount?.isLinked && (
+                <View className="mt-2 flex-row items-center rounded-full bg-primary/10 px-3 py-1.5">
+                  <View className="mr-1.5 h-2 w-2 rounded-full bg-primary" />
+                  <Text className="text-sm font-medium text-primary">
+                    Đã liên kết
+                  </Text>
+                </View>
+              )
+            )}
+          </View>
         </View>
 
         <View className="mb-6 rounded-xl bg-gray-50 p-5">
@@ -220,13 +251,15 @@ const BankAccount = () => {
             onPress={handler.handleBack}
             className="absolute bottom-[17px] left-4"
           >
-            <AntDesign name="close" size={24} />
+            <MaterialIcons name="arrow-back" size={24} />
           </TouchableOpacity>
           <Text className="text-lg font-bold">
             {TEXT_TRANSLATE_ACCOUNT.TITLE.BANK_ACCOUNT}
           </Text>
         </SectionComponent>
-        <LoadingSectionWrapper isLoading={state.isLoading}>
+        <LoadingSectionWrapper
+          isLoading={state.isLoading || state.isRefetching}
+        >
           <FlatListCustom
             showsVerticalScrollIndicator={false}
             data={state.bankAccounts}
@@ -251,12 +284,165 @@ const BankAccount = () => {
                 </Text>
               </View>
             }
+            refreshing={state.isRefetching}
+            onRefresh={handler.handleRefetch}
           />
         </LoadingSectionWrapper>
         <ModalLizeComponent ref={state.detailModalRef}>
           <AccountDetail />
         </ModalLizeComponent>
-        {state.bankAccounts && state.bankAccounts?.length < 2 && (
+        <ModalLizeComponent ref={state.deleteModalRef}>
+          <View className="p-6">
+            <Text className="mb-4 text-center text-lg font-bold text-gray-900">
+              Xác nhận xóa tài khoản
+            </Text>
+            <Text className="mb-6 text-center text-gray-600">
+              Bạn có chắc chắn muốn xóa tài khoản ngân hàng này?
+            </Text>
+            <View className="flex-row gap-4">
+              <TouchableOpacity
+                className="flex-1 rounded-lg border border-gray-200 py-3"
+                onPress={() => state.deleteModalRef.current?.close()}
+              >
+                <Text className="text-center font-medium text-gray-700">
+                  Hủy
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="flex-1 rounded-lg bg-red py-3"
+                onPress={handler.handleConfirmDelete}
+              >
+                <Text className="text-center font-medium text-white">Xóa</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ModalLizeComponent>
+        <ModalLizeComponent
+          ref={state.linkModalRef}
+          HeaderComponent={
+            <View className="border-b border-gray-200 p-4">
+              <Text className="text-lg font-bold">
+                Quy tắc liên kết tài khoản ngân hàng qua API Open Banking
+              </Text>
+            </View>
+          }
+        >
+          <View className="p-6">
+            <View className="mb-6 space-y-4">
+              <View>
+                <Text className="mb-2 font-medium text-primary">
+                  Mục Đích Liên Kết
+                </Text>
+                <View className="space-y-2">
+                  <Text className="text-gray-600">
+                    • Liên kết tài khoản ngân hàng nhằm ghi nhận giao dịch một
+                    cách tự động và chính xác trên ứng dụng EzMoney
+                  </Text>
+                </View>
+              </View>
+
+              <View>
+                <Text className="mb-2 font-medium text-primary">
+                  Cấp Quyền Truy Cập
+                </Text>
+                <View className="space-y-2">
+                  <Text className="text-gray-600">
+                    • Người dùng cần cho phép API truy cập thông tin giao dịch
+                    từ ngân hàng để hệ thống tự động cập nhật
+                  </Text>
+                </View>
+              </View>
+
+              <View>
+                <Text className="mb-2 font-medium text-primary">
+                  Xác Nhận Giao Dịch
+                </Text>
+                <View className="space-y-2">
+                  <Text className="text-gray-600">
+                    • Giao dịch sẽ được xác nhận qua webhook từ ngân hàng, đảm
+                    bảo dữ liệu được đồng bộ và minh bạch
+                  </Text>
+                </View>
+              </View>
+              <View>
+                <Text className="mb-2 font-medium text-primary">
+                  Bảo Mật Thông Tin
+                </Text>
+                <View className="space-y-2">
+                  <Text className="text-gray-600">
+                    • Người dùng có trách nhiệm bảo vệ thông tin đăng nhập và dữ
+                    liệu cá nhân; EzMoney cam kết sử dụng thông tin chỉ cho mục
+                    đích theo dõi giao dịch
+                  </Text>
+                </View>
+              </View>
+              <View>
+                <Text className="mb-2 font-medium text-primary">
+                  Tự Động Hóa Giao Dịch
+                </Text>
+                <View className="space-y-2">
+                  <Text className="text-gray-600">
+                    • Mọi giao dịch nạp, rút sẽ được cập nhật tự động vào ứng
+                    dụng sau khi được xác thực qua API
+                  </Text>
+                </View>
+              </View>
+              <Text className="italic">
+                <Text className="text-primary">* </Text>
+                Các quy tắc này giúp đảm bảo quá trình liên kết diễn ra nhanh
+                chóng, an toàn và minh bạch đối với người dùng.
+              </Text>
+            </View>
+
+            <View className="flex-row gap-4">
+              <TouchableOpacity
+                className="flex-1 rounded-lg border border-gray-200 py-3"
+                onPress={() => state.linkModalRef.current?.close()}
+              >
+                <Text className="text-center font-medium text-gray-700">
+                  Hủy
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="flex-1 rounded-lg bg-primary py-3"
+                onPress={handler.handleConfirmLink}
+              >
+                <Text className="text-center font-medium text-white">
+                  Tôi dồng ý
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ModalLizeComponent>
+        <ModalLizeComponent ref={state.unlinkModalRef}>
+          <View className="p-6">
+            <Text className="mb-4 text-center text-lg font-bold text-gray-900">
+              Xác nhận hủy liên kết
+            </Text>
+            <Text className="mb-6 text-center text-gray-600">
+              Bạn có chắc chắn muốn hủy liên kết tài khoản ngân hàng này?
+            </Text>
+            <View className="flex-row gap-4">
+              <TouchableOpacity
+                className="flex-1 rounded-lg border border-gray-200 py-3"
+                onPress={() => state.unlinkModalRef.current?.close()}
+              >
+                <Text className="text-center font-medium text-gray-700">
+                  Hủy
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="flex-1 rounded-lg bg-red py-3"
+                onPress={handler.handleConfirmUnlink}
+              >
+                <Text className="text-center font-medium text-white">
+                  Xác nhận
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ModalLizeComponent>
+        {state.bankAccounts && state.bankAccounts?.length < 3 && (
           <SectionComponent rootClassName="absolute bottom-10 right-5">
             <TouchableOpacity
               className="h-14 w-14 items-center justify-center rounded-full bg-primary shadow-lg shadow-gray-400"

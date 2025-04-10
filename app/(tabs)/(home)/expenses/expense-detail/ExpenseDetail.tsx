@@ -38,8 +38,8 @@ export default function ExpenseDetail() {
         <View className="flex-1">
           <Text className="text-base font-medium text-black">
             {item?.subcategoryName
-              ? item.subcategoryName.charAt(0).toUpperCase() +
-                item.subcategoryName.slice(1)
+              ? item.subcategoryName?.charAt(0)?.toUpperCase() +
+                item.subcategoryName?.slice(1)
               : ""}
           </Text>
           <View className="flex-row">

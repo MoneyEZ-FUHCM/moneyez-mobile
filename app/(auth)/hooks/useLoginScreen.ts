@@ -104,10 +104,16 @@ const useLoginScreen = () => {
           pathname: AUTH.INPUT_OTP as any,
           params: { mode: "verify" },
         });
-        ToastAndroid.show(
-          MESSAGE_ERROR.DOEST_NOT_VERIFY_EMAIL,
-          ToastAndroid.SHORT,
-        );
+        ToastAndroid.show(MESSAGE_ERROR.OTP_HAS_SENT, ToastAndroid.SHORT);
+        return;
+      }
+      if (error?.errorCode === ERROR_CODE.OTP_HAS_SENT) {
+        dispatch(setEmail(payload.email));
+        router.navigate({
+          pathname: AUTH.INPUT_OTP as any,
+          params: { mode: "verify" },
+        });
+        ToastAndroid.show(MESSAGE_ERROR.OTP_HAS_SENT, ToastAndroid.SHORT);
         return;
       }
       ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
@@ -118,6 +124,8 @@ const useLoginScreen = () => {
   };
 
   const sendUserInfoToServer = async (idToken: string) => {
+    dispatch(setLoading(true));
+
     try {
       const res = await loginGoogle(JSON.stringify(idToken)).unwrap();
       if (res && res?.status === HTTP_STATUS.SUCCESS.OK) {
@@ -166,10 +174,10 @@ const useLoginScreen = () => {
   };
 
   const handleLoginGoogle = async () => {
+    await GoogleSignin.signOut();
     await GoogleSignin.hasPlayServices({
       showPlayServicesUpdateDialog: true,
     });
-    dispatch(setLoading(true));
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo: any = await GoogleSignin.signIn();
@@ -177,7 +185,6 @@ const useLoginScreen = () => {
         await sendUserInfoToServer(userInfo.data.idToken);
       }
     } catch (err) {
-      dispatch(setLoading(false));
       ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
     }
   };

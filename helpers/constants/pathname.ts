@@ -25,11 +25,15 @@ const PATH_NAME = {
     CREATE_GROUP_STEP_1: "create-group/CreateGroup",
     CREATE_FUND_CONTRIBUTION_REQUEST:
       "fund-contribution-request/FundContributionRequest",
+    CREATE_FUNCTION_BANK_ACCOUNT:
+      "create-group/function-bank-account/FunctionBankAccount",
+    BANK_ACCOUNT_LIST: "create-group/bank-account-list/BankAccount",
   },
   BOT: {
     CHATBOT: "chatbot/ChatBot",
   },
   HOME: {
+    HOME_NAVIGATOR: "(home)",
     HOME_DEFAULT: "home-screen/HomeScreen",
     INDIVIDUAL_HOME: "individual-home/IndividualHome",
     ADD_TRANSACTION: "add-transaction/AddTransaction",
@@ -67,12 +71,22 @@ const PATH_NAME = {
       "group-details/group-home/withdraw-fund-request/WithdrawFundRequest",
     GROUP_FUND_REMIND:
       "group-details/group-home/group-fund-remind/GroupFundRemind",
+    GROUP_STATISTIC:
+      "group-details/group-home/group-statistic/GroupStatistic",
+    EDIT_LOG_HISTORY:
+      "group-details/group-home/edit-log-history/EditLogHistory",
+    ACTION_LOG_HISTORY:
+      "group-details/group-home/action-log-history/ActionLogHistory",
   },
   GROUP_SETTING: {
     GROUP_SETTING_DEFAULT:
       "group-details/group-setting/group-setting-default/GroupSettingDefault",
     GROUP_RATIO_MEMBER:
       "group-details/group-setting/group-ratio-member/GroupRatioMember",
+    GROUP_FINANCIAL_GOAL:
+      "group-details/group-setting/group-financial-goal/GroupFinancialGoal",
+    GROUP_FINANCIAL_GOAL_FORM:
+      "group-details/group-setting/group-financial-goal/GroupFinancialGoalForm",
   },
   MEMBER: {
     GROUP_MEMBER: "group-details/member/group-member/GroupMember",

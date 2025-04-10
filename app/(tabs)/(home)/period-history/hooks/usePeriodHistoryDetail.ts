@@ -1,5 +1,5 @@
 import { TRANSACTION_TYPE } from "@/enums/globals";
-import { formatCurrency, formatDate } from "@/helpers/libs";
+import { formatCurrency, formatDate, formatTime } from "@/helpers/libs";
 import { setImageView } from "@/redux/slices/systemSlice";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { useGetTransactionDetailQuery } from "@/services/transaction";
@@ -27,18 +27,14 @@ export interface Transaction {
 }
 
 const formatTransaction = (item: TransactionViewModelDetail) => {
-  const dateObj = new Date(item?.transactionDate);
   return {
     id: item?.id,
     name: item?.subCategoryName,
     subcategory: item?.description || "Không có mô tả",
     amount: item?.amount,
     type: item?.type?.toLowerCase() === "income" ? "income" : "expense",
-    date: dateObj.toLocaleDateString("vi-VN"),
-    time: dateObj.toLocaleTimeString("vi-VN", {
-      hour: "2-digit",
-      minute: "2-digit",
-    }),
+    date: formatDate(item?.transactionDate),
+    time: formatTime(item?.transactionDate),
     icon: item?.subcategoryIcon || "receipt",
     description: item?.description,
     subcategoryId: item?.subcategoryId,
@@ -128,7 +124,7 @@ const usePeriodHistoryDetail = () => {
   }, [transactionsData?.totalCount]);
 
   useEffect(() => {
-    if (transactions.length > 0) {
+    if (transactions?.length > 0) {
       setTransactions([]);
       setPageIndex(1);
     }
@@ -136,25 +132,30 @@ const usePeriodHistoryDetail = () => {
 
   useEffect(() => {
     if (transactionsData?.items) {
-      setTransactions((prevTransactions: any) => {
-        const newTransactions = transactionsData.items.map(
-          formatTransaction as any,
-        );
-        const uniqueTransactions = [
-          ...prevTransactions,
-          ...newTransactions.filter(
-            (newTrans: any) =>
-              !prevTransactions.some(
-                (oldTrans: any) => oldTrans.id === newTrans.id,
-              ),
-          ),
-        ];
-        return uniqueTransactions;
-      });
+      if (isRefetching) {
+        setTransactions(transactionsData?.items?.map(formatTransaction as any));
+        setPageIndex(1);
+      } else {
+        setTransactions((prevTransactions: any) => {
+          const newTransactions = transactionsData?.items?.map(
+            formatTransaction as any,
+          );
+          const uniqueTransactions = [
+            ...prevTransactions,
+            ...newTransactions.filter(
+              (newTrans: any) =>
+                !prevTransactions.some(
+                  (oldTrans: any) => oldTrans?.id === newTrans?.id,
+                ),
+            ),
+          ];
+          return uniqueTransactions;
+        });
+      }
       setIsFiltering(false);
       setIsLoadingMore(false);
     }
-  }, [transactionsData?.items]);
+  }, [transactionsData?.items, isRefetching]);
 
   const loadMoreData = useCallback(() => {
     if (

@@ -70,55 +70,55 @@ const useSpendingBudget = () => {
       const subcategoryMap = new Map<string, SubcategoryMapItem>();
       const sectionMap = new Map<string, BudgetSection>();
 
-      categoriesData.data.forEach((category: Category) => {
+      categoriesData?.data?.forEach((category: Category) => {
         category?.subcategories?.forEach((subcategory: Subcategory) => {
-          subcategoryMap?.set(subcategory.id, {
-            id: subcategory.id,
-            name: subcategory.name,
-            icon: subcategory.icon,
-            categoryCode: category.code,
-            categoryName: category.name,
+          subcategoryMap?.set(subcategory?.id, {
+            id: subcategory?.id,
+            name: subcategory?.name,
+            icon: subcategory?.icon,
+            categoryCode: category?.code,
+            categoryName: category?.name,
           });
         });
       });
 
-      financialGoalsData.items.forEach((goal: FinancialGoal) => {
-        const subcategory = subcategoryMap.get(goal.subcategoryId);
+      financialGoalsData?.items?.forEach((goal: FinancialGoal) => {
+        const subcategory = subcategoryMap?.get(goal?.subcategoryId);
 
         if (subcategory) {
           const categoryCode = subcategory.categoryCode;
 
-          if (!sectionMap.has(categoryCode)) {
-            sectionMap.set(categoryCode, {
+          if (!sectionMap?.has(categoryCode)) {
+            sectionMap?.set(categoryCode, {
               id: categoryCode,
-              category: subcategory.categoryName,
+              category: subcategory?.categoryName,
               items: [],
-              isSaving: goal.isSaving,
+              isSaving: goal?.isSaving,
             });
           }
 
-          const section = sectionMap.get(categoryCode);
+          const section = sectionMap?.get(categoryCode);
           if (section) {
-            section.items.push({
-              id: goal.id,
-              name: goal.name,
+            section?.items?.push({
+              id: goal?.id,
+              name: goal?.name,
               remaining:
-                goal.targetAmount - goal.currentAmount < 0
+                goal?.targetAmount - goal?.currentAmount < 0
                   ? 0
-                  : goal.targetAmount - goal.currentAmount,
-              currentAmount: goal.currentAmount,
-              targetAmount: goal.targetAmount,
-              isSaving: goal.isSaving,
+                  : goal?.targetAmount - goal?.currentAmount,
+              currentAmount: goal?.currentAmount,
+              targetAmount: goal?.targetAmount,
+              isSaving: goal?.isSaving,
               icon:
-                (subcategory.icon as keyof typeof MaterialIcons.glyphMap) ||
+                (subcategory?.icon as keyof typeof MaterialIcons.glyphMap) ||
                 "account-balance",
-              subcategoryId: goal.subcategoryId,
+              subcategoryId: goal?.subcategoryId,
             });
           }
         }
       });
 
-      setBudgetSections(Array.from(sectionMap.values()));
+      setBudgetSections(Array.from(sectionMap?.values()));
       setIsLoading(false);
     }
   }, [financialGoalsData, categoriesData, isLoadingGoals, isLoadingCategories]);
@@ -126,15 +126,15 @@ const useSpendingBudget = () => {
   const cycleInfo = useMemo(() => {
     if (
       !currentSpendingModel ||
-      !currentSpendingModel.startDate ||
-      !currentSpendingModel.endDate
+      !currentSpendingModel?.startDate ||
+      !currentSpendingModel?.endDate
     ) {
       return { cycle: "Không có chu kỳ", remainingDays: 0 };
     }
 
     return {
-      cycle: `${formatDateMonth(currentSpendingModel.startDate)} đến ${formatDateMonthYear(currentSpendingModel.endDate)}`,
-      remainingDays: calculateRemainingDays(currentSpendingModel.endDate),
+      cycle: `${formatDateMonth(currentSpendingModel?.startDate)} đến ${formatDateMonthYear(currentSpendingModel?.endDate)}`,
+      remainingDays: calculateRemainingDays(currentSpendingModel?.endDate),
     };
   }, [currentSpendingModel]);
 

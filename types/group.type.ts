@@ -10,6 +10,8 @@ export interface CreateGroupPayload {
   image: string;
 }
 export interface GroupMember {
+  transactionCount: unknown;
+  totalContribution: any;
   groupId: string;
   userId: string;
   contributionPercentage: number;
@@ -32,6 +34,7 @@ export interface GroupDetail {
   status: string;
   visibility: string;
   imageUrl: string;
+  isGoalActive: boolean;
   groupMembers: any[];
 }
 
@@ -64,3 +67,8 @@ export interface MemberLogs {
 }
 
 export type MemberLogsList = MemberLogs[];
+
+export interface QrData {
+  groupId: string;
+  qrCode: string;
+}

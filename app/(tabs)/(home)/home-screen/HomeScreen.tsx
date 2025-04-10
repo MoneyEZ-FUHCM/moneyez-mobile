@@ -18,6 +18,7 @@ import React from "react";
 import {
   FlatList,
   Image,
+  RefreshControl,
   Text,
   ToastAndroid,
   TouchableOpacity,
@@ -64,7 +65,16 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaViewCustom rootClassName="relative">
-      <ScrollViewCustom isBottomTab showsVerticalScrollIndicator={false}>
+      <ScrollViewCustom
+        isBottomTab
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={false}
+            onRefresh={handler.handleRefetch}
+          />
+        }
+      >
         <SectionComponent
           rootClassName="relative flex-1 "
           style={{
@@ -89,10 +99,13 @@ const HomeScreen = () => {
                 </View>
               </View>
               <TouchableOpacity
-                className="rounded-full bg-black/20 p-2"
+                className="relative rounded-full bg-black/20 p-2"
                 onPress={handler.handleNavigateNotification}
               >
                 <Feather name="bell" size={22} color="white" />
+                {state.hasUnreadNotification && (
+                  <View className="absolute right-1 top-0.5 h-3.5 w-3.5 rounded-full border-2 border-white bg-red" />
+                )}
               </TouchableOpacity>
             </View>
           </View>

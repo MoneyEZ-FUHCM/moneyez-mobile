@@ -1,4 +1,5 @@
 export interface BankAccount {
+  isHasGroup: boolean;
   id: string;
   accountHolderName: string;
   accountNumber: string;
@@ -20,6 +21,7 @@ export interface BankAccountType {
   bankShortName: string;
   accountHolderName: string;
   isLinked: boolean;
+  isHasGroup: boolean;
 }
 
 export interface BankType {

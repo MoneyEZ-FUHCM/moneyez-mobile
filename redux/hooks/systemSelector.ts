@@ -5,3 +5,5 @@ export const selectImageView = (state: RootState) =>
   state.system.isShowImageView;
 export const selectIsBotThinking = (state: RootState) =>
   state.system.isThinking;
+export const selectHasUnreadNotification = (state: RootState) =>
+  state.system.hasUnreadNotification;

@@ -1,9 +1,16 @@
-import { PATH_NAME } from "@/helpers/constants/pathname";
+import { COMMON_CONSTANT } from "@/helpers/constants/common";
+import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";
-import { router } from "expo-router";
+import { selectUserInfo } from "@/redux/slices/userSlice";
+import { useContributeGroupMutation } from "@/services/group";
+import { GroupMember } from "@/types/group.type";
+import { router, useFocusEffect } from "expo-router";
 import { useCallback, useMemo, useRef, useState } from "react";
-import { Alert } from "react-native";
-import { useDispatch } from "react-redux";
+import { BackHandler, ToastAndroid } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import TEXT_TRANSLATE_GROUP_RATIO_MEMBER from "../GroupRatioMember.translate";
+import { setLoading } from "@/redux/slices/loadingSlice";
+import { GROUP_MEMBER_STATUS } from "@/enums/globals";
 
 export interface Member {
   id: number;
@@ -14,40 +21,43 @@ export interface Member {
 }
 
 export default function useGroupRatioMember() {
-  const [members, setMembers] = useState<Member[]>([
-    { id: 1, name: "Đặng Gia Đức", ratio: 33, isYou: true },
-    { id: 2, name: "Dương Bảo", ratio: 33 },
-    { id: 3, name: "Minh Trí", ratio: 34 },
-  ]);
-  
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const groupDetail = useSelector(selectCurrentGroup);
+  const groupMembersDetail = groupDetail?.groupMembers;
+  const userInfo = useSelector(selectUserInfo);
+  const [contributeGroup] = useContributeGroupMutation();
+  const { SYSTEM_ERROR } = COMMON_CONSTANT;
 
-  const initialValuesRef = useRef<Record<number, number>>(
-    members.reduce(
-      (acc, member) => {
-        acc[member.id] = member.ratio;
+  const groupMembersDetailActive = (groupMembersDetail ?? []).filter(
+    ({ status }) => status === GROUP_MEMBER_STATUS.ACTIVE,
+  );
+
+  const initialValuesRef = useRef<Record<string, number>>(
+    groupMembersDetailActive?.reduce(
+      (acc, member: GroupMember) => {
+        acc[member.userId] = member.contributionPercentage;
         return acc;
       },
-      {} as Record<number, number>,
+      {} as Record<string, number>,
     ),
   );
 
-  const tempValuesRef = useRef<Record<number, number>>(
-    members.reduce(
-      (acc, member) => {
-        acc[member.id] = member.ratio;
+  const tempValuesRef = useRef<Record<string, number>>(
+    groupMembersDetailActive?.reduce(
+      (acc, member: GroupMember) => {
+        acc[member.userId] = member.contributionPercentage;
         return acc;
       },
-      {} as Record<number, number>,
+      {} as Record<string, number>,
     ),
   );
 
   const [localSliderValues, setLocalSliderValues] = useState<
-    Record<number, number>
+    Record<string, number>
   >(initialValuesRef.current);
 
   const [tooltipValue, setTooltipValue] = useState<{
-    id: number | null;
+    id: string | null;
     value: number;
   }>({
     id: null,
@@ -55,9 +65,19 @@ export default function useGroupRatioMember() {
   });
 
   const [isDragging, setIsDragging] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+
+  const result = useMemo(
+    () =>
+      Object.entries(localSliderValues)?.map(([memberId, contribution]) => ({
+        memberId,
+        contribution,
+      })),
+    [localSliderValues],
+  );
 
   const handleSliderStart = useCallback(
-    (memberId: number) => {
+    (memberId: string) => {
       tempValuesRef.current = { ...localSliderValues };
       setIsDragging(true);
       setTooltipValue({
@@ -68,12 +88,12 @@ export default function useGroupRatioMember() {
     [localSliderValues],
   );
 
-  const handleSliderChange = useCallback((memberId: number, value: number) => {
+  const handleSliderChange = useCallback((memberId: string, value: number) => {
     tempValuesRef.current[memberId] = Math.max(0, Math.min(150, value));
     setTooltipValue({ id: memberId, value: Math.round(value) });
   }, []);
 
-  const handleSliderComplete = useCallback((memberId: number) => {
+  const handleSliderComplete = useCallback((memberId: string) => {
     setLocalSliderValues((prev) => ({
       ...prev,
       [memberId]: tempValuesRef.current[memberId],
@@ -82,12 +102,17 @@ export default function useGroupRatioMember() {
     setTooltipValue({ id: null, value: 0 });
   }, []);
 
-  const handleInputChange = useCallback((id: number, value: string) => {
+  const handleInputChange = useCallback((id: string, value: string) => {
+    if (value === "") {
+      setEditingId(id);
+      return;
+    }
+
     const numValue = parseInt(value, 10);
     if (isNaN(numValue)) return;
 
     const newValue = Math.max(0, Math.min(100, numValue));
-
+    setEditingId(null);
     tempValuesRef.current[id] = newValue;
     setLocalSliderValues((prev) => ({
       ...prev,
@@ -95,28 +120,39 @@ export default function useGroupRatioMember() {
     }));
   }, []);
 
-  const handleUpdate = useCallback(() => {
-    const values = Object.values(localSliderValues);
-    const total = values.reduce((sum, val) => sum + val, 0);
+  const handleInputBlur = useCallback(
+    (id: string) => {
+      if (editingId === id) {
+        setEditingId(null);
+        setLocalSliderValues((prev) => ({
+          ...prev,
+          [id]: tempValuesRef.current[id],
+        }));
+      }
+    },
+    [editingId],
+  );
 
-    if (Math.abs(total - 100) > 0.01) {
-      Alert.alert(
-        "Invalid Distribution",
-        "The total percentage must equal 100% before updating.",
-        [{ text: "OK" }],
+  const handleUpdate = useCallback(async () => {
+    const payload = {
+      groupId: groupDetail?.id,
+      memberContributions: result,
+    };
+
+    dispatch(setLoading(true));
+    try {
+      await contributeGroup(payload).unwrap();
+      ToastAndroid.show(
+        TEXT_TRANSLATE_GROUP_RATIO_MEMBER.MESSAGE_SUCCESS
+          .UPDATE_CONTRIBUTE_SUCCESS,
+        ToastAndroid.SHORT,
       );
-      return;
+    } catch (err) {
+      ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
+    } finally {
+      dispatch(setLoading(false));
     }
-
-    setMembers((prevMembers) =>
-      prevMembers.map((member) => ({
-        ...member,
-        ratio: Math.round(localSliderValues[member.id]),
-      })),
-    );
-
-    Alert.alert("Success", "Contribution ratios updated successfully!");
-  }, [localSliderValues]);
+  }, [groupDetail?.id, localSliderValues, contributeGroup]);
 
   const localTotal = useMemo(
     () => Object.values(localSliderValues).reduce((sum, val) => sum + val, 0),
@@ -132,18 +168,52 @@ export default function useGroupRatioMember() {
   }, [localTotal]);
 
   const handleGoBack = useCallback(() => {
-    dispatch(setGroupTabHidden(false))
-    router.back()
+    dispatch(setGroupTabHidden(false));
+    router.back();
   }, []);
+
+  const handleEqualShare = useCallback(() => {
+    const memberCount = groupMembersDetailActive.length;
+    if (memberCount === 0) return;
+
+    const equalShare = Math.floor(100 / memberCount);
+    const remainder = 100 % memberCount;
+
+    const newValues = groupMembersDetailActive.reduce(
+      (acc, member, index) => {
+        acc[member.userId] = index === 0 ? equalShare + remainder : equalShare;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
+
+    setLocalSliderValues(newValues);
+    tempValuesRef.current = newValues;
+  }, [groupMembersDetailActive]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        handleGoBack();
+        return true;
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [handleGoBack]),
+  );
 
   return {
     state: {
-      members,
       localSliderValues,
       displayTotal,
       localTotal,
       tooltipValue,
       isDragging,
+      groupMembersDetail: groupMembersDetailActive ?? [],
+      userInfo,
+      editingId,
     },
     handler: {
       handleUpdate,
@@ -153,6 +223,8 @@ export default function useGroupRatioMember() {
       handleSliderStart,
       handleSliderChange,
       handleSliderComplete,
+      handleInputBlur,
+      handleEqualShare,
     },
   };
 }

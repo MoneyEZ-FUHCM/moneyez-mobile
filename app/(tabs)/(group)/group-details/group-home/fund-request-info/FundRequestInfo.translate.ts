@@ -6,7 +6,8 @@ export const TEXT_TRANSLATE_FUND_REQUEST_INFO = {
   },
   // Message
   MESSAGE: {
-    SUCCESS: "Bạn đã tạo yêu cầu góp quỹ thành công, vui lòng thực hiện chuyển khoản theo các thông tin bên dưới để được trưởng nhóm duyệt.",
+    SUCCESS:
+      "Bạn đã tạo yêu cầu góp quỹ thành công. Vui lòng chờ trưởng nhóm duyệt yêu cầu của bạn",
     COPY_SUCCESS: "Đã sao chép",
     COPY_ERROR: "Sao chép thất bại, vui lòng thử lại",
   },
@@ -14,7 +15,7 @@ export const TEXT_TRANSLATE_FUND_REQUEST_INFO = {
   LABELS: {
     AMOUNT: "Số tiền:",
     CREATED_DATE: "Ngày tạo:",
-    TRANSFER_CONTENT: "Nội dung chuyển khoản:",
+    TRANSFER_CONTENT: "Nội dung:",
     RECIPIENT_ACCOUNT: "Tài khoản nhận:",
     RECIPIENT_BANK: "Ngân hàng:",
     ACCOUNT_HOLDER: "Chủ tài khoản:",
@@ -23,6 +24,7 @@ export const TEXT_TRANSLATE_FUND_REQUEST_INFO = {
   BUTTON: {
     COPY: "copy",
     CONFIRM: "Xác nhận",
+    CREATE_FUND_REQUEST: "Tạo yêu cầu góp quỹ mới",
   },
 };
 

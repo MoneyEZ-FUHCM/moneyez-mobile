@@ -12,5 +12,6 @@ export const Colors = {
     red: "#cc0000",
     green: "#00a010",
     superlight: "#f6f9f4",
+    gray: "#f9fafb",
   },
 };

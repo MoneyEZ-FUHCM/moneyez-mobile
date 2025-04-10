@@ -60,6 +60,45 @@ const financialGoalApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["FinancialGoal"],
     }),
+    getGroupFinancialGoal: builder.query({
+      query: ({ groupId }) => ({
+        url: `/financial-goals/group?GroupId=${groupId}`,
+        method: HTTP_METHOD.GET,
+      }),
+      providesTags: ["FinancialGoal"],
+    }),
+    createGroupFinancialGoal: builder.mutation({
+      query: (payload) => ({
+        url: `/financial-goals/group`,
+        method: HTTP_METHOD.POST,
+        body: payload,
+      }),
+      invalidatesTags: ["FinancialGoal"],
+    }),
+    updateGroupFinancialGoal: builder.mutation({
+      query: (payload) => ({
+        url: `/financial-goals/group`,
+        method: HTTP_METHOD.PUT,
+        body: payload,
+      }),
+      invalidatesTags: ["FinancialGoal"],
+    }),
+    deleteGroupFinancialGoal: builder.mutation({
+      query: ({ id }) => ({
+        url: `/financial-goals/group/${id}`,
+        method: HTTP_METHOD.DELETE,
+      }),
+      invalidatesTags: ["FinancialGoal"],
+    }),
+    getPersonalFinancialGoalUserSpendingModel: builder.query({
+      query: ({ id }) => ({
+        url: `/financial-goals/personal/user-spending-model/${id}`,
+        method: HTTP_METHOD.GET,
+      }),
+      transformResponse: (response) =>
+        transformCommonResponse<FinancialGoal>(response),
+      providesTags: ["FinancialGoal"],
+    }),
   }),
 });
 
@@ -71,6 +110,11 @@ export const {
   useGetPersonalLimitBudgetSubcategoryQuery,
   useGetPersonalFinancialGoalChartQuery,
   useUpdateFinancialGoalMutation,
+  useGetGroupFinancialGoalQuery,
+  useCreateGroupFinancialGoalMutation,
+  useUpdateGroupFinancialGoalMutation,
+  useDeleteGroupFinancialGoalMutation,
+  useGetPersonalFinancialGoalUserSpendingModelQuery,
 } = financialGoalApi;
 
 export default financialGoalApi;

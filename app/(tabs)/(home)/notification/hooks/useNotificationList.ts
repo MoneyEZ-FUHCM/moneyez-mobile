@@ -1,21 +1,22 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
+import { PATH_NAME } from "@/helpers/constants/pathname";
 import { formatDate, formatTime } from "@/helpers/libs";
-import useHideTabbar from "@/hooks/useHideTabbar";
+import { setHasUnreadNotification } from "@/redux/slices/systemSlice";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import {
   useDeleteNotificationMutation,
   useGetNotificationQuery,
+  useLazyReadNotificationQuery,
   useReadAllNotificationMutation,
-  useReadNotificationMutation,
 } from "@/services/notification";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Animated, ToastAndroid } from "react-native";
-import { State } from "react-native-gesture-handler";
+import { BackHandler, Linking, ToastAndroid } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { useDispatch } from "react-redux";
 import NOTIFICATION_CONSTANTS from "../NotificationList.const";
 import TEXT_TRANSLATE_NOTICE from "../NotificationList.translate";
+import useHideTabbar from "@/hooks/useHideTabbar";
 
 type NotificationTabType = "all" | string;
 interface QueryParams {
@@ -29,7 +30,7 @@ const initialPageIndex = 1;
 const pageSize = 10;
 const tabs = NOTIFICATION_CONSTANTS.TABS;
 
-const useNotificationList = () => {
+const useNotificationList = (isHidden: boolean = false) => {
   const [activeTab, setActiveTab] =
     useState<NotificationTabType>(initialActiveTab);
   const [pageIndex, setPageIndex] = useState(initialPageIndex);
@@ -49,7 +50,7 @@ const useNotificationList = () => {
     type: activeTab,
   };
 
-  const [readNotification] = useReadNotificationMutation();
+  const [triggerReadNotification] = useLazyReadNotificationQuery();
   const [readAllNotification] = useReadAllNotificationMutation();
   const [deleteNotification] = useDeleteNotificationMutation();
   const {
@@ -63,45 +64,81 @@ const useNotificationList = () => {
 
   useHideTabbar();
 
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     if (!isHidden) {
+  //       dispatch(setMainTabHidden(true));
+  //     }
+  //   }, [dispatch]),
+  // );
+
+  const formatNotifications = (items: any[]) => {
+    return items?.map((notice: any) => ({
+      id: notice?.id,
+      title: notice?.title,
+      type: notice?.type,
+      message: notice?.message?.toLowerCase(),
+      isRead: notice?.isRead,
+      formattedDate: formatDate(notice?.createdDate),
+      formattedTime: formatTime(notice?.createdDate),
+      href: notice?.href,
+    }));
+  };
+
   useEffect(() => {
-    setIsFetchingData(true);
-    const fetchData = async () => {
-      setPageIndex(initialPageIndex);
+    if (notifications?.length > 0) {
       setNotifications([]);
-      await refetch();
-      setIsFetchingData(false);
-    };
-    fetchData();
+      setPageIndex(1);
+    }
   }, [activeTab]);
 
   useEffect(() => {
     if (data?.items) {
-      setNotifications((prev) => {
-        const newNotifications = data.items?.map((notice: any) => ({
-          id: notice.id,
-          title: notice.title,
-          type: notice.type,
-          message: notice.message.toLowerCase(),
-          isRead: notice.isRead,
-          formattedDate: formatDate(notice.createdDate),
-          formattedTime: formatTime(notice.createdDate),
-        }));
-        return [
-          ...prev,
-          ...newNotifications.filter(
-            (newTrans) => !prev.some((oldTrans) => oldTrans.id === newTrans.id),
-          ),
-        ];
-      });
+      if (isFetchingData) {
+        setNotifications(formatNotifications(data.items));
+        setPageIndex(1);
+      } else {
+        setNotifications((prev) => {
+          const newNotifications = formatNotifications(data.items);
+          return [
+            ...prev,
+            ...newNotifications.filter(
+              (newTrans) =>
+                !prev.some((oldTrans) => oldTrans.id === newTrans.id),
+            ),
+          ];
+        });
+      }
+
       setIsFetchingData(false);
       setIsLoadingMore(false);
     }
-  }, [data?.items]);
+  }, [data?.items, isFetchingData]);
+
+  useEffect(() => {
+    if (data?.items) {
+      const hasUnread = data.items?.some((notice: any) => !notice?.isRead);
+      dispatch(setHasUnreadNotification(hasUnread));
+    }
+  }, [data?.items, dispatch]);
 
   const handleGoBack = () => {
     router.back();
     dispatch(setMainTabHidden(false));
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        handleGoBack();
+        return true;
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [handleGoBack]),
+  );
 
   const loadMoreData = useCallback(() => {
     if (!isLoading && !isLoadingMore && data?.items?.length === pageSize) {
@@ -110,12 +147,45 @@ const useNotificationList = () => {
     }
   }, [data?.items.length, isLoading, isLoadingMore, pageSize]);
 
-  const handleMarkAsRead = async (id: string) => {
-    await readNotification(id).unwrap();
-  };
+  const handleMarkAsRead = useCallback(
+    async (id: string) => {
+      try {
+        await triggerReadNotification(id).unwrap();
+        await refetch();
+        setNotifications((prev) =>
+          prev.map((notice) =>
+            notice.id === id ? { ...notice, isRead: true } : notice,
+          ),
+        );
+
+        const remainingUnread = notifications.some(
+          (notice) => notice.id !== id && !notice.isRead,
+        );
+        dispatch(setHasUnreadNotification(remainingUnread));
+
+        ToastAndroid.show(
+          "Đánh dấu thông báo đã đọc thành công",
+          ToastAndroid.SHORT,
+        );
+        modalizeRef.current?.close();
+      } catch (err) {
+        console.log("check err", err);
+        ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
+      }
+    },
+    [notifications, dispatch, refetch],
+  );
 
   const handleMarkAllAsRead = async () => {
-    await readAllNotification({});
+    try {
+      await readAllNotification({}).unwrap();
+      setNotifications((prev) =>
+        prev.map((notice) => ({ ...notice, isRead: true })),
+      );
+      dispatch(setHasUnreadNotification(false));
+    } catch (err) {
+      ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
+    }
   };
 
   const handleDeleteNotice = useCallback(async (id: string) => {
@@ -151,26 +221,12 @@ const useNotificationList = () => {
     setIsFetchingData(false);
   }, []);
 
-  // gesture
-  const currentIndex = tabs.findIndex((tab) => tab.type === activeTab);
-  const slideAnim = useRef(new Animated.Value(0)).current;
-
-  const onGestureEvent = Animated.event(
-    [{ nativeEvent: { translationX: slideAnim } }],
-    { useNativeDriver: false },
-  );
-
-  const onHandlerStateChange = ({ nativeEvent }: { nativeEvent: any }) => {
-    if (nativeEvent.state === State.END) {
-      const dragX = nativeEvent.translationX;
-      if (dragX < -50 && currentIndex < tabs.length - 1) {
-        setActiveTab(tabs[currentIndex + 1].type);
-      } else if (dragX > 50 && currentIndex > 0) {
-        setActiveTab(tabs[currentIndex - 1].type);
-      }
-      Animated.spring(slideAnim, { toValue: 0, useNativeDriver: true }).start();
+  const handlePressNotification = useCallback((item: any) => {
+    if (item?.href) {
+      Linking.openURL(item.href);
+      router.replace(PATH_NAME.HOME.HOME_DEFAULT as any);
     }
-  };
+  }, []);
 
   return {
     state: {
@@ -189,7 +245,6 @@ const useNotificationList = () => {
       isFetchingData,
       isRefetching,
       tabs,
-      slideAnim,
     },
     handler: {
       setActiveTab,
@@ -201,8 +256,7 @@ const useNotificationList = () => {
       handleOpenMore,
       handleDeleteNotice,
       handleRefetchNotice,
-      onGestureEvent,
-      onHandlerStateChange,
+      handlePressNotification,
     },
   };
 };

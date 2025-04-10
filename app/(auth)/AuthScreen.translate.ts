@@ -68,6 +68,8 @@ const TEXT_TRANSLATE_AUTH = {
     LOGIN_SUCCESSFUL: "Đăng nhập thành công",
     REQUEST_PASSWORD_SUCCESSFUL:
       "Vui lòng kiểm tra hòm thư (hoặc Thư rác) để lấy mã OTP",
+    RESENT_OTP_SUCCESSFUL:
+      "Vui lòng kiểm tra hòm thư (hoặc Thư rác) để lấy mã OTP",
     CONFIRM_PASSWORD_SUCCESSFUL:
       "Cập nhật mật khẩu thành công. Vui lòng đăng nhập để vào hệ thống",
     REGISTER_SUCCESS:
@@ -88,6 +90,10 @@ const TEXT_TRANSLATE_AUTH = {
     PASSWORDS_MUST_MATCH: "Mật khẩu và xác nhận mật khẩu phải giống nhau",
     OTP_5_DIGITS: "Vui lòng nhập đầy đủ 5 chữ số",
     RESET_PASSWORD: "Vui lòng nhập mật khẩu mới và xác nhận",
+    PASSWORD_SPECIAL_CHAR: "Mật khẩu phải có ít nhất 1 kí tự đặc biệt",
+    PASSWORD_LETTERS: "Mật khẩu phải có ít nhất một chữ cái",
+    PASSWORD_NO_WHITESPACE: "Mật khẩu không được có khoảng trắng",
+    PASSWORD_UPPERCASE: "Mật khẩu phải có ít nhất một chữ cái in hoa",
   },
 };
 

@@ -12,121 +12,110 @@ import useFundRequestInfo from "./hooks/useFundRequestInfo";
 
 export default function FundRequestInfoPage() {
   const { state, handler } = useFundRequestInfo();
-  const { TITLE, MESSAGE, LABELS, BUTTON } = TEXT_TRANSLATE_FUND_REQUEST_INFO;
+  const { TITLE, LABELS, BUTTON } = TEXT_TRANSLATE_FUND_REQUEST_INFO;
+
+  const renderInfoRow = (
+    label: any,
+    value: any,
+    copyable = false,
+    lastItem = false,
+  ) => (
+    <View
+      className={`flex-row items-center justify-between py-3 ${!lastItem ? "border-b border-gray-200" : ""}`}
+    >
+      <Text className="text-sm font-semibold text-gray-700">{label}</Text>
+      <View className="max-w-[60%] flex-row items-center">
+        <Text
+          className="text-right text-sm text-gray-900"
+          numberOfLines={copyable ? 1 : 2}
+        >
+          {value || "-"}
+        </Text>
+        {copyable && value && (
+          <TouchableOpacity
+            onPress={() => handler.copyToClipboard(value)}
+            className="ml-2 p-1"
+          >
+            <MaterialIcons name="content-copy" size={18} color="#609084" />
+          </TouchableOpacity>
+        )}
+      </View>
+    </View>
+  );
 
   return (
-    <SafeAreaViewCustom rootClassName="flex-1 bg-[#f9f9f9]">
-      {/* Header */}
-      <SectionComponent rootClassName="h-14 bg-white justify-center">
-        <View className="flex-row items-center justify-between px-5">
-          <TouchableOpacity onPress={() => handler.handleBack}>
-            <MaterialIcons name="arrow-back" size={24} />
+    <SafeAreaViewCustom rootClassName="flex-1 bg-gray-50">
+      <SectionComponent rootClassName="h-16 bg-white justify-center shadow-sm">
+        <View className="flex-row items-center justify-between px-4">
+          <TouchableOpacity
+            className="rounded-full p-2"
+            onPress={handler.handleBack}
+          >
+            <MaterialIcons name="arrow-back" size={24} color="#333" />
           </TouchableOpacity>
-          <Text className="text-lg font-bold text-black">
-            {TITLE.MAIN_TITLE}
+          <Text className="text-lg font-bold text-gray-800">
+            {state.mode === "WITHDRAW"
+              ? "Chi tiết yêu cầu rút quỹ"
+              : TITLE.MAIN_TITLE}
           </Text>
-          <SpaceComponent width={24} />
+          <SpaceComponent width={40} />
         </View>
       </SectionComponent>
 
-      {/* Content */}
-      <SectionComponent rootClassName="mx-5 mt-8 rounded-[10px] bg-white p-4 shadow-sm">
-        <Text className="text-sm text-gray-600">{MESSAGE.SUCCESS}</Text>
-      </SectionComponent>
-
-      <SectionComponent rootClassName="mx-5 mt-4 rounded-[10px] bg-white p-4 shadow-sm">
-        <Text className="mb-3 text-base font-semibold text-black">
-          {TITLE.INFO_TITLE}
+      <SectionComponent rootClassName="mx-4 mt-6 rounded-xl bg-white p-4 shadow-sm">
+        <Text className="text-sm italic leading-5 text-gray-600">
+          <Text className="text-red">* {""}</Text>
+          {state.getSuccessMessage()}
         </Text>
-
-        <View className="flex-row items-center justify-between border-b border-gray-100 py-2">
-          <Text className="text-sm font-bold text-gray-700">
-            {LABELS.AMOUNT}
-          </Text>
-          <Text className="text-sm text-black">
-            {formatCurrency(state.fundRequest?.amount as any)}
-          </Text>
-        </View>
-
-        <View className="flex-row items-center justify-between border-b border-gray-100 py-2">
-          <Text className="text-sm font-bold text-gray-700">
-            {LABELS.CREATED_DATE}
-          </Text>
-          <Text className="text-sm text-black">
-            {formatDate(state.fundRequest.createdDate, "DD/MM/YYYY - HH:mm:ss")}
-          </Text>
-        </View>
-        <View className="flex-row items-center justify-between border-b border-gray-100 py-2">
-          <Text className="text-sm font-bold text-gray-700">Lời nhắn:</Text>
-          <Text className="text-sm text-black">
-            {state.fundRequest?.description}
-          </Text>
-        </View>
-
-        <View className="flex-row items-center justify-between border-b border-gray-100 py-2">
-          <Text className="text-sm font-bold text-gray-700">
-            {LABELS.TRANSFER_CONTENT}
-          </Text>
-          <View className="flex-row items-center">
-            <Text className="mr-2 text-sm text-black">
-              {state.fundRequest.transferContent}
-            </Text>
-            <TouchableOpacity
-              onPress={() =>
-                handler.copyToClipboard(state.fundRequest.transferContent)
-              }
-            >
-              <MaterialIcons name="content-copy" size={20} color="#609084" />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View className="flex-row items-center justify-between border-b border-gray-100 py-2">
-          <Text className="text-sm font-bold text-gray-700">
-            {LABELS.RECIPIENT_ACCOUNT}
-          </Text>
-          <View className="flex-row items-center">
-            <Text className="mr-2 text-sm text-black">
-              {state.fundRequest?.recipientAccount}
-            </Text>
-            <TouchableOpacity
-              onPress={() =>
-                handler.copyToClipboard(state.fundRequest?.recipientAccount)
-              }
-            >
-              <MaterialIcons name="content-copy" size={20} color="#609084" />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View className="flex-row items-center justify-between border-b border-gray-100 py-2">
-          <Text className="text-sm font-bold text-gray-700">
-            {LABELS.RECIPIENT_BANK}
-          </Text>
-          <Text className="text-sm text-black">
-            {state.fundRequest.bankName}
-          </Text>
-        </View>
-
-        <View className="flex-row items-center justify-between py-2">
-          <Text className="text-sm font-bold text-gray-700">
-            {LABELS.ACCOUNT_HOLDER}
-          </Text>
-          <Text className="text-sm text-black">
-            {state.fundRequest.accountHolder}
-          </Text>
-        </View>
       </SectionComponent>
-      <SpaceComponent height={22} />
 
-      {/* Confirm Button */}
-      <SectionComponent rootClassName="absolute bottom-0 left-0 right-0 p-5 bg-white">
+      <SectionComponent rootClassName="mx-4 mt-4 rounded-xl bg-white p-5 shadow-sm">
+        <Text className="mb-4 text-lg font-semibold text-gray-800">
+          {state.mode === "WITHDRAW"
+            ? "Thông tin rút quỹ"
+            : "Thông tin góp quỹ"}
+        </Text>
+        {renderInfoRow(
+          LABELS.AMOUNT,
+          formatCurrency(state.fundRequest?.amount as any),
+        )}
+        {renderInfoRow(
+          LABELS.CREATED_DATE,
+          formatDate(state.fundRequest?.createdDate, "DD/MM/YYYY - HH:mm:ss"),
+        )}
+        {renderInfoRow("Lời nhắn:", state.fundRequest?.description)}
+        {state.mode !== "WITHDRAW" && (
+          <>
+            {renderInfoRow(
+              LABELS.TRANSFER_CONTENT,
+              state.fundRequest?.transferContent,
+              true,
+            )}
+            {renderInfoRow(
+              LABELS.RECIPIENT_ACCOUNT,
+              state.fundRequest?.recipientAccount,
+              true,
+            )}
+            {renderInfoRow(LABELS.RECIPIENT_BANK, state.fundRequest?.bankName)}
+            {renderInfoRow(
+              LABELS.ACCOUNT_HOLDER,
+              state.fundRequest?.accountHolder,
+              false,
+              true,
+            )}
+          </>
+        )}
+      </SectionComponent>
+      <SectionComponent rootClassName="absolute bottom-5 left-0 right-0 px-4">
         <TouchableOpacity
-          onPress={handler.handleConfirm}
-          className="rounded-xl bg-[#609084] py-3"
+          onPress={handler.handleCreateFundRequest}
+          className="rounded-xl bg-primary py-4 shadow-sm"
+          activeOpacity={0.8}
         >
-          <Text className="text-center text-lg font-medium text-white">
-            {BUTTON.CONFIRM}
+          <Text className="text-center text-base font-semibold text-white">
+            {state.mode === "WITHDRAW"
+              ? "Tạo yêu cầu rút quỹ mới"
+              : BUTTON.CREATE_FUND_REQUEST}
           </Text>
         </TouchableOpacity>
       </SectionComponent>

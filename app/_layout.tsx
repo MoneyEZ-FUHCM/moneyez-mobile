@@ -5,7 +5,6 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { useMomentLocale } from "@/hooks/useMomentLocale";
 import { store } from "@/redux/store";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
-import messaging from "@react-native-firebase/messaging";
 import {
   DarkTheme,
   DefaultTheme,
@@ -40,28 +39,6 @@ export default function RootLayout() {
     };
 
     requestPermissions();
-
-    Notifications.setNotificationHandler({
-      handleNotification: async () => ({
-        shouldShowAlert: true,
-        shouldPlaySound: true,
-        shouldSetBadge: true,
-      }),
-    });
-
-    messaging().onMessage(async (remoteMessage) => {
-      const notification = remoteMessage.notification;
-
-      const title = notification?.title ?? "MoneyEz";
-      const body = notification?.body ?? "Bạn có thông báo mới";
-      await Notifications.scheduleNotificationAsync({
-        content: {
-          title,
-          body,
-        },
-        trigger: null,
-      });
-    });
   }, []);
 
   useEffect(() => {

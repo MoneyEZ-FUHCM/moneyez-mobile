@@ -1,0 +1,7 @@
+const CREATE_FUND_REQUEST_CONSTANT = {
+  ERROR_CODE: {
+    BANK_ACCOUNT_NOT_FOUND: "BankAccountNotFound",
+  },
+};
+
+export default CREATE_FUND_REQUEST_CONSTANT;

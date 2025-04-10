@@ -1,19 +1,25 @@
+import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { formatCurrency } from "@/helpers/libs";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
-import { useGetPersonalFinancialGoalsQuery } from "@/services/financialGoal";
+import {
+  useGetPersonalFinancialGoalsQuery,
+  useGetPersonalFinancialGoalUserSpendingModelQuery,
+} from "@/services/financialGoal";
 import {
   useGetCurrentUserSpendingModelChartQuery,
   useGetCurrentUserSpendingModelQuery,
 } from "@/services/userSpendingModel";
 import { router, useFocusEffect } from "expo-router";
-import { useCallback, useEffect, useMemo } from "react";
-import { BackHandler } from "react-native";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { BackHandler, ToastAndroid } from "react-native";
 import { useDispatch } from "react-redux";
 
 const useIndividualHome = () => {
   const { HOME } = PATH_NAME;
   const dispatch = useDispatch();
+  const { SYSTEM_ERROR } = COMMON_CONSTANT;
+  const [isRefetching, setIsRefetching] = useState(false);
   const {
     data: currentUserSpendingModelChart,
     isLoading,
@@ -27,7 +33,9 @@ const useIndividualHome = () => {
   const {
     data: personalFinancialGoals,
     refetch: refetchPersonalFinancialGoals,
-  } = useGetPersonalFinancialGoalsQuery({ PageIndex: 1, PageSize: 100 });
+  } = useGetPersonalFinancialGoalUserSpendingModelQuery({
+    id: currentUserSpendingModel?.data?.id,
+  });
 
   useFocusEffect(
     useCallback(() => {
@@ -100,12 +108,42 @@ const useIndividualHome = () => {
     router.push(HOME.SPENDING_BUDGET_LIST as any);
   };
 
+  const handleRefetch = useCallback(async () => {
+    if (isRefetching) {
+      ToastAndroid.show(
+        "Vui lòng đợi trước khi làm mới lại!",
+        ToastAndroid.SHORT,
+      );
+      return;
+    }
+
+    setIsRefetching(true);
+
+    try {
+      await Promise.all([
+        refetchCurrentUserSpendingModel(),
+        refetchCurrentUserSpendingModelChart(),
+        refetchPersonalFinancialGoals(),
+      ]);
+    } catch (error) {
+      ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
+    } finally {
+      setIsRefetching(false);
+    }
+  }, [
+    isRefetching,
+    refetchCurrentUserSpendingModel,
+    refetchCurrentUserSpendingModelChart,
+    refetchPersonalFinancialGoals,
+  ]);
+
   return {
     state: {
       isLoading,
       currentUserSpendingModelData,
       actualCategories,
       personalFinancialGoalsData,
+      isRefetching,
     },
     handler: {
       handleGoBack,
@@ -113,6 +151,7 @@ const useIndividualHome = () => {
       handleAddIncome: () => navigateToTransaction("INCOME"),
       handleHistoryPress,
       handleSpendingBudgetPress,
+      handleRefetch,
     },
   };
 };
