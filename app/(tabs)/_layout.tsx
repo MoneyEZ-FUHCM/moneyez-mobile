@@ -9,7 +9,6 @@ import { router, Tabs } from "expo-router";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import "../../globals.css";
-import useNotificationList from "./(home)/notification/hooks/useNotificationList";
 
 export default function TabLayout() {
   const dispatch = useDispatch();
@@ -19,7 +18,7 @@ export default function TabLayout() {
     CONDITION,
     ANIMATION_NAVIGATE_TAB,
   } = COMMON_CONSTANT;
-  const { handler } = useNotificationList(true);
+  // const { handler } = useNotificationList(true);
 
   useEffect(() => {
     Notifications.setNotificationHandler({
@@ -35,7 +34,7 @@ export default function TabLayout() {
 
       if (notification) {
         dispatch(setHasUnreadNotification(true));
-        handler.handleRefetchNotice();
+        // handler.handleRefetchNotice();
       }
 
       const title = notification?.title ?? "MoneyEz";
