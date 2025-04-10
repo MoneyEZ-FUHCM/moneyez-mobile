@@ -143,6 +143,13 @@ const useFunctionBankAccount = (params: any) => {
           );
           return;
         }
+        if (error?.errorCode === ERROR_CODE.BANK_ACCOUNT_VALIDATION_FAILED) {
+          ToastAndroid.show(
+            MESSAGE_ERROR.BANK_ACCOUNT_VALIDATION_FAILED,
+            ToastAndroid.SHORT,
+          );
+          return;
+        }
         ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
       }
     },

@@ -147,6 +147,7 @@ const FUNCTION_BANK_ACCOUNT_CONSTANT = {
 
   ERROR_CODE: {
     BANK_ACCOUNT_NOT_FOUND: "BankAccountNotFound",
+    BANK_ACCOUNT_VALIDATION_FAILED: "BankAccountValidationFailed",
   },
 };
 

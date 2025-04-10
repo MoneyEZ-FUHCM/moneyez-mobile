@@ -98,84 +98,91 @@ export default function SpendingBudget() {
       >
         {/* Budget Sections */}
         <View className="m-4">
-          {budgetSections?.map((section) => (
-            <SectionComponent
-              key={section?.id}
-              rootClassName="mb-[10px] bg-white rounded-[10px] p-[10px]"
-            >
-              <View className="mb-4 w-full flex-row items-center justify-between">
-                <Text className="text-base font-semibold text-[#808080]">
-                  {section?.category}
-                </Text>
-                <View
-                  className={`ml-2 rounded-sm px-2 py-0.5 ${
-                    section?.isSaving ? "bg-[#E8F0EE]" : "bg-[#FFF3E0]"
-                  }`}
-                >
-                  <Text
-                    className={`text-xs font-medium ${
-                      section?.isSaving ? "text-blue-400" : "text-[#FF9800]"
+          {budgetSections &&
+            budgetSections.length > 0 &&
+            budgetSections?.map((section) => (
+              <SectionComponent
+                key={section?.id}
+                rootClassName="mb-[10px] bg-white rounded-[10px] p-[10px]"
+              >
+                <View className="mb-4 w-full flex-row items-center justify-between">
+                  <Text className="text-base font-semibold text-[#808080]">
+                    {section?.category}
+                  </Text>
+                  <View
+                    className={`ml-2 rounded-sm px-2 py-0.5 ${
+                      section?.isSaving ? "bg-[#E8F0EE]" : "bg-[#FFF3E0]"
                     }`}
                   >
-                    {section?.isSaving ? "Tiết kiệm" : "Khoản chi"}
-                  </Text>
+                    <Text
+                      className={`text-xs font-medium ${
+                        section?.isSaving ? "text-blue-400" : "text-[#FF9800]"
+                      }`}
+                    >
+                      {section?.isSaving ? "Tiết kiệm" : "Khoản chi"}
+                    </Text>
+                  </View>
                 </View>
-              </View>
-              {section?.items?.map((item) => {
-                const progressPercent =
-                  item?.currentAmount / item?.targetAmount;
-                return (
-                  <Pressable
-                    key={item?.id}
-                    onPress={() => handleBudgetPress(item?.id)}
-                    className="mb-3 flex-row items-center justify-between rounded-[10px] border border-[#609084] p-3"
-                  >
-                    <View className="flex-row items-center space-x-3">
-                      <View>
-                        <ProgressCircleComponent
-                          value={progressPercent}
-                          size={72}
-                          thickness={9}
-                          isSaving={item?.isSaving}
-                          iconName={item?.icon}
-                          iconSize={28}
-                        />
-                      </View>
-                      <View className="gap-y-1">
-                        <Text className="text-base font-bold text-black">
-                          {item.name}
-                        </Text>
-                        <View className="flex-col gap-0.5">
-                          <View className="flex-row items-center space-x-1">
-                            <Text className="text-sm text-[#808080]">
-                              {TEXT_TRANSLATE_SPENDING_BUDGET.LABELS.REMAINING}
-                            </Text>
-                            <Text className="font-bold text-primary">
-                              {formatCurrency(item?.remaining)}
-                            </Text>
+                {section?.items &&
+                  section?.items?.length > 0 &&
+                  section?.items?.map((item) => {
+                    const progressPercent =
+                      item?.currentAmount / item?.targetAmount;
+                    return (
+                      <Pressable
+                        key={item?.id}
+                        onPress={() => handleBudgetPress(item?.id)}
+                        className="mb-3 flex-row items-center justify-between rounded-[10px] border border-[#609084] p-3"
+                      >
+                        <View className="flex-row items-center space-x-3">
+                          <View>
+                            <ProgressCircleComponent
+                              value={progressPercent}
+                              size={72}
+                              thickness={9}
+                              isSaving={item?.isSaving}
+                              iconName={item?.icon}
+                              iconSize={28}
+                            />
                           </View>
-                          <View className="flex-row items-center space-x-2">
-                            <Text className="text-sm text-text-gray">
-                              {TEXT_TRANSLATE_SPENDING_BUDGET.LABELS.SPENT}
+                          <View className="gap-y-1">
+                            <Text className="text-base font-bold text-black">
+                              {item.name}
                             </Text>
-                            <View className="flex-row items-center">
-                              <Text className="font-bold text-black">
-                                {formatCurrency(item?.currentAmount)}
-                              </Text>
-                              <Text className="text-sm text-text-gray">
-                                {" / "}
-                                {formatCurrency(item?.targetAmount)}
-                              </Text>
+                            <View className="flex-col gap-0.5">
+                              <View className="flex-row items-center space-x-1">
+                                <Text className="text-sm text-[#808080]">
+                                  {
+                                    TEXT_TRANSLATE_SPENDING_BUDGET.LABELS
+                                      .REMAINING
+                                  }
+                                </Text>
+                                <Text className="font-bold text-primary">
+                                  {formatCurrency(item?.remaining)}
+                                </Text>
+                              </View>
+                              <View className="flex-row items-center space-x-2">
+                                <Text className="text-sm text-text-gray">
+                                  {TEXT_TRANSLATE_SPENDING_BUDGET.LABELS.SPENT}
+                                </Text>
+                                <View className="flex-row items-center">
+                                  <Text className="font-bold text-black">
+                                    {formatCurrency(item?.currentAmount)}
+                                  </Text>
+                                  <Text className="text-sm text-text-gray">
+                                    {" / "}
+                                    {formatCurrency(item?.targetAmount)}
+                                  </Text>
+                                </View>
+                              </View>
                             </View>
                           </View>
                         </View>
-                      </View>
-                    </View>
-                  </Pressable>
-                );
-              })}
-            </SectionComponent>
-          ))}
+                      </Pressable>
+                    );
+                  })}
+              </SectionComponent>
+            ))}
         </View>
       </ScrollViewCustom>
     </SafeAreaViewCustom>

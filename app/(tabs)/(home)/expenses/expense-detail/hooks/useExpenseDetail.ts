@@ -94,13 +94,14 @@ const useExpenseDetail = () => {
     if (getPersonalTransactionFinancialGoals?.items) {
       setPersonalTransactionFinancialGoals((prevTransactions: any) => {
         const existingIds = new Set(
-          prevTransactions.map(
-            (item: PersonalTransactionFinancialGoals) => item.id,
-          ),
+          prevTransactions?.length > 0 &&
+            prevTransactions?.map(
+              (item: PersonalTransactionFinancialGoals) => item?.id,
+            ),
         );
-        const newItems = getPersonalTransactionFinancialGoals.items.filter(
+        const newItems = getPersonalTransactionFinancialGoals?.items?.filter(
           (item: PersonalTransactionFinancialGoals) =>
-            !existingIds.has(item.id),
+            !existingIds.has(item?.id),
         );
         return [...prevTransactions, ...newItems];
       });
