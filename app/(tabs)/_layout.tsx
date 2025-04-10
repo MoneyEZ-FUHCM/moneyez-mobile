@@ -1,14 +1,15 @@
 import { TabBar } from "@/components";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
+import { setHasUnreadNotification } from "@/redux/slices/systemSlice";
+import messaging from "@react-native-firebase/messaging";
 import * as Linking from "expo-linking";
+import * as Notifications from "expo-notifications";
 import { router, Tabs } from "expo-router";
 import React, { useEffect } from "react";
-import "../../globals.css";
-import messaging from "@react-native-firebase/messaging";
-import * as Notifications from "expo-notifications";
 import { useDispatch } from "react-redux";
-import { addNewNotification } from "@/redux/slices/notificationSlice";
+import "../../globals.css";
+import useNotificationList from "./(home)/notification/hooks/useNotificationList";
 
 export default function TabLayout() {
   const dispatch = useDispatch();
@@ -18,6 +19,7 @@ export default function TabLayout() {
     CONDITION,
     ANIMATION_NAVIGATE_TAB,
   } = COMMON_CONSTANT;
+  const { handler } = useNotificationList();
 
   useEffect(() => {
     Notifications.setNotificationHandler({
@@ -30,6 +32,11 @@ export default function TabLayout() {
 
     messaging().onMessage(async (remoteMessage) => {
       const notification = remoteMessage.notification;
+
+      if (notification) {
+        dispatch(setHasUnreadNotification(true));
+        handler.handleRefetchNotice();
+      }
 
       const title = notification?.title ?? "MoneyEz";
       const body = notification?.body ?? "Bạn có thông báo mới";
