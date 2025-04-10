@@ -67,6 +67,13 @@ const useUpdateExpense = () => {
         return;
       }
 
+      if (amount > personalLimitBudgetSubcate?.data?.limitBudget) {
+        ToastAndroid.show(
+          "Vui lòng không cập nhật số dư nhỏ hơn số dư hiện tại",
+          ToastAndroid.SHORT,
+        );
+        return;
+      }
       dispatch(setLoading(true));
       const payload = {
         name: data.name || "",
