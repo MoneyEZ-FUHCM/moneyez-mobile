@@ -9,9 +9,9 @@ import {
 import { PersonalLimitBudgetSubcate } from "@/types/financialGoal.type";
 import { MaterialIcons } from "@expo/vector-icons";
 import { CommonActions, useNavigation } from "@react-navigation/native";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useMemo, useRef } from "react";
-import { ToastAndroid } from "react-native";
+import { BackHandler, ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import CREATE_SPENDING_BUDGET from "../CreateSpendingBudget.constant";
 import TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP2 from "../CreateSpendingBudgetStep2.translate";
@@ -39,6 +39,19 @@ const useCreateSpendingBudgetStep2 = () => {
   const handleBack = useCallback(() => {
     router.back();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        handleBack();
+        return true;
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [handleBack]),
+  );
 
   const handleCreateBudget = useCallback(
     async (amount: number) => {
