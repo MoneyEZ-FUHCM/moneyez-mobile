@@ -5,6 +5,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { BarChart } from "react-native-gifted-charts";
 import { SectionComponent } from "../SectionComponent";
 import { useBarChart } from "./hooks/useBarChart";
+import { Colors } from "@/helpers/constants/color";
 
 interface GenericBarChartProps {
   data: ChartDataItem[];
@@ -14,7 +15,6 @@ interface GenericBarChartProps {
 const BarChartExpenseCustom = React.memo(
   ({ data, screenWidth }: GenericBarChartProps) => {
     const { state, handler } = useBarChart();
-    const PRIMARY_COLOR = "#609084";
     const GRAY_COLOR = "#E7E7E7";
     const formatAmount = (amount: number) => {
       if (amount >= 1000000) return `${(amount / 1000000).toFixed(1)}M`;
@@ -73,7 +73,7 @@ const BarChartExpenseCustom = React.memo(
               value: item?.amount || 0,
               label: formatDateMonth(item?.date),
               frontColor: state.isCurrentPeriod(item?.date, state.selectedType)
-                ? PRIMARY_COLOR
+                ? Colors.colors.primary
                 : GRAY_COLOR,
               opacity: state.isCurrentPeriod(item?.date, state.selectedType)
                 ? 1
