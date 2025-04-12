@@ -51,7 +51,7 @@ const DatePickerFinancialGoalComponent: React.FC<DatePickerFinancialGoalComponen
           <Calendar size="20" color="#609084" />
           <Text className="ml-2 text-[13px] text-black">
             {field.value
-              ? new Date(field.value).toLocaleDateString("vi-VN")
+              ? new Date(new Date(field.value).getTime()).toLocaleDateString("vi-VN")
               : "Chọn ngày"}
           </Text>
         </TouchableOpacity>
@@ -60,11 +60,11 @@ const DatePickerFinancialGoalComponent: React.FC<DatePickerFinancialGoalComponen
       {showPicker && (
         <DateTimePicker
           testID="dateTimePicker"
-          value={field.value ? new Date(field.value) : new Date()}
+          value={field.value ? new Date(field.value) : new Date(Date.now() + 86400000)}
           mode="date"
           is24Hour={true}
           display="default"
-          minimumDate={new Date()}
+          minimumDate={new Date(Date.now() + 86400000)}
           onChange={handleChange}
         />
       )}
