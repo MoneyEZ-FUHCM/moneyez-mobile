@@ -12,6 +12,7 @@ interface DatePickerRecurringTransactionProps {
   containerClass?: string;
   labelClass?: string;
   isRequired?: boolean;
+  maximumDate?: Date;
 }
 
 const DatePickerRecurringTransaction: React.FC<

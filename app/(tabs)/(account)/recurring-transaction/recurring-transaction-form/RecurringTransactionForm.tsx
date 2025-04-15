@@ -334,7 +334,7 @@ const RecurringTransactionForm = () => {
               {renderCategoryFilters()}
               {renderSubcategoryList()}
               {touched.subcategoryId && errors.subcategoryId && (
-                <Text className="text-red-500 mt-1 text-xs">
+                <Text className="ml-3 text-[12px] text-red">
                   {errors.subcategoryId}
                 </Text>
               )}
@@ -378,7 +378,7 @@ const RecurringTransactionForm = () => {
                   placeholder={TEXT_TRANSLATE.PLACEHOLDER.ENTER_DESCRIPTION}
                   isRequired
                   containerClass="my-5"
-                  labelClass="text-sm text-gray-600"
+                  labelClass="text-text-gray text-[12px] font-bold"
                   inputClass="text-sm text-gray-800"
                 />
               </View>

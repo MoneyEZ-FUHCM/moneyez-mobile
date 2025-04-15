@@ -16,7 +16,6 @@ import {
   RecurringTransactionFormValues,
   RecurringTransactionPayload,
 } from "@/types/recurringTransaction.types";
-import { Subcategory } from "@/types/subCategory";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FlatList, ToastAndroid } from "react-native";
@@ -37,8 +36,6 @@ const useRecurringTransactionForm = () => {
 
   // State for subcategory selection
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>("");
-  const [subcategoryName, setSubcategoryName] = useState<string>("");
-  const [subcategoryIcon, setSubcategoryIcon] = useState<string>("");
 
   // State for transaction type and category filtering
   const [transactionType, setTransactionType] = useState<string>(
@@ -108,19 +105,6 @@ const useRecurringTransactionForm = () => {
     }
   }, [id, transactionData]);
 
-  useEffect(() => {
-    if (selectedSubcategory && subCategories?.data) {
-      const subcategory = subCategories.data.find(
-        (item: Subcategory) => item.id === selectedSubcategory,
-      );
-
-      if (subcategory) {
-        setSubcategoryName(subcategory.name);
-        setSubcategoryIcon(subcategory.icon);
-      }
-    }
-  }, [selectedSubcategory, subCategories]);
-
   const isEditing = !!id;
   const isLoading =
     isLoadingSubCategories || isLoadingTransaction || isCreating || isUpdating;
@@ -129,7 +113,7 @@ const useRecurringTransactionForm = () => {
     subcategoryId: "",
     amount: "",
     frequencyType: 2,
-    interval: "",
+    interval: "1",
     startDate: new Date(),
     description: "",
     tags: "",
@@ -207,8 +191,6 @@ const useRecurringTransactionForm = () => {
           description: values.description,
           tags: values.tags,
         };
-
-        console.log("check payload", payload);
 
         let response;
         if (isEditing) {
