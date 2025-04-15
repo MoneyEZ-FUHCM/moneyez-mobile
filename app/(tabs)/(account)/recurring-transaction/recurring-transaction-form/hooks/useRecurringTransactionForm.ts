@@ -1,6 +1,6 @@
 import { TRANSACTION_TYPE, TRANSACTION_TYPE_TEXT } from "@/enums/globals";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
-import { parseCurrency } from "@/helpers/libs";
+import { convertUTCToVietnamTime, parseCurrency } from "@/helpers/libs";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import {
   useCreateRecurringTransactionMutation,
@@ -187,7 +187,7 @@ const useRecurringTransactionForm = () => {
           amount: parseCurrency(values.amount),
           frequencyType: values.frequencyType,
           interval: parseInt(values.interval, 10),
-          startDate: values.startDate.toISOString(),
+          startDate: convertUTCToVietnamTime(values?.startDate).toISOString(),
           description: values.description,
           tags: values.tags,
         };
