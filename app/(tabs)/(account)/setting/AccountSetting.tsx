@@ -4,9 +4,9 @@ import { appInfo } from "@/helpers/constants/appInfos";
 import {
   ArrowRight2,
   Bank,
-  Bookmark2,
+  Calendar,
   LogoutCurve,
-  TagUser,
+  TagUser
 } from "iconsax-react-native";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import TEXT_TRANSLATE_ACCOUNT from "../AccountScreen.translate";
@@ -27,9 +27,9 @@ const SETTING_OPTIONS = [
   },
   {
     id: 3,
-    icon: <Bookmark2 size="20" color="white" variant="Bold" />,
-    title: "Phiên bản",
-    description: "Thông tin phiên bản ứng dụng",
+    icon: <Calendar size="20" color="white" variant="Bold" />,
+    title: "Thu chi định kỳ",
+    description: "Quản lý các khoản thu chi định kỳ",
   },
 ];
 

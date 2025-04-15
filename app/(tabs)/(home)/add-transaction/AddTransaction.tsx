@@ -64,6 +64,7 @@ export default function AddTransaction() {
     ),
     [state.transactionType, handler],
   );
+
   const renderImageList = useMemo(
     () => (
       <>
