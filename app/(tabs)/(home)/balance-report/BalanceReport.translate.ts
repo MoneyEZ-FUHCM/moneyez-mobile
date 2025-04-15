@@ -1,7 +1,7 @@
 const TEXT_TRANSLATE_BALANCE_REPORT = {
     // Title
     TITLE: {
-        BALANCE_REPORT: "balance",
+        BALANCE_REPORT: "Báo cáo số dư",
     },
 
     // Labels

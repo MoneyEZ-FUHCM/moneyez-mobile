@@ -1,7 +1,7 @@
 const TEXT_TRANSLATE_ALL_TIME_REPORT = {
     // Title
     TITLE: {
-        ALL_TIME_REPORT: "All time report",
+        ALL_TIME_REPORT: "Tổng quan mọi thời gian",
     },
 
     // Labels

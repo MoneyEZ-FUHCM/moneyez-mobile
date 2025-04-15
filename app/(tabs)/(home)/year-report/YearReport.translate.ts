@@ -1,7 +1,7 @@
 const TEXT_TRANSLATE_YEAR_REPORT = {
     // Title
     TITLE: {
-        YEAR_REPORT: "year report",
+        YEAR_REPORT: "Báo cáo theo năm",
     },
 
     // Labels

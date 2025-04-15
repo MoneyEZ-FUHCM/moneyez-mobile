@@ -1,7 +1,7 @@
 const TEXT_TRANSLATE_CATEGORY_YEAR_REPORT = {
     // Title
     TITLE: {
-        YEAR_REPORT: "Category year report",
+        YEAR_REPORT: "Danh mục theo năm",
     },
 
     // Labels

@@ -6,11 +6,12 @@ import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { BackHandler } from "react-native";
 import { useDispatch } from "react-redux";
+import { getRandomColor } from "@/helpers/libs";
 
 const useCategoryAllTime = () => {
   const dispatch = useDispatch();
   const [pieData, setPieData] = useState([]);
-  const [type, setType] = useState<Number>(TRANSACTION_TYPE.EXPENSE)
+  const [type, setType] = useState<Number>(TRANSACTION_TYPE.EXPENSE);
   const [expenseItems, setExpenseItems] = useState<TransactionsReportCategoryItem[]>([]);
 
   const {
@@ -18,7 +19,7 @@ const useCategoryAllTime = () => {
     error,
     isLoading,
     refetch,
-  } = useGetReportTransactionAllTimeCategoryQuery({ type: type });
+  } = useGetReportTransactionAllTimeCategoryQuery({ type });
 
   useFocusEffect(
     useCallback(() => {
@@ -53,7 +54,6 @@ const useCategoryAllTime = () => {
 
     const categories = transactionsReportResponseData.items.categories || [];
 
-    // Merge by icon
     const mergedByIcon: Record<string, typeof categories[0]> = {};
 
     categories?.forEach((item) => {
@@ -68,28 +68,26 @@ const useCategoryAllTime = () => {
 
     const mergedList = Object.values(mergedByIcon);
 
-    const colorPalette = [
-      '#FFA500', '#32CD32', '#FF69B4', '#FFD700', '#1E90FF',
-      '#A52A2A', '#808080', '#800000', '#FFFF00', '#FF0000',
-      '#00CED1', '#6A5ACD', '#228B22', '#DC143C', '#00FA9A',
-      '#BDB76B', '#8B0000', '#20B2AA', '#FF8C00', '#2F4F4F'
-    ];
+    const pie = mergedList.map((item) => {
+      const color = getRandomColor();
+      return {
+        value: parseFloat((item.percentage ?? 0).toFixed(2)),
+        color,
+        text: '',
+        legend: item.name ?? '',
+      };
+    });
 
-    const pie = mergedList.map((item, index) => ({
-      value: parseFloat((item.percentage ?? 0).toFixed(2)),
-      color: colorPalette[index % colorPalette.length],
-      text: '',
-      legend: item.name ?? '',
-    }));
-
-    const items: TransactionsReportCategoryItem[] = mergedList.map((item, index) => ({
-      name: item.name ?? '',
-      amount: `${(item.amount ?? 0).toLocaleString()}₫`,
-      percentage: `${(item.percentage ?? 0).toFixed(2)}%`,
-      icon: item.icon ?? '',
-      color: colorPalette[index % colorPalette.length],
-    }));
-
+    const items: TransactionsReportCategoryItem[] = mergedList.map((item) => {
+      const color = getRandomColor();
+      return {
+        name: item.name ?? '',
+        amount: `${(item.amount ?? 0).toLocaleString()}₫`,
+        percentage: `${(item.percentage ?? 0).toFixed(2)}%`,
+        icon: item.icon ?? '',
+        color,
+      };
+    });
 
     setPieData(pie);
     setExpenseItems(items);

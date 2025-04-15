@@ -7,18 +7,18 @@ import { BackHandler } from "react-native";
 import { useDispatch } from "react-redux";
 
 const monthMap = {
-  January: "Jan",
-  February: "Feb",
-  March: "Mar",
-  April: "Apr",
-  May: "May",
-  June: "Jun",
-  July: "Jul",
-  August: "Aug",
-  September: "Sep",
-  October: "Oct",
-  November: "Nov",
-  December: "Dec"
+  January: "Th 1",
+  February: "Th 2",
+  March: "Th 3",
+  April: "Th 4",
+  May: "Th 5",
+  June: "Th 6",
+  July: "Th 7",
+  August: "Th 8",
+  September: "Th 9",
+  October: "Th 10",
+  November: "Th 11",
+  December: "Th 12"
 };
 
 const allMonths = Object.values(monthMap);
@@ -85,11 +85,11 @@ const useYearReport = () => {
     const total = data.reduce((sum, item) => sum + item.value, 0);
     const average = total / data.length;
 
-    const formatted = (value: number) => Number((value / 100));
+    const formatted = (value: number) => Number((value / 100)).toFixed(0);
 
     const details: TransactionsReportMonthlyData[] = [
-      { month: 'Total', amount: formatted(total) },
-      { month: 'Average', amount: formatted(average) },
+      { month: 'Tổng cộng', amount: formatted(total) },
+      { month: 'Trung bình', amount: formatted(average) },
       ...data.map(item => ({ month: item.label, amount: formatted(item.value) }))
     ];
 

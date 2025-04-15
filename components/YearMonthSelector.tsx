@@ -20,7 +20,7 @@ const YearMonthSelector: React.FC<YearMonthSelectorProps> = ({
       </Pressable>
       
       <Text style={styles.yearText}>
-        {currentYear} (Jan 01 - Dec 31)
+        {currentYear} (Th1 01 - Th12 31)
       </Text>
       
       <Pressable onPress={onNext} style={styles.button}>

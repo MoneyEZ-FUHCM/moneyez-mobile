@@ -1,7 +1,7 @@
 const TEXT_TRANSLATE_CATEGORY_ALL_TIME = {
     // Title
     TITLE: {
-        ALL_TIME: "Category year report",
+        ALL_TIME: "Tổng quan danh mục",
     },
 
     // Labels

@@ -43,8 +43,27 @@ const useAllTimeReport = () => {
   );
 
   useEffect(() => {
-    setFinancialSummary(transactionsReportResponseData?.items)
-  }, [transactionsReportResponseData])
+    if (!transactionsReportResponseData?.items) return;
+
+    const viLabelMap: Record<keyof TransactionsReportAllTime, string> = {
+      income: "Thu nhập",
+      expense: "Chi tiêu",
+      cumulation: "Tích lũy",
+      total: "Tổng cộng",
+      initialBalance: "Số dư ban đầu",
+    };
+
+    const rawData = transactionsReportResponseData.items;
+
+    const translatedSummary: Record<string, number> = Object.entries(rawData).reduce((acc, [key, value]) => {
+      const viKey = viLabelMap[key as keyof TransactionsReportAllTime] || key;
+      acc[viKey] = value;
+      return acc;
+    }, {} as Record<string, number>);
+
+    setFinancialSummary(translatedSummary as TransactionsReportAllTime);
+  }, [transactionsReportResponseData]);
+
 
   return {
     state: {

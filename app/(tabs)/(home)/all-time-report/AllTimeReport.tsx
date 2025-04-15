@@ -4,6 +4,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Text, ScrollView, View, Pressable, Image } from "react-native";
 import useAllTimeReport from './hooks/useAllTimeReport';
 import TEXT_TRANSLATE_ALL_TIME_REPORT from './AllTimeReport.translate';
+import { formatCurrency } from '@/helpers/libs';
 
 const AllTimeReport = () => {
 
@@ -32,7 +33,7 @@ const AllTimeReport = () => {
                                 }`}
                         >
                             <Text className="text-base font-medium">{key.charAt(0).toUpperCase() + key.slice(1)}</Text>
-                            <Text className="text-base font-medium text-gray-900">{value}</Text>
+                            <Text className="text-base font-medium text-gray-900">{formatCurrency(value)}</Text>
                         </View>
                     ))}
 
