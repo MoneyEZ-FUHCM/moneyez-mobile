@@ -3,7 +3,7 @@ import { Formik, FormikProps } from "formik";
 import React, { useCallback, useEffect, useRef } from "react";
 import { ActivityIndicator, FlatList, Pressable, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
-import { InputComponent, SafeAreaViewCustom, SectionComponent, SpaceComponent } from "@/components";
+import { CategoryItem, InputComponent, SafeAreaViewCustom, SectionComponent, SpaceComponent } from "@/components";
 import { DatePickerRecurringTransaction } from "@/components/DatePickerRecurringTransaction";
 import TagInputComponent from "@/components/TagInputComponent";
 import { TextAreaComponent } from "@/components/TextAreaComponent";
@@ -152,16 +152,17 @@ const RecurringTransactionForm = () => {
         showsHorizontalScrollIndicator={false}
         renderItem={({ item, index }: { item: CategoryListFilter; index: number }) => (
           <TouchableOpacity
-            onPress={() => handler.handleSelectCategoryFilter(item.code)}
-            accessibilityLabel={`Category ${item.name}`}
-            accessibilityHint="Select this category"
-            className={`my-1 mr-2.5 rounded-lg px-3 py-1 ${item.code === state.selectedCategoryCode
-              ? "scale-105 bg-[#609084] text-white shadow-xl shadow-[#609084]/40"
-              : "border border-gray-200 bg-white text-gray-800 shadow-sm"
-              } ${index === 0 ? "ml-1" : ""}`}
+            className={`my-1 mr-2.5 rounded-lg px-3 py-1 ${
+              item?.code === state.selectedCategoryCode
+                ? `scale-105 bg-primary ${index === 0 && "ml-1"} text-white shadow-xl shadow-primary/40`
+                : "border border-gray-200 bg-white text-gray-800 shadow-sm"
+            } transition-all duration-300`}
+            onPress={() => handler.handleSelectCategoryFilter(item?.code)}
           >
-            <Text className={`text-xs ${item.code === state.selectedCategoryCode ? "font-bold text-white" : "font-normal"}`}>
-              {item.name}
+            <Text
+              className={`text-xs ${item?.code === state.selectedCategoryCode ? "font-bold text-white" : "font-normal"} tracking-wide`}
+            >
+              {item?.name}
             </Text>
           </TouchableOpacity>
         )}
@@ -176,42 +177,31 @@ const RecurringTransactionForm = () => {
           <ActivityIndicator size="small" color="#609084" />
         </View>
       ) : (
-        state.subCategories?.data?.map((subcategory: Subcategory) => (
-          <Pressable
-            key={subcategory.id}
-            onPress={() => {
-              handler.handleSelectSubcategory(subcategory.id);
-              formikRef.current?.setFieldValue("subcategoryId", subcategory.id);
-              formikRef.current?.setFieldValue("description", subcategory.name);
-            }}
-            accessibilityLabel={`Subcategory ${subcategory.name}`}
-            className="mb-3 w-1/3 px-1.5"
-          >
-            <View
-              className={`flex-1 justify-center min-h-[110px] p-3 rounded-lg items-center ${state.selectedSubcategory === subcategory.id
-                ? "bg-green-100 border border-[#609084]"
-                : "bg-white border border-gray-200"
-                }`}
+        state.subCategories?.data?.map((subCategory: Subcategory) => {
+          return (
+            <Pressable
+              key={subCategory?.id}
+              onPress={() => {
+                handler.handleSelectSubcategory(subCategory?.id);
+                formikRef.current?.setFieldValue("subcategoryId", subCategory?.id);
+                formikRef.current?.setFieldValue("description", subCategory?.name);
+              }}
+              className="mb-3 w-1/3 px-1.5"
             >
-              <View
-                className={`w-12 h-12 rounded-full justify-center items-center ${state.selectedSubcategory === subcategory.id ? "bg-[#609084]" : "bg-gray-100"
-                  }`}
-              >
-                <MaterialIcons
-                  name={subcategory.icon as any}
-                  size={24}
-                  color={state.selectedSubcategory === subcategory.id ? "#fff" : "#609084"}
-                />
-              </View>
-              <Text
-                className={`mt-2 text-center text-sm ${state.selectedSubcategory === subcategory.id ? "font-bold" : "text-gray-700"
-                  }`}
-              >
-                {subcategory.name}
-              </Text>
-            </View>
-          </Pressable>
-        ))
+              <CategoryItem
+                label={subCategory?.name}
+                color="#609084"
+                iconName={
+                  subCategory?.icon as keyof typeof MaterialIcons.glyphMap
+                }
+                isSelected={
+                  state.selectedSubcategory === subCategory?.id
+                }
+                rootClassName="flex-1 justify-center min-h-[110px]"
+              />
+            </Pressable>
+          );
+        })
       )}
     </View>
   ), [state.isLoadingSubCategories, state.subCategories, state.selectedSubcategory, handler]);
@@ -234,7 +224,7 @@ const RecurringTransactionForm = () => {
               </View>
             </SectionComponent>
             <SectionComponent rootClassName="bg-white m-4 p-2 rounded-lg">
-              <Text className="text-lg font-bold tracking-tight text-[#609084] mb-1">
+              <Text className="text-base font-bold tracking-tight text-[#609084] mb-1">
                 {TEXT_TRANSLATE.LABEL.SUBCATEGORY}
               </Text>
               {renderCategoryFilters()}
@@ -291,7 +281,7 @@ const RecurringTransactionForm = () => {
             <SectionComponent rootClassName="bg-white m-4 p-4 rounded-lg">
               
               <SpaceComponent height={10} />
-              <Text className="font-bold tracking-tight text-[#609084] mb-1">
+              <Text className="text-base font-bold tracking-tight text-[#609084] mb-1">
                 {TEXT_TRANSLATE.LABEL.TAGS}
               </Text>
               <TagInputComponent 
