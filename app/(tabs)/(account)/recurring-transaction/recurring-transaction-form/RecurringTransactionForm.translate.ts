@@ -10,6 +10,7 @@ const TEXT_TRANSLATE = {
   LABEL: {
     SUBCATEGORY: "Danh mục",
     AMOUNT: "Số tiền",
+    INFO: "Thông tin",
     FREQUENCY_TYPE: "Chu kỳ",
     INTERVAL: "Số lần lặp lại",
     START_DATE: "Ngày bắt đầu",
