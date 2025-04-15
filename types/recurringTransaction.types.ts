@@ -1,5 +1,3 @@
-import { TRANSACTION_TYPE } from "@/enums/globals";
-
 export interface RecurringTransaction {
   id: string;
   userId: string;

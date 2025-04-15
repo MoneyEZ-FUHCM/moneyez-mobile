@@ -3,16 +3,16 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Alert } from "react-native";
 
 import { PATH_NAME } from "@/helpers/constants/pathname";
+import useHideTabbar from "@/hooks/useHideTabbar";
+import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import {
   useDeleteRecurringTransactionMutation,
   useGetRecurringTransactionQuery
 } from "@/services/recurringTransaction";
 import { RecurringTransaction } from "@/types/recurringTransaction.types";
 import { Modalize } from "react-native-modalize";
-import TEXT_TRANSLATE from "../RecurringTransactionList.translate";
 import { useDispatch } from "react-redux";
-import useHideTabbar from "@/hooks/useHideTabbar";
-import { setMainTabHidden } from "@/redux/slices/tabSlice";
+import TEXT_TRANSLATE from "../RecurringTransactionList.translate";
 
 const useRecurringTransactionList = () => {
   const [refreshing, setRefreshing] = useState(false);

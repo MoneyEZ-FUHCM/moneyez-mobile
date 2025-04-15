@@ -1,6 +1,6 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { MaterialIcons } from "@expo/vector-icons";
+import React, { useCallback, useEffect, useState } from 'react';
+import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 interface TagInputProps {
   value: string;
