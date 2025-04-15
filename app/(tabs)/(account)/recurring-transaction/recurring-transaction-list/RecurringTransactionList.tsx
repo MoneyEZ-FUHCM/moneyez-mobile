@@ -62,8 +62,8 @@ const RecurringTransactionList = () => {
   }, [state.transactions]);
 
   const renderHeader = useCallback(() => (
-    <SectionComponent rootClassName="h-14 bg-white justify-center items-center relative">
-      <View className="relative h-full flex-row items-center px-5">
+    <SectionComponent rootClassName="bg-white justify-center items-center relative">
+      <View className="relative h-14 flex-row items-center px-5">
         <Pressable onPress={handler.handleBack} className="absolute left-4">
           <MaterialIcons name="arrow-back" size={24} />
         </Pressable>
@@ -73,8 +73,28 @@ const RecurringTransactionList = () => {
           </Text>
         </View>
       </View>
+      
+      {/* Tab Selector */}
+      <View className="w-full flex-row bg-gray-100 rounded-lg mx-4 p-1 my-2">
+        <Pressable 
+          onPress={() => handler.handleTabChange('active')}
+          className={`flex-1 py-2 rounded-lg ${state.activeTab === 'active' ? 'bg-white shadow-sm' : ''}`}
+        >
+          <Text className={`text-center font-medium ${state.activeTab === 'active' ? 'text-primary' : 'text-gray-500'}`}>
+            Đang hoạt động
+          </Text>
+        </Pressable>
+        <Pressable 
+          onPress={() => handler.handleTabChange('archived')}
+          className={`flex-1 py-2 rounded-lg ${state.activeTab === 'archived' ? 'bg-white shadow-sm' : ''}`}
+        >
+          <Text className={`text-center font-medium ${state.activeTab === 'archived' ? 'text-primary' : 'text-gray-500'}`}>
+            Đã lưu trữ
+          </Text>
+        </Pressable>
+      </View>
     </SectionComponent>
-  ), []);
+  ), [state.activeTab, handler.handleTabChange, handler.handleBack]);
 
   const renderSectionHeader = useCallback((title: string, isIncome: boolean) => (
     <View className={`flex-row items-center px-4 py-2 mb-2 ${isIncome ? "bg-green-50" : "bg-red-50"}`}>
@@ -241,10 +261,12 @@ const RecurringTransactionList = () => {
         className="mb-4"
       />
       <Text className="text-gray-500 text-center">
-        {TEXT_TRANSLATE.MESSAGE.NO_TRANSACTIONS}
+        {state.activeTab === 'active' 
+          ? TEXT_TRANSLATE.MESSAGE.NO_TRANSACTIONS 
+          : "Không có giao dịch định kỳ đã lưu trữ"}
       </Text>
     </View>
-  ), []);
+  ), [state.activeTab]);
 
   const renderContent = () => {
     if (state.isLoading && state.pageIndex === 1) {
@@ -314,12 +336,14 @@ const RecurringTransactionList = () => {
           {renderContent()}
         </ScrollViewCustom>
 
-        <Pressable
-          onPress={handler.handleNavigateToForm}
-          className="absolute bottom-6 right-6 h-14 w-14 rounded-full bg-primary items-center justify-center shadow-lg"
-        >
-          <MaterialIcons name="add" size={24} color="#FFF" />
-        </Pressable>
+        {state.activeTab === 'active' && (
+          <Pressable
+            onPress={handler.handleNavigateToForm}
+            className="absolute bottom-6 right-6 h-14 w-14 rounded-full bg-primary items-center justify-center shadow-lg"
+          >
+            <MaterialIcons name="add" size={24} color="#FFF" />
+          </Pressable>
+        )}
 
         <ModalLizeComponent
           ref={state.modalizeRef}

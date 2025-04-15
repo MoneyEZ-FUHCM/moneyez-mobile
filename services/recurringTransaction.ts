@@ -5,8 +5,8 @@ const { HTTP_METHOD } = COMMON_CONSTANT;
 const recurringTransactionApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getRecurringTransaction: builder.query({
-      query: ({ PageIndex, PageSize }) => ({
-        url: `/recurring-transactions?PageIndex=${PageIndex}&PageSize=${PageSize}&is_deleted=false`,
+      query: ({ PageIndex, PageSize, isActive }) => ({
+        url: `/recurring-transactions?PageIndex=${PageIndex}&PageSize=${PageSize}&IsActive=${isActive}&is_deleted=false`,
         method: HTTP_METHOD.GET,
       }),
       providesTags: ["RecurringTransaction"],

@@ -22,10 +22,12 @@ const useRecurringTransactionList = () => {
   const [pageSize] = useState(10);
   const [hasMore, setHasMore] = useState(true);
   const [transactions, setTransactions] = useState<RecurringTransaction[]>([]);
+  const [activeTab, setActiveTab] = useState<'active' | 'archived'>('active');
 
   const { data, isLoading, refetch, isFetching } = useGetRecurringTransactionQuery({
     PageIndex: pageIndex,
-    PageSize: pageSize
+    PageSize: pageSize,
+    isActive: activeTab === 'active'
   });
   const [deleteRecurringTransaction, { isLoading: isDeleting }] = useDeleteRecurringTransactionMutation();
 
@@ -49,6 +51,12 @@ const useRecurringTransactionList = () => {
       }
     }
   }, [data, pageIndex, transactions]);
+
+  const handleTabChange = useCallback((tab: 'active' | 'archived') => {
+    setActiveTab(tab);
+    setPageIndex(1);
+    setTransactions([]);
+  }, []);
 
   const handleOpenDetail = useCallback((item: RecurringTransaction) => {
     setSelectedTransaction(item);
@@ -148,6 +156,7 @@ const useRecurringTransactionList = () => {
       isFetching,
       hasMore,
       isDeleting,
+      activeTab,
     },
     handler: {
       handleBack,
@@ -158,6 +167,7 @@ const useRecurringTransactionList = () => {
       handleEditTransaction,
       handleDeleteTransaction,
       getFrequencyText,
+      handleTabChange,
     }
   };
 };
