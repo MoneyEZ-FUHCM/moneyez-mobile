@@ -20,7 +20,7 @@ import TEXT_TRANSLATE from "../RecurringTransactionForm.translate";
 
 const useRecurringTransactionForm = () => {
   const { id } = useLocalSearchParams();
-  const { FILTER } = COMMON_CONSTANT;
+  const { FILTER, HTTP_STATUS } = COMMON_CONSTANT;
   useHideTabbar()
   // State for subcategory selection
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>("");
@@ -174,7 +174,7 @@ const useRecurringTransactionForm = () => {
           response = await createRecurringTransaction(payload).unwrap();
         }
 
-        if (response.status === 200) {
+        if (response.status === HTTP_STATUS.SUCCESS.OK || response.status === HTTP_STATUS.SUCCESS.CREATED) {
           ToastAndroid.show(
             isEditing
               ? TEXT_TRANSLATE.MESSAGE.SUCCESS_UPDATE

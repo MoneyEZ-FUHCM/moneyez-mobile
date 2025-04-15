@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Alert } from "react-native";
+import { Alert, ToastAndroid } from "react-native";
 
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import useHideTabbar from "@/hooks/useHideTabbar";
@@ -105,7 +105,7 @@ const useRecurringTransactionList = () => {
                 modalizeRef.current?.close();
                 setPageIndex(1);
                 refetch();
-                Alert.alert("Thành công", TEXT_TRANSLATE.MESSAGE.DELETE_SUCCESS);
+                ToastAndroid.show(TEXT_TRANSLATE.MESSAGE.DELETE_SUCCESS, ToastAndroid.SHORT)
               } catch (error) {
                 console.error("Failed to delete recurring transaction:", error);
                 Alert.alert("Lỗi", TEXT_TRANSLATE.MESSAGE.DELETE_ERROR);
