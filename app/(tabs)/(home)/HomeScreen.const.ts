@@ -25,17 +25,29 @@ const HOME_SCREEN_CONSTANTS = {
       icon: Coin1,
       url: HOME.SPENDING_MODEL_HISTORY,
     },
-    { label: "Thống kê", icon: Activity, url: HOME.STATISTICAL },
-    { label: "Báo cáo số dư", icon: Graph, url: HOME.BALANCE_REPORT },
-    { label: "Danh mục theo năm", icon: Bookmark, url: HOME.CATEGORY_YEAR_REPORT },
-    { label: "Tổng quan mọi thời gian", icon: Calendar, url: HOME.AllTimeReport },
-    { label: "Tổng quan danh mục", icon: Category, url: HOME.CATEGORY_ALL_TIME },
-    { label: "Báo cáo theo năm", icon: TrendUp, url: HOME.YEAR_REPORT },
     {
-      label: "Lịch giao dịch định kỳ",
-      icon: CalendarEdit,
-      url: HOME.RECURRING_TRANSACTIONS_CALENDAR
+      label: "Thống kê",
+      icon: Activity,
+      url: HOME.STATISTIC_OVERVIEW,
     },
+    // { label: "Thống kê", icon: Activity, url: HOME.STATISTICAL },
+    // { label: "Báo cáo số dư", icon: Graph, url: HOME.BALANCE_REPORT },
+    // {
+    //   label: "Danh mục theo năm",
+    //   icon: Bookmark,
+    //   url: HOME.CATEGORY_YEAR_REPORT,
+    // },
+    // {
+    //   label: "Tổng quan danh mục",
+    //   icon: Category,
+    //   url: HOME.CATEGORY_ALL_TIME,
+    // },
+    // { label: "Báo cáo theo năm", icon: TrendUp, url: HOME.YEAR_REPORT },
+    // {
+    //   label: "Lịch giao dịch định kỳ",
+    //   icon: CalendarEdit,
+    //   url: HOME.RECURRING_TRANSACTIONS_CALENDAR,
+    // },
   ],
   POST_DATAS: [
     {

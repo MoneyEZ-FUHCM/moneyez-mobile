@@ -138,7 +138,7 @@ const HomeScreen = () => {
                         className="h-4 w-4"
                         resizeMode="contain"
                       />
-                      <Text className="ml-[5px] text-[12px] font-medium text-red">
+                      <Text className="text-red ml-[5px] text-[12px] font-medium">
                         {TITLE.SPENDING}
                       </Text>
                     </View>
@@ -159,7 +159,7 @@ const HomeScreen = () => {
                         className="h-4 w-4"
                         resizeMode="contain"
                       />
-                      <Text className="ml-[5px] text-[12px] font-medium text-green">
+                      <Text className="text-green ml-[5px] text-[12px] font-medium">
                         {TITLE.INCOME}
                       </Text>
                     </View>
@@ -270,7 +270,7 @@ const HomeScreen = () => {
                       </View>
                     </View>
                   ))}
-                  {state.groupData.length > 2 && (
+                  {state.groupData?.length > 2 && (
                     <TouchableOpacity
                       className="flex-1 rounded-lg border border-secondary bg-white px-2 py-3"
                       onPress={() =>
@@ -291,7 +291,7 @@ const HomeScreen = () => {
           rootClassName={`px-5 ${state.groupData.length === 0 ? "mt-7" : "my-2.5"}`}
         >
           <View className="flex-row flex-wrap gap-y-5">
-            {state.MENU_ITEMS.map((item: any, index: number) => {
+            {state.MENU_ITEMS?.map((item: any, index: number) => {
               const Icon = item.icon;
               const handlePress = () => {
                 if (

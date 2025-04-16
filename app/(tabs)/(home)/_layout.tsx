@@ -22,6 +22,7 @@ export default function HomeLayout() {
       <Stack.Screen name={HOME.PERIOD_HISTORY} />
       <Stack.Screen name={HOME.PERIOD_HISTORY_DETAIL} />
       <Stack.Screen name={HOME.TRANSACTION_DETAIL} />
+      <Stack.Screen name={HOME.STATISTIC_OVERVIEW} />
     </Stack>
   );
 }

@@ -98,7 +98,7 @@ export default function ExpenseDetail() {
                 <Text className="text-sm">
                   {TEXT_TRANSLATE_EXPENSE_DETAIL.BUDGET_REMAINING}
                   {"  "}
-                  <Text className="text-green-500 font-bold">
+                  <Text className="font-bold text-green-500">
                     {formatCurrency(
                       state.financialGoalDetail?.targetAmount -
                         state.financialGoalDetail?.currentAmount,
@@ -109,7 +109,7 @@ export default function ExpenseDetail() {
                 <Text className="flex-wrap text-sm text-gray-500">
                   {TEXT_TRANSLATE_EXPENSE_DETAIL.BUDGET_SPENT}
                   {"  "}
-                  <Text className="text-green-500 font-bold">
+                  <Text className="text-green font-bold">
                     {formatCurrency(state.financialGoalDetail?.currentAmount)}
                   </Text>{" "}
                   / {formatCurrency(state.financialGoalDetail?.targetAmount)}

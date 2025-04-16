@@ -29,6 +29,7 @@ export enum TRANSACTION_TYPE {
 }
 export enum TRANSACTION_TYPE_TEXT {
   INCOME = "INCOME",
+  TOTAL = "TOTAL",
   EXPENSE = "EXPENSE",
 }
 

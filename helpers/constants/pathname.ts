@@ -44,13 +44,16 @@ const PATH_NAME = {
     ADD_SPENDING_BUDGET_STEP_2: "add-spending-budget/CreateSpendingBudgetStep2",
     EXPENSES_DETAIL: "expenses/expense-detail/ExpenseDetail",
     UPDATE_EXPENSE: "expenses/update-expense/UpdateExpense",
-    STATISTICAL: "statistical/Statistical",
-    CATEGORY_YEAR_REPORT: "category-year-report/CategoryYearReport",
-    AllTimeReport: "all-time-report/AllTimeReport",
-    CATEGORY_ALL_TIME: "category-all-time/CategoryAllTime",
-    BALANCE_REPORT: "balance-report/BalanceReport",
-    YEAR_REPORT: "year-report/YearReport",
-    RECURRING_TRANSACTIONS_CALENDAR: "recurring-transactions-calendar/RecurringTransactionsCalendar",
+    STATISTICAL: "statistic-overview/statistical/Statistical",
+    CATEGORY_YEAR_REPORT:
+      "statistic-overview/category-year-report/CategoryYearReport",
+    // ALL_TIME_REPORT: "statistic-overview/all-time-report/AllTimeReport",
+    CATEGORY_ALL_TIME: "statistic-overview/category-all-time/CategoryAllTime",
+    BALANCE_REPORT: "statistic-overview/balance-report/BalanceReport",
+    YEAR_REPORT: "statistic-overview/year-report/YearReport",
+    RECURRING_TRANSACTIONS_CALENDAR:
+      "statistic-overview/recurring-transactions-calendar/RecurringTransactionsCalendar",
+    STATISTIC_OVERVIEW: "statistic-overview/StatisticOverview",
   },
   ACCOUNT: {
     ACCOUNT_SETTING: "setting/AccountSetting",
@@ -62,15 +65,22 @@ const PATH_NAME = {
 
   // Group-detail
   GROUP_HOME: {
-    GROUP_HOME_DEFAULT: "group-details/group-home/group-home-default/GroupHomeDefault",
-    CREATE_FUND_REQUEST: "group-details/group-home/create-fund-request/CreateFundRequest",
-    FUND_REQUEST_INFO: "group-details/group-home/fund-request-info/FundRequestInfo",
-    WITHDRAW_FUND_REQUEST: "group-details/group-home/withdraw-fund-request/WithdrawFundRequest",
-    GROUP_FUND_REMIND: "group-details/group-home/group-fund-remind/GroupFundRemind",
+    GROUP_HOME_DEFAULT:
+      "group-details/group-home/group-home-default/GroupHomeDefault",
+    CREATE_FUND_REQUEST:
+      "group-details/group-home/create-fund-request/CreateFundRequest",
+    FUND_REQUEST_INFO:
+      "group-details/group-home/fund-request-info/FundRequestInfo",
+    WITHDRAW_FUND_REQUEST:
+      "group-details/group-home/withdraw-fund-request/WithdrawFundRequest",
+    GROUP_FUND_REMIND:
+      "group-details/group-home/group-fund-remind/GroupFundRemind",
   },
   GROUP_SETTING: {
-    GROUP_SETTING_DEFAULT: "group-details/group-setting/group-setting-default/GroupSettingDefault",
-    GROUP_RATIO_MEMBER: "group-details/group-setting/group-ratio-member/GroupRatioMember",
+    GROUP_SETTING_DEFAULT:
+      "group-details/group-setting/group-setting-default/GroupSettingDefault",
+    GROUP_RATIO_MEMBER:
+      "group-details/group-setting/group-ratio-member/GroupRatioMember",
   },
   MEMBER: {
     GROUP_MEMBER: "group-details/member/group-member/GroupMember",
@@ -83,4 +93,3 @@ const PATH_NAME = {
 };
 
 export { PATH_NAME };
-

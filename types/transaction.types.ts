@@ -100,6 +100,7 @@ export interface TransactionsReportYearlyData {
 }
 
 export interface TransactionsReportCategoryItem {
+  categoryType: string;
   name: string;
   amount: number;
   percentage: number;
@@ -126,7 +127,7 @@ export interface TransactionsReportCategoryItem {
   amount: number;
   percentage: number;
   icon: string;
-  color?: string
+  color?: string;
 }
 
 export interface TransactionsReportCategoryAllTime {
