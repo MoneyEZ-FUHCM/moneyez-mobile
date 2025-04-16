@@ -57,6 +57,8 @@ const PATH_NAME = {
     BANK_ACCOUNT: "bank-account/bank-account-list/BankAccount",
     FUNCTION_BANK_ACCOUNT:
       "bank-account/function-bank-account/FunctionBankAccount",
+    RECURRING_TRANSACTION_LIST: "recurring-transaction/recurring-transaction-list/RecurringTransactionList",
+    RECURRING_TRANSACTION_FORM: "recurring-transaction/recurring-transaction-form/RecurringTransactionForm",
   },
 
   // Group-detail
