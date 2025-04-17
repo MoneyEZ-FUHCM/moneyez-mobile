@@ -14,13 +14,11 @@ const useStatisticOverview = () => {
     useState<TransactionsReportAllTime>();
   const {
     data: transactionsReportResponseData,
-    error,
     isLoading,
     refetch,
   } = useGetReportTransactionAllTimeQuery({});
 
   useEffect(() => {
-    console.log("hji");
     refetch();
   }, []);
 
@@ -36,8 +34,6 @@ const useStatisticOverview = () => {
     };
 
     const rawData = transactionsReportResponseData.items;
-
-    console.log("check rawData", rawData);
 
     const translatedSummary: Record<string, number> = Object.entries(
       rawData,
