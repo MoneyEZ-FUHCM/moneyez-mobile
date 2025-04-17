@@ -28,7 +28,7 @@ const useYearReport = () => {
   const dispatch = useDispatch();
 
   const [currentYear, setCurrentYear] = useState(2025);
-  const [activeTab, setActiveTab] = useState("expense");
+  const [activeTab, setActiveTab] = useState("EXPENSE");
   const [barData, setBarData] = useState([]);
   const [quarterlyDetails, setQuarterlyDetails] = useState<
     TransactionsReportMonthlyData[]
@@ -41,8 +41,13 @@ const useYearReport = () => {
     refetch,
   } = useGetReportTransactionYearQuery({
     year: currentYear,
-    type: activeTab === "expense" ? 1 : activeTab === "income" ? 0 : 2,
+    type: activeTab,
   });
+
+  console.log(
+    "check transactionsReportResponseData",
+    transactionsReportResponseData,
+  );
 
   useEffect(() => {
     console.log("123");

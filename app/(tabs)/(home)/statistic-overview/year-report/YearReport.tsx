@@ -36,31 +36,31 @@ const YearReportScreen = () => {
 
         <View className="mx-4 mt-4 flex-row overflow-hidden rounded-lg bg-gray-200">
           <Pressable
-            onPress={() => handler.setActiveTab("expense")}
-            className={`flex-1 py-2 ${state.activeTab === "expense" ? "bg-primary" : "bg-gray-200"}`}
+            onPress={() => handler.setActiveTab("EXPENSE")}
+            className={`flex-1 py-2 ${state.activeTab === "EXPENSE" ? "bg-primary" : "bg-gray-200"}`}
           >
             <Text
-              className={`text-center font-medium ${state.activeTab === "expense" ? "text-white" : ""}`}
+              className={`text-center font-medium ${state.activeTab === "EXPENSE" ? "text-white" : ""}`}
             >
               {TEXT_TRANSLATE_YEAR_REPORT.LABELS.EXPENSE}
             </Text>
           </Pressable>
           <Pressable
-            onPress={() => handler.setActiveTab("income")}
-            className={`flex-1 border border-b-0 border-t-0 border-gray-300 py-2 ${state.activeTab === "income" ? "bg-primary" : "bg-gray-200"}`}
+            onPress={() => handler.setActiveTab("INCOME")}
+            className={`flex-1 border border-b-0 border-t-0 border-gray-300 py-2 ${state.activeTab === "INCOME" ? "bg-primary" : "bg-gray-200"}`}
           >
             <Text
-              className={`text-center font-medium ${state.activeTab === "income" ? "text-white" : ""}`}
+              className={`text-center font-medium ${state.activeTab === "INCOME" ? "text-white" : ""}`}
             >
               {TEXT_TRANSLATE_YEAR_REPORT.LABELS.INCOME}
             </Text>
           </Pressable>
           <Pressable
-            onPress={() => handler.setActiveTab("total")}
-            className={`flex-1 py-2 ${state.activeTab === "total" ? "bg-primary" : "bg-gray-200"}`}
+            onPress={() => handler.setActiveTab("TOTAL")}
+            className={`flex-1 py-2 ${state.activeTab === "TOTAL" ? "bg-primary" : "bg-gray-200"}`}
           >
             <Text
-              className={`text-center font-medium ${state.activeTab === "total" ? "text-white" : "text-gray-700"}`}
+              className={`text-center font-medium ${state.activeTab === "TOTAL" ? "text-white" : "text-gray-700"}`}
             >
               {TEXT_TRANSLATE_YEAR_REPORT.LABELS.TOTAL}
             </Text>
@@ -76,6 +76,7 @@ const YearReportScreen = () => {
             spacing={25}
             initialSpacing={10}
             minHeight={1}
+            isAnimated
             noOfSections={5}
             barBorderRadius={4}
             yAxisThickness={0}
@@ -107,14 +108,14 @@ const YearReportScreen = () => {
                 className={`${
                   index === 0
                     ? "font-bold"
-                    : state.activeTab === "expense" ||
-                        (state.activeTab === "total" &&
+                    : state.activeTab === "EXPENSE" ||
+                        (state.activeTab === "TOTAL" &&
                           parseFloat(
                             item.amount.toString().replace(/[^0-9.-]+/g, ""),
                           ) < 0)
                       ? "font-medium text-red"
-                      : state.activeTab === "income" ||
-                          (state.activeTab === "total" &&
+                      : state.activeTab === "INCOME" ||
+                          (state.activeTab === "TOTAL" &&
                             parseFloat(
                               item.amount.toString().replace(/[^0-9.-]+/g, ""),
                             ) > 0)

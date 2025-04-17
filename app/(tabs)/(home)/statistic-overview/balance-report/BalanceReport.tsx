@@ -46,7 +46,7 @@ const BalanceReport = () => {
             endFillColor="rgba(135, 206, 235, 0.2)"
             startOpacity={0.9}
             endOpacity={0.1}
-            noOfSections={5}
+            noOfSections={3}
             yAxisThickness={0}
             xAxisThickness={0}
             hideDataPoints={false}
@@ -56,11 +56,11 @@ const BalanceReport = () => {
               textAlign: "center",
               fontSize: 12,
             }}
+            yAxisOffset={0}
             yAxisTextStyle={{ color: "gray", fontSize: 12 }}
             hideYAxisText={false}
             dataPointsColor={Colors.colors.primary}
             dataPointsRadius={5}
-            curved
             pointerConfig={{
               showPointerStrip: true,
               pointerStripHeight: 90,

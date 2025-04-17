@@ -64,7 +64,7 @@ const transactionApi = apiSlice.injectEndpoints({
     }),
     getReportTransactionCategoryYear: builder.query({
       query: ({ year, type }) => ({
-        url: `transactions/report/category-year-v2?year=${year}&type=${type}`,
+        url: `transactions/report/category-year?year=${year}&type=${type}`,
         method: HTTP_METHOD.GET,
       }),
       transformResponse: (response) =>
