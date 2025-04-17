@@ -40,31 +40,31 @@ const CategoryYearReport = () => {
 
         <View className="mx-4 flex-row rounded-lg border-b border-gray-200 bg-white">
           <Pressable
-            className={`flex-1 rounded-lg border-b-2 py-2 ${state.type === TRANSACTION_TYPE_TEXT.TOTAL ? "border-gray-800" : "border-transparent"}`}
+            className={`flex-1 rounded-lg border-b-2 py-2 ${state.type === TRANSACTION_TYPE_TEXT.TOTAL ? "border-primary" : "border-transparent"}`}
             onPress={() => handler.setType(TRANSACTION_TYPE_TEXT.TOTAL)}
           >
             <Text
-              className={`text-center font-medium ${state.type === TRANSACTION_TYPE_TEXT.TOTAL ? "text-gray-800" : "text-gray-400"}`}
+              className={`text-center font-medium ${state.type === TRANSACTION_TYPE_TEXT.TOTAL ? "font-bold text-primary" : "text-gray-400"}`}
             >
               {TEXT_TRANSLATE_CATEGORY_YEAR_REPORT.LABELS.ALL}
             </Text>
           </Pressable>
           <Pressable
-            className={`flex-1 rounded-lg border-b-2 py-2 ${state.type === TRANSACTION_TYPE_TEXT.EXPENSE ? "border-gray-800" : "border-transparent"}`}
+            className={`flex-1 rounded-lg border-b-2 py-2 ${state.type === TRANSACTION_TYPE_TEXT.EXPENSE ? "border-primary" : "border-transparent"}`}
             onPress={() => handler.setType(TRANSACTION_TYPE_TEXT.EXPENSE)}
           >
             <Text
-              className={`text-center font-medium ${state.type === TRANSACTION_TYPE_TEXT.EXPENSE ? "text-gray-800" : "text-gray-400"}`}
+              className={`text-center font-medium ${state.type === TRANSACTION_TYPE_TEXT.EXPENSE ? "font-bold text-primary" : "text-gray-400"}`}
             >
               {TEXT_TRANSLATE_CATEGORY_YEAR_REPORT.LABELS.EXPENSE}
             </Text>
           </Pressable>
           <Pressable
-            className={`flex-1 rounded-lg border-b-2 py-2 ${state.type === TRANSACTION_TYPE_TEXT.INCOME ? "border-gray-800" : "border-transparent"}`}
+            className={`flex-1 rounded-lg border-b-2 py-2 ${state.type === TRANSACTION_TYPE_TEXT.INCOME ? "border-primary" : "border-transparent"}`}
             onPress={() => handler.setType(TRANSACTION_TYPE_TEXT.INCOME)}
           >
             <Text
-              className={`text-center font-medium ${state.type === TRANSACTION_TYPE_TEXT.INCOME ? "text-gray-800" : "text-gray-400"}`}
+              className={`text-center font-medium ${state.type === TRANSACTION_TYPE_TEXT.INCOME ? "font-bold text-primary" : "text-gray-400"}`}
             >
               {TEXT_TRANSLATE_CATEGORY_YEAR_REPORT.LABELS.INCOME}
             </Text>
