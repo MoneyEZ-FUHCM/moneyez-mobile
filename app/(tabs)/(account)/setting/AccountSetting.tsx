@@ -6,7 +6,7 @@ import {
   Bank,
   Calendar,
   LogoutCurve,
-  TagUser
+  TagUser,
 } from "iconsax-react-native";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import TEXT_TRANSLATE_ACCOUNT from "../AccountScreen.translate";
@@ -25,12 +25,12 @@ const SETTING_OPTIONS = [
     title: "Tài khoản ngân hàng",
     description: "Số tài khoản, tên ngân hàng, chi nhánh,...",
   },
-  {
-    id: 3,
-    icon: <Calendar size="20" color="white" variant="Bold" />,
-    title: "Thu chi định kỳ",
-    description: "Quản lý các khoản thu chi định kỳ",
-  },
+  // {
+  //   id: 3,
+  //   icon: <Calendar size="20" color="white" variant="Bold" />,
+  //   title: "Thu chi định kỳ",
+  //   description: "Quản lý các khoản thu chi định kỳ",
+  // },
 ];
 
 const AccountSetting = () => {

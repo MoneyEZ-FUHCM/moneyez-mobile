@@ -1,7 +1,17 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import apiSlice from "@/redux/slices/apiSlice";
-import { transformCommonResponse } from "@/types/system.types";
-import { GroupTransaction } from "@/types/transaction.types";
+import {
+  transformCommonResponse,
+  transformTransactionsResponse,
+} from "@/types/system.types";
+import {
+  GroupTransaction,
+  TransactionsReportAllTime,
+  TransactionsReportCategoryAllTime,
+  TransactionsReportCategoryYear,
+  TransactionsReportYearlyBalance,
+  TransactionsReportYearlyData,
+} from "@/types/transaction.types";
 
 const { HTTP_METHOD } = COMMON_CONSTANT;
 const transactionApi = apiSlice.injectEndpoints({
@@ -56,6 +66,58 @@ const transactionApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["transaction"],
     }),
+    getReportTransactionYear: builder.query({
+      query: ({ year, type }) => ({
+        url: `transactions/report/year?year=${year}&type=${type}`,
+        method: HTTP_METHOD.GET,
+      }),
+      transformResponse: (response) =>
+        transformTransactionsResponse<TransactionsReportYearlyData>(response),
+    }),
+    getReportTransactionCategoryYear: builder.query({
+      query: ({ year, type }) => ({
+        url: `transactions/report/category-year?year=${year}&type=${type}`,
+        method: HTTP_METHOD.GET,
+      }),
+      transformResponse: (response) =>
+        transformTransactionsResponse<TransactionsReportCategoryYear>(response),
+    }),
+    getReportTransactionAllTime: builder.query({
+      query: () => ({
+        url: `transactions/report/all-time`,
+        method: HTTP_METHOD.GET,
+      }),
+      transformResponse: (response) =>
+        transformTransactionsResponse<TransactionsReportAllTime>(response),
+    }),
+    getReportTransactionAllTimeCategory: builder.query({
+      query: ({ type }) => ({
+        url: `transactions/report/all-time-category?type=${type}`,
+        method: HTTP_METHOD.GET,
+      }),
+      transformResponse: (response) =>
+        transformTransactionsResponse<TransactionsReportCategoryAllTime>(
+          response,
+        ),
+    }),
+    getReportTransactionBalanceYear: builder.query({
+      query: ({ year }) => ({
+        url: `transactions/report/balance-year?year=${year}`,
+        method: HTTP_METHOD.GET,
+      }),
+      transformResponse: (response) =>
+        transformTransactionsResponse<TransactionsReportYearlyBalance>(
+          response,
+        ),
+    }),
+    getRecurringTransactionsCalendar: builder.query({
+      query: () => ({
+        url: `recurring-transactions/calendar`,
+        method: HTTP_METHOD.GET,
+      }),
+      transformResponse: (response) =>
+        transformTransactionsResponse<Number[]>(response),
+    }),
   }),
 });
 
@@ -67,6 +129,12 @@ export const {
   useGetTransactionDetailQuery,
   useGetGroupTransactionQuery,
   useUpdateGroupTransactionStatusMutation,
+  useGetReportTransactionYearQuery,
+  useGetReportTransactionCategoryYearQuery,
+  useGetReportTransactionAllTimeCategoryQuery,
+  useGetReportTransactionAllTimeQuery,
+  useGetReportTransactionBalanceYearQuery,
+  useGetRecurringTransactionsCalendarQuery,
 } = transactionApi;
 
 export default transactionApi;

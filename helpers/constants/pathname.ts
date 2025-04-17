@@ -33,7 +33,6 @@ const PATH_NAME = {
     CHATBOT: "chatbot/ChatBot",
   },
   HOME: {
-    HOME_NAVIGATOR: "(home)",
     HOME_DEFAULT: "home-screen/HomeScreen",
     INDIVIDUAL_HOME: "individual-home/IndividualHome",
     ADD_TRANSACTION: "add-transaction/AddTransaction",
@@ -48,8 +47,19 @@ const PATH_NAME = {
     ADD_SPENDING_BUDGET_STEP_2: "add-spending-budget/CreateSpendingBudgetStep2",
     EXPENSES_DETAIL: "expenses/expense-detail/ExpenseDetail",
     UPDATE_EXPENSE: "expenses/update-expense/UpdateExpense",
-    STATISTICAL: "statistical/Statistical",
-    QUIZ: "quiz/QuizScreen",
+    STATISTICAL: "statistic-overview/statistical/Statistical",
+    CATEGORY_YEAR_REPORT:
+      "statistic-overview/category-year-report/CategoryYearReport",
+    CATEGORY_ALL_TIME: "statistic-overview/category-all-time/CategoryAllTime",
+    BALANCE_REPORT: "statistic-overview/balance-report/BalanceReport",
+    YEAR_REPORT: "statistic-overview/year-report/YearReport",
+    RECURRING_TRANSACTIONS_CALENDAR:
+      "statistic-overview/recurring-transactions-calendar/RecurringTransactionsCalendar",
+    STATISTIC_OVERVIEW: "statistic-overview/StatisticOverview",
+    RECURRING_TRANSACTION_LIST:
+      "recurring-transaction/recurring-transaction-list/RecurringTransactionList",
+    RECURRING_TRANSACTION_FORM:
+      "recurring-transaction/recurring-transaction-form/RecurringTransactionForm",
   },
   ACCOUNT: {
     ACCOUNT_SETTING: "setting/AccountSetting",
@@ -57,8 +67,10 @@ const PATH_NAME = {
     BANK_ACCOUNT: "bank-account/bank-account-list/BankAccount",
     FUNCTION_BANK_ACCOUNT:
       "bank-account/function-bank-account/FunctionBankAccount",
-    RECURRING_TRANSACTION_LIST: "recurring-transaction/recurring-transaction-list/RecurringTransactionList",
-    RECURRING_TRANSACTION_FORM: "recurring-transaction/recurring-transaction-form/RecurringTransactionForm",
+    RECURRING_TRANSACTION_LIST:
+      "recurring-transaction/recurring-transaction-list/RecurringTransactionList",
+    RECURRING_TRANSACTION_FORM:
+      "recurring-transaction/recurring-transaction-form/RecurringTransactionForm",
   },
 
   // Group-detail
@@ -73,8 +85,7 @@ const PATH_NAME = {
       "group-details/group-home/withdraw-fund-request/WithdrawFundRequest",
     GROUP_FUND_REMIND:
       "group-details/group-home/group-fund-remind/GroupFundRemind",
-    GROUP_STATISTIC:
-      "group-details/group-home/group-statistic/GroupStatistic",
+    GROUP_STATISTIC: "group-details/group-home/group-statistic/GroupStatistic",
     EDIT_LOG_HISTORY:
       "group-details/group-home/edit-log-history/EditLogHistory",
     ACTION_LOG_HISTORY:

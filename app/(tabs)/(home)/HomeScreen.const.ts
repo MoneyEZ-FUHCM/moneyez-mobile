@@ -3,6 +3,7 @@ import { PATH_NAME } from "@/helpers/constants/pathname";
 import {
   Activity,
   Bookmark,
+  Calendar,
   Card,
   Category,
   Coin1,
@@ -24,16 +25,16 @@ const HOME_SCREEN_CONSTANTS = {
       icon: Coin1,
       url: HOME.SPENDING_MODEL_HISTORY,
     },
-    { label: "Thống kê", icon: Activity, url: HOME.STATISTICAL },
+    { label: "Thống kê", icon: Activity, url: HOME.STATISTIC_OVERVIEW },
     {
-      label: "Tính năng 5",
-      icon: EmptyWallet,
-      // url: HOME.QUIZ,
+      label: "Thu chi định kì",
+      icon: Calendar,
+      url: HOME.RECURRING_TRANSACTION_LIST,
     },
-    { label: "Tính năng 5", icon: Bookmark },
-    { label: "Tính năng 6", icon: Card },
-    { label: "Tính năng 7", icon: Category },
-    { label: "Tính năng 8", icon: Profile2User },
+    // { label: "Tính năng 5", icon: Bookmark },
+    // { label: "Tính năng 6", icon: Card },
+    // { label: "Tính năng 7", icon: Category },
+    // { label: "Tính năng 8", icon: Profile2User },
   ],
   POST_DATAS: [
     {
