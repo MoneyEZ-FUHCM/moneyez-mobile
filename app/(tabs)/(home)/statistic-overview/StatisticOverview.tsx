@@ -1,4 +1,5 @@
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
+import { appInfo } from "@/helpers/constants/appInfos";
 import { Colors } from "@/helpers/constants/color";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { formatCurrency } from "@/helpers/libs";
@@ -7,9 +8,9 @@ import { router } from "expo-router";
 import React, { useCallback } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { ActivityIndicator } from "react-native-paper";
 import * as Progress from "react-native-progress";
 import useStatisticOverview from "./hooks/useStatisticOverview";
-import { appInfo } from "@/helpers/constants/appInfos";
 
 const StatisticOverview = () => {
   const { state, handler } = useStatisticOverview();
@@ -141,8 +142,8 @@ const StatisticOverview = () => {
   const renderStatisticsAtGlance = useCallback(() => {
     if (!state.financialSummary) {
       return (
-        <View className="m-4 overflow-hidden rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
-          <Text className="text-center text-gray-500">Đang tải dữ liệu...</Text>
+        <View className="m-4 flex items-center justify-center overflow-hidden rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
+          <ActivityIndicator size="small" color="#609084" />
         </View>
       );
     }
