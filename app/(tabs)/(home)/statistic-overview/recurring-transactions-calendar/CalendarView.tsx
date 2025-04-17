@@ -83,7 +83,7 @@ const CalendarView: React.FC = () => {
           <Text
             className={`text-base font-bold ${
               state.totalIncome - state.totalExpense >= 0
-                ? "text-blue-600"
+                ? "text-green"
                 : "text-red"
             }`}
           >

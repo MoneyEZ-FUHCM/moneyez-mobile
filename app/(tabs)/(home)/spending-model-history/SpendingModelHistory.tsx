@@ -5,6 +5,7 @@ import {
   SafeAreaViewCustom,
   SectionComponent,
 } from "@/components";
+import { Colors } from "@/helpers/constants/color";
 import { UserSpendingModel } from "@/types/spendingModel.types";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
@@ -15,7 +16,6 @@ import TEXT_TRANSLATE_SPENDING_MODEL_HISTORY from "./SpendingModelHistory.transl
 
 export default function SpendingModelHistory() {
   const { state, handler } = useSpendingModelHistory();
-  const PRIMARY_COLOR = "#609084";
 
   handler.useHideTabbar();
 
@@ -122,7 +122,7 @@ export default function SpendingModelHistory() {
       </SectionComponent>
       {state.isLoading || state.isLoadingHistory ? (
         <View className="mb-28 flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color={PRIMARY_COLOR} />
+          <ActivityIndicator size="large" color={Colors.colors.primary} />
         </View>
       ) : state.spendingModelsByYear &&
         state.spendingModelsByYear.length > 0 ? (

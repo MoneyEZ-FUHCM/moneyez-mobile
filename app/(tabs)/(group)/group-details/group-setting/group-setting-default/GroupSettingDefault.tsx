@@ -46,7 +46,7 @@ export default function GroupSettingsDefault() {
                   />
                 </Pressable>
               </SectionComponent>
-              <SpaceComponent height={10} />
+              {/* <SpaceComponent height={10} />
               <SectionComponent rootClassName="bg-white rounded-xl shadow-sm">
                 <Pressable
                   onPress={handler.handleUpdateContributionRate}
@@ -69,7 +69,7 @@ export default function GroupSettingsDefault() {
                     color="#9e9e9e"
                   />
                 </Pressable>
-              </SectionComponent>
+              </SectionComponent> */}
               <SpaceComponent height={10} />
               <SectionComponent rootClassName="bg-white rounded-xl shadow-sm">
                 <Pressable
