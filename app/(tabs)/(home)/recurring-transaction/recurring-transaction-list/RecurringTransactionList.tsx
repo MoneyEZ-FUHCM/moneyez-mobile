@@ -398,7 +398,7 @@ const RecurringTransactionList = () => {
         {renderHeader()}
 
         <ScrollViewCustom
-          contentContainerStyle={{ paddingVertical: 16 }}
+          contentContainerStyle={{ paddingVertical: 16, paddingBottom: 30 }}
           isBottomTab={false}
           refreshControl={
             <RefreshControl

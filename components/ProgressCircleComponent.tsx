@@ -5,14 +5,7 @@ import * as Progress from "react-native-progress";
 
 const interpolateColor = (value: number, isSaving: boolean) => {
   if (isSaving) {
-    const startColor = [144, 238, 144];
-    const endColor = [96, 144, 132];
-
-    const r = Math.round(startColor[0] + (endColor[0] - startColor[0]) * value);
-    const g = Math.round(startColor[1] + (endColor[1] - startColor[1]) * value);
-    const b = Math.round(startColor[2] + (endColor[2] - startColor[2]) * value);
-
-    return `rgb(${r}, ${g}, ${b})`;
+    return "green";
   } else {
     if (value <= 0.5) return "green";
     if (value <= 0.75) return "#FFCC00";

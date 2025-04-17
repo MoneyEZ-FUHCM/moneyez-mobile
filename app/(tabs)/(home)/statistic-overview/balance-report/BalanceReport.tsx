@@ -94,22 +94,6 @@ const BalanceReport = () => {
               {TEXT_TRANSLATE_BALANCE_REPORT.LABELS.RECENT_TRANSACTIONS}
             </Text>
           </View>
-          <View className="bg-gray-50 px-5 py-4">
-            <View className="flex-row justify-between">
-              <Text className="text-base font-bold text-gray-800">
-                {TEXT_TRANSLATE_BALANCE_REPORT.LABELS.TOTAL}
-              </Text>
-              <Text className="text-base font-bold text-green">
-                {formatCurrency(
-                  state.monthlyDetails.reduce(
-                    (sum: number, item) =>
-                      sum + (parseFloat(item?.balance as any) || 0),
-                    0,
-                  ),
-                )}
-              </Text>
-            </View>
-          </View>
           {state.monthlyDetails.map((item, index) => (
             <View
               key={index}

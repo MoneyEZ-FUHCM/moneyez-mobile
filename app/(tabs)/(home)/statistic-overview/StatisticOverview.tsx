@@ -165,7 +165,7 @@ const StatisticOverview = () => {
       },
       {
         id: "total",
-        label: "Tổng cộng",
+        label: "Số dư",
         value: formatCurrency(state.financialSummary?.total as number),
         icon: "account-balance-wallet",
         color: Colors.colors.blue,

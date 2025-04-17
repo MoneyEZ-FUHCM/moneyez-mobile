@@ -13,23 +13,32 @@ interface GenericBarChartProps {
 }
 
 const BarChartExpenseCustom = React.memo(
-  ({ data, screenWidth }: GenericBarChartProps) => {
+  ({ data = [], screenWidth }: GenericBarChartProps) => {
     const { state, handler } = useBarChart();
     const GRAY_COLOR = "#E7E7E7";
+
     const formatAmount = (amount: number) => {
       if (amount >= 1000000) return `${(amount / 1000000).toFixed(1)}M`;
       if (amount >= 1000) return `${(amount / 1000).toFixed(1)}K`;
       return amount.toString();
     };
 
-    const maxAmount = Math.max(...data?.map((item) => item?.amount || 0));
+    const safeData =
+      Array.isArray(data) && data.length > 0
+        ? data
+        : [{ amount: 0, date: new Date().toISOString() }];
+
+    const maxAmount =
+      safeData.length > 0
+        ? Math.max(...safeData.map((item) => item?.amount || 0))
+        : 0;
     const adjustedMaxValue =
       maxAmount >= 1000 ? maxAmount * 1.1 : maxAmount + 100;
+
     const yAxisValues = Array.from(
       { length: 5 },
       (_, i) => (adjustedMaxValue / 4) * i,
     );
-
     const formattedYAxisLabels = yAxisValues.map(formatAmount);
 
     return (
@@ -60,6 +69,7 @@ const BarChartExpenseCustom = React.memo(
             </TouchableOpacity>
           ))}
         </View>
+
         <View className="w-full overflow-hidden">
           <BarChart
             yAxisLabelTexts={formattedYAxisLabels}
@@ -69,7 +79,7 @@ const BarChartExpenseCustom = React.memo(
             minHeight={3}
             maxValue={adjustedMaxValue}
             barBorderRadius={6}
-            data={data?.map((item) => ({
+            data={safeData.map((item) => ({
               value: item?.amount || 0,
               label: formatDateMonth(item?.date),
               frontColor: state.isCurrentPeriod(item?.date, state.selectedType)
@@ -87,8 +97,10 @@ const BarChartExpenseCustom = React.memo(
             showYAxisIndices={true}
             leftShiftForLastIndexTooltip={20}
             renderTooltip={(item: any) => (
-              <View className="rounded-md bg-white p-2">
-                <Text className="text-sm">{formatCurrency(item?.value)}</Text>
+              <View className="flex w-full items-center justify-center bg-white">
+                <Text className="text-center text-xs">
+                  {formatCurrency(item?.value)}
+                </Text>
               </View>
             )}
           />
