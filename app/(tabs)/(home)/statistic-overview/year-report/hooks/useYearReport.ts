@@ -7,23 +7,6 @@ import { useCallback, useEffect, useState } from "react";
 import { BackHandler } from "react-native";
 import { useDispatch } from "react-redux";
 
-const monthMap = {
-  January: "Th 1",
-  February: "Th 2",
-  March: "Th 3",
-  April: "Th 4",
-  May: "Th 5",
-  June: "Th 6",
-  July: "Th 7",
-  August: "Th 8",
-  September: "Th 9",
-  October: "Th 10",
-  November: "Th 11",
-  December: "Th 12",
-};
-
-const allMonths = Object.values(monthMap);
-
 const useYearReport = () => {
   const dispatch = useDispatch();
 
@@ -34,30 +17,15 @@ const useYearReport = () => {
     TransactionsReportMonthlyData[]
   >([]);
 
-  const {
-    data: transactionsReportResponseData,
-    error,
-    isLoading,
-    refetch,
-  } = useGetReportTransactionYearQuery({
-    year: currentYear,
-    type: activeTab,
-  });
-
-  console.log(
-    "check transactionsReportResponseData",
-    transactionsReportResponseData,
-  );
+  const { data: transactionsReportResponseData, refetch } =
+    useGetReportTransactionYearQuery({
+      year: currentYear,
+      type: activeTab,
+    });
 
   useEffect(() => {
-    console.log("123");
     refetch();
-  }, []);
-
-  console.log(
-    "check transactionsReportResponseData",
-    transactionsReportResponseData,
-  );
+  }, [activeTab, currentYear]);
 
   const handleBack = useCallback(() => {
     router.back();
@@ -83,35 +51,76 @@ const useYearReport = () => {
     const average = transactionsReportResponseData?.items?.average || 0;
     const total = transactionsReportResponseData?.items?.total || 0;
 
-    // Create a map from full month name to amount
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    const monthLabelsForChart = [
+      "T1",
+      "T2",
+      "T3",
+      "T4",
+      "T5",
+      "T6",
+      "T7",
+      "T8",
+      "T9",
+      "T10",
+      "T11",
+      "T12",
+    ];
+
+    const monthLabelsForDetail = [
+      "Tháng 1",
+      "Tháng 2",
+      "Tháng 3",
+      "Tháng 4",
+      "Tháng 5",
+      "Tháng 6",
+      "Tháng 7",
+      "Tháng 8",
+      "Tháng 9",
+      "Tháng 10",
+      "Tháng 11",
+      "Tháng 12",
+    ];
+
     const monthAmountMap = monthlyData.reduce(
       (acc, item) => {
-        acc[monthMap[item.month as keyof typeof monthMap]] = item.amount;
+        const index = monthNames.indexOf(item.month);
+        if (index !== -1) {
+          acc[monthLabelsForChart[index]] = item.amount;
+        }
         return acc;
       },
       {} as Record<string, number>,
     );
 
-    // Generate barData
-    const data = allMonths.map((month) => ({
+    const data = monthLabelsForChart.map((month) => ({
       value: monthAmountMap[month] || 0,
-      frontColor: Colors.colors.primary,
+      frontColor:
+        monthAmountMap[month] >= 0 ? Colors.colors.primary : Colors.colors.red,
       label: month,
     }));
 
     setBarData(data as any);
 
-    // Set quarterlyDetails (example - customize as needed)
-    // const total = data.reduce((sum, item) => sum + item.value, 0);
-    // const average = total / data.length;
-
-    // const formatted = (value: number) => Number(value / 100).toFixed(0);
-
     const details: TransactionsReportMonthlyData[] = [
       { month: "Tổng cộng", amount: total },
       { month: "Trung bình", amount: average },
-      ...data.map((item) => ({
-        month: item.label,
+      ...data.map((item, index) => ({
+        month: monthLabelsForDetail[index] || item.label,
         amount: item.value,
       })),
     ];
@@ -119,15 +128,23 @@ const useYearReport = () => {
     setQuarterlyDetails(details);
   }, [currentYear, transactionsReportResponseData]);
 
-  // Handle previous year
   const handlePreviousYear = () => {
     setCurrentYear((prevYear) => prevYear - 1);
   };
 
-  // Handle next year
   const handleNextYear = () => {
     setCurrentYear((prevYear) => prevYear + 1);
   };
+
+  const updateBarData = barData?.map(
+    (item: { value: number; [key: string]: any }) => ({
+      ...item,
+      labelTextStyle: {
+        color: item.value < 0 ? "white" : "gray",
+        textAlign: "center",
+      },
+    }),
+  );
 
   return {
     state: {
@@ -135,8 +152,7 @@ const useYearReport = () => {
       activeTab,
       barData,
       quarterlyDetails,
-      error,
-      isLoading,
+      updateBarData,
     },
     handler: {
       handlePreviousYear,

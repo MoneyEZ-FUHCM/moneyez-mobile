@@ -15,46 +15,19 @@ const useCategoryYearReport = () => {
   const chartRef = useRef<ScrollView>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [currentYear, setCurrentYear] = useState(2025);
-  const [type, setType] = useState<string>(TRANSACTION_TYPE_TEXT.TOTAL);
+  const [type, setType] = useState<string>(TRANSACTION_TYPE_TEXT.EXPENSE);
   const [pieData, setPieData] = useState<PieChartDataPoint[]>([]);
   const [detailItems, setDetailItems] = useState<
     TransactionsReportCategoryItem[]
   >([]);
-  const [expenseCount, setExpenseCount] = useState(0);
-  const [incomeCount, setIncomeCount] = useState(0);
-  const [totalCategories, setTotalCategories] = useState(0);
   const categoryColorsRef = useRef<Record<string, string>>({});
 
-  const {
-    data: transactionsReportResponseData,
-    error,
-    isLoading,
-    refetch,
-  } = useGetReportTransactionCategoryYearQuery({ year: currentYear, type });
+  const { data: transactionsReportResponseData, refetch } =
+    useGetReportTransactionCategoryYearQuery({ year: currentYear, type });
 
   useEffect(() => {
     const rawCategories =
       transactionsReportResponseData?.items?.categories || [];
-
-    const uniqueIncome = new Set();
-    const uniqueExpense = new Set();
-    const uniqueTotal = new Set();
-
-    rawCategories?.forEach((item) => {
-      if (item.icon) {
-        uniqueTotal.add(item.icon);
-
-        if (item.categoryType === TRANSACTION_TYPE_TEXT.INCOME) {
-          uniqueIncome.add(item.icon);
-        } else if (item.categoryType === TRANSACTION_TYPE_TEXT.EXPENSE) {
-          uniqueExpense.add(item.icon);
-        }
-      }
-    });
-
-    setIncomeCount(uniqueIncome.size);
-    setExpenseCount(uniqueExpense.size);
-    setTotalCategories(uniqueTotal.size);
 
     const grouped: Record<string, TransactionsReportCategoryItem> = {};
     rawCategories.forEach((item) => {
@@ -162,14 +135,9 @@ const useCategoryYearReport = () => {
       pieData,
       detailItems,
       transactionsReportResponseData,
-      error,
-      isLoading,
       type,
       chartRef,
       selectedCategory,
-      expenseCount,
-      incomeCount,
-      totalCategories,
     },
     handler: {
       handlePreviousYear,

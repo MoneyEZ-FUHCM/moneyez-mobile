@@ -24,7 +24,6 @@ const CategoryYearReport = () => {
           </Text>
         </View>
       </SectionComponent>
-
       <ScrollView
         className="flex-1"
         contentContainerStyle={{ paddingBottom: 20 }}
@@ -39,16 +38,6 @@ const CategoryYearReport = () => {
         </SectionComponent>
 
         <View className="mx-4 flex-row rounded-lg border-b border-gray-200 bg-white">
-          <Pressable
-            className={`flex-1 rounded-lg border-b-2 py-2 ${state.type === TRANSACTION_TYPE_TEXT.TOTAL ? "border-primary" : "border-transparent"}`}
-            onPress={() => handler.setType(TRANSACTION_TYPE_TEXT.TOTAL)}
-          >
-            <Text
-              className={`text-center font-medium ${state.type === TRANSACTION_TYPE_TEXT.TOTAL ? "font-bold text-primary" : "text-gray-400"}`}
-            >
-              {TEXT_TRANSLATE_CATEGORY_YEAR_REPORT.LABELS.ALL}
-            </Text>
-          </Pressable>
           <Pressable
             className={`flex-1 rounded-lg border-b-2 py-2 ${state.type === TRANSACTION_TYPE_TEXT.EXPENSE ? "border-primary" : "border-transparent"}`}
             onPress={() => handler.setType(TRANSACTION_TYPE_TEXT.EXPENSE)}
@@ -72,29 +61,6 @@ const CategoryYearReport = () => {
         </View>
 
         <SectionComponent rootClassName="mt-4 bg-white p-4 rounded-lg mx-4">
-          <View className="mb-4 flex-row items-center justify-between">
-            <View className="rounded-lg bg-blue-100 px-4 py-2">
-              <Text className="text-xs font-semibold text-blue-900">
-                {TEXT_TRANSLATE_CATEGORY_YEAR_REPORT.LABELS.TOTAL}:{" "}
-                {state.totalCategories || 0}
-              </Text>
-            </View>
-
-            <View className="flex-row space-x-2">
-              <View className="rounded-lg bg-red/10 px-4 py-2">
-                <Text className="text-xs font-semibold text-red">
-                  {TEXT_TRANSLATE_CATEGORY_YEAR_REPORT.LABELS.EXPENSE}:{" "}
-                  {state.expenseCount || 0}
-                </Text>
-              </View>
-              <View className="rounded-lg bg-green/10 px-4 py-2">
-                <Text className="text-xs font-semibold text-green">
-                  {TEXT_TRANSLATE_CATEGORY_YEAR_REPORT.LABELS.INCOME}:{" "}
-                  {state.incomeCount || 0}
-                </Text>
-              </View>
-            </View>
-          </View>
           <View className="items-center">
             <PieChart
               data={state.pieData ?? []}
@@ -133,7 +99,7 @@ const CategoryYearReport = () => {
                       {selectedItem.name}
                     </Text>
                     <Text
-                      className={`text-xl font-bold ${selectedItem.categoryType === TRANSACTION_TYPE_TEXT.INCOME ? "text-green" : "text-red"}`}
+                      className={`text-xl font-bold ${state.type === TRANSACTION_TYPE_TEXT.INCOME ? "text-green" : "text-red"}`}
                     >
                       {formatCurrency(selectedItem.amount)}
                     </Text>
@@ -146,11 +112,10 @@ const CategoryYearReport = () => {
             />
           </View>
         </SectionComponent>
-
         <View className="mx-4 mt-6 overflow-hidden rounded-xl bg-white shadow-md">
           <View className="flex-row items-center justify-between px-5 pb-2 pt-4">
             <Text className="text-lg font-semibold text-gray-800">
-              Danh mục
+              Danh mục ({state.detailItems?.length || 0})
             </Text>
             {state.type === TRANSACTION_TYPE_TEXT.TOTAL && (
               <View className="flex-row space-x-2">
@@ -198,7 +163,7 @@ const CategoryYearReport = () => {
                 <View className="flex-row items-center">
                   <View className="items-end">
                     <Text
-                      className={`text-base font-semibold ${item.categoryType === TRANSACTION_TYPE_TEXT.INCOME ? "text-green" : "text-red"}`}
+                      className={`text-base font-semibold ${state.type === TRANSACTION_TYPE_TEXT.INCOME ? "text-green" : "text-red"}`}
                     >
                       {formatCurrency(item.amount)}
                     </Text>

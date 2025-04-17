@@ -24,9 +24,7 @@ const StatisticOverview = () => {
             <MaterialIcons name="arrow-back" size={24} color="#333" />
           </Pressable>
           <View className="flex-1 items-center">
-            <Text className="text-lg font-bold text-gray-800">
-              Báo cáo thống kê
-            </Text>
+            <Text className="text-lg font-bold">Báo cáo thống kê</Text>
           </View>
         </View>
       </SectionComponent>
@@ -141,7 +139,6 @@ const StatisticOverview = () => {
 
   const renderStatisticsAtGlance = useCallback(() => {
     if (!state.financialSummary) {
-      // Trả về trạng thái loading hoặc placeholder
       return (
         <View className="m-4 overflow-hidden rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
           <Text className="text-center text-gray-500">Đang tải dữ liệu...</Text>
@@ -171,13 +168,13 @@ const StatisticOverview = () => {
         icon: "account-balance-wallet",
         color: Colors.colors.blue,
       },
-      {
-        id: "accumulated",
-        label: "Tích lũy",
-        value: formatCurrency(state.financialSummary?.cumulation as number),
-        icon: "savings",
-        color: Colors.colors.primary,
-      },
+      // {
+      //   id: "accumulated",
+      //   label: "Tích lũy",
+      //   value: formatCurrency(state.financialSummary?.cumulation as number),
+      //   icon: "savings",
+      //   color: Colors.colors.primary,
+      // },
     ];
 
     const income = state.financialSummary?.income || 0;
@@ -245,12 +242,12 @@ const StatisticOverview = () => {
           <Progress.Bar
             progress={percentageToShow / 100}
             className="w-full"
-            width={400}
+            width={326}
             height={7.5}
             borderRadius={100}
             borderWidth={0}
             color={progressBarColor}
-            unfilledColor={Colors.colors.light}
+            unfilledColor={"#eee"}
             useNativeDriver={true}
           />
           <Text className="mt-2 text-center text-xs text-gray-500">

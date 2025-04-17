@@ -120,8 +120,8 @@ const BalanceReport = () => {
               <Text
                 className={`text-base font-semibold ${
                   parseFloat(item?.balance as any) >= 0
-                    ? "text-green-600"
-                    : "text-red-500"
+                    ? "text-green"
+                    : "text-red"
                 }`}
               >
                 {formatCurrency(item?.balance)}

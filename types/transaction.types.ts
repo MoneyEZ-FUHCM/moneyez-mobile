@@ -100,7 +100,6 @@ export interface TransactionsReportYearlyData {
 }
 
 export interface TransactionsReportCategoryItem {
-  categoryType: string;
   name: string;
   amount: number;
   percentage: number;

@@ -37,6 +37,8 @@ const useStatisticOverview = () => {
 
     const rawData = transactionsReportResponseData.items;
 
+    console.log("check rawData", rawData);
+
     const translatedSummary: Record<string, number> = Object.entries(
       rawData,
     ).reduce(

@@ -11,14 +11,11 @@ import { useDispatch } from "react-redux";
 const useCategoryAllTime = () => {
   const dispatch = useDispatch();
   const [pieData, setPieData] = useState([]);
-  const [type, setType] = useState<String>(TRANSACTION_TYPE_TEXT.TOTAL);
+  const [type, setType] = useState<String>(TRANSACTION_TYPE_TEXT.EXPENSE);
   const [expenseItems, setExpenseItems] = useState<
     TransactionsReportCategoryItem[]
   >([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [expenseCount, setExpenseCount] = useState(0);
-  const [incomeCount, setIncomeCount] = useState(0);
-  const [totalCategories, setTotalCategories] = useState(0);
   const categoryColorsRef = useRef<Record<string, string>>({});
   const chartRef = useRef<ScrollView>(null);
 
@@ -68,26 +65,6 @@ const useCategoryAllTime = () => {
 
     const categories = transactionsReportResponseData.items.categories || [];
 
-    const uniqueIncome = new Set();
-    const uniqueExpense = new Set();
-    const uniqueTotal = new Set();
-
-    categories?.forEach((item) => {
-      if (item.icon) {
-        uniqueTotal.add(item.icon);
-
-        if (item.categoryType === TRANSACTION_TYPE_TEXT.INCOME) {
-          uniqueIncome.add(item.icon);
-        } else if (item.categoryType === TRANSACTION_TYPE_TEXT.EXPENSE) {
-          uniqueExpense.add(item.icon);
-        }
-      }
-    });
-
-    setIncomeCount(uniqueIncome.size);
-    setExpenseCount(uniqueExpense.size);
-    setTotalCategories(uniqueTotal.size);
-
     const mergedByIcon: Record<string, (typeof categories)[0]> = {};
 
     categories?.forEach((item) => {
@@ -119,7 +96,6 @@ const useCategoryAllTime = () => {
         percentage: `${(item.percentage ?? 0).toFixed(2)}%`,
         icon: item.icon ?? "",
         color,
-        categoryType: item.categoryType,
       };
     });
 
@@ -153,9 +129,6 @@ const useCategoryAllTime = () => {
       isLoading,
       type,
       selectedCategory,
-      expenseCount,
-      incomeCount,
-      totalCategories,
       chartRef,
     },
     handler: {

@@ -22,57 +22,78 @@ const useBalanceReport = () => {
     isLoading,
     refetch,
   } = useGetReportTransactionBalanceYearQuery({ year: currentYear });
-  console.log(
-    "check transactionsReportResponseData",
-    transactionsReportResponseData?.items?.balances,
-  );
+
+  useEffect(() => {
+    refetch();
+  }, [currentYear]);
+
   useEffect(() => {
     if (!transactionsReportResponseData?.items?.balances) return;
 
-    let monthMap: Record<string, string> = {
-      January: "T1",
-      February: "T2",
-      March: "T3",
-      April: "T4",
-      May: "T5",
-      June: "T6",
-      July: "T7",
-      August: "T8",
-      September: "T9",
-      October: "T10",
-      November: "T11",
-      December: "T12",
-    };
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
 
-    const multiplier = (currentYear - 2023) * 0.1 + 1;
+    const monthLabelsForChart = [
+      "T1",
+      "T2",
+      "T3",
+      "T4",
+      "T5",
+      "T6",
+      "T7",
+      "T8",
+      "T9",
+      "T10",
+      "T11",
+      "T12",
+    ];
+
+    const monthLabelsForDetail = [
+      "Tháng 1",
+      "Tháng 2",
+      "Tháng 3",
+      "Tháng 4",
+      "Tháng 5",
+      "Tháng 6",
+      "Tháng 7",
+      "Tháng 8",
+      "Tháng 9",
+      "Tháng 10",
+      "Tháng 11",
+      "Tháng 12",
+    ];
 
     const rawData = transactionsReportResponseData.items.balances.map(
-      (item) => ({
-        month: monthMap[item.month] || item.month,
-        balance: Math.round(item.balance * multiplier * 100) / 100,
-      }),
+      (item) => {
+        const monthIndex = monthNames.indexOf(item.month);
+        return {
+          month: monthLabelsForDetail[monthIndex] || item.month,
+          balance: Math.round(item.balance),
+        };
+      },
     );
 
-    monthMap = {
-      January: "1",
-      February: "2",
-      March: "3",
-      April: "4",
-      May: "5",
-      June: "6",
-      July: "7",
-      August: "8",
-      September: "9",
-      October: "10",
-      November: "11",
-      December: "12",
-    };
-
-    // For chart (with Vietnamese labels)
-    const chartData = rawData.map((item) => ({
-      value: item.balance,
-      label: monthMap[item.month] || item.month, // fallback to original if not matched
-    }));
+    const chartData = transactionsReportResponseData.items.balances.map(
+      (item) => {
+        const monthIndex = monthNames.indexOf(item.month);
+        return {
+          label: monthLabelsForChart[monthIndex] || item.month,
+          value: Math.round(item.balance),
+        };
+      },
+    );
 
     setLineData(chartData);
     setMonthlyDetails(rawData);

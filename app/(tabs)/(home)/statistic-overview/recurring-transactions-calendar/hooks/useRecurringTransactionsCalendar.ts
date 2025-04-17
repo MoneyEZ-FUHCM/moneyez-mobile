@@ -35,8 +35,6 @@ const useRecurringTransactionsCalendar = () => {
     refetch: recurringTransactionRefetch,
   } = useGetRecurringTransactionsCalendarQuery({});
 
-  console.log("checjk transactionsResponseData", transactionsResponseData);
-
   const handleBack = useCallback(() => {
     router.back();
     dispatch(setMainTabHidden(true));

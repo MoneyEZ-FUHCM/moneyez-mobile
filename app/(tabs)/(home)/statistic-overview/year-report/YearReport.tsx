@@ -1,12 +1,12 @@
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
 import YearMonthSelector from "@/components/YearMonthSelector";
+import { formatCurrency } from "@/helpers/libs";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { BarChart } from "react-native-gifted-charts";
 import useYearReport from "./hooks/useYearReport";
 import TEXT_TRANSLATE_YEAR_REPORT from "./YearReport.translate";
-import { formatCurrency } from "@/helpers/libs";
 
 const YearReportScreen = () => {
   const { state, handler } = useYearReport();
@@ -69,12 +69,12 @@ const YearReportScreen = () => {
 
         <SectionComponent rootClassName="mt-4 bg-white p-4 rounded-lg mx-4 overflow-hidden">
           <BarChart
-            data={state.barData ?? []}
+            data={state.updateBarData ?? []}
             height={200}
             width={350}
-            barWidth={30}
-            spacing={25}
-            initialSpacing={10}
+            barWidth={35}
+            spacing={10}
+            initialSpacing={5}
             minHeight={1}
             isAnimated
             noOfSections={5}
@@ -82,7 +82,6 @@ const YearReportScreen = () => {
             yAxisThickness={0}
             xAxisThickness={0}
             verticalLinesColor="rgba(0, 0, 0, 0.1)"
-            xAxisLabelTextStyle={{ color: "gray", textAlign: "center" }}
             yAxisTextStyle={{ color: "gray" }}
           />
         </SectionComponent>

@@ -19,7 +19,9 @@ const YearMonthSelector: React.FC<YearMonthSelectorProps> = ({
         <MaterialIcons name="chevron-left" size={24} color="black" />
       </Pressable>
 
-      <Text style={styles.yearText}>{currentYear} (Th1 01 - Th12 31)</Text>
+      <Text
+        style={styles.yearText}
+      >{`(01 Tháng 1 - 31 Tháng 12) ${currentYear} `}</Text>
 
       <Pressable onPress={onNext} style={styles.button}>
         <MaterialIcons name="chevron-right" size={24} color="black" />
