@@ -42,7 +42,6 @@ const useYearReport = () => {
     isLoading,
     refetch,
   } = useGetReportTransactionYearQuery({ year: currentYear, type: activeTab === "expence" ? 1 : activeTab === "income" ? 0 : 2 });
-  // useGetReportTransactionYearQuery
 
   const handleBack = useCallback(() => {
 
@@ -66,13 +65,11 @@ const useYearReport = () => {
   useEffect(() => {
     const monthlyData = transactionsReportResponseData?.items?.monthlyData || [];
 
-    // Create a map from full month name to amount
     const monthAmountMap = monthlyData.reduce((acc, item) => {
       acc[monthMap[item.month]] = item.amount;
       return acc;
     }, {} as Record<string, number>);
 
-    // Generate barData
     const data = allMonths.map(month => ({
       value: monthAmountMap[month] || 0,
       frontColor: '#1E90FF',
@@ -81,7 +78,6 @@ const useYearReport = () => {
 
     setBarData(data);
 
-    // Set quarterlyDetails (example - customize as needed)
     const total = data.reduce((sum, item) => sum + item.value, 0);
     const average = total / data.length;
 
@@ -96,12 +92,10 @@ const useYearReport = () => {
     setQuarterlyDetails(details);
   }, [currentYear, transactionsReportResponseData]);
 
-  // Handle previous year
   const handlePreviousYear = () => {
     setCurrentYear(prevYear => prevYear - 1);
   };
 
-  // Handle next year
   const handleNextYear = () => {
     setCurrentYear(prevYear => prevYear + 1);
   };

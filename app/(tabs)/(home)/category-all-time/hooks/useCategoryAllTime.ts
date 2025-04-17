@@ -46,7 +46,7 @@ const useCategoryAllTime = () => {
   );
 
   useEffect(() => {
-    refetch(); // ensures fetch on type change
+    refetch();
   }, [type, refetch]);
 
   useEffect(() => {

@@ -59,7 +59,6 @@ console.log(dateCalendarResponseData);
   }, [selectedMonth, transactions]);
 
   useEffect(() => {
-    // Type assertion to ensure transactions are of type Transaction[]
     const fetchedTransactions = transactionsResponseData?.items as Transaction[] || [];
     setTransactions(fetchedTransactions);
   }, [transactionsResponseData]);

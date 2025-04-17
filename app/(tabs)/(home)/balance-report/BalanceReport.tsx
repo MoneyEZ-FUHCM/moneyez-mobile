@@ -6,6 +6,7 @@ import { LineChart } from "react-native-gifted-charts";
 import useBalanceReport from './hooks/useBalanceReport';
 import YearMonthSelector from '@/components/YearMonthSelector';
 import TEXT_TRANSLATE_BALANCE_REPORT from './BalanceReport.translate';
+import { formatCurrency } from '@/helpers/libs';
 
 const BalanceReport = () => {
     const { state, handler } = useBalanceReport();
@@ -55,12 +56,62 @@ const BalanceReport = () => {
                         hideDataPoints={false}
                         showVerticalLines={true}
                         verticalLinesColor="rgba(0, 0, 0, 0.1)"
-                        xAxisLabelTextStyle={{ color: 'gray', textAlign: 'center' }}
+                        xAxisLabelTextStyle={{ color: 'gray', textAlign: 'center', fontSize: 10 }}
                         yAxisTextStyle={{ color: 'gray' }}
                         hideYAxisText={false}
                         dataPointsColor="#1E90FF"
                         dataPointsRadius={5}
                         curved
+                        formatYLabel={(value) => {
+                            const absValue = Math.abs(Number(value));
+                            if (absValue >= 1000000) return `${(absValue / 1000000).toFixed(0)}M`;
+                            if (absValue >= 1000) return `${(absValue / 1000).toFixed(0)}K`;
+                            return `${absValue}`;
+                        }}
+                        maxValue={15000000}
+                        minValue={-20000000}
+                        yAxisLabelSuffix=""
+                        yAxisLabelPrefix=""
+                        rulesType="solid"
+                        rulesColor="rgba(0, 0, 0, 0.05)"
+                        yAxisColor="transparent"
+                        xAxisColor="transparent"
+                        pointerConfig={{
+                            pointerStripHeight: 160,
+                            pointerStripColor: 'rgba(0, 0, 0, 0.1)',
+                            pointerStripWidth: 2,
+                            pointerColor: '#1E90FF',
+                            radius: 6,
+                            pointerLabelWidth: 100,
+                            pointerLabelHeight: 30,
+                            activatePointersOnLongPress: true,
+                            autoAdjustPointerLabelPosition: true,
+                            pointerLabelComponent: (items: any) => {
+                                return (
+                                    <View style={{
+                                        backgroundColor: 'white',
+                                        borderRadius: 8,
+                                        padding: 8,
+                                        borderWidth: 1,
+                                        borderColor: '#ddd',
+                                        shadowColor: "#000",
+                                        shadowOffset: { width: 0, height: 2 },
+                                        shadowOpacity: 0.1,
+                                        shadowRadius: 2,
+                                    }}>
+                                        <Text style={{ color: '#333', fontWeight: '600' }}>
+                                            {items[0].label}
+                                        </Text>
+                                        <Text style={{
+                                            color: items[0].value < 0 ? 'red' : '#1E90FF',
+                                            fontWeight: 'bold'
+                                        }}>
+                                            {new Intl.NumberFormat('vi-VN').format(items[0].value)} đ
+                                        </Text>
+                                    </View>
+                                );
+                            }
+                        }}
                     />
                 </SectionComponent>
 
@@ -71,7 +122,7 @@ const BalanceReport = () => {
                             className="flex-row justify-between px-4 py-3 bg-white border-b border-gray-200"
                         >
                             <Text className="text-base font-medium">{item.month}</Text>
-                            <Text className="text-base font-medium text-blue-500">{item.balance} đ</Text>
+                            <Text className="text-base font-medium text-blue-500">{formatCurrency(item.balance)}</Text>
                         </View>
                     ))}
                 </View>

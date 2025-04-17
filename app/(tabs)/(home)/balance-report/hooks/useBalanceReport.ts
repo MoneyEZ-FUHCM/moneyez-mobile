@@ -45,11 +45,9 @@ const useBalanceReport = () => {
       December: "Tháng 12",
     };
 
-    const multiplier = (currentYear - 2023) * 0.1 + 1;
-
     const rawData = transactionsReportResponseData.items.balances.map(item => ({
       month: monthMap[item.month] || item.month,
-      balance: Math.round(item.balance * multiplier * 100) / 100,
+      balance: item.balance,
     }));
 
     monthMap = {
@@ -67,11 +65,11 @@ const useBalanceReport = () => {
       December: "12",
     };
 
-    // For chart (with Vietnamese labels)
-    const chartData = rawData.map(item => ({
+    const chartData = transactionsReportResponseData.items?.balances?.map(item => ({
       value: item.balance,
-      label: monthMap[item.month] || item.month, // fallback to original if not matched
+      label: monthMap[item.month] || item.month,
     }));
+
 
     setLineData(chartData);
     setMonthlyDetails(rawData);
@@ -96,12 +94,10 @@ const useBalanceReport = () => {
     }, [handleBack]),
   );
 
-  // Handle previous year
   const handlePreviousYear = () => {
     setCurrentYear(prevYear => prevYear - 1);
   };
-
-  // Handle next year
+  
   const handleNextYear = () => {
     setCurrentYear(prevYear => prevYear + 1);
   };

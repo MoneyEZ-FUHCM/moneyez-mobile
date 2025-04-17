@@ -48,7 +48,6 @@ const useCategoryYearReport = () => {
       percentage: parseFloat(item.percentage.toFixed(2)),
     }));
 
-    // Generate consistent colors per index
     const colors = groupedArray.map(() => getRandomColor());
 
     const pieChartData = groupedArray.map((item, index) => ({
