@@ -10,29 +10,20 @@ import { GroupDetail } from "@/types/group.type";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import dayjs from "dayjs";
 import { router } from "expo-router";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { FlatList, ToastAndroid } from "react-native";
+import { useCallback, useEffect, useState } from "react";
+import { ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import HOME_SCREEN_CONSTANTS from "../../HomeScreen.const";
-
-interface ItemType {
-  id: string;
-  image: any;
-  title: string;
-  time: string;
-}
 
 const useHomeScreen = () => {
   const { POST_DATAS, MENU_ITEMS, GROUP_DATAS } = HOME_SCREEN_CONSTANTS;
   const today = dayjs();
   const startOfMonth = today.startOf("month").format("DD/MM");
   const endOfMonth = today.endOf("month").format("DD/MM/YYYY");
-  const currentIndexRef = useRef(0);
   const [isShow, setIsShow] = useState(false);
   const [isShowGroupBalance, setIsShowGroupBalance] = useState<{
     [key: string]: boolean;
   }>({});
-  const flatListRef = useRef<FlatList<ItemType>>(null);
   const userInfo = useSelector(selectUserInfo);
   const currentSpendingModel = useSelector(selectCurrentUserSpendingModel);
   const hasUnreadNotification = useSelector(selectHasUnreadNotification);
@@ -73,19 +64,6 @@ const useHomeScreen = () => {
       [groupId]: !prev[groupId],
     }));
   }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      currentIndexRef.current =
-        (currentIndexRef.current + 1) % POST_DATAS.length;
-      flatListRef.current?.scrollToIndex({
-        index: currentIndexRef.current,
-        animated: true,
-      });
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [POST_DATAS.length]);
 
   const handleNavigateAddPersonalIncome = useCallback(() => {
     dispatch(setMainTabHidden(true));
@@ -137,14 +115,12 @@ const useHomeScreen = () => {
   return {
     state: {
       isShow,
-      currentIndex: currentIndexRef,
       POST_DATAS,
       MENU_ITEMS,
       GROUP_DATAS,
       today,
       startOfMonth,
       endOfMonth,
-      flatListRef,
       userInfo,
       currentSpendingModel,
       isLoadingSpendingModel: isLoading,
