@@ -40,12 +40,24 @@ export interface QuizUserAnswer {
   answerContent: string;
 }
 
+export interface BudgetModel {
+  id: string;
+  name: string;
+  description: string;
+}
+
+export interface RecommendationResult {
+  recommendedModel: BudgetModel;
+  alternativeModels: BudgetModel[];
+  reasoning: string;
+}
+
 export interface QuizSubmitResponse {
   id: string;
   userId: string;
   quizId: string;
   quizVersion: string;
   takenAt: string;
-  recommendedModel: string;
+  recommendedModel: RecommendationResult;
   answers: QuizUserAnswer[];
 }

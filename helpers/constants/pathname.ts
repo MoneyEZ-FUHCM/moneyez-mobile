@@ -61,6 +61,7 @@ const PATH_NAME = {
     RECURRING_TRANSACTION_FORM:
       "recurring-transaction/recurring-transaction-form/RecurringTransactionForm",
     POST_DETAIL: "post/PostDetail",
+    QUIZ: "quiz/QuizScreen",
   },
   ACCOUNT: {
     ACCOUNT_SETTING: "setting/AccountSetting",

@@ -1,10 +1,13 @@
-import React, { useState, useEffect, memo } from "react";
-import { Text, TouchableOpacity, View, Animated } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import { MaterialIcons } from "@expo/vector-icons";
-import { PieChart } from "react-native-gifted-charts";
-import TEXT_TRANSLATE_QUIZ from "../Quiz.translate";
 import { QuizSubmitResponse } from "@/types/quiz.types";
+import { MaterialIcons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { memo, useEffect, useState } from "react";
+import { Animated, Dimensions, Text, View } from "react-native";
+import { PieChart } from "react-native-gifted-charts";
+import RenderHTML from "react-native-render-html";
+import TEXT_TRANSLATE_QUIZ from "../Quiz.translate";
+
+const { width } = Dimensions.get("window");
 
 // API model interface
 interface SpendingModelCategory {
@@ -20,7 +23,7 @@ interface SpendingModelCategory {
     type: string;
     isSaving: boolean;
     id: string;
-  }
+  };
 }
 
 interface SpendingModelData {
@@ -74,17 +77,6 @@ const ChartSection = memo(({ model }: { model: SpendingModelData }) => {
 
 // Memoized ModelInfo component
 const ModelInfo = memo(({ model }: { model: SpendingModelData }) => {
-  // Select an appropriate icon based on the model name
-  const getIconName = () => {
-    const name = model.name.toLowerCase();
-    if (name.includes('jar')) return "account-balance-wallet";
-    if (name.includes('50-30-20')) return "pie-chart";
-    if (name.includes('80-20')) return "donut-large";
-    return "attach-money"; // Default icon
-  };
-  
-  // Clean HTML tags from description
-  const cleanDescription = model.description.replace(/<\/?[^>]+(>|$)/g, "");
 
   // Generate example text based on model data
   const generateExample = () => {
@@ -98,7 +90,7 @@ const ModelInfo = memo(({ model }: { model: SpendingModelData }) => {
     <View className="bg-gray-50 rounded-xl p-5 mb-6">
       <View className="flex-row items-center mb-4">
         <MaterialIcons 
-          name={getIconName() as any} 
+          name="pie-chart"
           size={28} 
           color="#609084" 
           style={{ marginRight: 10 }}
@@ -108,9 +100,12 @@ const ModelInfo = memo(({ model }: { model: SpendingModelData }) => {
         </Text>
       </View>
       
-      <Text className="text-base text-gray-700 mb-4">
-        {cleanDescription}
-      </Text>
+      <View className="mb-4">
+        <RenderHTML
+          contentWidth={width - 60}
+          source={{ html: model.description }}
+        />
+      </View>
       
       <ChartSection model={model} />
       
@@ -126,8 +121,7 @@ const ModelInfo = memo(({ model }: { model: SpendingModelData }) => {
 const SuggestionPage = memo(({ 
   suggestedModel, 
   quizSubmitResponse,
-  onNavigateModel,
-  isButtonBelow = false
+  isButtonBelow = false,
 }: SuggestionPageProps) => {
   const [animatedValue] = useState(new Animated.Value(0));
   
@@ -139,27 +133,16 @@ const SuggestionPage = memo(({
     }).start();
   }, []);
 
-  const renderInternalButton = () => {
-    if (isButtonBelow) return null;
-    
-    return (
-      <View className="flex-row justify-between">
-        <TouchableOpacity
-          onPress={onNavigateModel}
-          className="flex-1 mr-2 rounded-xl bg-white p-4 items-center border-2 border-[#609084]"
-          activeOpacity={0.7}
-        >
-          <Text className="text-base font-semibold text-[#609084]">
-            {TEXT_TRANSLATE_QUIZ.BUTTON_SELECT_MODEL}
-          </Text>
-        </TouchableOpacity>
-      </View>
-    );
-  };
-
   const renderResultDetails = () => {
     if (!quizSubmitResponse) return null;
     
+    const takenAtDate = quizSubmitResponse.takenAt 
+      ? new Date(quizSubmitResponse.takenAt).toLocaleString('vi-VN')
+      : new Date().toLocaleString('vi-VN');
+      
+    const modelName = suggestedModel?.name || 
+      (quizSubmitResponse?.recommendedModel?.recommendedModel?.name || "");
+      
     return (
       <View className="bg-[#EDF7F5] rounded-xl p-4 mb-5">
         <Text className="text-sm text-gray-600 mb-2">
@@ -172,13 +155,28 @@ const SuggestionPage = memo(({
           </Text>
           <View className="bg-[#609084] py-1 px-3 rounded-full">
             <Text className="text-white font-medium">
-              {suggestedModel?.name || quizSubmitResponse.recommendedModel}
+              {modelName}
             </Text>
           </View>
         </View>
         
         <Text className="text-xs text-gray-500 mt-2 italic">
-          Hoàn thành vào: {new Date(quizSubmitResponse.takenAt).toLocaleString('vi-VN')}
+          Hoàn thành vào: {takenAtDate}
+        </Text>
+      </View>
+    );
+  };
+
+  const renderReasoning = () => {
+    if (!quizSubmitResponse?.recommendedModel?.reasoning) return null;
+    
+    return (
+      <View className="bg-[#F9F9F9] rounded-xl p-4 mb-5 border border-gray-200">
+        <Text className="text-base font-medium text-gray-800 mb-2">
+          Lý do đề xuất:
+        </Text>
+        <Text className="text-sm text-gray-700">
+          {quizSubmitResponse?.recommendedModel?.reasoning}
         </Text>
       </View>
     );
@@ -195,7 +193,8 @@ const SuggestionPage = memo(({
             outputRange: [50, 0]
           })
         }],
-        flex: isButtonBelow ? 1 : undefined
+        flex: 1,
+        marginBottom: 40,
       }}
     >
       <LinearGradient
@@ -216,7 +215,7 @@ const SuggestionPage = memo(({
       </View>
 
       {renderResultDetails()}
-
+      
       {suggestedModel ? (
         <ModelInfo model={suggestedModel} />
       ) : (
@@ -227,8 +226,8 @@ const SuggestionPage = memo(({
           </Text>
         </View>
       )}
-      
-      {renderInternalButton()}
+
+      {renderReasoning()}
     </Animated.View>
   );
 });

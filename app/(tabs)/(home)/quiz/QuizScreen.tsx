@@ -194,7 +194,7 @@ const QuizScreen = memo(() => {
     }
 
     if (currentStep === 0) {
-      return <SpendingModelReview spendingModels={spendingModels} />;
+      return <SpendingModelReview />;
     } else if (currentStep > 0 && currentStep < totalSteps - 1 && quiz) {
       const question = quiz.questions[quizStepIndex];
       return (
@@ -213,9 +213,13 @@ const QuizScreen = memo(() => {
           quizSubmitResponse={quizSubmitResponse}
           onSubmit={() => {}}
           onNavigateModel={() => {
-            router.replace(PATH_NAME.HOME.PERSONAL_EXPENSES_MODEL as any);
+            const recommendedModelId = quizSubmitResponse?.recommendedModel?.recommendedModel?.id;
+            router.replace({
+              pathname: PATH_NAME.HOME.PERSONAL_EXPENSES_MODEL as any,
+              params: { recommendedModelId }
+            });
           }}
-          isButtonBelow={true} // This ensures the button is not shown inside the component
+          isButtonBelow={true} 
         />
       );
     }
@@ -259,7 +263,11 @@ const QuizScreen = memo(() => {
       {isSuggestionPage && (
         <SuggestionButton
           onNavigateModel={() => {
-            router.replace(PATH_NAME.HOME.PERSONAL_EXPENSES_MODEL as any);
+            const recommendedModelId = quizSubmitResponse?.recommendedModel?.recommendedModel?.id;
+            router.replace({
+              pathname: PATH_NAME.HOME.PERSONAL_EXPENSES_MODEL as any,
+              params: { recommendedModelId }
+            });
           }}
         />
       )}

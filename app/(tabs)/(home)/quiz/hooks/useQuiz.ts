@@ -5,13 +5,41 @@ import { useState } from "react";
 import { ToastAndroid } from "react-native";
 
 // API model interface
+interface SpendingModelCategory {
+  spendingModelId: string;
+  categoryId: string;
+  percentageAmount: number;
+  category: {
+    name: string;
+    nameUnsign: string;
+    description: string;
+    code: string;
+    icon: string;
+    type: string;
+    isSaving: boolean;
+    id: string;
+  };
+}
+
 interface SpendingModelData {
   id: string;
   name: string;
   nameUnsign: string;
   description: string;
   isTemplate: boolean;
-  spendingModelCategories: any[];
+  spendingModelCategories: SpendingModelCategory[];
+}
+
+interface RecommendedModelData {
+  id: string;
+  name: string;
+  description: string;
+}
+
+interface RecommendationResponse {
+  recommendedModel: RecommendedModelData;
+  alternativeModels: RecommendedModelData[];
+  reasoning: string;
 }
 
 interface Answer {
@@ -35,6 +63,7 @@ const useQuiz = () => {
   const [customAnswers, setCustomAnswers] = useState<{[questionId: string]: string}>({});
   const [suggestedModel, setSuggestedModel] = useState<SpendingModelData | null>(null);
   const [quizSubmitResponse, setQuizSubmitResponse] = useState<QuizSubmitResponse | null>(null);
+  const [recommendationData, setRecommendationData] = useState<RecommendationResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   
   const { data: quizData, isLoading, refetch: refetchQuiz } = useGetActiveQuizQuery({});
@@ -131,11 +160,18 @@ const useQuiz = () => {
     
     try {
       const response = await submitQuizMutation(payload).unwrap();
+      
       if (response.status === 200 && response.data) {
         setQuizSubmitResponse(response.data);
         
-        const model = getModelFromRecommendation(response.data.recommendedModel);
-        setSuggestedModel(model);
+        if (response.data.recommendedModel) {
+          setRecommendationData(response.data.recommendedModel);
+          
+          // Get the full model with categories from our data
+          const recommendedId = response.data.recommendedModel.recommendedModel.id;
+          const fullModel = getModelFromRecommendation(recommendedId);
+          setSuggestedModel(fullModel);
+        }
         
         setCurrentStep(totalSteps - 1);
         ToastAndroid.show("Đã hoàn thành quiz thành công", ToastAndroid.SHORT);
@@ -162,6 +198,7 @@ const useQuiz = () => {
       isSubmitting,
       error,
       quizSubmitResponse,
+      recommendationData,
     },
     handler: {
       nextStep,
