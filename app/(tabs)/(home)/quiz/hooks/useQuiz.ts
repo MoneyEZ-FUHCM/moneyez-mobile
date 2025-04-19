@@ -1,56 +1,12 @@
 import { useGetActiveQuizQuery, useSubmitQuizMutation } from "@/services/quiz";
 import { useGetSpendingModelQuery } from "@/services/spendingModel";
-import { Quiz, QuizAnswer, QuizAnswerOption, QuizSubmitRequest, QuizSubmitResponse } from "@/types/quiz.types";
+import { AnswersState, Quiz, QuizAnswer, QuizAnswerOption, QuizSubmitRequest, QuizSubmitResponse, RecommendationResponse } from "@/types/quiz.types";
+import { SpendingModelData } from "@/types/spendingModel.types";
+import { PATH_NAME } from "@/helpers/constants/pathname";
+import { router } from "expo-router";
 import { useState } from "react";
 import { ToastAndroid } from "react-native";
-
-// API model interface
-interface SpendingModelCategory {
-  spendingModelId: string;
-  categoryId: string;
-  percentageAmount: number;
-  category: {
-    name: string;
-    nameUnsign: string;
-    description: string;
-    code: string;
-    icon: string;
-    type: string;
-    isSaving: boolean;
-    id: string;
-  };
-}
-
-interface SpendingModelData {
-  id: string;
-  name: string;
-  nameUnsign: string;
-  description: string;
-  isTemplate: boolean;
-  spendingModelCategories: SpendingModelCategory[];
-}
-
-interface RecommendedModelData {
-  id: string;
-  name: string;
-  description: string;
-}
-
-interface RecommendationResponse {
-  recommendedModel: RecommendedModelData;
-  alternativeModels: RecommendedModelData[];
-  reasoning: string;
-}
-
-interface Answer {
-  option: QuizAnswerOption | null;
-  customAnswer: string;
-  isCustom: boolean;
-}
-
-interface AnswersState {
-  [questionId: string]: Answer;
-}
+import TEXT_TRANSLATE_QUIZ from "../Quiz.translate";
 
 const calculateTotalSteps = (quiz: Quiz | null) => {
   if (!quiz) return 2;
@@ -79,7 +35,10 @@ const useQuiz = () => {
     setError(null);
     refetchQuiz()
       .unwrap()
-      .then(() => {
+      .then((response) => {
+        if (!response.data) {
+          ToastAndroid.show("Không có quiz nào hiện đang kích hoạt", ToastAndroid.SHORT);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -167,8 +126,7 @@ const useQuiz = () => {
         if (response.data.recommendedModel) {
           setRecommendationData(response.data.recommendedModel);
           
-          // Get the full model with categories from our data
-          const recommendedId = response.data.recommendedModel.recommendedModel.id;
+          const recommendedId = response?.data?.recommendedModel?.recommendedModel?.id;
           const fullModel = getModelFromRecommendation(recommendedId);
           setSuggestedModel(fullModel);
         }
@@ -183,6 +141,44 @@ const useQuiz = () => {
       ToastAndroid.show("Lỗi khi submit quiz", ToastAndroid.SHORT);
       console.log(err);
     }
+  };
+
+  // Added functions that were previously in QuizScreen
+  const isNextButtonDisabled = (): boolean => {
+    if (currentStep === 0) return false; // Review page
+    if (currentStep >= totalSteps - 1) return false; // Suggestion page
+
+    const quizStepIndex = currentStep - 1;
+    const currentQuestion = quiz?.questions[quizStepIndex];
+
+    if (!currentQuestion) return true;
+
+    const answer = answers[currentQuestion.id];
+    if (!answer) return true;
+
+    if (
+      answer.isCustom &&
+      (!answer.customAnswer || answer.customAnswer.trim() === "")
+    ) {
+      return true;
+    }
+
+    return false;
+  };
+
+  const getButtonText = (): string => {
+    if (currentStep === 0) return TEXT_TRANSLATE_QUIZ.BUTTON_CONTINUE;
+    if (currentStep === totalSteps - 2)
+      return TEXT_TRANSLATE_QUIZ.BUTTON_SUBMIT;
+    return TEXT_TRANSLATE_QUIZ.BUTTON_NEXT;
+  };
+
+  const navigateToRecommendedModel = (): void => {
+    const recommendedModelId = quizSubmitResponse?.recommendedModel?.recommendedModel?.id;
+    router.replace({
+      pathname: PATH_NAME.HOME.PERSONAL_EXPENSES_MODEL as any,
+      params: { recommendedModelId }
+    });
   };
 
   return {
@@ -207,6 +203,9 @@ const useQuiz = () => {
       updateCustomAnswer,
       handleQuizSubmission,
       fetchActiveQuiz,
+      isNextButtonDisabled,
+      getButtonText,
+      navigateToRecommendedModel,
     },
   };
 };

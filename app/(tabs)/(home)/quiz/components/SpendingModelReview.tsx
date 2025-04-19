@@ -1,39 +1,14 @@
 import { LoadingSectionWrapper } from "@/components";
+import { appInfo } from "@/helpers/constants/appInfos";
 import { useGetSpendingModelQuery } from "@/services/spendingModel";
+import { SpendingModelData } from "@/types/spendingModel.types";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { memo, useCallback, useEffect, useRef, useState } from "react";
-import { Dimensions, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { PieChart } from "react-native-gifted-charts";
 import RenderHTML from "react-native-render-html";
 import Carousel from "react-native-snap-carousel";
-
-interface SpendingModelCategory {
-  spendingModelId: string;
-  categoryId: string;
-  percentageAmount: number;
-  category: {
-    name: string;
-    nameUnsign: string;
-    description: string;
-    code: string;
-    icon: string;
-    type: string;
-    isSaving: boolean;
-    id: string;
-  };
-}
-
-interface SpendingModelData {
-  id: string;
-  name: string;
-  nameUnsign: string;
-  description: string;
-  isTemplate: boolean;
-  spendingModelCategories: SpendingModelCategory[];
-}
-
-const { width } = Dimensions.get("window");
 
 const CarouselItem = memo(({ item }: { item: SpendingModelData }) => {
   // Generate chart data from API data
@@ -82,7 +57,7 @@ const CarouselItem = memo(({ item }: { item: SpendingModelData }) => {
 
       <Text className="text-xl font-bold text-gray-800">
         <RenderHTML
-          contentWidth={width * 1}
+          contentWidth={appInfo.sizes.WIDTH * 1}
           source={{ html: item?.description }}
         />
       </Text>
@@ -167,8 +142,8 @@ const SpendingModelReview = memo(
               ref={carouselRef}
               data={models}
               renderItem={({ item }) => <CarouselItem item={item} />}
-              sliderWidth={width - 32}
-              itemWidth={width - 64}
+              sliderWidth={appInfo.sizes.WIDTH - 32}
+              itemWidth={appInfo.sizes.WIDTH - 64}
               autoplay
               autoplayInterval={8000}
               loop

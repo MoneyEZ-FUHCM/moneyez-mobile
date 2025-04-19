@@ -39,6 +39,31 @@ export interface UserSpendingModel {
   spendingModelId?: string;
 }
 
+export interface SpendingModelCategory {
+  spendingModelId: string;
+  categoryId: string;
+  percentageAmount: number;
+  category: {
+    name: string;
+    nameUnsign: string;
+    description: string;
+    code: string;
+    icon: string;
+    type: string;
+    isSaving: boolean;
+    id: string;
+  };
+}
+
+export interface SpendingModelData {
+  id: string;
+  name: string;
+  nameUnsign: string;
+  description: string;
+  isTemplate: boolean;
+  spendingModelCategories: SpendingModelCategory[];
+}
+
 export interface SpendingModelHistoryState {
   spendingModelsByYear: Array<{
     year: string;
