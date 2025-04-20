@@ -3,9 +3,7 @@ import {
   ScrollViewCustom,
   SectionComponent,
 } from "@/components";
-import { PATH_NAME } from "@/helpers/constants/pathname";
 import { MaterialIcons } from "@expo/vector-icons";
-import { router } from "expo-router";
 import React, { memo, useEffect } from "react";
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 import QuizQuestion from "./components/QuizQuestion";
@@ -14,7 +12,6 @@ import SuggestionPage from "./components/SuggestionPage";
 import useQuiz from "./hooks/useQuiz";
 import TEXT_TRANSLATE_QUIZ from "./Quiz.translate";
 
-// Memoized components to prevent unnecessary re-renders
 const LoadingState = memo(() => (
   <View className="items-center justify-center rounded-2xl bg-white p-8 shadow-md">
     <ActivityIndicator size="large" color="#609084" />
@@ -24,7 +21,7 @@ const LoadingState = memo(() => (
 
 const SubmittingState = memo(() => (
   <View className="items-center justify-center rounded-2xl bg-white p-8 shadow-md">
-    <ActivityIndicator size="large" color="#609084" />
+    <ActivityIndicator size="large" color="#609084" /> 
     <Text className="mt-4 text-base text-gray-700">
       Phân tích câu trả lời của bạn...
     </Text>
@@ -92,7 +89,6 @@ const BottomButtons = memo(
   ),
 );
 
-// Memoized SuggestionButton for the final screen
 const SuggestionButton = memo(
   ({ onNavigateModel }: { onNavigateModel: () => void }) => (
     <View className="absolute bottom-0 left-0 right-0 border-t border-gray-200 bg-white px-6 py-4 shadow-lg">
@@ -119,7 +115,6 @@ const QuizScreen = memo(() => {
     currentStep,
     totalSteps,
     quiz,
-    spendingModels,
     answers,
     suggestedModel,
     isLoading,
@@ -128,44 +123,11 @@ const QuizScreen = memo(() => {
     error,
   } = state;
 
-  // Fetch the active quiz when the component mounts
   useEffect(() => {
     handler.fetchActiveQuiz();
   }, []);
 
   const quizStepIndex = currentStep - 1;
-
-  // Determine if the next button should be disabled (no answer selected for current question)
-  const isNextButtonDisabled = () => {
-    if (currentStep === 0) return false; // Review page
-    if (currentStep >= totalSteps - 1) return false; // Suggestion page
-
-    // For question pages, check if the current question has an answer
-    const currentQuestion = quiz?.questions[quizStepIndex];
-
-    if (!currentQuestion) return true;
-
-    const answer = answers[currentQuestion.id];
-    if (!answer) return true;
-
-    // If it's a custom answer, check that it's not empty
-    if (
-      answer.isCustom &&
-      (!answer.customAnswer || answer.customAnswer.trim() === "")
-    ) {
-      return true;
-    }
-
-    return false;
-  };
-
-  // Determine which button text to show
-  const getButtonText = () => {
-    if (currentStep === 0) return TEXT_TRANSLATE_QUIZ.BUTTON_CONTINUE;
-    if (currentStep === totalSteps - 2)
-      return TEXT_TRANSLATE_QUIZ.BUTTON_SUBMIT;
-    return TEXT_TRANSLATE_QUIZ.BUTTON_NEXT;
-  };
 
   const renderContent = () => {
     if (isLoading) {
@@ -194,7 +156,7 @@ const QuizScreen = memo(() => {
     }
 
     if (currentStep === 0) {
-      return <SpendingModelReview spendingModels={spendingModels} />;
+      return <SpendingModelReview />;
     } else if (currentStep > 0 && currentStep < totalSteps - 1 && quiz) {
       const question = quiz.questions[quizStepIndex];
       return (
@@ -212,10 +174,7 @@ const QuizScreen = memo(() => {
           suggestedModel={suggestedModel}
           quizSubmitResponse={quizSubmitResponse}
           onSubmit={() => {}}
-          onNavigateModel={() => {
-            router.replace(PATH_NAME.HOME.PERSONAL_EXPENSES_MODEL as any);
-          }}
-          isButtonBelow={true} // This ensures the button is not shown inside the component
+          onNavigateModel={handler.navigateToRecommendedModel}
         />
       );
     }
@@ -251,16 +210,14 @@ const QuizScreen = memo(() => {
             onPrevious={currentStep > 0 ? handler.previousStep : undefined}
             onNext={handler.nextStep}
             showPrevious={currentStep > 0}
-            buttonText={getButtonText()}
-            isDisabled={isNextButtonDisabled()}
+            buttonText={handler.getButtonText()}
+            isDisabled={handler.isNextButtonDisabled()}
           />
         )}
 
       {isSuggestionPage && (
         <SuggestionButton
-          onNavigateModel={() => {
-            router.replace(PATH_NAME.HOME.PERSONAL_EXPENSES_MODEL as any);
-          }}
+          onNavigateModel={handler.navigateToRecommendedModel}
         />
       )}
     </SafeAreaViewCustom>

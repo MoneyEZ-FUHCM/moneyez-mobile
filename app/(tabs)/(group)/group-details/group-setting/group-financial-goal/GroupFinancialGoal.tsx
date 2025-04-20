@@ -9,15 +9,17 @@ import { ScrollViewCustom } from "@/components/ScrollViewCustom";
 import { AntDesign, MaterialIcons, Feather } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import { ActivityIndicator, Text, View, TouchableOpacity } from "react-native";
+import { ActivityIndicator, Text, View, TouchableOpacity, RefreshControl } from "react-native";
 import TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL from "./GroupFinancialGoal.translate";
 import useGroupFinancialGoal from "./hooks/useGroupFinancialGoal";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Colors } from "@/helpers/constants/color";
 
 export default function GroupFinancialGoal() {
   const { state, handler } = useGroupFinancialGoal();
   const { LABELS, BUTTON, TITLE } = TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL;
   const [showOptions, setShowOptions] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const toggleOptions = () => {
     setShowOptions(!showOptions);
@@ -27,6 +29,12 @@ export default function GroupFinancialGoal() {
     if (showOptions) {
       setShowOptions(false);
     }
+  };
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await handler.refetch();
+    setRefreshing(false);
   };
 
   const renderGoalProgress = () => {
@@ -195,6 +203,13 @@ export default function GroupFinancialGoal() {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ padding: 16, paddingBottom: 40 }}
             isBottomTab={false}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={handleRefresh}
+                colors={[Colors.colors.primary]}
+              />
+            }
           >
             {renderGoalProgress()}
             {renderGoalDetails()}

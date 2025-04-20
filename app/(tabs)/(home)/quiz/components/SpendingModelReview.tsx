@@ -1,43 +1,14 @@
+import { LoadingSectionWrapper } from "@/components";
+import { appInfo } from "@/helpers/constants/appInfos";
 import { useGetSpendingModelQuery } from "@/services/spendingModel";
+import { SpendingModelData } from "@/types/spendingModel.types";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { memo, useEffect, useRef, useState } from "react";
-import { ActivityIndicator, Dimensions, Text, View } from "react-native";
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
+import { Text, View } from "react-native";
 import { PieChart } from "react-native-gifted-charts";
 import RenderHTML from "react-native-render-html";
 import Carousel from "react-native-snap-carousel";
-
-// Using API types directly
-interface SpendingModelCategory {
-  spendingModelId: string;
-  categoryId: string;
-  percentageAmount: number;
-  category: {
-    name: string;
-    nameUnsign: string;
-    description: string;
-    code: string;
-    icon: string;
-    type: string;
-    isSaving: boolean;
-    id: string;
-  };
-}
-
-interface SpendingModelData {
-  id: string;
-  name: string;
-  nameUnsign: string;
-  description: string;
-  isTemplate: boolean;
-  spendingModelCategories: SpendingModelCategory[];
-}
-
-interface SpendingModelReviewProps {
-  spendingModels?: SpendingModelData[];
-}
-
-const { width } = Dimensions.get("window");
 
 const CarouselItem = memo(({ item }: { item: SpendingModelData }) => {
   // Generate chart data from API data
@@ -61,14 +32,6 @@ const CarouselItem = memo(({ item }: { item: SpendingModelData }) => {
       };
     });
 
-  const getIconName = () => {
-    const name = item.name.toLowerCase();
-    if (name.includes("jar")) return "account-balance-wallet";
-    if (name.includes("50-30-20")) return "pie-chart";
-    if (name.includes("80-20")) return "donut-large";
-    return "attach-money"; // Default icon
-  };
-
   const generateExample = () => {
     return `Ví dụ: Thu nhập 10 triệu VND → ${item?.spendingModelCategories
       .filter((category) => category?.percentageAmount > 0)
@@ -86,7 +49,7 @@ const CarouselItem = memo(({ item }: { item: SpendingModelData }) => {
         className="absolute left-0 right-0 top-0 h-40"
       />
       <View className="mb-4 flex-row items-center justify-center">
-        <MaterialIcons name={getIconName() as any} size={30} color="#609084" />
+        <MaterialIcons name="pie-chart" size={30} color="#609084" />
         <Text className="ml-2 text-xl font-bold text-gray-800">
           {item?.name}
         </Text>
@@ -94,7 +57,7 @@ const CarouselItem = memo(({ item }: { item: SpendingModelData }) => {
 
       <Text className="text-xl font-bold text-gray-800">
         <RenderHTML
-          contentWidth={width * 1}
+          contentWidth={appInfo.sizes.WIDTH * 1}
           source={{ html: item?.description }}
         />
       </Text>
@@ -123,30 +86,38 @@ const CarouselItem = memo(({ item }: { item: SpendingModelData }) => {
 });
 
 const SpendingModelReview = memo(
-  ({ spendingModels: propModels }: SpendingModelReviewProps) => {
+  () => {
     const carouselRef = useRef(null);
     const [activeIndex, setActiveIndex] = useState(0);
-    const { data: apiData, isLoading, error } = useGetSpendingModelQuery({});
+    const { 
+      data: apiData, 
+      isLoading, 
+      error,
+      isFetching 
+    } = useGetSpendingModelQuery({});
     const [models, setModels] = useState<SpendingModelData[]>([]);
+    const [state, setState] = useState({
+      isRefetching: false,
+    });
 
     useEffect(() => {
-      if (propModels) {
-        setModels(propModels);
-      } else if (apiData?.items) {
+      if (apiData?.items) {
         setModels(apiData.items);
       }
-    }, [propModels, apiData]);
+    }, [apiData]);
 
-    if (isLoading && !propModels) {
-      return (
-        <View className="items-center justify-center p-10">
-          <ActivityIndicator size="large" color="#609084" />
-          <Text className="mt-2 text-gray-600">Đang tải...</Text>
-        </View>
-      );
-    }
+    useEffect(() => {
+      setState(prev => ({
+        ...prev,
+        isRefetching: isFetching && !isLoading
+      }));
+    }, [isFetching, isLoading]);
 
-    if (error && !propModels) {
+    const handleSnapToItem = useCallback((index: number) => {
+      setActiveIndex(index);
+    }, []);
+
+    if (error) {
       return (
         <View className="items-center justify-center p-10">
           <Text className="text-red-500">Lỗi khi tải các mô hình chi tiêu</Text>
@@ -154,47 +125,45 @@ const SpendingModelReview = memo(
       );
     }
 
-    if (models.length === 0) {
-      return (
-        <View className="items-center justify-center p-10">
-          <Text className="text-gray-600">
-            Hiện chưa có mô hình chi tiêu nào
-          </Text>
-        </View>
-      );
-    }
-
     return (
-      <View>
-        <Carousel
-          ref={carouselRef}
-          data={models}
-          renderItem={({
-            item,
-          }: {
-            item: SpendingModelData;
-            index: number;
-          }) => <CarouselItem item={item} />}
-          sliderWidth={width - 32}
-          itemWidth={width - 64}
-          autoplay
-          autoplayInterval={8000}
-          loop
-          onSnapToItem={(index) => setActiveIndex(index)}
-          {...({ lockScrollWhileSnapping: true } as any)}
-        />
-
-        <View className="mt-2 flex-row justify-center">
-          {models?.map((_, i) => (
-            <View
-              key={i}
-              className={`mx-1 h-2.5 w-2.5 rounded-full ${
-                i === activeIndex ? "bg-[#609084]" : "bg-gray-300"
-              }`}
+      <LoadingSectionWrapper
+        isLoading={isLoading || state.isRefetching}
+        rootClassName="flex-1"
+      >
+        {models.length === 0 ? (
+          <View className="items-center justify-center p-10">
+            <Text className="text-gray-600">
+              Hiện chưa có mô hình chi tiêu nào
+            </Text>
+          </View>
+        ) : (
+          <View>
+            <Carousel
+              ref={carouselRef}
+              data={models}
+              renderItem={({ item }) => <CarouselItem item={item} />}
+              sliderWidth={appInfo.sizes.WIDTH - 32}
+              itemWidth={appInfo.sizes.WIDTH - 64}
+              autoplay
+              autoplayInterval={8000}
+              loop
+              vertical={false}
+              onSnapToItem={handleSnapToItem}
             />
-          ))}
-        </View>
-      </View>
+
+            <View className="mt-2 flex-row justify-center">
+              {models?.map((_, i) => (
+                <View
+                  key={i}
+                  className={`mx-1 h-2.5 w-2.5 rounded-full ${
+                    i === activeIndex ? "bg-[#609084]" : "bg-gray-300"
+                  }`}
+                />
+              ))}
+            </View>
+          </View>
+        )}
+      </LoadingSectionWrapper>
     );
   },
 );
