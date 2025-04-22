@@ -187,7 +187,8 @@ const useExpenseDetail = () => {
       }
 
       if (
-        data.data.currentAmount > personalLimitBudgetSubcate.data.limitBudget
+        data.data.currentAmount > personalLimitBudgetSubcate.data.limitBudget ||
+        data.data.targetAmount - data.data.currentAmount <= 0
       ) {
         ToastAndroid.show(
           "Mức chi tiêu của bạn đã vượt định mức. Không thể cập nhật",

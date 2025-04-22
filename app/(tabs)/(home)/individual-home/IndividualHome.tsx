@@ -57,7 +57,7 @@ export default function IndividualHome() {
           {/* BALANCE CARD */}
           <SectionComponent rootClassName="mx-5 mt-8 rounded-[10px] bg-white p-4 shadow-sm">
             <View className="flex-row items-center justify-between">
-              <Text className="text-sm text-black">
+              <Text className="text-base font-bold text-black">
                 {TEXT_TRANSLATE_INDIVIDUAL_HOME.TITLE.TOTAL_BALANCE}
               </Text>
               <Pressable onPress={handler.handleHistoryPress}>
@@ -131,7 +131,7 @@ export default function IndividualHome() {
             <>
               <View className="mx-5 rounded-xl bg-white shadow-sm">
                 <View className="px-4 pt-4">
-                  <Text className="text-base font-bold text-gray-900">
+                  <Text className="text-base font-bold">
                     Ngân sách chi tiêu
                   </Text>
                 </View>

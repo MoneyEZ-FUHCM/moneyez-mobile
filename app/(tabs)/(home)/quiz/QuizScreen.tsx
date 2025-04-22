@@ -6,6 +6,7 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { memo, useEffect } from "react";
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import QuizQuestion from "./components/QuizQuestion";
 import SpendingModelReview from "./components/SpendingModelReview";
 import SuggestionPage from "./components/SuggestionPage";
@@ -13,16 +14,22 @@ import useQuiz from "./hooks/useQuiz";
 import TEXT_TRANSLATE_QUIZ from "./Quiz.translate";
 
 const LoadingState = memo(() => (
-  <View className="items-center justify-center rounded-2xl bg-white p-8 shadow-md">
-    <ActivityIndicator size="large" color="#609084" />
-    <Text className="mt-4 text-base text-gray-700">Đang tải...</Text>
+  <View className="items-center justify-center rounded-3xl bg-white p-8 shadow-lg">
+    <View className="h-16 w-16 items-center justify-center rounded-full bg-gray-50">
+      <ActivityIndicator size="large" color="#609084" />
+    </View>
+    <Text className="mt-5 text-base font-medium text-gray-700">
+      Đang tải...
+    </Text>
   </View>
 ));
 
 const SubmittingState = memo(() => (
-  <View className="items-center justify-center rounded-2xl bg-white p-8 shadow-md">
-    <ActivityIndicator size="large" color="#609084" /> 
-    <Text className="mt-4 text-base text-gray-700">
+  <View className="items-center justify-center rounded-3xl bg-white p-8 shadow-lg">
+    <View className="h-16 w-16 items-center justify-center rounded-full bg-gray-50">
+      <ActivityIndicator size="large" color="#609084" />
+    </View>
+    <Text className="mt-5 text-base font-medium text-gray-700">
       Phân tích câu trả lời của bạn...
     </Text>
   </View>
@@ -30,17 +37,21 @@ const SubmittingState = memo(() => (
 
 const HeaderSection = memo(
   ({ title, onBack }: { title: string; onBack?: () => void }) => (
-    <SectionComponent rootClassName="h-14 bg-white justify-center shadow-sm">
+    <SectionComponent rootClassName="h-16 bg-white justify-center shadow-sm">
       <View className="flex-row items-center justify-between px-5">
         {onBack ? (
-          <TouchableOpacity onPress={onBack}>
-            <MaterialIcons name="arrow-back" size={24} color="#609084" />
+          <TouchableOpacity
+            className="h-10 w-10 items-center justify-center rounded-full bg-gray-50"
+            activeOpacity={0.7}
+            onPress={onBack}
+          >
+            <MaterialIcons name="arrow-back" size={22} color="#333" />
           </TouchableOpacity>
         ) : (
-          <View style={{ width: 24 }} />
+          <View style={{ width: 40 }} />
         )}
-        <Text className="text-lg font-bold text-black">{title}</Text>
-        <View style={{ width: 24 }} />
+        <Text className="text-lg font-bold text-gray-800">{title}</Text>
+        <View style={{ width: 40 }} />
       </View>
     </SectionComponent>
   ),
@@ -60,16 +71,17 @@ const BottomButtons = memo(
     buttonText: string;
     isDisabled?: boolean;
   }) => (
-    <View className="absolute bottom-0 left-0 right-0 border-t border-gray-200 bg-white px-6 py-4 shadow-lg">
+    <View className="absolute bottom-0 left-0 right-0 border-t border-gray-100 bg-white px-6 py-5 shadow-lg">
       <View
         className={`flex-row ${showPrevious ? "justify-between" : "justify-center"}`}
       >
         {showPrevious && (
           <TouchableOpacity
             onPress={onPrevious}
-            className="items-center rounded-lg bg-gray-200 px-6 py-4"
+            activeOpacity={0.7}
+            className="mr-3 items-center rounded-xl border border-gray-200 bg-gray-50 px-6 py-4"
           >
-            <Text className="text-base font-semibold text-gray-800">
+            <Text className="text-base font-semibold text-gray-700">
               {TEXT_TRANSLATE_QUIZ.BUTTON_PREVIOUS}
             </Text>
           </TouchableOpacity>
@@ -78,7 +90,17 @@ const BottomButtons = memo(
         <TouchableOpacity
           onPress={onNext}
           disabled={isDisabled}
-          className={`rounded-lg px-6 py-4 ${isDisabled ? "bg-gray-300" : "bg-[#609084]"} items-center`}
+          activeOpacity={0.7}
+          className={`rounded-xl px-6 py-4 ${
+            isDisabled ? "bg-gray-300" : "bg-[#609084]"
+          } items-center ${showPrevious ? "" : "w-4/5"}`}
+          style={{
+            shadowColor: isDisabled ? "#ccc" : "#609084",
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.2,
+            shadowRadius: 8,
+            elevation: 6,
+          }}
         >
           <Text className="text-base font-semibold text-white">
             {buttonText}
@@ -91,18 +113,30 @@ const BottomButtons = memo(
 
 const SuggestionButton = memo(
   ({ onNavigateModel }: { onNavigateModel: () => void }) => (
-    <View className="absolute bottom-0 left-0 right-0 border-t border-gray-200 bg-white px-6 py-4 shadow-lg">
-      <View className="flex-row justify-between">
+    <View className="absolute bottom-0 left-0 right-0 border-t border-gray-100 bg-white px-6 py-5 shadow-lg">
+      <LinearGradient
+        colors={["#609084", "#4d7d73"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        className="overflow-hidden rounded-xl"
+        style={{
+          shadowColor: "#609084",
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.2,
+          shadowRadius: 8,
+          elevation: 6,
+        }}
+      >
         <TouchableOpacity
           onPress={onNavigateModel}
-          className="mr-2 flex-1 items-center rounded-xl border-2 border-[#609084] bg-white p-4"
-          activeOpacity={0.7}
+          className="items-center justify-center py-4"
+          activeOpacity={0.8}
         >
-          <Text className="text-base font-semibold text-[#609084]">
+          <Text className="text-base font-semibold text-white">
             {TEXT_TRANSLATE_QUIZ.BUTTON_SELECT_MODEL}
           </Text>
         </TouchableOpacity>
-      </View>
+      </LinearGradient>
     </View>
   ),
 );
@@ -140,14 +174,24 @@ const QuizScreen = memo(() => {
 
     if (error) {
       return (
-        <View className="items-center justify-center rounded-2xl bg-white p-8 shadow-md">
-          <MaterialIcons name="error-outline" size={40} color="#F44336" />
-          <Text className="mt-4 text-center text-base text-gray-700">
+        <View className="items-center justify-center rounded-3xl bg-white p-8 shadow-lg">
+          <View className="bg-red-50 h-16 w-16 items-center justify-center rounded-full">
+            <MaterialIcons name="error-outline" size={32} color="#F44336" />
+          </View>
+          <Text className="mt-5 text-center text-base text-gray-700">
             {error}
           </Text>
           <TouchableOpacity
-            className="mt-6 rounded-lg bg-[#609084] px-5 py-3"
+            className="mt-6 rounded-xl bg-[#609084] px-6 py-3"
+            activeOpacity={0.7}
             onPress={handler.fetchActiveQuiz}
+            style={{
+              shadowColor: "#609084",
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.15,
+              shadowRadius: 6,
+              elevation: 4,
+            }}
           >
             <Text className="font-medium text-white">Thử lại</Text>
           </TouchableOpacity>
@@ -182,10 +226,10 @@ const QuizScreen = memo(() => {
 
   const isSuggestionPage =
     currentStep === totalSteps - 1 && !isLoading && !isSubmitting;
-  const paddingBottom = !isLoading && !isSubmitting ? "pb-24" : "pb-4";
+  const paddingBottom = !isLoading && !isSubmitting ? "pb-28" : "pb-6";
 
   return (
-    <SafeAreaViewCustom rootClassName="flex-1 bg-[#f9f9f9]">
+    <SafeAreaViewCustom rootClassName="flex-1 bg-[#f5f7f8]">
       <HeaderSection
         title={TEXT_TRANSLATE_QUIZ.HEADER}
         onBack={currentStep > 0 ? handler.previousStep : undefined}
@@ -194,10 +238,13 @@ const QuizScreen = memo(() => {
       <ScrollViewCustom
         showsVerticalScrollIndicator={false}
         className={`${paddingBottom}`}
-        isBottomTab={false}
-        contentContainerStyle={{ flexGrow: isSuggestionPage ? 1 : undefined }}
+        isBottomTab={true}
+        contentContainerStyle={{
+          flexGrow: isSuggestionPage ? 1 : undefined,
+          paddingHorizontal: 16,
+        }}
       >
-        <View className={`p-4 ${isSuggestionPage ? "flex-1" : ""}`}>
+        <View className={`py-6 ${isSuggestionPage ? "flex-1" : ""}`}>
           {renderContent()}
         </View>
       </ScrollViewCustom>

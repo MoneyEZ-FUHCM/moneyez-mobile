@@ -405,12 +405,42 @@ const ActionLogHistory = () => {
               </View>
             )}
 
-            <Pressable
-              onPress={() => state.detailModalizeRef.current?.close()}
-              className="mt-8 rounded-lg bg-primary px-4 py-3"
-            >
-              <Text className="text-center text-white">Đóng</Text>
-            </Pressable>
+            {state.selectedLog?.status === TRANSACTION_STATUS.PENDING &&
+            state.isLeader ? (
+              <View className="mt-8 flex-row space-x-3">
+                <Pressable
+                  onPress={() => {
+                    handler.handleOpenRejectModal(state.selectedLog as any);
+                    state.detailModalizeRef.current?.close();
+                  }}
+                  className={`flex-1 rounded-lg bg-gray-200 px-4 py-3`}
+                >
+                  <Text className={`text-center font-bold text-gray-700`}>
+                    Từ chối
+                  </Text>
+                </Pressable>
+                <Pressable
+                  onPress={() => {
+                    handler.handleAcceptTransaction(
+                      state.selectedLog?.id || "",
+                    );
+                    state.detailModalizeRef.current?.close();
+                  }}
+                  className="flex-1 rounded-lg bg-primary px-4 py-3"
+                >
+                  <Text className="text-center font-bold text-white">
+                    Chấp nhận
+                  </Text>
+                </Pressable>
+              </View>
+            ) : (
+              <Pressable
+                onPress={() => state.detailModalizeRef.current?.close()}
+                className="mt-8 rounded-lg bg-primary px-4 py-3"
+              >
+                <Text className="text-center font-bold text-white">Đóng</Text>
+              </Pressable>
+            )}
           </View>
         </ModalLizeComponent>
         <ModalLizeComponent
@@ -464,7 +494,9 @@ const ActionLogHistory = () => {
                 }
                 className="rounded-lg bg-red px-4 py-2"
               >
-                <Text className="text-sm text-white">Xác nhận từ chối</Text>
+                <Text className="text-sm font-bold text-white">
+                  Xác nhận từ chối
+                </Text>
               </Pressable>
             </View>
           </View>
