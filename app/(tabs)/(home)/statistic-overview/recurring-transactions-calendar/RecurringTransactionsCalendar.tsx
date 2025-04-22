@@ -18,7 +18,7 @@ export default function RecurringTransactionsCalendar() {
 
   const renderTransactionList = () => (
     <View className="mt-6 px-4">
-      <Text className="mb-4 text-xl font-bold text-gray-800">
+      <Text className="mb-4 text-xl font-bold">
         {TEXT_TRANSLATE_RECURRING_TRANSACTIONS.LABELS.RECENT_TRANSACTIONS}
       </Text>
 
@@ -47,7 +47,7 @@ export default function RecurringTransactionsCalendar() {
               </View>
 
               {transactions.length > 0 &&
-                transactions.map((item) => (
+                transactions?.map((item) => (
                   <View
                     key={item.id}
                     className="mb-3 rounded-xl bg-white p-4 shadow-sm"
@@ -63,7 +63,7 @@ export default function RecurringTransactionsCalendar() {
                         </View>
                         <View className="flex-1">
                           <Text
-                            className="text-base font-semibold text-gray-800"
+                            className="text-base font-semibold"
                             numberOfLines={1}
                           >
                             {item.subcategoryName || item.description}
@@ -101,7 +101,7 @@ export default function RecurringTransactionsCalendar() {
           <MaterialIcons name="arrow-back" size={24} color="black" />
         </Pressable>
         <View className="items-center justify-between">
-          <Text className="text-lg font-bold text-gray-900">
+          <Text className="text-lg font-bold">
             {TEXT_TRANSLATE_RECURRING_TRANSACTIONS.TITLE.RECURRING_TRANSACTIONS}
           </Text>
         </View>
