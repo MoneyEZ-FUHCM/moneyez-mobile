@@ -111,7 +111,22 @@ const useFunctionBankAccount = (params: any) => {
           );
           router.back();
         }
-      } catch (err) {
+      } catch (err: any) {
+        const error = err?.data;
+        if (error?.errorCode === ERROR_CODE.BANK_ACCOUNT_NOT_FOUND) {
+          ToastAndroid.show(
+            MESSAGE_ERROR.BANK_ACCOUNT_NOT_FOUND,
+            ToastAndroid.SHORT,
+          );
+          return;
+        }
+        if (error?.errorCode === ERROR_CODE.BANK_ACCOUNT_VALIDATION_FAILED) {
+          ToastAndroid.show(
+            MESSAGE_ERROR.BANK_ACCOUNT_VALIDATION_FAILED,
+            ToastAndroid.SHORT,
+          );
+          return;
+        }
         ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
       }
     },
