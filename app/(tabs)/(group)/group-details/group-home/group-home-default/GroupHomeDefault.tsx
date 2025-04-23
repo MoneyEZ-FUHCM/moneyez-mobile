@@ -103,7 +103,9 @@ const GroupHomeDefault = () => {
                 color={Colors.colors.primary}
               />
             </View>
-            <Text className="text-xl font-bold">{state.groupDetail?.name}</Text>
+            <Text className="flex-1 text-xl font-bold">
+              {state.groupDetail?.name}
+            </Text>
           </View>
         </View>
         <Text className="mt-1 text-3xl font-bold">

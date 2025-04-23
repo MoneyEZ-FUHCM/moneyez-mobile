@@ -71,12 +71,12 @@ const useExpenseDetail = () => {
   );
   const { SYSTEM_ERROR } = COMMON_CONSTANT;
 
-  // useEffect(() => {
-  //   if (!budgetId) return;
-  //   refetchGoalsById();
-  //   refetchPersonalTransactionFinancialGoals();
-  //   refetchChartData();
-  // }, [budgetId, budgetStatisticType]);
+  useEffect(() => {
+    if (!budgetId) return;
+    refetchGoalsById();
+    refetchPersonalTransactionFinancialGoals();
+    refetchChartData();
+  }, [budgetId, budgetStatisticType]);
 
   const handleLoadMore = useCallback(() => {
     if (
