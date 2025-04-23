@@ -3,7 +3,7 @@ import { PATH_NAME } from "@/helpers/constants/pathname";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { useGetSpendingModelQuery } from "@/services/spendingModel";
 import { useCreateUserSpendingModelMutation } from "@/services/userSpendingModel";
-import { router, useFocusEffect } from "expo-router";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { BackHandler, ToastAndroid } from "react-native";
 import { useDispatch } from "react-redux";
@@ -36,6 +36,9 @@ const usePersonalExpensesModel = () => {
     spendingModels.find((model) => model?.id === selectedModel)?.name ||
     "Tùy chọn";
 
+  const params = useLocalSearchParams();
+  const recommendedModelId = params.recommendedModelId as string;
+
   const { MESSAGE_ERROR } = TEXT_TRANSLATE_PERSONAL_EXPENSES;
   const { ERROR_CODE } = PERSONAL_EXPENSES_MODEL_CONSTANTS;
 
@@ -52,10 +55,19 @@ const usePersonalExpensesModel = () => {
   });
 
   useEffect(() => {
-    if (spendingModels.length > 0 && !selectedModel) {
-      setSelectedModel(spendingModels[0].id);
+    if (spendingModels.length > 0) {
+      if (recommendedModelId) {
+        const modelExists = spendingModels.some(model => model.id === recommendedModelId);
+        if (modelExists) {
+          setSelectedModel(recommendedModelId);
+        }
+      }
+      
+      if (!selectedModel) {
+        setSelectedModel(spendingModels[0].id);
+      }
     }
-  }, [spendingModels, selectedModel]);
+  }, [spendingModels, selectedModel, recommendedModelId]);
 
   const validationSchema = Yup.object({
     startDate: Yup.string()

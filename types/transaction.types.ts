@@ -53,22 +53,21 @@ export interface TransactionPreviewPayload extends TransactionPayload {
 
 export interface GroupTransaction {
   note: string;
+  bankTransactionDate: string;
+  accountBankNumber: string;
+  accountBankName: string;
   groupId: string;
   userId: string;
   amount: number;
-  type: "INCOME" | "EXPENSE";
+  type: string;
   transactionDate: string;
   description: string;
   images: string[];
   status: "PENDING" | "APPROVED" | "REJECTED";
   approvalRequired: boolean;
-  requestCode: string;
+  requestCode: string | null;
   insertType: "MANUAL" | "AUTO";
   avatarUrl: string;
-  accountBankNumber: string | null;
-  accountBankName: string | null;
-  bankTransactionId: string | null;
-  bankTransactionDate: string | null;
   id: string;
   createdDate: string;
   createdBy: string;
@@ -89,4 +88,63 @@ export interface MarkedDates {
     selected?: boolean;
     selectedColor?: string;
   };
+}
+
+export interface TransactionsReportMonthlyData {
+  month: string;
+  amount: number;
+}
+
+export interface TransactionsReportYearlyData {
+  year: number;
+  type: number;
+  total: number;
+  average: number;
+  monthlyData: TransactionsReportMonthlyData[];
+}
+
+export interface TransactionsReportCategoryItem {
+  name: string;
+  amount: number;
+  percentage: number;
+  icon: string;
+}
+
+export interface TransactionsReportCategoryYear {
+  year: number;
+  type: number;
+  total: number;
+  categories: TransactionsReportCategoryItem[];
+}
+
+export interface TransactionsReportAllTime {
+  income: number;
+  expense: number;
+  total: number;
+  initialBalance: number;
+  cumulation: number;
+}
+
+export interface TransactionsReportCategoryItem {
+  name: string;
+  amount: number;
+  percentage: number;
+  icon: string;
+  color?: string;
+}
+
+export interface TransactionsReportCategoryAllTime {
+  type: number;
+  total: number;
+  categories: TransactionsReportCategoryItem[];
+}
+
+export interface TransactionsReportMonthlyBalance {
+  month: string;
+  balance: number;
+}
+
+export interface TransactionsReportYearlyBalance {
+  year: number;
+  balances: TransactionsReportMonthlyBalance[];
 }

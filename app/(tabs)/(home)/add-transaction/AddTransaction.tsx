@@ -8,6 +8,7 @@ import {
 } from "@/components";
 import { TextAreaComponent } from "@/components/TextAreaComponent";
 import { TRANSACTION_TYPE_TEXT } from "@/enums/globals";
+import { Colors } from "@/helpers/constants/color";
 import { formatCurrencyInput } from "@/helpers/libs";
 import { CategoryListFilter } from "@/types/category.types";
 import { Subcategory } from "@/types/subCategory";
@@ -28,8 +29,6 @@ import { ActivityIndicator, RadioButton } from "react-native-paper";
 import TEXT_TRANSLATE_ADD_TRANSACTION from "./AddTransaction.translate";
 import useAddTransaction from "./hooks/useAddTransaction";
 
-const PRIMARY_COLOR = "#609084";
-
 export default function AddTransaction() {
   const { type } = useLocalSearchParams();
   const { state, handler } = useAddTransaction(type as string);
@@ -49,7 +48,7 @@ export default function AddTransaction() {
           value={type}
           status={state.transactionType === type ? "checked" : "unchecked"}
           onPress={() => handler.setTransactionType(type)}
-          color={PRIMARY_COLOR}
+          color={Colors.colors.primary}
           uncheckedColor="gray"
         />
         <SpaceComponent width={5} />
@@ -173,7 +172,10 @@ export default function AddTransaction() {
                 <View className="mt-1 flex-row flex-wrap">
                   {state.isLoading ? (
                     <View className="h-44 w-full items-center justify-center">
-                      <ActivityIndicator size="small" color={PRIMARY_COLOR} />
+                      <ActivityIndicator
+                        size="small"
+                        color={Colors.colors.primary}
+                      />
                     </View>
                   ) : (
                     state.mapSubCategories?.map((subCategory: Subcategory) => {
@@ -191,7 +193,7 @@ export default function AddTransaction() {
                         >
                           <CategoryItem
                             label={subCategory?.name}
-                            color={PRIMARY_COLOR}
+                            color={Colors.colors.primary}
                             iconName={
                               subCategory?.icon as keyof typeof MaterialIcons.glyphMap
                             }

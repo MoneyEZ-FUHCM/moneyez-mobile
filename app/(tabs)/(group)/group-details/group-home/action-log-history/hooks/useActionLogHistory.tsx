@@ -132,6 +132,8 @@ const useActionLogHistory = () => {
     setRejectReason("");
     modalizeRef.current?.open();
   }, []);
+  console.log("check selectedTransaction", selectedTransaction);
+  console.log("check selectedlog", selectedLog);
 
   const handleAcceptTransaction = useCallback(
     async (transactionId: string) => {

@@ -103,10 +103,12 @@ const GroupHomeDefault = () => {
                 color={Colors.colors.primary}
               />
             </View>
-            <Text className="text-xl font-bold">{state.groupDetail?.name}</Text>
+            <Text className="flex-1 text-xl font-bold">
+              {state.groupDetail?.name}
+            </Text>
           </View>
         </View>
-        <Text className="mt-1 text-3xl font-bold text-gray-800">
+        <Text className="mt-1 text-3xl font-bold">
           {formatCurrency(state.groupDetail?.currentBalance as number)}
         </Text>
         <Text className="mb-4 mt-2 leading-5 text-gray-600">
@@ -357,9 +359,7 @@ const GroupHomeDefault = () => {
         )}
         <View className="flex-1 pl-1">
           <View className="flex-row items-center">
-            <Text className="text-base font-bold text-gray-800">
-              {activity?.changedBy}
-            </Text>
+            <Text className="text-base font-bold">{activity?.changedBy}</Text>
           </View>
           <Text className="mt-1 text-gray-600">
             {highlightAndBreakText(activity?.changeDescription || "No Title", {

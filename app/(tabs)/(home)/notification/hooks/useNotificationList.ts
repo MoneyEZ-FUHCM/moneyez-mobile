@@ -169,7 +169,6 @@ const useNotificationList = (isHidden: boolean = false) => {
         );
         modalizeRef.current?.close();
       } catch (err) {
-        console.log("check err", err);
         ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
       }
     },

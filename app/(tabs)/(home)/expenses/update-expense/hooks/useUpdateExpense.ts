@@ -10,7 +10,7 @@ import {
   UpdateBudgetPayload,
 } from "@/types/financialGoal.type";
 import { router, useLocalSearchParams } from "expo-router";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
@@ -37,11 +37,15 @@ const useUpdateExpense = () => {
     subCategoryId: params?.subCategoryId as string,
     budgetId: params.budgetId as string,
   };
-  const { data: personalLimitBudgetSubcate } =
+  const { data: personalLimitBudgetSubcate, refetch } =
     useGetPersonalLimitBudgetSubcategoryQuery(
       { id: params?.subCategoryId },
       { skip: !params.subCategoryId },
     );
+
+  useEffect(() => {
+    refetch();
+  }, [params?.subCategoryId]);
 
   const initialValues = {
     amount: "",
@@ -67,13 +71,13 @@ const useUpdateExpense = () => {
         return;
       }
 
-      if (amount > personalLimitBudgetSubcate?.data?.limitBudget) {
-        ToastAndroid.show(
-          "Vui lòng không cập nhật số dư nhỏ hơn số dư hiện tại",
-          ToastAndroid.SHORT,
-        );
-        return;
-      }
+      // if (amount > personalLimitBudgetSubcate?.data?.limitBudget) {
+      //   ToastAndroid.show(
+      //     "Vui lòng không cập nhật số tiền lớn hơn số dư hiện tại",
+      //     ToastAndroid.SHORT,
+      //   );
+      //   return;
+      // }
       dispatch(setLoading(true));
       const payload = {
         name: data.name || "",

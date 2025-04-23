@@ -4,12 +4,12 @@ import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";
 import {
   useDeleteGroupFinancialGoalMutation,
-  useGetGroupFinancialGoalQuery
+  useGetGroupFinancialGoalQuery,
 } from "@/services/financialGoal";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import moment from "moment";
 import { useCallback, useMemo, useRef } from "react";
-import { ToastAndroid } from "react-native";
+import { BackHandler, ToastAndroid } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { useDispatch, useSelector } from "react-redux";
 import TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL from "../GroupFinancialGoal.translate";
@@ -29,43 +29,48 @@ interface FinancialGoal {
 export default function useGroupFinancialGoal() {
   const dispatch = useDispatch();
   const groupDetail = useSelector(selectCurrentGroup);
-  const groupId = useMemo(() => groupDetail?.id || '', [groupDetail]);
+  const groupId = useMemo(() => groupDetail?.id || "", [groupDetail]);
   const modalizeRef = useRef<Modalize>(null);
 
   // API Hooks
   const {
     data: groupFinancialGoalData,
     isLoading,
-    refetch
-  } = useGetGroupFinancialGoalQuery(
-    { groupId },
-    { skip: !groupId }
+    refetch,
+  } = useGetGroupFinancialGoalQuery({ groupId }, { skip: !groupId });
+
+  const [deleteGroupFinancialGoal, { isLoading: isDeleting }] =
+    useDeleteGroupFinancialGoalMutation();
+
+  const financialGoal: FinancialGoal = useMemo(
+    () =>
+      groupFinancialGoalData?.data?.filter(
+        (goal: FinancialGoal) => goal.isDeleted === false,
+      )[0],
+    [groupFinancialGoalData],
   );
-
-  const [deleteGroupFinancialGoal, { isLoading: isDeleting }] = useDeleteGroupFinancialGoalMutation();
-
-  const financialGoal: FinancialGoal = useMemo(() =>
-    groupFinancialGoalData?.data?.filter((goal: FinancialGoal) => goal.isDeleted === false)[0],
-    [groupFinancialGoalData]);
 
   const hasExistingGoal = !!financialGoal;
 
-  const daysLeft = useMemo(() =>
-    financialGoal
-      ? Math.max(0, moment(financialGoal.deadline).diff(moment(), "days"))
-      : 0,
-    [financialGoal]);
+  const daysLeft = useMemo(
+    () =>
+      financialGoal
+        ? Math.max(0, moment(financialGoal.deadline).diff(moment(), "days"))
+        : 0,
+    [financialGoal],
+  );
 
-  const isGoalCompleted = useMemo(() =>
-    (financialGoal?.currentAmount) >= (financialGoal?.targetAmount),
-    [financialGoal]);
+  const isGoalCompleted = useMemo(
+    () => financialGoal?.currentAmount >= financialGoal?.targetAmount,
+    [financialGoal],
+  );
 
   // Navigation handlers
   const handleNavigateToCreate = useCallback(() => {
     dispatch(setGroupTabHidden(true));
     router.push({
       pathname: PATH_NAME.GROUP_SETTING.GROUP_FINANCIAL_GOAL_FORM as any,
-      params: { mode: "create" }
+      params: { mode: "create" },
     });
   }, [dispatch]);
 
@@ -74,7 +79,7 @@ export default function useGroupFinancialGoal() {
       dispatch(setGroupTabHidden(true));
       router.push({
         pathname: PATH_NAME.GROUP_SETTING.GROUP_FINANCIAL_GOAL_FORM as any,
-        params: { mode: "update", goalId: financialGoal.id }
+        params: { mode: "update", goalId: financialGoal.id },
       });
     }
   }, [dispatch, financialGoal]);
@@ -93,17 +98,17 @@ export default function useGroupFinancialGoal() {
         await deleteGroupFinancialGoal({ id: financialGoal.id }).unwrap();
         ToastAndroid.show(
           TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.MESSAGE_SUCCESS.DELETE_SUCCESS,
-          ToastAndroid.SHORT
+          ToastAndroid.SHORT,
         );
         modalizeRef.current?.close();
         router.back();
-        refetch();
+        dispatch(setGroupTabHidden(false));
       }
     } catch (error) {
       console.error("Error deleting goal:", error);
       ToastAndroid.show(
         TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.MESSAGE_ERROR.DELETE_FAILED,
-        ToastAndroid.SHORT
+        ToastAndroid.SHORT,
       );
     }
   }, [deleteGroupFinancialGoal, financialGoal, dispatch, refetch]);
@@ -112,6 +117,19 @@ export default function useGroupFinancialGoal() {
     dispatch(setGroupTabHidden(false));
     router.back();
   }, [dispatch]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        handleGoBack();
+        return true;
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [handleGoBack]),
+  );
 
   const getStatusText = useCallback((status: number) => {
     switch (status) {

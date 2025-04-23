@@ -14,15 +14,13 @@ interface DatePickerFinancialGoalComponentProps {
   isRequired?: boolean;
 }
 
-const DatePickerFinancialGoalComponent: React.FC<DatePickerFinancialGoalComponentProps> = ({
-  name,
-  label,
-  containerClass,
-  labelClass,
-  isRequired = false,
-}) => {
+const DatePickerFinancialGoalComponent: React.FC<
+  DatePickerFinancialGoalComponentProps
+> = ({ name, label, containerClass, labelClass, isRequired = false }) => {
   const [showPicker, setShowPicker] = useState(false);
   const [field, meta, helpers] = useField(name);
+  const maxDate = new Date();
+  maxDate.setFullYear(maxDate.getFullYear() + 1);
 
   const handleChange = (event: DateTimePickerEvent, date?: Date) => {
     setShowPicker(false);
@@ -51,7 +49,9 @@ const DatePickerFinancialGoalComponent: React.FC<DatePickerFinancialGoalComponen
           <Calendar size="20" color="#609084" />
           <Text className="ml-2 text-[13px] text-black">
             {field.value
-              ? new Date(new Date(field.value).getTime()).toLocaleDateString("vi-VN")
+              ? new Date(new Date(field.value).getTime()).toLocaleDateString(
+                  "vi-VN",
+                )
               : "Chọn ngày"}
           </Text>
         </TouchableOpacity>
@@ -60,11 +60,16 @@ const DatePickerFinancialGoalComponent: React.FC<DatePickerFinancialGoalComponen
       {showPicker && (
         <DateTimePicker
           testID="dateTimePicker"
-          value={field.value ? new Date(field.value) : new Date(Date.now() + 86400000)}
+          value={
+            field.value
+              ? new Date(field.value)
+              : new Date(Date.now() + 86400000)
+          }
           mode="date"
           is24Hour={true}
           display="default"
           minimumDate={new Date(Date.now() + 86400000)}
+          maximumDate={maxDate}
           onChange={handleChange}
         />
       )}
@@ -79,4 +84,3 @@ const DatePickerFinancialGoalComponent: React.FC<DatePickerFinancialGoalComponen
 };
 
 export { DatePickerFinancialGoalComponent };
-
