@@ -28,3 +28,5 @@ export { SplashScreenLoading } from "./SplashScreenLoading";
 export { TabBar } from "./TabBarCustom/TabBar";
 export { TypingIndicatorComponent } from "./TypeIndicatorComponent";
 export { QRScanner } from "./QRScanner";
+export { DatePickerRecurringTransaction } from "./DatePickerRecurringTransaction";
+export { YearMonthSelector } from "./YearMonthSelector";

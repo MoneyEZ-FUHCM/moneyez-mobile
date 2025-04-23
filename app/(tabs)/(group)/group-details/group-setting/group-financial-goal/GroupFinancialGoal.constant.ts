@@ -1,0 +1,7 @@
+const GROUP_FINANCIAL_GOAL_CONSTANT = {
+  ERROR_CODE: {
+    INVALID_DEADLINE: "InvalidDeadline",
+  },
+};
+
+export default GROUP_FINANCIAL_GOAL_CONSTANT;

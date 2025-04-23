@@ -1,4 +1,5 @@
 import { icons } from "@/assets/icons/icons";
+import { Colors } from "@/helpers/constants/color";
 import { AntDesign } from "@expo/vector-icons";
 import React, { memo } from "react";
 import { Pressable, PressableProps } from "react-native";
@@ -28,7 +29,6 @@ const TabBarButton: React.FC<TabBarButtonProps> = ({
   size,
   ...props
 }) => {
-  const PRIMARY_COLOR = "#609084";
   const TRANSPARENT_COLOR = "transparent";
   const animatedScale = useDerivedValue(() => {
     return withSpring(isFocused ? 1 : 0, {
@@ -43,7 +43,7 @@ const TabBarButton: React.FC<TabBarButtonProps> = ({
     backgroundColor: interpolateColor(
       animatedScale.value,
       [0, 1],
-      [TRANSPARENT_COLOR, PRIMARY_COLOR],
+      [TRANSPARENT_COLOR, Colors.colors.primary],
     ),
     borderRadius: interpolate(animatedScale.value, [0, 0.1], [0, 100]),
   }));

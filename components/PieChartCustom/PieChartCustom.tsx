@@ -2,7 +2,7 @@ import { formatCurrency } from "@/helpers/libs";
 import { BudgetCategory } from "@/types/category.types";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { PieChart } from "react-native-gifted-charts";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
 import { SectionComponent } from "../SectionComponent";
@@ -23,32 +23,81 @@ interface PieChartCustomProps {
   title: string;
 }
 
-const RenderDetailComponent = ({ pieData }: { pieData: PieChartData[] }) => (
-  <View className="mt-12 flex-row flex-wrap items-center">
-    <View className="flex-1 flex-row justify-between">
-      <View className="w-1/2 pr-4">
+const RenderDetailComponent = ({
+  pieData,
+  onItemPress,
+}: {
+  pieData: PieChartData[];
+  onItemPress: (index: number) => void;
+}) => (
+  <View className="mt-12 flex-1">
+    <View className="flex-row flex-wrap justify-between">
+      <View className="w-1/2 pr-2">
         {pieData
           ?.slice(0, Math.ceil(pieData.length / 2))
           ?.map((item, index) => (
-            <View key={index} className="mb-2 flex-row items-center">
-              <View
-                className="h-2.5 w-2.5 rounded-full"
-                style={{ backgroundColor: item.color }}
-              />
-              <Text className="ml-2 text-black">{`${item?.categoryName}: ${item?.plannedPercentage}%`}</Text>
-            </View>
+            <TouchableOpacity
+              key={index}
+              onPress={() => onItemPress(index)}
+              className="mb-3 rounded-lg bg-gray-50 p-2.5 shadow-sm"
+              activeOpacity={0.7}
+            >
+              <View className="flex-row items-center">
+                <View
+                  className="mr-2 h-4 w-4 rounded-full"
+                  style={{ backgroundColor: item.color }}
+                />
+                <View className="flex-1">
+                  <Text
+                    className="mb-0.5 text-sm font-bold text-gray-800"
+                    numberOfLines={1}
+                  >
+                    {item?.categoryName}
+                  </Text>
+                  <View className="flex-row justify-between">
+                    <Text className="text-xs text-gray-600">{`${item?.plannedPercentage}%`}</Text>
+                    <Text className="text-xs font-medium text-primary">
+                      {formatCurrency(item?.totalSpent || 0)}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </TouchableOpacity>
           ))}
       </View>
-      <View className="w-1/2 pl-4">
-        {pieData?.slice(Math.ceil(pieData.length / 2))?.map((item, index) => (
-          <View key={index} className="mb-2 flex-row items-center">
-            <View
-              className="h-2.5 w-2.5 rounded-full"
-              style={{ backgroundColor: item?.color }}
-            />
-            <Text className="ml-2 text-black">{`${item?.categoryName}: ${item?.plannedPercentage}%`}</Text>
-          </View>
-        ))}
+      <View className="w-1/2 pl-2">
+        {pieData?.slice(Math.ceil(pieData.length / 2))?.map((item, index) => {
+          const actualIndex = index + Math.ceil(pieData.length / 2);
+          return (
+            <TouchableOpacity
+              key={index}
+              onPress={() => onItemPress(actualIndex)}
+              className="mb-3 rounded-lg bg-gray-50 p-2.5 shadow-sm"
+              activeOpacity={0.7}
+            >
+              <View className="flex-row items-center">
+                <View
+                  className="mr-2 h-4 w-4 rounded-full"
+                  style={{ backgroundColor: item.color }}
+                />
+                <View className="flex-1">
+                  <Text
+                    className="mb-0.5 text-sm font-bold text-gray-800"
+                    numberOfLines={1}
+                  >
+                    {item?.categoryName}
+                  </Text>
+                  <View className="flex-row justify-between">
+                    <Text className="text-xs text-gray-600">{`${item?.plannedPercentage}%`}</Text>
+                    <Text className="text-xs font-medium text-primary">
+                      {formatCurrency(item?.totalSpent || 0)}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </TouchableOpacity>
+          );
+        })}
       </View>
     </View>
   </View>
@@ -57,9 +106,14 @@ const RenderDetailComponent = ({ pieData }: { pieData: PieChartData[] }) => (
 const PieChartCustom = React.memo(({ data, title }: PieChartCustomProps) => {
   const { state, handler } = usePieChart(data);
 
+  // Xử lý việc nhấn vào item trong chi tiết
+  const handleLegendItemPress = (index: number) => {
+    handler.handlePress(index);
+  };
+
   return (
     <SectionComponent>
-      <Text className="text-lg font-bold text-gray-800">{title}</Text>
+      <Text className="text-base font-bold">{title}</Text>
       <View className="mt-4 items-center">
         {state.selectedIndex !== null && (
           <View className="w-full rounded-lg bg-gray-50/60 p-3">
@@ -138,7 +192,10 @@ const PieChartCustom = React.memo(({ data, title }: PieChartCustomProps) => {
           />
         </Animated.View>
       </View>
-      <RenderDetailComponent pieData={state.pieDataCategory} />
+      <RenderDetailComponent
+        pieData={state.pieDataCategory}
+        onItemPress={handleLegendItemPress}
+      />
     </SectionComponent>
   );
 });

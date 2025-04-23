@@ -23,9 +23,9 @@ const SpendingBudgetComponent = ({
   };
 
   return (
-    <SafeAreaViewCustom rootClassName="p-4 bg-white mx-5 rounded-[10px]">
+    <SectionComponent rootClassName="p-4 bg-white mx-5 rounded-[10px]">
       {/* Header */}
-      <SectionComponent rootClassName="mb-3.5">
+      <View className="mb-5">
         <Pressable
           className="flex-row items-center justify-between"
           onPress={onHeaderPress}
@@ -44,7 +44,7 @@ const SpendingBudgetComponent = ({
           </View>
           <MaterialIcons name="arrow-forward-ios" size={20} color="#000" />
         </Pressable>
-      </SectionComponent>
+      </View>
 
       {/* Budget category list */}
       {data?.map((item) => {
@@ -87,7 +87,7 @@ const SpendingBudgetComponent = ({
           </SectionComponent>
         );
       })}
-    </SafeAreaViewCustom>
+    </SectionComponent>
   );
 };
 

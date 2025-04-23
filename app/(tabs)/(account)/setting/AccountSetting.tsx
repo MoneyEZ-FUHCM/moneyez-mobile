@@ -4,7 +4,7 @@ import { appInfo } from "@/helpers/constants/appInfos";
 import {
   ArrowRight2,
   Bank,
-  Bookmark2,
+  Calendar,
   LogoutCurve,
   TagUser,
 } from "iconsax-react-native";
@@ -25,12 +25,12 @@ const SETTING_OPTIONS = [
     title: "Tài khoản ngân hàng",
     description: "Số tài khoản, tên ngân hàng, chi nhánh,...",
   },
-  {
-    id: 3,
-    icon: <Bookmark2 size="20" color="white" variant="Bold" />,
-    title: "Phiên bản",
-    description: "Thông tin phiên bản ứng dụng",
-  },
+  // {
+  //   id: 3,
+  //   icon: <Calendar size="20" color="white" variant="Bold" />,
+  //   title: "Thu chi định kỳ",
+  //   description: "Quản lý các khoản thu chi định kỳ",
+  // },
 ];
 
 const AccountSetting = () => {

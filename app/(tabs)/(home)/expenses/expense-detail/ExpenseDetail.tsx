@@ -2,7 +2,6 @@ import Admin from "@/assets/images/logo/avatar_admin.jpg";
 import {
   BarChartExpenseCustom,
   FlatListCustom,
-  LoadingSectionWrapper,
   ProgressCircleComponent,
   SafeAreaViewCustom,
   SectionComponent,
@@ -80,27 +79,50 @@ export default function ExpenseDetail() {
             </View>
             <View className="w-full flex-1">
               <View className="">
-                <Text className="mb-1 text-lg font-bold">
+                <Text className="text-lg font-bold">
                   {state.financialGoalDetail?.name}
                 </Text>
                 <Text className="text-base text-gray-500">
-                  Kết thúc sau{" "}
-                  <Text className="text-sm font-bold">
-                    {calculateRemainingDays(
-                      state.financialGoalDetail?.deadline,
-                    )}{" "}
-                    ngày
-                  </Text>
+                  {calculateRemainingDays(
+                    state.financialGoalDetail?.deadline,
+                  ) === 0 ? (
+                    <Text className="text-sm font-bold text-green">
+                      Đã hoàn thành
+                    </Text>
+                  ) : (
+                    <>
+                      Kết thúc sau{" "}
+                      <Text className="text-sm font-bold">
+                        {calculateRemainingDays(
+                          state.financialGoalDetail?.deadline,
+                        )}{" "}
+                        ngày
+                      </Text>
+                    </>
+                  )}
                 </Text>
                 <Text className="text-sm">
-                  {TEXT_TRANSLATE_EXPENSE_DETAIL.BUDGET_REMAINING}
-                  {"  "}
-                  <Text className="text-green-500 font-bold">
-                    {formatCurrency(
-                      state.financialGoalDetail?.targetAmount -
-                        state.financialGoalDetail?.currentAmount,
-                    )}
-                  </Text>
+                  {state.financialGoalDetail?.targetAmount -
+                    state.financialGoalDetail?.currentAmount >
+                  0 ? (
+                    <Text className="text-green-500 font-bold">
+                      <Text className="!font-normal">
+                        {TEXT_TRANSLATE_EXPENSE_DETAIL.BUDGET_REMAINING}{" "}
+                      </Text>
+                      {formatCurrency(
+                        state.financialGoalDetail?.targetAmount -
+                          state.financialGoalDetail?.currentAmount,
+                      )}
+                    </Text>
+                  ) : (
+                    <Text className="font-bold text-red">
+                      Đã vượt hạn mức{" "}
+                      {formatCurrency(
+                        state.financialGoalDetail?.currentAmount -
+                          state.financialGoalDetail?.targetAmount,
+                      )}
+                    </Text>
+                  )}
                 </Text>
                 <View className="my-1 h-[1px] w-full bg-gray-300" />
                 <Text className="flex-wrap text-sm text-gray-500">
@@ -258,40 +280,38 @@ export default function ExpenseDetail() {
       </SectionComponent>
 
       {/* Danh sách giao dịch */}
-      <LoadingSectionWrapper isLoading={isLoading || state.isFetchingRefresh}>
-        <SectionComponent rootClassName="bg-[#fafafa] rounded-lg">
-          {state.financialGoalDetail && (
-            <FlatListCustom
-              showsVerticalScrollIndicator={false}
-              data={personalTransactionFinancialGoals ?? []}
-              isBottomTab={true}
-              hasMore={
-                state.getPersonalTransactionFinancialGoals?.items?.length ===
-                state.pageSize
-              }
-              isLoading={state.isLoadingMore}
-              ListHeaderComponent={renderListHeader}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={renderTransactionItem}
-              onLoadMore={handler.handleLoadMore}
-              refreshing={state.isFetchingRefresh}
-              onRefresh={handler.handleRefresh}
-              ListEmptyComponent={
-                <View className="flex-1 items-center justify-center p-6">
-                  <View className="mb-4 h-20 w-20 items-center justify-center rounded-full bg-gray-100">
-                    <AntDesign
-                      name="file1"
-                      size={32}
-                      color={Colors.colors.primary}
-                    />
-                  </View>
-                  <Text>Không có dữ liệu</Text>
+      <SectionComponent rootClassName="bg-[#fafafa] rounded-lg">
+        {state.financialGoalDetail && (
+          <FlatListCustom
+            showsVerticalScrollIndicator={false}
+            data={personalTransactionFinancialGoals ?? []}
+            isBottomTab={true}
+            hasMore={
+              state.getPersonalTransactionFinancialGoals?.items?.length ===
+              state.pageSize
+            }
+            isLoading={state.isLoadingMore}
+            ListHeaderComponent={renderListHeader}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={renderTransactionItem}
+            onLoadMore={handler.handleLoadMore}
+            refreshing={state.isFetchingRefresh}
+            onRefresh={handler.handleRefresh}
+            ListEmptyComponent={
+              <View className="flex-1 items-center justify-center p-6">
+                <View className="mb-4 h-20 w-20 items-center justify-center rounded-full bg-gray-100">
+                  <AntDesign
+                    name="file1"
+                    size={32}
+                    color={Colors.colors.primary}
+                  />
                 </View>
-              }
-            />
-          )}
-        </SectionComponent>
-      </LoadingSectionWrapper>
+                <Text>Không có dữ liệu</Text>
+              </View>
+            }
+          />
+        )}
+      </SectionComponent>
     </SafeAreaViewCustom>
   );
 }

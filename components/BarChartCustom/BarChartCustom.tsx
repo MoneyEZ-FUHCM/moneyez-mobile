@@ -3,6 +3,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { BarChart } from "react-native-gifted-charts";
 import { SectionComponent } from "../SectionComponent";
 import { useBarChart } from "./hooks/useBarChart";
+import { Colors } from "@/helpers/constants/color";
 
 interface DataItem {
   [key: string]: number | string;
@@ -18,7 +19,6 @@ interface GenericBarChartProps {
 const BarChartCustom = React.memo(
   ({ data, categories, screenWidth }: GenericBarChartProps) => {
     const { state, handler } = useBarChart(categories);
-    const PRIMARY_COLOR = "#609084";
     const GRAY_COLOR = "#E7E7E7";
 
     return (
@@ -57,7 +57,7 @@ const BarChartCustom = React.memo(
             label: item.label,
             frontColor:
               item.label === state.dow[state.currentDateIndex]
-                ? PRIMARY_COLOR
+                ? Colors.colors.primary
                 : GRAY_COLOR,
             opacity: item.label === state.dow[state.currentDateIndex] ? 1 : 0.5,
           }))}

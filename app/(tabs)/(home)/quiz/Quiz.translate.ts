@@ -11,9 +11,11 @@ const TEXT_TRANSLATE_QUIZ = {
   BUTTON_PREVIOUS: "Quay lại",
   BUTTON_SUBMIT: "Gửi đáp án",
   SUGGESTION_TITLE: "Mô hình chi tiêu đề xuất",
-  SUGGESTION_DESCRIPTION: "Dựa trên các câu trả lời của bạn, chúng tôi đề xuất mô hình sau đây phù hợp nhất với bạn.",
-  NO_SUGGESTION_AVAILABLE: "Không có đề xuất nào khả dụng. Vui lòng thử lại sau.",
-  BUTTON_SELECT_MODEL: "Đến trang lựa chọn mô hình",
+  SUGGESTION_DESCRIPTION:
+    "Dựa trên các câu trả lời của bạn, chúng tôi đề xuất mô hình sau đây phù hợp nhất với bạn.",
+  NO_SUGGESTION_AVAILABLE:
+    "Không có đề xuất nào khả dụng. Vui lòng thử lại sau.",
+  BUTTON_SELECT_MODEL: "Tạo mô hình chi tiêu",
   QUESTION_LABEL: "Câu hỏi",
   QUESTION_PROGRESS: "Câu hỏi {current}/{total}",
 };

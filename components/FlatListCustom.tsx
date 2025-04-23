@@ -1,3 +1,4 @@
+import { Colors } from "@/helpers/constants/color";
 import React, { useCallback } from "react";
 import {
   FlatList,
@@ -25,8 +26,6 @@ export function FlatListCustom<T>({
   hasMore = true,
   ...props
 }: FlatListCustomProps<T>) {
-  const PRIMARY_COLOR = "#609084";
-
   const handleEndReached = useCallback(() => {
     if (!isLoading && hasMore) {
       onLoadMore?.();
@@ -47,7 +46,7 @@ export function FlatListCustom<T>({
       ListFooterComponent={
         isLoading && hasMore ? (
           <View className="my-5 items-center">
-            <ActivityIndicator size="small" color={PRIMARY_COLOR} />
+            <ActivityIndicator size="small" color={Colors.colors.primary} />
           </View>
         ) : !hasMore && (props.data?.length ?? 0) > 0 ? (
           <View className="my-3 items-center"></View>

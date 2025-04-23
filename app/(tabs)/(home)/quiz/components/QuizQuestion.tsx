@@ -1,16 +1,11 @@
-import React, { memo, useState } from "react";
-import { Text, TouchableOpacity, View, Dimensions, TextInput } from "react-native";
-import * as Progress from "react-native-progress";
-import { LinearGradient } from "expo-linear-gradient";
+import { appInfo } from "@/helpers/constants/appInfos";
+import { Answer, QuizQuestion as QuestionType, QuizAnswerOption } from "@/types/quiz.types";
 import { MaterialIcons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { memo, useState } from "react";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import * as Progress from "react-native-progress";
 import TEXT_TRANSLATE_QUIZ from "../Quiz.translate";
-import { QuizQuestion as QuestionType, QuizAnswerOption } from "@/types/quiz.types";
-
-interface Answer {
-  option: QuizAnswerOption | null;
-  customAnswer: string;
-  isCustom: boolean;
-}
 
 interface QuizQuestionProps {
   question: QuestionType;
@@ -20,30 +15,28 @@ interface QuizQuestionProps {
   totalQuestions: number;
 }
 
-const { width } = Dimensions.get("window");
-
-const AnswerOptionItem = memo(({ 
-  option, 
-  isSelected, 
-  onPress 
-}: { 
-  option: QuizAnswerOption; 
-  isSelected: boolean; 
+const AnswerOptionItem = memo(({
+  option,
+  isSelected,
+  onPress
+}: {
+  option: QuizAnswerOption;
+  isSelected: boolean;
   onPress: () => void;
 }) => (
   <TouchableOpacity
     onPress={onPress}
     className={`mb-3 rounded-xl p-4 border-2 flex-row items-center
-      ${isSelected 
-        ? "border-[#609084] bg-[#E8F5E9]" 
+      ${isSelected
+        ? "border-[#609084] bg-[#E8F5E9]"
         : "border-gray-200"
       }`}
     activeOpacity={0.7}
   >
-    <View 
+    <View
       className={`w-6 h-6 rounded-full mr-3 items-center justify-center 
-        ${isSelected 
-          ? "bg-[#609084]" 
+        ${isSelected
+          ? "bg-[#609084]"
           : "bg-gray-200"
         }`}
     >
@@ -51,7 +44,7 @@ const AnswerOptionItem = memo(({
         <MaterialIcons name="check" size={16} color="white" />
       )}
     </View>
-    <Text 
+    <Text
       className={`text-base flex-1 ${isSelected ? "text-gray-800 font-medium" : "text-gray-700"}`}
     >
       {option.content}
@@ -59,13 +52,13 @@ const AnswerOptionItem = memo(({
   </TouchableOpacity>
 ));
 
-const CustomAnswerItem = memo(({ 
-  isSelected, 
+const CustomAnswerItem = memo(({
+  isSelected,
   onPress,
   customValue,
-  onChangeText 
-}: { 
-  isSelected: boolean; 
+  onChangeText
+}: {
+  isSelected: boolean;
   onPress: () => void;
   customValue: string;
   onChangeText: (text: string) => void;
@@ -74,16 +67,16 @@ const CustomAnswerItem = memo(({
     <TouchableOpacity
       onPress={onPress}
       className={`rounded-xl p-4 border-2 flex-row items-center
-        ${isSelected 
-          ? "border-[#609084] bg-[#E8F5E9]" 
+        ${isSelected
+          ? "border-[#609084] bg-[#E8F5E9]"
           : "border-gray-200"
         }`}
       activeOpacity={0.7}
     >
-      <View 
+      <View
         className={`w-6 h-6 rounded-full mr-3 items-center justify-center 
-          ${isSelected 
-            ? "bg-[#609084]" 
+          ${isSelected
+            ? "bg-[#609084]"
             : "bg-gray-200"
           }`}
       >
@@ -91,7 +84,7 @@ const CustomAnswerItem = memo(({
           <MaterialIcons name="check" size={16} color="white" />
         )}
       </View>
-      <Text 
+      <Text
         className={`text-base flex-1 ${isSelected ? "text-gray-800 font-medium" : "text-gray-700"}`}
       >
         Khác
@@ -112,12 +105,12 @@ const CustomAnswerItem = memo(({
   </View>
 ));
 
-const QuestionProgress = memo(({ 
-  progress, 
-  currentQuestionIndex, 
-  totalQuestions 
-}: { 
-  progress: number; 
+const QuestionProgress = memo(({
+  progress,
+  currentQuestionIndex,
+  totalQuestions
+}: {
+  progress: number;
   currentQuestionIndex: number;
   totalQuestions: number;
 }) => (
@@ -134,7 +127,7 @@ const QuestionProgress = memo(({
     </View>
     <Progress.Bar
       progress={progress}
-      width={width - 74}
+      width={appInfo.sizes.WIDTH - 74}
       color="#609084"
       unfilledColor="#E0E0E0"
       borderWidth={0}
@@ -153,7 +146,7 @@ const QuizQuestion = memo(({
 }: QuizQuestionProps) => {
   const progress = (currentQuestionIndex + 1) / totalQuestions;
   const [customValue, setCustomValue] = useState<string>(selectedAnswer?.isCustom ? selectedAnswer.customAnswer : '');
-  
+
   const handleCustomAnswerChange = (text: string) => {
     setCustomValue(text);
     onSelectAnswer(question.id, null, true, text);
@@ -165,21 +158,21 @@ const QuizQuestion = memo(({
         colors={["rgba(96, 144, 132, 0.15)", "rgba(255, 255, 255, 0)"]}
         className="absolute top-0 left-0 right-0 h-24"
       />
-      
+
       {/* Progress indicator */}
-      <QuestionProgress 
-        progress={progress} 
+      <QuestionProgress
+        progress={progress}
         currentQuestionIndex={currentQuestionIndex}
         totalQuestions={totalQuestions}
       />
-      
+
       {/* Question */}
       <View className="bg-gray-50 rounded-xl p-4 mb-5">
         <Text className="text-lg font-bold text-gray-800">
           {question.content}
         </Text>
       </View>
-      
+
       {/* Answer options */}
       <View className="mb-2">
         {question.answerOptions.map((option) => {
@@ -193,8 +186,7 @@ const QuizQuestion = memo(({
             />
           );
         })}
-        
-        {/* Custom "Khác" option */}
+
         <CustomAnswerItem
           isSelected={selectedAnswer?.isCustom || false}
           onPress={() => onSelectAnswer(question.id, null, true, customValue)}

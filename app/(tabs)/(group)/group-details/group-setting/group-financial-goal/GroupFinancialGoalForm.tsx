@@ -7,26 +7,15 @@ import {
 import { DatePickerFinancialGoalComponent } from "@/components/GroupComponentCustom/DatePickerFinancialGoalComponent";
 import { ScrollViewCustom } from "@/components/ScrollViewCustom";
 import { formatCurrencyInput } from "@/helpers/libs";
-import { setGroupTabHidden } from "@/redux/slices/tabSlice";
 import { MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { Formik } from "formik";
-import React, { useEffect } from "react";
+import React from "react";
 import { Pressable, Text, View } from "react-native";
-import { useDispatch } from "react-redux";
 import TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL from "./GroupFinancialGoal.translate";
 import useGroupFinancialGoalForm from "./hooks/useGroupFinancialGoalForm";
 
 export default function GroupFinancialGoalForm() {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(setGroupTabHidden(true));
-    return () => {
-      dispatch(setGroupTabHidden(false));
-    };
-  }, []);
-
   // Use custom hook
   const { state, refState, handler } = useGroupFinancialGoalForm();
   const { LABELS, BUTTON, TITLE } = TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL;
@@ -39,7 +28,7 @@ export default function GroupFinancialGoalForm() {
       <SectionComponent rootClassName="h-14 bg-white justify-center relative">
         <View className="flex-row items-center justify-between px-5">
           <Pressable onPress={handler.handleGoBack}>
-            <MaterialIcons name="arrow-back" size={24} color="#609084" />
+            <MaterialIcons name="arrow-back" size={24} />
           </Pressable>
           <Text className="text-lg font-bold">
             {state.isCreateMode ? TITLE.CREATE_GOAL : TITLE.UPDATE_GOAL}

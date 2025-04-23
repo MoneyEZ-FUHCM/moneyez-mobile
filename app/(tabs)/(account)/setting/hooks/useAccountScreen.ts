@@ -23,7 +23,7 @@ const useAccountScreen = () => {
         router.navigate(PATH_NAME.ACCOUNT.BANK_ACCOUNT as any);
         break;
       case 3:
-        //
+        router.navigate(PATH_NAME.ACCOUNT.RECURRING_TRANSACTION_LIST as any);
         break;
       default:
       //

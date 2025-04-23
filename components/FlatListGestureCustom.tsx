@@ -1,3 +1,4 @@
+import { Colors } from "@/helpers/constants/color";
 import React, { useCallback } from "react";
 import { FlatListProps, StyleProp, Text, View, ViewStyle } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
@@ -19,8 +20,6 @@ export function FlatListGestureCustom<T>({
   hasMore = true,
   ...props
 }: FlatListCustomProps<T>) {
-  const PRIMARY_COLOR = "#609084";
-
   const handleEndReached = useCallback(() => {
     if (!isLoading && hasMore) {
       onLoadMore?.();
@@ -40,7 +39,7 @@ export function FlatListGestureCustom<T>({
       ListFooterComponent={
         isLoading && hasMore ? (
           <View className="my-5 items-center">
-            <ActivityIndicator size="small" color={PRIMARY_COLOR} />
+            <ActivityIndicator size="small" color={Colors.colors.primary} />
           </View>
         ) : !hasMore ? (
           <View className="my-3 items-center">

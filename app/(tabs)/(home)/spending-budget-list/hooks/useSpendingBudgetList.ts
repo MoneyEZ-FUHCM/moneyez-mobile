@@ -162,12 +162,15 @@ const useSpendingBudget = () => {
     }, [handleBack]),
   );
 
-  const handleBudgetPress = useCallback((budgetId: string) => {
-    router.navigate({
-      pathname: PATH_NAME.HOME.EXPENSES_DETAIL as any,
-      params: { budgetId: budgetId },
-    });
-  }, []);
+  const handleBudgetPress = useCallback(
+    (budgetId: string, subCategoryId: string) => {
+      router.navigate({
+        pathname: PATH_NAME.HOME.EXPENSES_DETAIL as any,
+        params: { budgetId: budgetId, subCategoryId: subCategoryId },
+      });
+    },
+    [],
+  );
 
   const handleRefresh = useCallback(() => {
     setIsLoading(true);

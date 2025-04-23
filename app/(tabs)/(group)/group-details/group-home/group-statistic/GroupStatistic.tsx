@@ -3,7 +3,7 @@ import {
   ProgressCircleComponent,
   SafeAreaViewCustom,
   SectionComponent,
-  LoadingSectionWrapper
+  LoadingSectionWrapper,
 } from "@/components";
 import { formatCurrency } from "@/helpers/libs";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -30,9 +30,9 @@ export default function GroupStatisticPage() {
             <Text></Text>
           </View>
         </SectionComponent>
-        
-        <View className="flex-1 justify-center items-center p-5">
-          <Text className="text-base text-gray-500 text-center">
+
+        <View className="flex-1 items-center justify-center p-5">
+          <Text className="text-center text-base text-gray-500">
             Nhóm chưa có mục tiêu tài chính nào được thiết lập.
           </Text>
         </View>
@@ -64,7 +64,8 @@ export default function GroupStatisticPage() {
             {/* Group Target Info */}
             <SectionComponent rootClassName="rounded-2 bg-white p-4 shadow-sm">
               <Text className="text-base font-semibold">
-                {LABELS.GROUP_TARGET}: {state.goalName} ({state.members.length} thành viên)
+                {LABELS.GROUP_TARGET}: {state.goalName} ({state.members.length}{" "}
+                thành viên)
               </Text>
               <View className="mt-2 flex-row items-center space-x-3">
                 <View>
@@ -108,55 +109,60 @@ export default function GroupStatisticPage() {
                   {LABELS.MEMBER_LIST}
                 </Text>
               </View>
-              {state.members.map((member) => (
-                <View
-                  key={member.id}
-                  className="flex-row items-center justify-between py-2"
-                >
-                  <Image
-                    source={member.avatar ? member.avatar : Admin}
-                    className="h-12 w-12 rounded-full"
-                    resizeMode="cover"
-                  />
-                  <View className="flex-1 ml-3 mr-2">
-                    <View className="flex-row items-center">
-                      <Text className="text-base font-semibold">
-                        {member.name}
-                      </Text>
-                      {member.hasFundedEnough && (
-                        <View className="ml-2 px-2 py-0.5 bg-[#E6F2EF] rounded-md">
-                          <Text className="text-xs text-[#609084] font-medium">
-                            {LABELS.FUNDED}
-                          </Text>
-                        </View>
-                      )}
-                    </View>
-                    <Text className="text-sm text-gray-500">
-                      {LABELS.CONTRIBUTE_RATIO}: {member.ratio}%
-                    </Text>
-                    <Text className="pt-1 text-sm">
-                      <Text className="text-[#848484]">
-                        {LABELS.CONTRIBUTED}:{" "}
-                      </Text>
-                      <Text className="text-base font-semibold text-[#609084]">
-                        {formatCurrency(member.contributed)}
-                      </Text>
-                      <Text className="text-[#848484]">
-                        {" "}
-                        / {formatCurrency(member.target)}
-                      </Text>
-                    </Text>
-                  </View>
-                  <View>
-                    <ProgressCircleComponent
-                      value={member.target > 0 ? member.contributed / member.target : 0}
-                      size={50}
-                      thickness={4}
-                      showPercentage={true}
+              {state.members?.length > 0 &&
+                state.members?.map((member) => (
+                  <View
+                    key={member.id}
+                    className="flex-row items-center justify-between py-2"
+                  >
+                    <Image
+                      source={member.avatar ? member.avatar : Admin}
+                      className="h-12 w-12 rounded-full"
+                      resizeMode="cover"
                     />
+                    <View className="ml-3 mr-2 flex-1">
+                      <View className="flex-row items-center">
+                        <Text className="text-base font-semibold">
+                          {member.name}
+                        </Text>
+                        {/* {member.hasFundedEnough && (
+                          <View className="ml-2 rounded-md bg-[#E6F2EF] px-2 py-0.5">
+                            <Text className="text-xs font-medium text-[#609084]">
+                              {LABELS.FUNDED}
+                            </Text>
+                          </View>
+                        )} */}
+                      </View>
+                      {/* <Text className="text-sm text-gray-500">
+                        {LABELS.CONTRIBUTE_RATIO}: {member.ratio}%
+                      </Text> */}
+                      <Text className="pt-1 text-sm">
+                        <Text className="text-[#848484]">
+                          {LABELS.CONTRIBUTED}
+                        </Text>
+                        {/* <Text className="text-base font-semibold text-[#609084]">
+                          {formatCurrency(member.contributed)}
+                        </Text>
+                        <Text className="text-[#848484]">
+                          {" "}
+                          / {formatCurrency(member.target)}
+                        </Text> */}
+                      </Text>
+                    </View>
+                    <View>
+                      <ProgressCircleComponent
+                        value={
+                          member.target > 0
+                            ? member.contributed / member.target
+                            : 0
+                        }
+                        size={50}
+                        thickness={4}
+                        showPercentage={true}
+                      />
+                    </View>
                   </View>
-                </View>
-              ))}
+                ))}
             </SectionComponent>
           </View>
         </ScrollView>

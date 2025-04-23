@@ -199,12 +199,6 @@ export default function GroupRemindPage() {
                     <Text className="text-base font-semibold text-[#609084]">
                       {formatCurrency(member.contributed)}
                     </Text>
-                    {state.isGoalActive && state.hasFinancialGoal && (
-                      <Text className="text-[#848484]">
-                        {" "}
-                        / {formatCurrency(member.target)}
-                      </Text>
-                    )}
                   </Text>
                 </View>
                 <Pressable

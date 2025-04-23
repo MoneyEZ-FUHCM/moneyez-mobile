@@ -10,6 +10,7 @@ const TEXT_TRANSLATE_SPENDING_BUDGET = {
   LABELS: {
     REMAINING: "Còn lại ",
     SPENT: "Chi",
+    REAL: "Thực tế",
   },
 
   MESSAGE_ERROR: {},

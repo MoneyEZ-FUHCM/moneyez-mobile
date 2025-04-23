@@ -104,7 +104,7 @@ const TabBar = React.memo(
         style={animatedStyle}
         className={`absolute bottom-5 ${
           type === "group" ? "mx-16" : "mx-8"
-        } flex-row items-center justify-between rounded-full bg-white/95 px-4 py-1.5 shadow-lg transition-all duration-500`}
+        } flex-row items-center justify-between rounded-full bg-white px-4 py-1.5 shadow-lg transition-all duration-500`}
       >
         {filteredRoutes.map((route, index) => {
           const { options } = descriptors[route.key];

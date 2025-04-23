@@ -126,12 +126,15 @@ export default function SpendingBudget() {
                 {section?.items &&
                   section?.items?.length > 0 &&
                   section?.items?.map((item) => {
+                    console.log("check item", item);
                     const progressPercent =
                       item?.currentAmount / item?.targetAmount;
                     return (
                       <Pressable
                         key={item?.id}
-                        onPress={() => handleBudgetPress(item?.id)}
+                        onPress={() =>
+                          handleBudgetPress(item?.id, item?.subcategoryId)
+                        }
                         className="mb-3 flex-row items-center justify-between rounded-[10px] border border-[#609084] p-3"
                       >
                         <View className="flex-row items-center space-x-3">
@@ -151,22 +154,38 @@ export default function SpendingBudget() {
                             </Text>
                             <View className="flex-col gap-0.5">
                               <View className="flex-row items-center space-x-1">
-                                <Text className="text-sm text-[#808080]">
-                                  {
-                                    TEXT_TRANSLATE_SPENDING_BUDGET.LABELS
-                                      .REMAINING
-                                  }
-                                </Text>
-                                <Text className="font-bold text-primary">
-                                  {formatCurrency(item?.remaining)}
-                                </Text>
+                                {item?.remaining > 0 ? (
+                                  <Text className="!font-bold text-primary">
+                                    <Text className="text-sm !font-normal !text-[#808080]">
+                                      {
+                                        TEXT_TRANSLATE_SPENDING_BUDGET.LABELS
+                                          .REMAINING
+                                      }
+                                    </Text>
+                                    {formatCurrency(item?.remaining)}
+                                  </Text>
+                                ) : item?.isSaving ? (
+                                  <Text className="font-bold text-green">
+                                    Đã vượt kỳ vọng{" "}
+                                    {formatCurrency(
+                                      item?.currentAmount - item?.targetAmount,
+                                    )}
+                                  </Text>
+                                ) : (
+                                  <Text className="font-bold text-red">
+                                    Đã vượt hạn mức{" "}
+                                    {formatCurrency(
+                                      item?.currentAmount - item?.targetAmount,
+                                    )}
+                                  </Text>
+                                )}
                               </View>
-                              <View className="flex-row items-center space-x-2">
+                              <View className="flex-row items-center space-x-1">
                                 <Text className="text-sm text-text-gray">
-                                  {TEXT_TRANSLATE_SPENDING_BUDGET.LABELS.SPENT}
+                                  {TEXT_TRANSLATE_SPENDING_BUDGET.LABELS.REAL}
                                 </Text>
                                 <View className="flex-row items-center">
-                                  <Text className="font-bold text-black">
+                                  <Text className="text-sm font-bold text-black">
                                     {formatCurrency(item?.currentAmount)}
                                   </Text>
                                   <Text className="text-sm text-text-gray">

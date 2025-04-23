@@ -17,6 +17,15 @@ export const formatCurrencyInput = (value: string) => {
   return value.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
 
+export const formatIntervalInput = (value: string): string => {
+  if (!value) return "";
+  const digitsOnly = value.replace(/[^\d]/g, "");
+  const withoutLeadingZeros = digitsOnly.replace(/^0+/, "");
+  const numericValue = parseInt(withoutLeadingZeros, 10);
+
+  return isNaN(numericValue) ? "1" : numericValue.toString();
+};
+
 export const parseCurrency = (formattedValue: string): number => {
   return Number(formattedValue.replace(/\./g, ""));
 };

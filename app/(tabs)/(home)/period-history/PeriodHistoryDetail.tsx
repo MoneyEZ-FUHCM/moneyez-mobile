@@ -1,5 +1,4 @@
 import NoImages from "@/assets/images/no-images.png";
-import NoData from "@/assets/images/not-found-result.png";
 import {
   FlatListCustom,
   ImageViewerComponent,
@@ -9,7 +8,7 @@ import {
   SectionComponent,
   SkeletonLoaderComponent,
 } from "@/components";
-import { TRANSACTION_TYPE } from "@/enums/globals";
+import { TRANSACTION_TYPE, TRANSACTION_TYPE_TEXT } from "@/enums/globals";
 import { Colors } from "@/helpers/constants/color";
 import { formatCurrency, formatDate, formatDateTime } from "@/helpers/libs";
 import { TransactionViewModelDetail } from "@/types/transaction.types";
@@ -58,7 +57,7 @@ export default function PeriodHistoryDetail() {
           </View>
         </View>
         <Text
-          className={`text-base font-semibold ${item?.type === "income" ? "text-[#00a010]" : "text-[#cc0000]"}`}
+          className={`text-base font-semibold ${item?.type === "income" ? "text-green" : "text-red"}`}
         >
           {item?.type === "income" ? "+" : "-"}{" "}
           {handler.formatCurrency(item?.amount)}
@@ -358,9 +357,16 @@ export default function PeriodHistoryDetail() {
                     <Text className="font-semibold">
                       {state.transactionDetail?.description}
                     </Text>
-                    <Text className="text-base font-bold text-red">
-                      {formatCurrency(state.transactionDetail?.amount)}
-                    </Text>
+                    {state.transactionDetail?.type ===
+                    TRANSACTION_TYPE_TEXT.EXPENSE ? (
+                      <Text className="text-base font-bold text-red">
+                        -{formatCurrency(state.transactionDetail?.amount)}
+                      </Text>
+                    ) : (
+                      <Text className="text-base font-bold text-green">
+                        +{formatCurrency(state.transactionDetail?.amount)}
+                      </Text>
+                    )}
                   </View>
                 </View>
                 <View className="gap-5">

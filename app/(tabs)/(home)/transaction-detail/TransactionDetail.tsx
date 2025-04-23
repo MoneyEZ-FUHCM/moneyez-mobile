@@ -14,8 +14,6 @@ import { Image, Pressable, Text, View } from "react-native";
 import TEXT_TRANSLATE_TRANSACTION_DETAIL from "./TransactionDetail.translate";
 import useTransactionDetail from "./hooks/useTransactionDetail";
 
-const PRIMARY_COLOR = "#609084";
-
 const TransactionDetail = () => {
   const { state, handler } = useTransactionDetail();
 

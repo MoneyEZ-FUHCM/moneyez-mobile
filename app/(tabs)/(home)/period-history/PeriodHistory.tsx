@@ -88,12 +88,12 @@ export default function PeriodHistory() {
 
       {/* Transactions Header */}
       <View className="flex-row items-center justify-between">
-        <Text className="text-lg font-bold text-primary">
+        <Text className="text-base font-bold">
           {TEXT_TRANSLATE_PERIOD_HISTORY.TITLE.TRANSACTIONS}
         </Text>
         {transactions && transactions.length > 0 && (
           <Pressable onPress={handler.navigateToPeriodHistoryDetail}>
-            <Text className="text-base italic text-primary">
+            <Text className="text-sm italic text-primary">
               {TEXT_TRANSLATE_PERIOD_HISTORY.BUTTON.SEE_MORE}
             </Text>
           </Pressable>
