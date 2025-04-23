@@ -15,6 +15,7 @@ const usePost = () => {
   const [postDetail, setPostDetail] = useState<Post | undefined>();
 
   useEffect(() => {
+    if (!postList?.items?.length) return;
     const interval = setInterval(() => {
       currentIndexRef.current = postList?.items?.length
         ? (currentIndexRef.current + 1) % postList.items.length

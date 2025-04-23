@@ -32,8 +32,10 @@ const PostList = () => {
               resizeMode="cover"
             />
             <View className="gap-y-1 p-3">
-              <Text className="text-[18px] font-medium">{item?.title}</Text>
-              <Text className="text-[#757575]">{item?.shortContent}</Text>
+              <Text className="text-base font-medium">{item?.title}</Text>
+              <Text className="text-xs text-[#757575]">
+                {item?.shortContent}
+              </Text>
             </View>
           </TouchableOpacity>
         )}

@@ -118,6 +118,14 @@ const transactionApi = apiSlice.injectEndpoints({
       transformResponse: (response) =>
         transformTransactionsResponse<Number[]>(response),
     }),
+    getGroupPendingRequests: builder.query({
+      query: ({ groupId, PageIndex, PageSize }) => ({
+        url: `/groups/pending-requests?groupId=${groupId}&PageIndex=${PageIndex}&PageSize=${PageSize}`,
+        method: HTTP_METHOD.GET,
+      }),
+      transformResponse: (response) =>
+        transformTransactionsResponse<Number[]>(response),
+    }),
   }),
 });
 

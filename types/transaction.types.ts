@@ -52,10 +52,14 @@ export interface TransactionPreviewPayload extends TransactionPayload {
 }
 
 export interface GroupTransaction {
+  note: string;
+  bankTransactionDate: string;
+  accountBankNumber: string;
+  accountBankName: string;
   groupId: string;
   userId: string;
   amount: number;
-  type: number;
+  type: string;
   transactionDate: string;
   description: string;
   images: string[];

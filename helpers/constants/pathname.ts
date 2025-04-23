@@ -33,6 +33,7 @@ const PATH_NAME = {
     CHATBOT: "chatbot/ChatBot",
   },
   HOME: {
+    HOME_NAVIGATOR: "(home)",
     HOME_DEFAULT: "home-screen/HomeScreen",
     INDIVIDUAL_HOME: "individual-home/IndividualHome",
     ADD_TRANSACTION: "add-transaction/AddTransaction",

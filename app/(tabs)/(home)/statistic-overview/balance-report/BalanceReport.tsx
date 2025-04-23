@@ -61,6 +61,13 @@ const BalanceReport = () => {
             }}
             yAxisOffset={0}
             yAxisTextStyle={{ color: "gray", fontSize: 12 }}
+            formatYLabel={(value) => {
+              const absValue = Math.abs(Number(value));
+              if (absValue >= 1000000)
+                return `${(absValue / 1000000).toFixed(0)}M`;
+              if (absValue >= 1000) return `${(absValue / 1000).toFixed(0)}K`;
+              return `${absValue}`;
+            }}
             hideYAxisText={false}
             dataPointsColor={Colors.colors.primary}
             dataPointsRadius={5}
@@ -77,8 +84,11 @@ const BalanceReport = () => {
               autoAdjustPointerLabelPosition: true,
               pointerLabelComponent: (items: any) => {
                 return (
-                  <View className="rounded-md bg-primary px-2 py-1">
-                    <Text className="text-xs font-medium text-white">
+                  <View className="rounded-md bg-superlight py-1">
+                    <Text>{items[0].label}</Text>
+                    <Text
+                      className={`font-bold ${items[0].value >= 0 ? "text-green" : "text-red"}`}
+                    >
                       {formatCurrency(items[0].value)}
                     </Text>
                   </View>
