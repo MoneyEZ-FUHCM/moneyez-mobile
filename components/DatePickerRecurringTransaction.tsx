@@ -79,10 +79,7 @@ const DatePickerRecurringTransaction: React.FC<
           mode={mode}
           is24Hour={true}
           display="default"
-          minimumDate={new Date(new Date().setDate(new Date().getDate() + 1))}
-          maximumDate={
-            new Date(new Date().setFullYear(new Date().getFullYear() + 1))
-          }
+          minimumDate={new Date()}
           onChange={handleChange}
         />
       )}

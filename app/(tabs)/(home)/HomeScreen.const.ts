@@ -31,11 +31,6 @@ const HOME_SCREEN_CONSTANTS = {
       icon: Calendar,
       url: HOME.RECURRING_TRANSACTION_LIST,
     },
-    {
-      label: "Quiz",
-      icon: Calendar,
-      url: HOME.QUIZ,
-    },
     // { label: "Tính năng 5", icon: Bookmark },
     // { label: "Tính năng 6", icon: Card },
     // { label: "Tính năng 7", icon: Category },

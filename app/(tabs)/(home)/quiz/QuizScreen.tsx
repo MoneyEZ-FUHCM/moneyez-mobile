@@ -4,9 +4,9 @@ import {
   SectionComponent,
 } from "@/components";
 import { MaterialIcons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import React, { memo, useEffect } from "react";
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import QuizQuestion from "./components/QuizQuestion";
 import SpendingModelReview from "./components/SpendingModelReview";
 import SuggestionPage from "./components/SuggestionPage";
@@ -37,15 +37,15 @@ const SubmittingState = memo(() => (
 
 const HeaderSection = memo(
   ({ title, onBack }: { title: string; onBack?: () => void }) => (
-    <SectionComponent rootClassName="h-16 bg-white justify-center shadow-sm">
+    <SectionComponent rootClassName="h-14 bg-white justify-center shadow-sm">
       <View className="flex-row items-center justify-between px-5">
         {onBack ? (
           <TouchableOpacity
-            className="h-10 w-10 items-center justify-center rounded-full bg-gray-50"
+            className="h-10 w-10 items-center justify-center rounded-full"
             activeOpacity={0.7}
             onPress={onBack}
           >
-            <MaterialIcons name="arrow-back" size={22} color="#333" />
+            <MaterialIcons name="arrow-back" size={24} color="#333" />
           </TouchableOpacity>
         ) : (
           <View style={{ width: 40 }} />
@@ -141,7 +141,6 @@ const SuggestionButton = memo(
   ),
 );
 
-// Main component
 const QuizScreen = memo(() => {
   const { state, handler } = useQuiz();
 
