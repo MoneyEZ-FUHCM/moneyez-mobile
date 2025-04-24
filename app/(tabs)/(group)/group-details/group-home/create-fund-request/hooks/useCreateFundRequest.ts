@@ -95,7 +95,7 @@ const useCreateFundRequest = () => {
             params: {
               id: currentGroup?.id,
               amount: response?.data?.amount,
-              createdDate: response?.data?.bankAccount?.createdDate,
+              createdDate: response?.data?.createdDate,
               requestCode: response?.data?.requestCode,
               accountNumber: response?.data?.bankAccount?.accountNumber,
               bankName: response?.data?.bankAccount?.bankName,
