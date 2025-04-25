@@ -70,7 +70,7 @@ const AccountSetting = () => {
               onPress={() => handler.handleNavigateAccountOptions(item?.id)}
             >
               <View
-                className={`flex-row items-center gap-x-5 ${item.id === 2 ? "my-3" : ""}`}
+                className={`flex-row items-center gap-x-5 ${item.id === 2 ? "mt-2" : ""}`}
               >
                 <View className="rounded-full bg-primary p-2">{item.icon}</View>
                 <View>

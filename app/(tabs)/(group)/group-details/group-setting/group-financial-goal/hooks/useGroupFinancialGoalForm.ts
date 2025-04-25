@@ -1,3 +1,4 @@
+import { GROUP_FINANCIAL_GOAL_STATUS } from "@/enums/globals";
 import { convertUTCToVietnamTime, formatCurrencyInput } from "@/helpers/libs";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";
@@ -25,6 +26,8 @@ export default function useGroupFinancialGoalForm() {
     goalId?: string;
   }>();
 
+  console.log("check goalId", goalId);
+
   const isCreateMode = !goalId || mode === "create";
   const [initialValues, setInitialValues] = useState({
     name: "",
@@ -50,13 +53,13 @@ export default function useGroupFinancialGoalForm() {
 
   const financialGoal = groupFinancialGoalData?.data
     ? groupFinancialGoalData.data.filter(
-        (goal: { isDeleted: boolean }) => goal.isDeleted === false,
+        (goal: { status: string }) =>
+          goal.status === GROUP_FINANCIAL_GOAL_STATUS.ACTIVE,
       )[0] || null
     : null;
 
   useEffect(() => {
     if (!isCreateMode && financialGoal) {
-      console.log("check financialGoal", financialGoal.deadline);
       setInitialValues({
         name: financialGoal.name,
         targetAmount: formatCurrencyInput(
@@ -99,7 +102,7 @@ export default function useGroupFinancialGoalForm() {
         TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.MESSAGE_ERROR
           .TARGET_AMOUNT_MUST_BE_GREATER_THAN_CURRENT,
         function (value) {
-          if (isCreateMode) return true;
+          // if (isCreateMode) return true;
 
           const targetAmount = value
             ? parseInt(value.toString().replace(/\D/g, ""))
@@ -155,7 +158,7 @@ export default function useGroupFinancialGoalForm() {
           currentAmount: 0,
           deadline: convertUTCToVietnamTime(values.deadline),
         };
-
+        console.log("check createPayload", createPayload);
         await createGroupFinancialGoal(createPayload).unwrap();
         ToastAndroid.show(
           TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.MESSAGE_SUCCESS.CREATE_SUCCESS,
@@ -169,7 +172,6 @@ export default function useGroupFinancialGoalForm() {
           targetAmount,
           deadline: convertUTCToVietnamTime(values.deadline),
         };
-        console.log("check updatePayload", updatePayload);
         await updateGroupFinancialGoal(updatePayload).unwrap();
         ToastAndroid.show(
           TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.MESSAGE_SUCCESS.UPDATE_SUCCESS,
@@ -185,6 +187,14 @@ export default function useGroupFinancialGoalForm() {
         ToastAndroid.show(
           TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.MESSAGE_ERROR
             .DEADLINE_MUST_BE_FUTURE,
+          ToastAndroid.SHORT,
+        );
+        return;
+      }
+      if (error?.errorCode === ERROR_CODE.INVALID_TARGET_AMOUNT) {
+        ToastAndroid.show(
+          TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.MESSAGE_ERROR
+            .TARGET_AMOUNT_MUST_BE_GREATER_THAN_CURRENT,
           ToastAndroid.SHORT,
         );
         return;

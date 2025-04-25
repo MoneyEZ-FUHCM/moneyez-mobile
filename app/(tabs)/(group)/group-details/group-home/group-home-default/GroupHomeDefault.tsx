@@ -148,7 +148,7 @@ const GroupHomeDefault = () => {
     return (
       <View className="mx-4 mt-5 rounded-3xl bg-white p-4 shadow-lg">
         <Text className="mb-4 text-lg font-bold">{BUTTON.FUND_FACILITIES}</Text>
-        <View className="w-full flex-row justify-around">
+        <View className={`justify-around" w-full flex-row`}>
           {state.isLeader ? (
             <>
               <TouchableOpacity
@@ -200,19 +200,39 @@ const GroupHomeDefault = () => {
               </TouchableOpacity>
             </>
           ) : (
-            <TouchableOpacity
-              className="mx-2 flex-1 items-start justify-center"
-              onPress={() => handler.handlePress(state.RECENT_ACTIVITIES)}
-            >
-              <View className="mb-3 rounded-full bg-primary/10 p-4">
-                <MaterialIcons
-                  name="wallet"
-                  size={28}
-                  color={Colors.colors.primary}
-                />
-              </View>
-              <Text className="text-sm font-bold text-primary">Giao dịch</Text>
-            </TouchableOpacity>
+            <View className="flex w-full flex-row justify-center space-x-20">
+              <TouchableOpacity
+                className="items-center justify-center"
+                onPress={() => handler.handlePress(state.RECENT_ACTIVITIES)}
+              >
+                <View className="mb-3 rounded-full bg-primary/10 p-4">
+                  <MaterialIcons
+                    name="wallet"
+                    size={28}
+                    color={Colors.colors.primary}
+                  />
+                </View>
+                <Text className="text-sm font-bold text-primary">
+                  Giao dịch
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                className="items-center justify-center"
+                onPress={handler.handleStatistic}
+              >
+                <View className="mb-3 rounded-full bg-primary/10 p-4">
+                  <MaterialIcons
+                    name="bar-chart"
+                    size={28}
+                    color={Colors.colors.primary}
+                  />
+                </View>
+                <Text className="text-sm font-bold text-primary">
+                  {TEXT.STATISTICS}
+                </Text>
+              </TouchableOpacity>
+            </View>
           )}
         </View>
       </View>
@@ -282,7 +302,7 @@ const GroupHomeDefault = () => {
             )}
             <View className="flex-1">
               <Text className="text-base font-bold">{activity?.createdBy}</Text>
-              <Text className="text-gray-600" numberOfLines={2}>
+              <Text className="text-ellipsis text-gray-600" numberOfLines={2}>
                 "{activity?.description}"
               </Text>
             </View>
@@ -361,7 +381,7 @@ const GroupHomeDefault = () => {
           <View className="flex-row items-center">
             <Text className="text-base font-bold">{activity?.changedBy}</Text>
           </View>
-          <Text className="mt-1 text-gray-600">
+          <Text className="mt-1 text-ellipsis text-gray-600" numberOfLines={2}>
             {highlightAndBreakText(activity?.changeDescription || "No Title", {
               color: Colors.colors.primary,
               fontWeight: "bold",

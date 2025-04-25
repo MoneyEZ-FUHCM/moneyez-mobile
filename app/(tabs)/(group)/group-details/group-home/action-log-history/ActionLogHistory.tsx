@@ -393,12 +393,12 @@ const ActionLogHistory = () => {
                 </View>
 
                 {state.selectedLog?.note && (
-                  <View>
-                    <Text className="mb-2 font-medium text-red">
-                      Lý do từ chối:
+                  <View className="flex-row">
+                    <Text className="mb-2 text-xs font-medium italic text-red">
+                      * {""}
                     </Text>
-                    <Text className="text-gray-600">
-                      {state.selectedLog?.note}
+                    <Text className="text-xs italic text-gray-600">
+                      Lưu ý: {state.selectedLog?.note}
                     </Text>
                   </View>
                 )}

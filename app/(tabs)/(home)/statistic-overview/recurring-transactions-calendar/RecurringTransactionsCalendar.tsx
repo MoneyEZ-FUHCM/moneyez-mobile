@@ -10,11 +10,11 @@ import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import CalendarView from "./CalendarView";
-import useStatistical from "./hooks/useRecurringTransactionsCalendar";
+import useRecurringTransactionsCalendar from "./hooks/useRecurringTransactionsCalendar";
 import TEXT_TRANSLATE_RECURRING_TRANSACTIONS from "./RecurringTransactionsCalendar.translate";
 
 export default function RecurringTransactionsCalendar() {
-  const { state, handler } = useStatistical();
+  const { state, handler } = useRecurringTransactionsCalendar();
 
   const renderTransactionList = () => (
     <View className="mt-6 px-4">
@@ -30,6 +30,7 @@ export default function RecurringTransactionsCalendar() {
         Object.entries(state.transactionsByDate).map(([date, transactions]) => {
           const transactionData = handler.getTransaction(transactions);
           const netAmount = transactionData.income - transactionData.expense;
+
           return (
             <View key={date} className="mb-6">
               <View className="mb-3 flex-row items-center justify-between border-b border-gray-100 pb-2">
@@ -77,10 +78,10 @@ export default function RecurringTransactionsCalendar() {
                       <View className="ml-3">
                         <Text
                           className={`text-base font-bold ${
-                            item.type === "EXPENSE" ? "text-red" : "text-green"
+                            item.type === (1 as any) ? "text-red" : "text-green"
                           }`}
                         >
-                          {item.type === "EXPENSE" ? "-" : "+"}
+                          {item.type === (1 as any) ? "-" : "+"}
                           {formatCurrency(item.amount)}
                         </Text>
                       </View>
