@@ -22,7 +22,6 @@ import useExpenseDetail from "./hooks/useExpenseDetail";
 
 export default function ExpenseDetail() {
   const { state, handler } = useExpenseDetail();
-  const { personalTransactionFinancialGoals, isLoading } = state;
 
   const renderTransactionItem = ({ item }: { item: any }) => (
     <TouchableOpacity className="mx-4 flex-row items-center justify-between border-b border-[#f0f0f0] bg-white px-2 py-3">
@@ -52,9 +51,10 @@ export default function ExpenseDetail() {
         </View>
       </View>
       <Text
-        className={`text-base font-semibold ${item?.type === "INCOME" ? "text-[#00a010]" : "text-[#cc0000]"}`}
+        className={`text-base font-semibold ${item?.type === "INCOME" ? "text-green" : "text-red"}`}
       >
-        {item?.type === "INCOME" ? "+" : "-"} {formatCurrency(item?.amount)}
+        {item?.type === "INCOME" ? "+" : "-"}
+        {formatCurrency(item?.amount)}
       </Text>
     </TouchableOpacity>
   );
@@ -67,8 +67,8 @@ export default function ExpenseDetail() {
             <View className="h-14 w-14 items-center justify-center">
               <ProgressCircleComponent
                 value={
-                  state.financialGoalDetail?.currentAmount /
-                  state.financialGoalDetail?.targetAmount
+                  (state.financialGoalDetail?.currentAmount ?? 0) /
+                  (state.financialGoalDetail?.targetAmount || 1)
                 }
                 size={80}
                 thickness={11}
@@ -102,17 +102,49 @@ export default function ExpenseDetail() {
                   )}
                 </Text>
                 <Text className="text-sm">
-                  {state.financialGoalDetail?.targetAmount -
-                    state.financialGoalDetail?.currentAmount >
-                  0 ? (
-                    <Text className="text-green-500 font-bold">
+                  {state.financialGoalDetail?.isSaving ? (
+                    state.financialGoalDetail?.targetAmount -
+                      state.financialGoalDetail?.currentAmount >
+                    0 ? (
+                      <Text className="font-bold">
+                        <Text className="!font-normal">
+                          {TEXT_TRANSLATE_EXPENSE_DETAIL.BUDGET_REMAINING}{" "}
+                        </Text>
+                        <Text
+                          className={`${
+                            state.financialGoalDetail?.isSaving
+                              ? "text-green"
+                              : "text-red"
+                          } `}
+                        >
+                          {formatCurrency(
+                            state.financialGoalDetail?.targetAmount -
+                              state.financialGoalDetail?.currentAmount,
+                          )}
+                        </Text>
+                      </Text>
+                    ) : (
+                      <Text className="font-bold text-green">
+                        Đã vượt kỳ vọng{" "}
+                        {formatCurrency(
+                          state.financialGoalDetail?.currentAmount -
+                            state.financialGoalDetail?.targetAmount,
+                        )}
+                      </Text>
+                    )
+                  ) : state.financialGoalDetail?.targetAmount -
+                      state.financialGoalDetail?.currentAmount >
+                    0 ? (
+                    <Text className="font-bold">
                       <Text className="!font-normal">
                         {TEXT_TRANSLATE_EXPENSE_DETAIL.BUDGET_REMAINING}{" "}
                       </Text>
-                      {formatCurrency(
-                        state.financialGoalDetail?.targetAmount -
-                          state.financialGoalDetail?.currentAmount,
-                      )}
+                      <Text className="text-red">
+                        {formatCurrency(
+                          state.financialGoalDetail?.targetAmount -
+                            state.financialGoalDetail?.currentAmount,
+                        )}
+                      </Text>
                     </Text>
                   ) : (
                     <Text className="font-bold text-red">
@@ -126,9 +158,8 @@ export default function ExpenseDetail() {
                 </Text>
                 <View className="my-1 h-[1px] w-full bg-gray-300" />
                 <Text className="flex-wrap text-sm text-gray-500">
-                  {TEXT_TRANSLATE_EXPENSE_DETAIL.BUDGET_SPENT}
-                  {"  "}
-                  <Text className="text-green-500 font-bold">
+                  {TEXT_TRANSLATE_EXPENSE_DETAIL.BUDGET_SPENT}{" "}
+                  <Text className={`font-bold text-black`}>
                     {formatCurrency(state.financialGoalDetail?.currentAmount)}
                   </Text>{" "}
                   / {formatCurrency(state.financialGoalDetail?.targetAmount)}
@@ -151,17 +182,18 @@ export default function ExpenseDetail() {
           </View>
         </View>
       </SectionComponent>
-      {/* Xu hướng chi tiêu */}
       <SectionComponent rootClassName="bg-white mx-4 px-2 py-5 rounded-lg mb-2">
         <Text className="pb-2 text-lg font-bold text-black">
-          {TEXT_TRANSLATE_EXPENSE_DETAIL.SPENDING_TREND}
+          {state.financialGoalDetail?.isSaving
+            ? TEXT_TRANSLATE_EXPENSE_DETAIL.SAVING_TREND
+            : TEXT_TRANSLATE_EXPENSE_DETAIL.SPENDING_TREND}
         </Text>
         <BarChartExpenseCustom
-          data={state.personalTransactionFinancialGoalChart}
+          budgetId={state.budgetId as any}
+          // data={state.personalTransactionFinancialGoalChart}
           screenWidth={Dimensions.get("window").width}
         />
       </SectionComponent>
-      {/* AI NOTICE */}
       <LinearGradient
         colors={[Colors.colors.secondary, Colors.colors.thirdly]}
         className="m-4 overflow-hidden rounded-3xl shadow-2xl"
@@ -179,18 +211,15 @@ export default function ExpenseDetail() {
           </View>
         </View>
 
-        {/* Content Container */}
         <View className="px-4">
-          {/* Title */}
           <Text className="mb-4 text-center text-xl font-bold text-[#2c4a42]">
             Dự Báo{" "}
             {state.financialGoalDetail?.isSaving ? "Tiết Kiệm" : "Chi tiêu"}
           </Text>
 
-          {/* Progress Overview */}
           <View className="mb-4 flex-row justify-between rounded-2xl bg-white/80 p-4 shadow-md">
             <View className="flex-1 items-center border-r border-[#bad8b6] pr-2">
-              <Text className="mb-1 text-xs uppercase tracking-wider text-[#609084]">
+              <Text className="mb-1 text-xs uppercase tracking-wider text-primary">
                 Tiến Độ Hiện Tại
               </Text>
               <Text className="text-xl font-bold text-[#2c4a42]">
@@ -199,7 +228,7 @@ export default function ExpenseDetail() {
             </View>
 
             <View className="flex-1 items-center pl-2">
-              <Text className="mb-1 text-xs uppercase tracking-wider text-[#609084]">
+              <Text className="mb-1 text-xs uppercase tracking-wider text-primary">
                 Ngày Còn Lại
               </Text>
               <Text className="text-xl font-bold text-[#2c4a42]">
@@ -208,7 +237,7 @@ export default function ExpenseDetail() {
             </View>
           </View>
           <View className="mb-4 rounded-2xl bg-white/90 p-4 shadow-md">
-            <Text className="mb-4 text-center text-sm italic text-[#609084]">
+            <Text className="mb-4 text-center text-sm italic text-primary">
               {state.financialGoalDetail?.prediction?.trendDescription}
             </Text>
             <View className="space-y-3">
@@ -244,7 +273,7 @@ export default function ExpenseDetail() {
                   }`}
                 >
                   <Text className="text-sm text-[#2c4a42]">{item?.label}</Text>
-                  <Text className="text-sm font-bold text-[#609084]">
+                  <Text className="text-sm font-bold text-primary">
                     {item.value}
                   </Text>
                 </View>
@@ -266,7 +295,6 @@ export default function ExpenseDetail() {
 
   return (
     <SafeAreaViewCustom rootClassName="relative bg-[#fafafa]">
-      {/* HEADER */}
       <SectionComponent rootClassName="relative bg-white shadow-md h-14 flex-row items-center justify-center">
         <TouchableOpacity
           onPress={handler.handleBack}
@@ -278,13 +306,11 @@ export default function ExpenseDetail() {
           {TEXT_TRANSLATE_EXPENSE_DETAIL.HEADER_TITLE}
         </Text>
       </SectionComponent>
-
-      {/* Danh sách giao dịch */}
       <SectionComponent rootClassName="bg-[#fafafa] rounded-lg">
         {state.financialGoalDetail && (
           <FlatListCustom
             showsVerticalScrollIndicator={false}
-            data={personalTransactionFinancialGoals ?? []}
+            data={state.personalTransactionFinancialGoals ?? []}
             isBottomTab={true}
             hasMore={
               state.getPersonalTransactionFinancialGoals?.items?.length ===
@@ -292,10 +318,12 @@ export default function ExpenseDetail() {
             }
             isLoading={state.isLoadingMore}
             ListHeaderComponent={renderListHeader}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item, index) =>
+              item.id?.toString() || index.toString()
+            }
             renderItem={renderTransactionItem}
             onLoadMore={handler.handleLoadMore}
-            refreshing={state.isFetchingRefresh}
+            refreshing={false}
             onRefresh={handler.handleRefresh}
             ListEmptyComponent={
               <View className="flex-1 items-center justify-center p-6">

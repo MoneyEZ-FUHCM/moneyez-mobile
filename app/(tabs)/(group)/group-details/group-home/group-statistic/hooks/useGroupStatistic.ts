@@ -4,7 +4,7 @@ import { setGroupTabHidden } from "@/redux/slices/tabSlice";
 import { useGetGroupFinancialGoalQuery } from "@/services/financialGoal";
 import { router, useFocusEffect } from "expo-router";
 import moment from "moment";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { BackHandler, ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import TEXT_TRANSLATE_GROUP_STATISTIC from "../GroupStatistic.translate";
@@ -24,57 +24,16 @@ export default function useGroupStatistic() {
   const dispatch = useDispatch();
   const groupDetail = useSelector(selectCurrentGroup);
   const isGoalActive = groupDetail?.isGoalActive || false;
+  const groupId = groupDetail?.id || "";
 
   const {
     data: financialGoalData,
     isLoading: isGoalLoading,
     error,
   } = useGetGroupFinancialGoalQuery(
-    {
-      groupId: groupDetail?.id || "",
-    },
-    { skip: !groupDetail?.id || !isGoalActive },
+    { groupId },
+    { skip: !groupId || !isGoalActive },
   );
-
-  const [members, setMembers] = useState<StatisticMemberData[]>([]);
-
-  const hasFinancialGoal =
-    financialGoalData?.data && financialGoalData.data.length > 0;
-
-  const activeFinancialGoals = hasFinancialGoal
-    ? financialGoalData?.data?.filter(
-        (goal: { isDeleted: boolean }) => !goal.isDeleted,
-      ) || []
-    : [];
-  const activeFinancialGoal =
-    activeFinancialGoals.length > 0 ? activeFinancialGoals[0] : null;
-
-  const goalName = activeFinancialGoal?.name;
-  const groupGoal = activeFinancialGoal?.targetAmount || 0;
-  const groupCurrent =
-    activeFinancialGoal?.currentAmount || groupDetail?.currentBalance || 0;
-  const deadlineDate = activeFinancialGoal?.deadline || null;
-
-  const dueDate = formatDate(deadlineDate, "DD.MM.YYYY");
-  // const remainDays = moment(deadlineDate).diff(moment(), "days");
-  const remainDays = useMemo(() => {
-    if (!deadlineDate) return { days: 0, hours: 0 };
-
-    const now = moment();
-    const deadline = moment(deadlineDate);
-    const duration = moment.duration(deadline.diff(now));
-
-    const days = Math.max(0, Math.floor(duration.asDays()));
-    const hours = Math.max(0, Math.floor(duration.hours()));
-
-    return { days, hours };
-  }, [deadlineDate]);
-
-  const remain = isGoalActive
-    ? groupGoal - groupCurrent > 0
-      ? groupGoal - groupCurrent
-      : 0
-    : 0;
 
   useEffect(() => {
     if (error) {
@@ -85,38 +44,63 @@ export default function useGroupStatistic() {
     }
   }, [error]);
 
-  useEffect(() => {
-    if (groupDetail?.groupMembers) {
-      const mappedMembers = groupDetail.groupMembers
-        .filter((member) => member.status === "ACTIVE")
-        .map((member) => {
-          const target =
-            isGoalActive && groupGoal > 0
-              ? (member.contributionPercentage / 100) * groupGoal
-              : 0;
+  const activeFinancialGoal = useMemo(() => {
+    return (
+      financialGoalData?.data?.find((goal: any) => !goal.isDeleted) || null
+    );
+  }, [financialGoalData]);
 
-          const hasFundedEnough =
-            member.totalContribution >= target && target > 0;
+  const goalName = activeFinancialGoal?.name ?? "";
+  const groupGoal = activeFinancialGoal?.targetAmount ?? 0;
+  const groupCurrent =
+    activeFinancialGoal?.currentAmount ?? groupDetail?.currentBalance ?? 0;
+  const deadlineDate = activeFinancialGoal?.deadline ?? null;
 
-          return {
-            id: member.id,
-            avatar: undefined,
-            name: member.userInfo.fullName,
-            ratio: member.contributionPercentage,
-            contributed: member.totalContribution,
-            target: target,
-            userId: member.userId,
-            hasFundedEnough: hasFundedEnough,
-          };
-        });
-      setMembers(mappedMembers);
-    }
+  const dueDate = formatDate(deadlineDate, "DD.MM.YYYY");
+
+  const remainDays = useMemo(() => {
+    if (!deadlineDate) return { days: 0, hours: 0, minutes: 0 };
+
+    const now = moment();
+    const deadline = moment(deadlineDate);
+    const duration = moment.duration(deadline.diff(now));
+
+    return {
+      days: Math.max(0, Math.floor(duration.asDays())),
+      hours: Math.max(0, duration.hours()),
+      minutes: Math.max(0, duration.minutes()),
+    };
+  }, [deadlineDate]);
+
+  const remain = isGoalActive ? Math.max(0, groupGoal - groupCurrent) : 0;
+
+  const members: StatisticMemberData[] = useMemo(() => {
+    if (!groupDetail?.groupMembers) return [];
+    return groupDetail.groupMembers
+      .filter((m) => m.status === "ACTIVE")
+      .map((member) => {
+        const target = isGoalActive
+          ? (member.contributionPercentage / 100) * groupGoal
+          : 0;
+        const hasFundedEnough =
+          member.totalContribution >= target && target > 0;
+        return {
+          id: member.id,
+          avatar: undefined,
+          name: member.userInfo.fullName,
+          ratio: member.contributionPercentage,
+          contributed: member.totalContribution,
+          target,
+          userId: member.userId,
+          hasFundedEnough,
+        };
+      });
   }, [groupDetail, isGoalActive, groupGoal]);
 
   const handleGoBack = useCallback(() => {
     router.back();
     dispatch(setGroupTabHidden(false));
-  }, []);
+  }, [dispatch]);
 
   useFocusEffect(
     useCallback(() => {
@@ -131,6 +115,9 @@ export default function useGroupStatistic() {
     }, [handleGoBack]),
   );
 
+  const hasGroupName = goalName.trim() !== "";
+  const hasFinancialGoal = !!financialGoalData?.data?.length;
+
   return {
     state: {
       goalName,
@@ -142,7 +129,8 @@ export default function useGroupStatistic() {
       members,
       isLoading: isGoalLoading,
       isGoalActive,
-      hasFinancialGoal: !!financialGoalData?.data?.[0],
+      hasFinancialGoal,
+      hasGroupName,
     },
     handler: {
       handleGoBack,

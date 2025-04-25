@@ -60,7 +60,6 @@ export default function useGroupFinancialGoalForm() {
 
   useEffect(() => {
     if (!isCreateMode && financialGoal) {
-      console.log("check financialGoal", financialGoal.deadline);
       setInitialValues({
         name: financialGoal.name,
         targetAmount: formatCurrencyInput(
@@ -159,7 +158,7 @@ export default function useGroupFinancialGoalForm() {
           currentAmount: 0,
           deadline: convertUTCToVietnamTime(values.deadline),
         };
-
+        console.log("check createPayload", createPayload);
         await createGroupFinancialGoal(createPayload).unwrap();
         ToastAndroid.show(
           TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.MESSAGE_SUCCESS.CREATE_SUCCESS,
@@ -173,7 +172,6 @@ export default function useGroupFinancialGoalForm() {
           targetAmount,
           deadline: convertUTCToVietnamTime(values.deadline),
         };
-        console.log("check updatePayload", updatePayload);
         await updateGroupFinancialGoal(updatePayload).unwrap();
         ToastAndroid.show(
           TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.MESSAGE_SUCCESS.UPDATE_SUCCESS,
@@ -184,7 +182,6 @@ export default function useGroupFinancialGoalForm() {
       dispatch(setGroupTabHidden(true));
       router.back();
     } catch (err: any) {
-      console.log("check err", err);
       const error = err?.data;
       if (error?.errorCode === ERROR_CODE.INVALID_DEADLINE) {
         ToastAndroid.show(

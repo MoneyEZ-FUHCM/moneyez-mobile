@@ -16,42 +16,19 @@ export default function GroupStatisticPage() {
   const { state, handler } = useGroupStatistic();
   const { LABELS } = TEXT_TRANSLATE_GROUP_STATISTIC;
 
-  if (!state.isLoading && (!state.isGoalActive || !state.hasFinancialGoal)) {
-    return (
-      <SafeAreaViewCustom rootClassName="bg-[#f9f9f9] flex-1">
-        <SectionComponent rootClassName="h-14 bg-white justify-center relative">
-          <View className="flex-row items-center justify-between px-5">
-            <Pressable onPress={handler.handleGoBack}>
-              <MaterialIcons name="arrow-back" size={24} color="#609084" />
-            </Pressable>
-            <Text className="text-lg font-bold">
-              {TEXT_TRANSLATE_GROUP_STATISTIC.TITLE.GROUP_STATISTIC}
-            </Text>
-            <Text></Text>
-          </View>
-        </SectionComponent>
-
-        <View className="flex-1 items-center justify-center p-5">
-          <Text className="text-center text-base text-gray-500">
-            Nhóm chưa có mục tiêu tài chính nào được thiết lập.
-          </Text>
-        </View>
-      </SafeAreaViewCustom>
-    );
-  }
-
   return (
-    <SafeAreaViewCustom rootClassName="bg-[#f9f9f9] flex-1">
-      {/* HEADER */}
-      <SectionComponent rootClassName="h-14 bg-white justify-center relative">
-        <View className="flex-row items-center justify-between px-5">
-          <Pressable onPress={handler.handleGoBack}>
-            <MaterialIcons name="arrow-back" size={24} />
-          </Pressable>
+    <SafeAreaViewCustom rootClassName="bg-[#f5f7fa] flex-1">
+      <SectionComponent rootClassName="h-16 bg-white justify-center relative shadow-sm">
+        <Pressable
+          onPress={handler.handleGoBack}
+          className="absolute left-4 h-10 w-10 items-center justify-center rounded-full"
+        >
+          <MaterialIcons name="arrow-back" size={24} />
+        </Pressable>
+        <View className="items-center justify-between">
           <Text className="text-lg font-bold">
             {TEXT_TRANSLATE_GROUP_STATISTIC.TITLE.GROUP_STATISTIC}
           </Text>
-          <Text></Text>
         </View>
       </SectionComponent>
 
@@ -60,138 +37,177 @@ export default function GroupStatisticPage() {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 40 }}
         >
-          <View className="p-4">
-            {/* Group Target Info */}
-            <SectionComponent rootClassName="rounded-2 bg-white p-4 shadow-sm">
-              <Text className="text-base font-semibold">
-                {LABELS.GROUP_TARGET}: {state.goalName} ({state.members.length}{" "}
-                thành viên)
-              </Text>
-              <View className="mt-2 flex-row items-center space-x-3">
-                <View>
-                  <ProgressCircleComponent
-                    value={
-                      state.groupCurrent >= state.groupGoal
-                        ? 1
-                        : state.groupCurrent / state.groupGoal
-                    }
-                    size={60}
-                    thickness={4}
-                    showPercentage={true}
-                  />
-                </View>
-                <View className="gap-1">
-                  <Text>
-                    <Text className="text-lg font-semibold text-[#609084]">
-                      {formatCurrency(state.groupCurrent)}
+          <View className="space-y-4 p-4">
+            <SectionComponent rootClassName="rounded-2xl bg-white p-5 shadow-md">
+              {state.hasGroupName ? (
+                <>
+                  <View className="mb-3 flex-row items-center justify-between">
+                    <Text className="text-lg font-bold">
+                      {LABELS.GROUP_TARGET}
                     </Text>
-                    <Text className="text-sm text-gray-500">
-                      {" / "}
-                      {formatCurrency(state.groupGoal)}
-                    </Text>
-                  </Text>
-                  <Text className="text-sm text-[#848484]">
-                    {LABELS.REMAINING}: {formatCurrency(state.remain)}
-                  </Text>
-                  <Text className="text-sm">
-                    <Text className="font-semibold text-gray-500">
-                      {LABELS.DUE_DATE}: {state.dueDate}
-                    </Text>
-
-                    <Text
-                      className={`font-bold ${
-                        state.groupCurrent >= state.groupGoal
-                          ? "text-green"
-                          : "text-red"
-                      }`}
-                    >
-                      {" "}
-                      (
-                      {state.groupCurrent >= state.groupGoal ? (
-                        <>Đã hoàn thành mục tiêu</>
-                      ) : state.remainDays.days > 0 ? (
-                        <>Còn lại {state.remainDays.days} ngày</>
-                      ) : state.remainDays.hours > 0 ? (
-                        <>Còn lại {state.remainDays.hours} giờ</>
-                      ) : (
-                        <>Chưa hoàn thành</>
-                      )}
-                      )
-                    </Text>
-                  </Text>
-                </View>
-              </View>
-            </SectionComponent>
-
-            {/* Members List */}
-            <SectionComponent rootClassName="mt-4 rounded-[10px] bg-white p-4 shadow-sm">
-              <View className="mb-2 flex-row items-center justify-between">
-                <Text className="text-base font-semibold">
-                  {LABELS.MEMBER_LIST}
-                </Text>
-              </View>
-              {state.members?.length > 0 &&
-                state.members?.map((member) => (
-                  <View
-                    key={member.id}
-                    className="flex-row items-center justify-between py-2"
-                  >
-                    {member?.avatar ? (
-                      <Image
-                        source={member.avatar}
-                        className="h-12 w-12 rounded-full"
-                        resizeMode="cover"
-                      />
-                    ) : (
-                      <LinearGradient
-                        colors={["#609084", "#4A7A70"]}
-                        className="h-12 w-12 items-center justify-center rounded-full shadow-md"
-                      >
-                        <Text className="text-2xl font-semibold uppercase text-white">
-                          {member?.name?.charAt(0)}
-                        </Text>
-                      </LinearGradient>
-                    )}
-
-                    <View className="ml-3 mr-2 flex-1">
-                      <View className="flex-row items-center">
-                        <Text className="text-base font-semibold">
-                          {member.name}
-                        </Text>
-                        {/* {member.hasFundedEnough && (
-                          <View className="ml-2 rounded-md bg-[#E6F2EF] px-2 py-0.5">
-                            <Text className="text-xs font-medium text-[#609084]">
-                              {LABELS.FUNDED}
-                            </Text>
-                          </View>
-                        )} */}
-                      </View>
-                      {/* <Text className="text-sm text-gray-500">
-                        {LABELS.CONTRIBUTE_RATIO}: {member.ratio}%
-                      </Text> */}
-                      <Text className="pt-1 text-sm">
-                        <Text className="text-[#848484]">
-                          {LABELS.CONTRIBUTED}
-                        </Text>
-                        {/* <Text className="text-base font-semibold text-[#609084]">
-                          {formatCurrency(member.contributed)}
-                        </Text>
-                        <Text className="text-[#848484]">
-                          {" "}
-                          / {formatCurrency(member.target)}
-                        </Text> */}
+                    <View className="rounded-full bg-[#E6F2EF] px-3 py-1">
+                      <Text className="text-sm font-medium text-primary">
+                        {state.members.length} thành viên
                       </Text>
                     </View>
-                    <View>
-                      <ProgressCircleComponent
-                        value={member.ratio / 100}
-                        size={50}
-                        thickness={4}
-                        showPercentage={true}
-                      />
+                  </View>
+
+                  <Text className="mb-4 text-base font-semibold text-primary">
+                    {state.goalName}
+                  </Text>
+
+                  <View className="mb-2 rounded-xl bg-[#F8FBFA] p-4">
+                    <View className="flex-row items-center space-x-4">
+                      <View>
+                        <ProgressCircleComponent
+                          value={
+                            state.groupGoal === 0
+                              ? 0
+                              : state.groupCurrent >= state.groupGoal
+                                ? 1
+                                : state.groupCurrent / state.groupGoal
+                          }
+                          size={70}
+                          thickness={6}
+                          showPercentage={true}
+                        />
+                      </View>
+                      <View className="flex-1 gap-2">
+                        <Text>
+                          <Text className="text-xl font-bold text-primary">
+                            {formatCurrency(state.groupCurrent)}
+                          </Text>
+                          <Text className="text-sm text-gray-500">
+                            {" / "}
+                            {formatCurrency(state.groupGoal)}
+                          </Text>
+                        </Text>
+                        <Text className="text-sm font-medium text-[#848484]">
+                          {LABELS.REMAINING}: {formatCurrency(state.remain)}
+                        </Text>
+                      </View>
                     </View>
                   </View>
-                ))}
+
+                  {state.dueDate && state.dueDate !== "N/A" && (
+                    <View className="mt-3 flex-row items-center justify-between rounded-lg bg-[#F5F7FA] p-3">
+                      <View className="flex-row items-center">
+                        <MaterialIcons name="event" size={18} color="#609084" />
+                        <Text className="ml-2 font-medium text-gray-700">
+                          {LABELS.DUE_DATE}: {state.dueDate}
+                        </Text>
+                      </View>
+                      <Text
+                        className={`rounded-md px-2 py-1 text-xs font-bold ${
+                          state.groupCurrent >= state.groupGoal
+                            ? "bg-green/10 text-green"
+                            : "bg-red/10 text-red"
+                        }`}
+                      >
+                        {state.groupCurrent >= state.groupGoal ? (
+                          <>Đã hoàn thành</>
+                        ) : state.remainDays.days > 0 ? (
+                          <>Còn {state.remainDays.days} ngày</>
+                        ) : state.remainDays.hours > 0 ? (
+                          <>Còn {state.remainDays.hours} giờ</>
+                        ) : state.remainDays.minutes > 0 ? (
+                          <>Còn {state.remainDays.minutes} phút</>
+                        ) : (
+                          <>Chưa hoàn thành</>
+                        )}
+                      </Text>
+                    </View>
+                  )}
+                </>
+              ) : (
+                <View className="items-center py-3">
+                  <Text className="mb-3 text-base font-medium text-primary">
+                    Tổng số tiền đã đóng góp
+                  </Text>
+                  <Text className="mb-2 text-4xl font-bold text-[#2A3240]">
+                    {formatCurrency(state.groupCurrent)}
+                  </Text>
+                  <View className="mt-1 h-1 w-16 rounded-full bg-primary text-primary opacity-70" />
+                </View>
+              )}
+            </SectionComponent>
+
+            <SectionComponent rootClassName="rounded-2xl bg-white p-5 shadow-md">
+              <View className="mb-4 flex-row items-center justify-between">
+                <Text className="text-lg font-bold">{LABELS.MEMBER_LIST}</Text>
+                <View className="rounded-full bg-[#E6F2EF] px-3 py-1">
+                  <Text className="text-sm font-medium text-primary">
+                    {state.members?.length || 0} người
+                  </Text>
+                </View>
+              </View>
+
+              {state.members?.length > 0 ? (
+                <View className="space-y-1">
+                  {state.members?.map((member, index) => (
+                    <View
+                      key={member.id}
+                      className={`flex-row items-center justify-between px-2 py-3 ${
+                        index < state.members.length - 1
+                          ? "border-b border-gray-100"
+                          : ""
+                      }`}
+                    >
+                      {member?.avatar ? (
+                        <Image
+                          source={member.avatar}
+                          className="h-14 w-14 rounded-full"
+                          resizeMode="cover"
+                        />
+                      ) : (
+                        <LinearGradient
+                          colors={["#609084", "#4A7A70"]}
+                          className="h-14 w-14 items-center justify-center rounded-full shadow-md"
+                        >
+                          <Text className="text-2xl font-semibold uppercase text-white">
+                            {member?.name?.charAt(0)}
+                          </Text>
+                        </LinearGradient>
+                      )}
+
+                      <View className="ml-3 mr-2 flex-1">
+                        <View className="flex-row items-center">
+                          <Text
+                            className="text-ellipsis text-base font-semibold text-[#2A3240]"
+                            numberOfLines={1}
+                          >
+                            {member.name}
+                          </Text>
+                        </View>
+                        <View className="mt-1 flex-row items-center">
+                          <Text className="text-sm text-[#848484]">
+                            {LABELS.CONTRIBUTED}:{" "}
+                          </Text>
+                          <Text className="text-base font-bold text-primary">
+                            {formatCurrency(member.contributed)}
+                          </Text>
+                        </View>
+                      </View>
+
+                      <View className="rounded-lg p-1">
+                        <ProgressCircleComponent
+                          value={member.ratio / 100}
+                          size={52}
+                          thickness={4}
+                          showPercentage={true}
+                        />
+                      </View>
+                    </View>
+                  ))}
+                </View>
+              ) : (
+                <View className="items-center py-6">
+                  <MaterialIcons name="group-off" size={40} color="#CCCCCC" />
+                  <Text className="mt-2 text-center text-sm text-gray-500">
+                    Chưa có thành viên nào trong nhóm
+                  </Text>
+                </View>
+              )}
             </SectionComponent>
           </View>
         </ScrollView>

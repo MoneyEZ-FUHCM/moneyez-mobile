@@ -44,6 +44,38 @@ export default function useGroupFinancialGoal() {
     refetch,
   } = useGetGroupFinancialGoalQuery({ groupId }, { skip: !groupId });
 
+  const [showOptions, setShowOptions] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [selectedCompletedGoal, setSelectedCompletedGoal] =
+    useState<FinancialGoal>();
+
+  const handlePressOutside = () => {
+    if (showOptions) {
+      setShowOptions(false);
+    }
+  };
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
+
+  const TABS = [
+    { label: "Đang hoạt động", type: "ACTIVE" },
+    { label: "Đã hoàn thành", type: "COMPLETED" },
+  ];
+
+  const COMPLETED_FILTERS = [
+    { label: "Đã lưu trữ", type: "ARCHIVED" },
+    { label: "Đã hoàn thành", type: "COMPLETED" },
+  ];
+
+  const handleViewCompletedGoalDetails = (goal: FinancialGoal) => {
+    setSelectedCompletedGoal(goal);
+    detailsModalizeRef.current?.open();
+  };
+
   const [deleteGroupFinancialGoal, { isLoading: isDeleting }] =
     useDeleteGroupFinancialGoalMutation();
 
@@ -125,7 +157,6 @@ export default function useGroupFinancialGoal() {
         dispatch(setGroupTabHidden(false));
       }
     } catch (error) {
-      console.error("Error deleting goal:", error);
       ToastAndroid.show(
         TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.MESSAGE_ERROR.DELETE_FAILED,
         ToastAndroid.SHORT,
@@ -190,6 +221,11 @@ export default function useGroupFinancialGoal() {
       activeTab,
       completedFilter,
       financialGoals: filteredGoals,
+      TABS,
+      COMPLETED_FILTERS,
+      showOptions,
+      refreshing,
+      selectedCompletedGoal,
     },
     handler: {
       handleNavigateToCreate,
@@ -205,6 +241,9 @@ export default function useGroupFinancialGoal() {
       refetch,
       setActiveTab,
       setCompletedFilter,
+      handleViewCompletedGoalDetails,
+      handlePressOutside,
+      handleRefresh,
     },
   };
 }
