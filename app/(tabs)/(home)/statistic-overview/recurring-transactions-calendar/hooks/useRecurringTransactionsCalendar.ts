@@ -35,6 +35,8 @@ const useRecurringTransactionsCalendar = () => {
     refetch: recurringTransactionRefetch,
   } = useGetRecurringTransactionsCalendarQuery({});
 
+  console.log("check dateCalendarResponseData", dateCalendarResponseData);
+
   const handleBack = useCallback(() => {
     router.back();
     dispatch(setMainTabHidden(true));

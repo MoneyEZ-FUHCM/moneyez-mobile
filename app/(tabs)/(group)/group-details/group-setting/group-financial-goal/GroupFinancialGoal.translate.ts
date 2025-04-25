@@ -34,6 +34,7 @@ const TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL = {
     PENDING: "Đang chờ",
     REJECTED: "Đã từ chối",
     COMPLETED: "Đã hoàn thành",
+    ARCHIVED: "Đã lưu trữ",
   },
 
   BUTTON: {

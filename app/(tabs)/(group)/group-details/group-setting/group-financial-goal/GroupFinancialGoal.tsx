@@ -7,7 +7,7 @@ import {
 } from "@/components";
 import { ScrollViewCustom } from "@/components/ScrollViewCustom";
 import { Colors } from "@/helpers/constants/color";
-import { AntDesign, MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
@@ -20,13 +20,17 @@ import {
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL from "./GroupFinancialGoal.translate";
-import useGroupFinancialGoal from "./hooks/useGroupFinancialGoal";
+import useGroupFinancialGoal, {
+  FinancialGoal,
+} from "./hooks/useGroupFinancialGoal";
 
 export default function GroupFinancialGoal() {
   const { state, handler } = useGroupFinancialGoal();
   const { LABELS, BUTTON, TITLE } = TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL;
   const [showOptions, setShowOptions] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [selectedCompletedGoal, setSelectedCompletedGoal] =
+    useState<FinancialGoal>();
 
   const handlePressOutside = () => {
     if (showOptions) {
@@ -44,6 +48,16 @@ export default function GroupFinancialGoal() {
     { label: "Đang hoạt động", type: "ACTIVE" },
     { label: "Đã hoàn thành", type: "COMPLETED" },
   ];
+
+  const COMPLETED_FILTERS = [
+    { label: "Đã lưu trữ", type: "ARCHIVED" },
+    { label: "Đã hoàn thành", type: "COMPLETED" },
+  ];
+
+  const handleViewCompletedGoalDetails = (goal: FinancialGoal) => {
+    setSelectedCompletedGoal(goal);
+    state.detailsModalizeRef.current?.open();
+  };
 
   const renderTab = () => {
     return (
@@ -65,8 +79,80 @@ export default function GroupFinancialGoal() {
     );
   };
 
+  const renderCompletedFilters = () => {
+    if (state.activeTab !== "COMPLETED") return null;
+
+    return (
+      <View className="mx-4 mt-2 flex-row space-x-2">
+        {COMPLETED_FILTERS.map((filter) => (
+          <Pressable
+            key={filter.type}
+            onPress={() => handler.setCompletedFilter(filter.type as any)}
+            className={`flex-1 rounded-lg py-2 ${
+              state.completedFilter === filter.type
+                ? "bg-primary"
+                : "border border-gray-200 bg-white"
+            }`}
+          >
+            <Text
+              className={`text-center ${
+                state.completedFilter === filter.type
+                  ? "font-medium text-white"
+                  : "text-gray-600"
+              }`}
+            >
+              {filter.label}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
+    );
+  };
+
+  const renderCompletedGoalsList = () => {
+    if (
+      state.activeTab !== "COMPLETED" ||
+      !state.financialGoals ||
+      state.financialGoals.length === 0
+    )
+      return null;
+
+    return (
+      <View className="mt-4">
+        {state.financialGoals.map((goal) => (
+          <TouchableOpacity
+            key={goal.id}
+            onPress={() => handleViewCompletedGoalDetails(goal)}
+            className="mb-3 rounded-lg bg-white p-4 shadow-sm"
+          >
+            <View className="flex-row items-center justify-between">
+              <Text className="text-lg font-medium">{goal.name}</Text>
+              <MaterialIcons name="chevron-right" size={24} color="#609084" />
+            </View>
+
+            <View className="mt-2 flex-row items-center justify-between">
+              <View className="flex-row items-center">
+                <AntDesign name="calendar" size={16} color="#609084" />
+                <Text className="ml-2 text-[#848484]">
+                  {handler.formatDate(goal.createdDate, "DD.MM.YYYY")}
+                </Text>
+              </View>
+
+              <View className="flex-row items-center">
+                <Text className="mr-2 font-medium text-[#609084]">
+                  {handler.formatCurrency(goal.currentAmount)} /{" "}
+                  {handler.formatCurrency(goal.targetAmount)}
+                </Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+        ))}
+      </View>
+    );
+  };
+
   const renderGoalProgress = () => {
-    if (!state.hasExistingGoal) return null;
+    if (!state.hasExistingGoal || state.activeTab === "COMPLETED") return null;
 
     return (
       <SectionComponent rootClassName="rounded-[16px] bg-white p-5 shadow-sm">
@@ -152,7 +238,7 @@ export default function GroupFinancialGoal() {
   };
 
   const renderGoalDetails = () => {
-    if (!state.hasExistingGoal) return null;
+    if (!state.hasExistingGoal || state.activeTab === "COMPLETED") return null;
 
     return (
       <SectionComponent rootClassName="mt-5 rounded-[16px] bg-white p-5 shadow-sm">
@@ -184,8 +270,8 @@ export default function GroupFinancialGoal() {
         <View className="space-y-3">
           <View className="flex-row justify-between">
             <Text className="text-[#848484]">{LABELS.GOAL_STATUS}</Text>
-            <Text className="font-medium text-[#609084]">
-              {handler.getStatusText(state.financialGoal?.status || 1)}
+            <Text className="font-medium text-primary">
+              {handler.getStatusText(state.financialGoal?.status || "ACTIVE")}
             </Text>
           </View>
 
@@ -227,7 +313,7 @@ export default function GroupFinancialGoal() {
   };
 
   const renderEmptyState = () => {
-    if (state.hasExistingGoal) return null;
+    if (state.hasExistingGoal || state.activeTab === "COMPLETED") return null;
 
     return (
       <SectionComponent rootClassName="mt-5 rounded-[16px] bg-white p-6 shadow-sm items-center">
@@ -257,6 +343,27 @@ export default function GroupFinancialGoal() {
     );
   };
 
+  const renderEmptyCompletedGoals = () => {
+    if (
+      state.activeTab !== "COMPLETED" ||
+      (state.financialGoals && state.financialGoals.length > 0)
+    )
+      return null;
+
+    return (
+      <View className="mt-5 items-center justify-center rounded-lg bg-white p-8 shadow-sm">
+        <AntDesign name="inbox" size={60} color="#609084" />
+        <Text className="mt-4 text-center text-lg font-medium">
+          {/* {LABELS.NO_COMPLETED_GOALS} */}Chưa có data
+        </Text>
+        <Text className="mt-2 text-center text-gray-500">
+          {/* {LABELS.NO_COMPLETED_GOALS_DESCRIPTION} */}
+          Chưa có data
+        </Text>
+      </View>
+    );
+  };
+
   return (
     <GestureHandlerRootView>
       <SafeAreaViewCustom rootClassName="bg-[#f9f9f9] flex-1">
@@ -275,6 +382,7 @@ export default function GroupFinancialGoal() {
           </View>
         </SectionComponent>
         {renderTab()}
+        {renderCompletedFilters()}
         <LoadingSectionWrapper isLoading={state.isLoading}>
           <ScrollViewCustom
             showsVerticalScrollIndicator={false}
@@ -291,9 +399,12 @@ export default function GroupFinancialGoal() {
             {renderGoalProgress()}
             {renderGoalDetails()}
             {renderEmptyState()}
+            {renderCompletedGoalsList()}
+            {renderEmptyCompletedGoals()}
           </ScrollViewCustom>
         </LoadingSectionWrapper>
 
+        {/* Delete Confirmation Modal */}
         <ModalLizeComponent ref={state.modalizeRef} adjustToContentHeight>
           <View className="p-6">
             <View className="mb-4 items-center">
@@ -340,6 +451,198 @@ export default function GroupFinancialGoal() {
               </TouchableOpacity>
             </View>
           </View>
+        </ModalLizeComponent>
+
+        {/* Completed Goal Details Modal */}
+        <ModalLizeComponent ref={state.detailsModalizeRef}>
+          {selectedCompletedGoal && (
+            <View className="p-6">
+              {/* Header with goal name and status */}
+              <View className="mb-6 items-center">
+                <Text className="mb-2 text-xl font-bold text-gray-900">
+                  {selectedCompletedGoal.name}
+                </Text>
+
+                {/* Goal completion status */}
+                <View
+                  className={`flex-row items-center rounded-full px-3 py-1 ${
+                    selectedCompletedGoal.currentAmount >=
+                    selectedCompletedGoal.targetAmount
+                      ? "bg-green"
+                      : "bg-amber-100"
+                  }`}
+                >
+                  {selectedCompletedGoal.currentAmount >=
+                  selectedCompletedGoal.targetAmount ? (
+                    <>
+                      <Ionicons
+                        name="checkmark-circle"
+                        size={18}
+                        color="#22c55e"
+                      />
+                      <Text className="text-green-700 ml-1 font-medium">
+                        {LABELS.COMPLETED}
+                      </Text>
+                    </>
+                  ) : (
+                    <>
+                      <Ionicons name="alert-circle" size={18} color="#f59e0b" />
+                      <Text className="ml-1 font-medium text-amber-700">
+                        {LABELS.FAILED}
+                      </Text>
+                    </>
+                  )}
+                </View>
+              </View>
+
+              {/* Progress visualization in a card */}
+              <View className="mb-5 rounded-xl bg-gray-50 p-5 shadow-sm">
+                <View className="mb-5 items-center">
+                  <ProgressCircleComponent
+                    value={
+                      selectedCompletedGoal.currentAmount /
+                        selectedCompletedGoal.targetAmount >
+                      1
+                        ? 1
+                        : selectedCompletedGoal.currentAmount /
+                          selectedCompletedGoal.targetAmount
+                    }
+                    size={120}
+                    thickness={8}
+                    showPercentage={true}
+                  />
+                </View>
+
+                <View className="flex-row justify-between rounded-lg bg-white p-4 shadow-sm">
+                  <View>
+                    <Text className="text-sm text-[#848484]">
+                      {LABELS.CURRENT_AMOUNT}
+                    </Text>
+                    <Text className="text-lg font-semibold text-[#609084]">
+                      {handler.formatCurrency(
+                        selectedCompletedGoal.currentAmount,
+                      )}
+                    </Text>
+                  </View>
+
+                  <View className="items-end">
+                    <Text className="text-sm text-[#848484]">
+                      {LABELS.TARGET_AMOUNT}
+                    </Text>
+                    <Text className="text-lg font-semibold">
+                      {handler.formatCurrency(
+                        selectedCompletedGoal.targetAmount,
+                      )}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+
+              {/* Goal details in a card */}
+              <View className="mb-5 overflow-hidden rounded-xl bg-white shadow-sm">
+                <View className="border-b border-gray-200 bg-gray-50 px-4 py-2">
+                  <Text className="font-semibold text-gray-700">
+                    {/* {LABELS.GOAL_DETAILS} */} Chi tiết
+                  </Text>
+                </View>
+
+                <View className="p-4">
+                  <View className="space-y-3">
+                    <View className="flex-row justify-between border-b border-gray-100 py-2">
+                      <View className="flex-row items-center">
+                        <AntDesign
+                          name="tag"
+                          size={16}
+                          color="#609084"
+                          style={{ marginRight: 8 }}
+                        />
+                        <Text className="text-[#848484]">
+                          {LABELS.GOAL_STATUS}
+                        </Text>
+                      </View>
+                      <Text className="font-medium text-primary">
+                        {handler.getStatusText(selectedCompletedGoal.status)}
+                      </Text>
+                    </View>
+
+                    <View className="flex-row justify-between border-b border-gray-100 py-2">
+                      <View className="flex-row items-center">
+                        <AntDesign
+                          name="checkcircle"
+                          size={16}
+                          color="#609084"
+                          style={{ marginRight: 8 }}
+                        />
+                        <Text className="text-[#848484]">
+                          {LABELS.APPROVAL_STATUS}
+                        </Text>
+                      </View>
+                      <Text className="font-medium text-[#609084]">
+                        {handler.getApprovalStatusText(
+                          selectedCompletedGoal.approvalStatus,
+                        )}
+                      </Text>
+                    </View>
+
+                    <View className="flex-row justify-between border-b border-gray-100 py-2">
+                      <View className="flex-row items-center">
+                        <AntDesign
+                          name="calendar"
+                          size={16}
+                          color="#609084"
+                          style={{ marginRight: 8 }}
+                        />
+                        <Text className="text-[#848484]">
+                          {LABELS.CREATED_DATE}
+                        </Text>
+                      </View>
+                      <Text className="text-[#000]">
+                        {handler.formatDate(
+                          selectedCompletedGoal.createdDate,
+                          "DD.MM.YYYY",
+                        )}
+                      </Text>
+                    </View>
+
+                    <View className="flex-row justify-between py-2">
+                      <View className="flex-row items-center">
+                        <AntDesign
+                          name="clockcircle"
+                          size={16}
+                          color="#609084"
+                          style={{ marginRight: 8 }}
+                        />
+                        <Text className="text-[#848484]">
+                          {LABELS.DEADLINE}
+                        </Text>
+                      </View>
+                      <Text className="text-[#000]">
+                        {handler.formatDate(
+                          selectedCompletedGoal.deadline,
+                          "DD.MM.YYYY",
+                        )}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+
+              {/* Close button */}
+              <TouchableOpacity
+                onPress={() => state.detailsModalizeRef.current?.close()}
+                className="h-12 overflow-hidden rounded-lg bg-[#609084]"
+                activeOpacity={0.85}
+              >
+                <View className="absolute bottom-0 left-0 right-0 top-0 bg-black opacity-5" />
+                <View className="h-full flex-row items-center justify-center">
+                  <Text className="text-base font-semibold text-white">
+                    {/* {BUTTON.CLOSE} */}
+                    Đóng
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          )}
         </ModalLizeComponent>
       </SafeAreaViewCustom>
     </GestureHandlerRootView>

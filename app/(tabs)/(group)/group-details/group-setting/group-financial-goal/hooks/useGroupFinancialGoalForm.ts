@@ -1,3 +1,4 @@
+import { GROUP_FINANCIAL_GOAL_STATUS } from "@/enums/globals";
 import { convertUTCToVietnamTime, formatCurrencyInput } from "@/helpers/libs";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";
@@ -25,6 +26,8 @@ export default function useGroupFinancialGoalForm() {
     goalId?: string;
   }>();
 
+  console.log("check goalId", goalId);
+
   const isCreateMode = !goalId || mode === "create";
   const [initialValues, setInitialValues] = useState({
     name: "",
@@ -50,7 +53,8 @@ export default function useGroupFinancialGoalForm() {
 
   const financialGoal = groupFinancialGoalData?.data
     ? groupFinancialGoalData.data.filter(
-        (goal: { isDeleted: boolean }) => goal.isDeleted === false,
+        (goal: { status: string }) =>
+          goal.status === GROUP_FINANCIAL_GOAL_STATUS.ACTIVE,
       )[0] || null
     : null;
 
@@ -169,6 +173,7 @@ export default function useGroupFinancialGoalForm() {
           targetAmount,
           deadline: convertUTCToVietnamTime(values.deadline),
         };
+        console.log("check updatePayload", updatePayload);
         await updateGroupFinancialGoal(updatePayload).unwrap();
         ToastAndroid.show(
           TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.MESSAGE_SUCCESS.UPDATE_SUCCESS,

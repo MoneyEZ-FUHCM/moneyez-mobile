@@ -14,13 +14,13 @@ import { Modalize } from "react-native-modalize";
 import { useDispatch, useSelector } from "react-redux";
 import TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL from "../GroupFinancialGoal.translate";
 
-interface FinancialGoal {
+export interface FinancialGoal {
   id: string;
   isDeleted: boolean;
   currentAmount: number;
   targetAmount: number;
   deadline: string;
-  status: number;
+  status: string;
   approvalStatus: number;
   createdDate: string;
   name: string;
@@ -31,7 +31,11 @@ export default function useGroupFinancialGoal() {
   const groupDetail = useSelector(selectCurrentGroup);
   const groupId = useMemo(() => groupDetail?.id || "", [groupDetail]);
   const modalizeRef = useRef<Modalize>(null);
-  const [activeTab, setActiveTab] = useState<"ACTIVE" | "ARCHIVED">("ACTIVE");
+  const detailsModalizeRef = useRef<Modalize>(null);
+  const [activeTab, setActiveTab] = useState<"ACTIVE" | "COMPLETED">("ACTIVE");
+  const [completedFilter, setCompletedFilter] = useState<
+    "ARCHIVED" | "COMPLETED"
+  >("ARCHIVED");
 
   // API Hooks
   const {
@@ -43,13 +47,22 @@ export default function useGroupFinancialGoal() {
   const [deleteGroupFinancialGoal, { isLoading: isDeleting }] =
     useDeleteGroupFinancialGoalMutation();
 
-  const financialGoal: FinancialGoal = useMemo(
+  const financialGoals: FinancialGoal[] = useMemo(
     () =>
       groupFinancialGoalData?.data?.filter(
-        (goal: FinancialGoal) => goal.isDeleted === false,
-      )[0],
+        (goal: FinancialGoal) => !goal.isDeleted,
+      ) || [],
     [groupFinancialGoalData],
   );
+
+  const filteredGoals = useMemo(() => {
+    if (activeTab === "ACTIVE") {
+      return financialGoals.filter((goal) => goal.status === "ACTIVE");
+    }
+    return financialGoals.filter((goal) => goal.status === completedFilter);
+  }, [financialGoals, activeTab, completedFilter]);
+
+  const financialGoal = filteredGoals[0];
 
   const hasExistingGoal = !!financialGoal;
 
@@ -138,10 +151,14 @@ export default function useGroupFinancialGoal() {
     }, [handleGoBack]),
   );
 
-  const getStatusText = useCallback((status: number) => {
+  const getStatusText = useCallback((status: string) => {
     switch (status) {
-      case 1:
+      case "ACTIVE":
         return TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.STATUS.ACTIVE;
+      case "COMPLETED":
+        return TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.STATUS.COMPLETED;
+      case "ARCHIVED":
+        return TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.STATUS.ARCHIVED;
       default:
         return TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.STATUS.INACTIVE;
     }
@@ -169,7 +186,10 @@ export default function useGroupFinancialGoal() {
       daysLeft,
       isGoalCompleted,
       modalizeRef,
+      detailsModalizeRef,
       activeTab,
+      completedFilter,
+      financialGoals: filteredGoals,
     },
     handler: {
       handleNavigateToCreate,
@@ -184,6 +204,7 @@ export default function useGroupFinancialGoal() {
       formatDate,
       refetch,
       setActiveTab,
+      setCompletedFilter,
     },
   };
 }
