@@ -169,7 +169,6 @@ export default function useGroupFinancialGoalForm() {
           targetAmount,
           deadline: convertUTCToVietnamTime(values.deadline),
         };
-        console.log("check updatePayload", updatePayload);
         await updateGroupFinancialGoal(updatePayload).unwrap();
         ToastAndroid.show(
           TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.MESSAGE_SUCCESS.UPDATE_SUCCESS,

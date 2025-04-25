@@ -19,7 +19,9 @@ const TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL = {
     GOAL_STATUS: "Trạng thái mục tiêu",
     APPROVAL_STATUS: "Trạng thái phê duyệt",
     DAYS_LEFT: "Còn {{days}} ngày",
+    TIMES_LEFT: "Còn {{hours}} giờ",
     COMPLETED: "Đã hoàn thành mục tiêu!",
+    FAILED: "Chưa hoàn thành mục tiêu",
     CREATED_DATE: "Ngày tạo",
     NO_GOAL: "Chưa có mục tiêu tài chính nào",
     CREATE_GOAL_DESCRIPTION: "Tạo mục tiêu tài chính cho nhóm của bạn",
@@ -31,6 +33,7 @@ const TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL = {
     APPROVED: "Đã phê duyệt",
     PENDING: "Đang chờ",
     REJECTED: "Đã từ chối",
+    COMPLETED: "Đã hoàn thành",
   },
 
   BUTTON: {
@@ -48,7 +51,8 @@ const TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL = {
     NAME_MIN_LENGTH: "Tên mục tiêu phải có ít nhất 3 ký tự",
     TARGET_AMOUNT_REQUIRED: "Vui lòng nhập số tiền mục tiêu",
     TARGET_AMOUNT_MUST_GREATER_THAN_ZERO: "Số tiền mục tiêu phải lớn hơn 0",
-    TARGET_AMOUNT_MUST_BE_GREATER_THAN_CURRENT: "Số tiền mục tiêu phải lớn hơn hoặc bằng số tiền hiện tại",
+    TARGET_AMOUNT_MUST_BE_GREATER_THAN_CURRENT:
+      "Số tiền mục tiêu phải lớn hơn hoặc bằng số tiền hiện tại",
     CURRENT_AMOUNT_REQUIRED: "Vui lòng nhập số tiền hiện tại",
     CURRENT_AMOUNT_MUST_GREATER_THAN_ZERO: "Số tiền hiện tại không được âm",
     DEADLINE_REQUIRED: "Vui lòng chọn thời hạn",

@@ -1,12 +1,12 @@
-import Admin from "@/assets/images/logo/avatar_admin.jpg";
 import {
+  LoadingSectionWrapper,
   ProgressCircleComponent,
   SafeAreaViewCustom,
   SectionComponent,
-  LoadingSectionWrapper,
 } from "@/components";
 import { formatCurrency } from "@/helpers/libs";
 import { MaterialIcons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import TEXT_TRANSLATE_GROUP_STATISTIC from "./GroupStatistic.translate";
@@ -46,7 +46,7 @@ export default function GroupStatisticPage() {
       <SectionComponent rootClassName="h-14 bg-white justify-center relative">
         <View className="flex-row items-center justify-between px-5">
           <Pressable onPress={handler.handleGoBack}>
-            <MaterialIcons name="arrow-back" size={24} color="#609084" />
+            <MaterialIcons name="arrow-back" size={24} />
           </Pressable>
           <Text className="text-lg font-bold">
             {TEXT_TRANSLATE_GROUP_STATISTIC.TITLE.GROUP_STATISTIC}
@@ -70,7 +70,11 @@ export default function GroupStatisticPage() {
               <View className="mt-2 flex-row items-center space-x-3">
                 <View>
                   <ProgressCircleComponent
-                    value={state.groupCurrent / state.groupGoal}
+                    value={
+                      state.groupCurrent >= state.groupGoal
+                        ? 1
+                        : state.groupCurrent / state.groupGoal
+                    }
                     size={60}
                     thickness={4}
                     showPercentage={true}
@@ -93,9 +97,26 @@ export default function GroupStatisticPage() {
                     <Text className="font-semibold text-gray-500">
                       {LABELS.DUE_DATE}: {state.dueDate}
                     </Text>
-                    <Text className="text-gray-500">
+
+                    <Text
+                      className={`font-bold ${
+                        state.groupCurrent >= state.groupGoal
+                          ? "text-green"
+                          : "text-red"
+                      }`}
+                    >
                       {" "}
-                      (còn lại {state.remainDays} ngày)
+                      (
+                      {state.groupCurrent >= state.groupGoal ? (
+                        <>Đã hoàn thành mục tiêu</>
+                      ) : state.remainDays.days > 0 ? (
+                        <>Còn lại {state.remainDays.days} ngày</>
+                      ) : state.remainDays.hours > 0 ? (
+                        <>Còn lại {state.remainDays.hours} giờ</>
+                      ) : (
+                        <>Chưa hoàn thành</>
+                      )}
+                      )
                     </Text>
                   </Text>
                 </View>
@@ -115,11 +136,23 @@ export default function GroupStatisticPage() {
                     key={member.id}
                     className="flex-row items-center justify-between py-2"
                   >
-                    <Image
-                      source={member.avatar ? member.avatar : Admin}
-                      className="h-12 w-12 rounded-full"
-                      resizeMode="cover"
-                    />
+                    {member?.avatar ? (
+                      <Image
+                        source={member.avatar}
+                        className="h-12 w-12 rounded-full"
+                        resizeMode="cover"
+                      />
+                    ) : (
+                      <LinearGradient
+                        colors={["#609084", "#4A7A70"]}
+                        className="h-12 w-12 items-center justify-center rounded-full shadow-md"
+                      >
+                        <Text className="text-2xl font-semibold uppercase text-white">
+                          {member?.name?.charAt(0)}
+                        </Text>
+                      </LinearGradient>
+                    )}
+
                     <View className="ml-3 mr-2 flex-1">
                       <View className="flex-row items-center">
                         <Text className="text-base font-semibold">
@@ -151,11 +184,7 @@ export default function GroupStatisticPage() {
                     </View>
                     <View>
                       <ProgressCircleComponent
-                        value={
-                          member.target > 0
-                            ? member.contributed / member.target
-                            : 0
-                        }
+                        value={member.ratio / 100}
                         size={50}
                         thickness={4}
                         showPercentage={true}
