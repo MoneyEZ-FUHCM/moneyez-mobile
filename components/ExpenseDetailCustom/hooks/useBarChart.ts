@@ -1,98 +1,104 @@
-import { setBudgetStatisticType } from "@/redux/slices/budgetSlice";
-import { RootState } from "@/redux/store";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useMemo, useState } from "react";
+import { useGetPersonalFinancialGoalChartQuery } from "@/services/financialGoal";
+import { ChartDataItem } from "@/types/financialGoal.type";
 
 const STATISTIC_TYPES = {
   week: "Tuần",
   month: "Tháng",
 } as const;
 
-export const useBarChart = () => {
-  const dispatch = useDispatch();
-  const selectedType = useSelector((state: RootState) => state.budget.type);
+export const useBarChart = (budgetId: string) => {
+  const [selectedType, setSelectedType] = useState<"week" | "month">("week");
 
-  const handleSelectType = (type: "week" | "month") => {
-    dispatch(setBudgetStatisticType(type));
-  };
+  const { data, refetch: refetchChartData } =
+    useGetPersonalFinancialGoalChartQuery(
+      { goalId: budgetId, type: selectedType },
+      { skip: !budgetId },
+    );
+
+  useEffect(() => {
+    if (budgetId) {
+      refetchChartData();
+    }
+  }, [budgetId, selectedType]);
 
   const getCurrentWeekRange = () => {
     const today = new Date();
     const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - today.getDay() + 1);
+    const day = today.getDay() === 0 ? 7 : today.getDay();
+    startOfWeek.setDate(today.getDate() - day + 1);
+
     const endOfWeek = new Date(startOfWeek);
     endOfWeek.setDate(startOfWeek.getDate() + 6);
 
-    return `${startOfWeek.getDate().toString().padStart(2, "0")}/${(startOfWeek.getMonth() + 1).toString().padStart(2, "0")} - ${endOfWeek.getDate().toString().padStart(2, "0")}/${(endOfWeek.getMonth() + 1).toString().padStart(2, "0")}`;
+    const format = (date: Date) =>
+      `${date.getDate().toString().padStart(2, "0")}/${(date.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}`;
+
+    return `${format(startOfWeek)} - ${format(endOfWeek)}`;
   };
 
-  const isCurrentWeekRange = (dateRange: string) => {
+  const isCurrentPeriod = (date: string, type: "week" | "month") => {
     const today = new Date();
-    const [startStr, endStr] = dateRange.split(" - ");
-    const [startDay, startMonth] = startStr.split("/").map(Number);
-    const [endDay, endMonth] = endStr.split("/").map(Number);
-
-    const currentDay = today.getDate();
-    const currentMonth = today.getMonth() + 1;
-
-    if (currentMonth === startMonth && currentMonth === endMonth) {
-      return currentDay >= startDay && currentDay <= endDay;
-    }
-
-    if (currentMonth === startMonth) {
-      return currentDay >= startDay;
-    }
-
-    if (currentMonth === endMonth) {
-      return currentDay <= endDay;
-    }
-
-    return false;
-  };
-
-  const isCurrentPeriod = (date: string, type: string) => {
-    const today = new Date();
-    const itemDate = new Date(date);
+    const target = new Date(date);
 
     if (type === "week") {
-      const todayStart = new Date(today);
-      todayStart.setHours(0, 0, 0, 0);
+      const getWeekStart = (d: Date) => {
+        const day = d.getDay() === 0 ? 7 : d.getDay();
+        const weekStart = new Date(d);
+        weekStart.setDate(d.getDate() - day + 1);
+        weekStart.setHours(0, 0, 0, 0);
+        return weekStart;
+      };
 
-      const itemDateStart = new Date(itemDate);
-      itemDateStart.setHours(0, 0, 0, 0);
-
-      const currentWeekStart = new Date(todayStart);
-      currentWeekStart.setDate(
-        todayStart.getDate() -
-          todayStart.getDay() +
-          (todayStart.getDay() === 0 ? -6 : 1),
-      );
-
-      const itemWeekStart = new Date(itemDateStart);
-      itemWeekStart.setDate(
-        itemDateStart.getDate() -
-          itemDateStart.getDay() +
-          (itemDateStart.getDay() === 0 ? -6 : 1),
-      );
-
-      return currentWeekStart.getTime() === itemWeekStart.getTime();
+      return getWeekStart(today).getTime() === getWeekStart(target).getTime();
     }
 
     return (
-      today.getMonth() === itemDate.getMonth() &&
-      today.getFullYear() === itemDate.getFullYear()
+      today.getFullYear() === target.getFullYear() &&
+      today.getMonth() === target.getMonth()
     );
   };
+
+  const formatAmount = (amount: number) => {
+    if (amount >= 1_000_000) return `${(amount / 1_000_000).toFixed(1)}M`;
+    if (amount >= 1_000) return `${(amount / 1_000).toFixed(0)}K`;
+    return amount.toString();
+  };
+
+  const chartData = useMemo(() => {
+    const raw = data?.data?.chartData;
+    if (Array.isArray(raw) && raw.length > 0) return raw;
+    return [{ amount: 0, date: new Date().toISOString() }];
+  }, [data]);
+
+  const maxAmount = useMemo(
+    () => Math.max(...chartData.map((item) => item.amount || 0)),
+    [chartData],
+  );
+
+  const adjustedMaxValue =
+    maxAmount >= 1000 ? maxAmount * 1.1 : maxAmount + 100;
+
+  const formattedYAxisLabels = useMemo(() => {
+    return Array.from({ length: 5 }, (_, i) =>
+      formatAmount((adjustedMaxValue / 4) * i),
+    );
+  }, [adjustedMaxValue]);
 
   return {
     state: {
       currentWeekRange: getCurrentWeekRange(),
-      isCurrentWeekRange,
       isCurrentPeriod,
       selectedType,
       types: STATISTIC_TYPES,
+      adjustedMaxValue,
+      formattedYAxisLabels,
+      safeData: chartData,
     },
     handler: {
-      handleSelectType,
+      setSelectedType,
     },
   };
 };

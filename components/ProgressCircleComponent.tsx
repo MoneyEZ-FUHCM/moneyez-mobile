@@ -1,5 +1,5 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { useLayoutEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Text, View } from "react-native";
 import * as Progress from "react-native-progress";
 
@@ -32,30 +32,29 @@ const ProgressCircleComponent = ({
   showPercentage?: boolean;
   percentageTextStyle?: object;
 }) => {
-  const [progress, setProgress] = useState(0);
+  const progressRef = useRef(0);
+  const [progress, setProgress] = useState(progressRef.current);
 
-  useLayoutEffect(() => {
-    let interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= value) {
-          clearInterval(interval);
-          return value;
+  useEffect(() => {
+    if (progressRef.current < value) {
+      const timer = setInterval(() => {
+        if (progressRef.current < value) {
+          progressRef.current += 0.02;
+          setProgress(progressRef.current);
+        } else {
+          clearInterval(timer);
         }
-        return prev + 0.02;
-      });
-    }, 10);
+      }, 10);
 
-    return () => clearInterval(interval);
-  }, [value]);
+      return () => clearInterval(timer);
+    }
+  }, [value, progress]);
 
-  const animatedColor = useMemo(() => {
-    return interpolateColor(progress, isSaving);
-  }, [progress, isSaving]);
-
-  const animatedIconColor = useMemo(() => {
-    if (progress === 0) return "#d6d6d6";
-    return interpolateColor(progress, isSaving);
-  }, [progress, isSaving]);
+  const animatedColor = useMemo(
+    () => interpolateColor(progress, isSaving),
+    [progress, isSaving],
+  );
+  const animatedIconColor = progress === 0 ? "#d6d6d6" : animatedColor;
 
   return (
     <View className="flex-1 items-center justify-center">

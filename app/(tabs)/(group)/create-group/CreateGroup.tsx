@@ -291,9 +291,9 @@ const CreateGroup = () => {
               trong điều khoản khi tạo nhóm.
             </Text>
             <Text className="mb-4 text-gray-700">
-              • Mọi giao dịch{" "}
+              • Giao dịch{" "}
               <Text className="font-medium text-primary">nạp / rút quỹ</Text>{" "}
-              được xác nhận qua hệ thống open banking (webhook).
+              cũng có thể được xác nhận qua hệ thống open banking (webhook).
             </Text>
 
             <Text className="mb-2 font-semibold text-primary">

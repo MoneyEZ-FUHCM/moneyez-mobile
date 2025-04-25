@@ -2,15 +2,10 @@ import LogoDeer from "@/assets/images/logo/logo_deer.png";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import {
   Activity,
-  Bookmark,
   Calendar,
-  Card,
-  Category,
   Coin1,
-  EmptyWallet,
   Eye,
   EyeSlash,
-  Profile2User,
   WalletAdd1,
 } from "iconsax-react-native";
 
@@ -31,7 +26,7 @@ const HOME_SCREEN_CONSTANTS = {
       icon: Calendar,
       url: HOME.RECURRING_TRANSACTION_LIST,
     },
-    // { label: "Tính năng 5", icon: Bookmark },
+    // { label: "Quiz", icon: Bookmark, url: HOME.QUIZ },
     // { label: "Tính năng 6", icon: Card },
     // { label: "Tính năng 7", icon: Category },
     // { label: "Tính năng 8", icon: Profile2User },

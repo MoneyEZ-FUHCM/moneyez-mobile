@@ -8,19 +8,19 @@ import {
 } from "@/services/financialGoal";
 import { router, useFocusEffect } from "expo-router";
 import moment from "moment";
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { BackHandler, ToastAndroid } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { useDispatch, useSelector } from "react-redux";
 import TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL from "../GroupFinancialGoal.translate";
 
-interface FinancialGoal {
+export interface FinancialGoal {
   id: string;
   isDeleted: boolean;
   currentAmount: number;
   targetAmount: number;
   deadline: string;
-  status: number;
+  status: string;
   approvalStatus: number;
   createdDate: string;
   name: string;
@@ -31,6 +31,11 @@ export default function useGroupFinancialGoal() {
   const groupDetail = useSelector(selectCurrentGroup);
   const groupId = useMemo(() => groupDetail?.id || "", [groupDetail]);
   const modalizeRef = useRef<Modalize>(null);
+  const detailsModalizeRef = useRef<Modalize>(null);
+  const [activeTab, setActiveTab] = useState<"ACTIVE" | "COMPLETED">("ACTIVE");
+  const [completedFilter, setCompletedFilter] = useState<
+    "ARCHIVED" | "COMPLETED"
+  >("ARCHIVED");
 
   // API Hooks
   const {
@@ -39,26 +44,73 @@ export default function useGroupFinancialGoal() {
     refetch,
   } = useGetGroupFinancialGoalQuery({ groupId }, { skip: !groupId });
 
+  const [showOptions, setShowOptions] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [selectedCompletedGoal, setSelectedCompletedGoal] =
+    useState<FinancialGoal>();
+
+  const handlePressOutside = () => {
+    if (showOptions) {
+      setShowOptions(false);
+    }
+  };
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
+
+  const TABS = [
+    { label: "Đang hoạt động", type: "ACTIVE" },
+    { label: "Đã hoàn thành", type: "COMPLETED" },
+  ];
+
+  const COMPLETED_FILTERS = [
+    { label: "Đã lưu trữ", type: "ARCHIVED" },
+    { label: "Đã hoàn thành", type: "COMPLETED" },
+  ];
+
+  const handleViewCompletedGoalDetails = (goal: FinancialGoal) => {
+    setSelectedCompletedGoal(goal);
+    detailsModalizeRef.current?.open();
+  };
+
   const [deleteGroupFinancialGoal, { isLoading: isDeleting }] =
     useDeleteGroupFinancialGoalMutation();
 
-  const financialGoal: FinancialGoal = useMemo(
+  const financialGoals: FinancialGoal[] = useMemo(
     () =>
       groupFinancialGoalData?.data?.filter(
-        (goal: FinancialGoal) => goal.isDeleted === false,
-      )[0],
+        (goal: FinancialGoal) => !goal.isDeleted,
+      ) || [],
     [groupFinancialGoalData],
   );
 
+  const filteredGoals = useMemo(() => {
+    if (activeTab === "ACTIVE") {
+      return financialGoals.filter((goal) => goal.status === "ACTIVE");
+    }
+    return financialGoals.filter((goal) => goal.status === completedFilter);
+  }, [financialGoals, activeTab, completedFilter]);
+
+  const financialGoal = filteredGoals[0];
+
   const hasExistingGoal = !!financialGoal;
 
-  const daysLeft = useMemo(
-    () =>
-      financialGoal
-        ? Math.max(0, moment(financialGoal.deadline).diff(moment(), "days"))
-        : 0,
-    [financialGoal],
-  );
+  const daysLeft = useMemo(() => {
+    if (!financialGoal) return { days: 0, hours: 0, minutes: 0 };
+
+    const now = moment();
+    const deadline = moment(financialGoal.deadline);
+    const duration = moment.duration(deadline.diff(now));
+
+    const days = Math.max(0, Math.floor(duration.asDays()));
+    const hours = Math.max(0, duration.hours());
+    const minutes = Math.max(0, duration.minutes());
+
+    return { days, hours, minutes };
+  }, [financialGoal]);
 
   const isGoalCompleted = useMemo(
     () => financialGoal?.currentAmount >= financialGoal?.targetAmount,
@@ -105,7 +157,6 @@ export default function useGroupFinancialGoal() {
         dispatch(setGroupTabHidden(false));
       }
     } catch (error) {
-      console.error("Error deleting goal:", error);
       ToastAndroid.show(
         TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.MESSAGE_ERROR.DELETE_FAILED,
         ToastAndroid.SHORT,
@@ -131,10 +182,14 @@ export default function useGroupFinancialGoal() {
     }, [handleGoBack]),
   );
 
-  const getStatusText = useCallback((status: number) => {
+  const getStatusText = useCallback((status: string) => {
     switch (status) {
-      case 1:
+      case "ACTIVE":
         return TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.STATUS.ACTIVE;
+      case "COMPLETED":
+        return TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.STATUS.COMPLETED;
+      case "ARCHIVED":
+        return TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.STATUS.ARCHIVED;
       default:
         return TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.STATUS.INACTIVE;
     }
@@ -162,6 +217,15 @@ export default function useGroupFinancialGoal() {
       daysLeft,
       isGoalCompleted,
       modalizeRef,
+      detailsModalizeRef,
+      activeTab,
+      completedFilter,
+      financialGoals: filteredGoals,
+      TABS,
+      COMPLETED_FILTERS,
+      showOptions,
+      refreshing,
+      selectedCompletedGoal,
     },
     handler: {
       handleNavigateToCreate,
@@ -175,6 +239,11 @@ export default function useGroupFinancialGoal() {
       formatCurrency,
       formatDate,
       refetch,
+      setActiveTab,
+      setCompletedFilter,
+      handleViewCompletedGoalDetails,
+      handlePressOutside,
+      handleRefresh,
     },
   };
 }

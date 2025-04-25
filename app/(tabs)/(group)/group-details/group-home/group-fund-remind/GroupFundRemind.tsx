@@ -1,4 +1,3 @@
-import Admin from "@/assets/images/logo/avatar_admin.jpg";
 import {
   InputComponent,
   ProgressCircleComponent,
@@ -9,6 +8,7 @@ import {
 import { TextAreaComponent } from "@/components/TextAreaComponent";
 import { formatCurrency, formatCurrencyInput } from "@/helpers/libs";
 import { MaterialIcons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { Formik } from "formik";
 import React from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
@@ -43,7 +43,7 @@ export default function GroupRemindPage() {
       <SectionComponent rootClassName="h-14 bg-white justify-center relative">
         <View className="flex-row items-center justify-between px-5">
           <Pressable onPress={handler.handleGoBack}>
-            <MaterialIcons name="arrow-back" size={24} color="#609084" />
+            <MaterialIcons name="arrow-back" size={24} />
           </Pressable>
           <Text className="text-lg font-bold">
             {TEXT_TRANSLATE_GROUP_REMIND.TITLE.GROUP_REMIND}
@@ -67,7 +67,11 @@ export default function GroupRemindPage() {
               <View className="mt-2 flex-row items-center space-x-3">
                 <View>
                   <ProgressCircleComponent
-                    value={state.groupCurrent / state.groupGoal}
+                    value={
+                      state.groupCurrent >= state.groupGoal
+                        ? 1
+                        : state.groupCurrent / state.groupGoal
+                    }
                     size={60}
                     thickness={4}
                     showPercentage={true}
@@ -103,7 +107,6 @@ export default function GroupRemindPage() {
           {/* Tabs */}
 
           {/* Tab Content: Tạo mới */}
-
           <SectionComponent rootClassName="rounded-2 bg-white shadow-sm px-3 pb-5">
             <Text className="py-4 text-base font-semibold">
               {LABELS.ADD_REMIND}
@@ -165,64 +168,82 @@ export default function GroupRemindPage() {
                 </Text>
               </Pressable>
             </View>
-            {state.members.map((member) => (
-              <View key={member.id} className="flex-row items-center py-2">
-                <Image
-                  source={member.avatar ? member.avatar : Admin}
-                  className="mr-3 h-12 w-12 rounded-full"
-                  resizeMode="cover"
-                />
-                <View className="flex-1">
-                  <View className="flex-row items-center">
-                    <Text className="text-base font-semibold">
-                      {member.name}
-                    </Text>
-                    {member.disabled &&
-                      state.isGoalActive &&
-                      state.hasFinancialGoal && (
+            {state.members.length > 0 &&
+              state.members.map((member) => (
+                <View key={member.id} className="flex-row items-center py-2">
+                  {member?.avatar ? (
+                    <Image
+                      source={member.avatar}
+                      className="mr-3 h-12 w-12 rounded-full"
+                      resizeMode="cover"
+                    />
+                  ) : (
+                    <LinearGradient
+                      colors={["#609084", "#4A7A70"]}
+                      className="mr-3 h-12 w-12 items-center justify-center rounded-full shadow-md"
+                    >
+                      <Text className="text-2xl font-semibold uppercase text-white">
+                        {member?.name?.charAt(0)}
+                      </Text>
+                    </LinearGradient>
+                  )}
+
+                  <View className="flex-1">
+                    <View className="flex-row items-center">
+                      <Text className="text-base font-semibold">
+                        {member.name}
+                      </Text>
+                      {member.userId === state.userInfo?.id && (
                         <View className="ml-2 rounded-md bg-[#E6F2EF] px-2 py-0.5">
                           <Text className="text-xs font-medium text-[#609084]">
-                            {LABELS.FUNDED}
+                            Trưởng nhóm
                           </Text>
                         </View>
                       )}
-                  </View>
-                  {state.isGoalActive && state.hasFinancialGoal && (
-                    <Text className="text-sm text-gray-500">
-                      {LABELS.CONTRIBUTE_RATIO}: {member.ratio}%
-                    </Text>
-                  )}
-                  <Text className="pt-1 text-sm">
-                    <Text className="text-[#848484]">
-                      {LABELS.CONTRIBUTED}:{" "}
-                    </Text>
-                    <Text className="text-base font-semibold text-[#609084]">
-                      {formatCurrency(member.contributed)}
-                    </Text>
-                  </Text>
-                </View>
-                <Pressable
-                  onPress={() => handler.handleToggleMember(member.id)}
-                  disabled={member.disabled}
-                >
-                  <View className="h-6 w-6 items-center justify-center">
-                    {member.checked ? (
-                      <MaterialIcons
-                        name="check-box"
-                        size={24}
-                        color="#609084"
-                      />
-                    ) : (
-                      <MaterialIcons
-                        name="check-box-outline-blank"
-                        size={24}
-                        color={member.disabled ? "#e5e7eb" : "#d1d5db"}
-                      />
+                    </View>
+                    {state.isGoalActive && state.hasFinancialGoal && (
+                      <Text className="text-sm text-gray-500">
+                        {LABELS.CONTRIBUTE_RATIO}: {member.ratio}%
+                      </Text>
                     )}
+                    <Text className="pt-1 text-sm">
+                      <Text className="text-[#848484]">
+                        {LABELS.CONTRIBUTED}:{" "}
+                      </Text>
+                      <Text className="text-base font-semibold text-[#609084]">
+                        {formatCurrency(member.contributed)}
+                      </Text>
+                    </Text>
                   </View>
-                </Pressable>
-              </View>
-            ))}
+                  <Pressable
+                    onPress={() => handler.handleToggleMember(member.id)}
+                    disabled={
+                      member.disabled || member.userId === state.userInfo?.id
+                    }
+                  >
+                    <View className="h-6 w-6 items-center justify-center">
+                      {member.checked ? (
+                        <MaterialIcons
+                          name="check-box"
+                          size={24}
+                          color="#609084"
+                        />
+                      ) : (
+                        <MaterialIcons
+                          name="check-box-outline-blank"
+                          size={24}
+                          color={
+                            member.disabled ||
+                            member.userId === state.userInfo?.id
+                              ? "#e5e7eb"
+                              : "#d1d5db"
+                          }
+                        />
+                      )}
+                    </View>
+                  </Pressable>
+                </View>
+              ))}
           </SectionComponent>
         </View>
       </ScrollView>

@@ -133,15 +133,6 @@ export default function GroupSettingsDefault() {
                 Xác nhận rời nhóm
               </Text>
             </View>
-
-            <View className="rounded-lg bg-orange-50 p-4">
-              <Text className="text-center text-base leading-6 text-gray-700">
-                Khi rời nhóm, toàn bộ số tiền bạn đã đóng trong thời gian qua sẽ
-                không được hoàn trả.
-                {"\n\n"}Bạn có chắc chắn muốn rời nhóm?
-              </Text>
-            </View>
-
             <View className="mt-2 flex-row space-x-4">
               <Pressable
                 onPress={() => {

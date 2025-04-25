@@ -7,7 +7,12 @@ import {
   SectionComponent,
   SpaceComponent,
 } from "@/components";
-import { formatCurrency, formatCurrencyInput, formatDateMonthYear, formatTime } from "@/helpers/libs";
+import {
+  formatCurrency,
+  formatCurrencyInput,
+  formatDateMonthYear,
+  formatTime,
+} from "@/helpers/libs";
 import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Formik } from "formik";
 import React, { useState } from "react";
@@ -33,7 +38,9 @@ export default function CreateFundRequest() {
   const { handleBack, handleCreateFundRequest } = handler;
 
   // Tab state
-  const [activeTab, setActiveTab] = useState<'createRequest' | 'pendingRequests'>('createRequest');
+  const [activeTab, setActiveTab] = useState<
+    "createRequest" | "pendingRequests"
+  >("createRequest");
 
   const FundRequestSchema = Yup.object().shape({
     amount: Yup.string()
@@ -42,6 +49,11 @@ export default function CreateFundRequest() {
         if (!value) return true;
         const numericValue = Number(value.replace(/\./g, ""));
         return numericValue >= 10000;
+      })
+      .test("max-amount", "Giá trị cao nhất là 5.000.000đ", function (value) {
+        if (!value) return true;
+        const numericValue = Number(value.replace(/\./g, ""));
+        return numericValue <= 5000000;
       }),
     description: Yup.string()
       .required(MESSAGE_VALIDATE.DESCRIPTION_REQUIRED)
@@ -65,9 +77,17 @@ export default function CreateFundRequest() {
             className={`rounded-full p-1 ${item.type === TRANSACTION_TYPE_TEXT.INCOME ? "bg-green/10" : "bg-red/10"}`}
           >
             <Ionicons
-              name={item.type === TRANSACTION_TYPE_TEXT.INCOME ? "arrow-down" : "arrow-up"}
+              name={
+                item.type === TRANSACTION_TYPE_TEXT.INCOME
+                  ? "arrow-down"
+                  : "arrow-up"
+              }
               size={16}
-              color={item.type === TRANSACTION_TYPE_TEXT.INCOME ? "#16a34a" : "#dc2626"}
+              color={
+                item.type === TRANSACTION_TYPE_TEXT.INCOME
+                  ? "#16a34a"
+                  : "#dc2626"
+              }
             />
           </View>
           <Text
@@ -97,19 +117,18 @@ export default function CreateFundRequest() {
               </LinearGradient>
             )}
             <View className="flex-1">
-              <Text className="text-base font-bold">
-                {item.createdBy}
-              </Text>
+              <Text className="text-base font-bold">{item.createdBy}</Text>
               <Text className="text-gray-600" numberOfLines={2}>
                 "{item.description}"
               </Text>
             </View>
           </View>
           <Text
-            className={`text-right text-base font-bold ${item.type === TRANSACTION_TYPE_TEXT.INCOME
-              ? "text-green"
-              : "text-red"
-              }`}
+            className={`text-right text-base font-bold ${
+              item.type === TRANSACTION_TYPE_TEXT.INCOME
+                ? "text-green"
+                : "text-red"
+            }`}
           >
             {item.type === TRANSACTION_TYPE_TEXT.INCOME
               ? `+ ${formatCurrency(item.amount)}`
@@ -128,7 +147,8 @@ export default function CreateFundRequest() {
           <View className="flex-row items-center rounded-full bg-gray-50 px-3 py-1.5">
             <MaterialIcons name="access-time" size={12} color="#666" />
             <Text className="ml-1 text-xs font-medium text-gray-600">
-              {formatTime(item.createdDate)} · {formatDateMonthYear(item.createdDate)}
+              {formatTime(item.createdDate)} ·{" "}
+              {formatDateMonthYear(item.createdDate)}
             </Text>
           </View>
         </View>
@@ -148,28 +168,28 @@ export default function CreateFundRequest() {
 
         <View className="flex-row bg-white">
           <Pressable
-            onPress={() => setActiveTab('createRequest')}
-            className={`flex-1 items-center border-b-2 py-3 ${activeTab === 'createRequest' ? "border-primary" : "border-transparent"}`}
+            onPress={() => setActiveTab("createRequest")}
+            className={`flex-1 items-center border-b-2 py-3 ${activeTab === "createRequest" ? "border-primary" : "border-transparent"}`}
           >
             <Text
-              className={`font-normal ${activeTab === 'createRequest' ? "font-extrabold text-primary" : "text-[#757575]"}`}
+              className={`font-normal ${activeTab === "createRequest" ? "font-extrabold text-primary" : "text-[#757575]"}`}
             >
               {TITLE.MAIN_TITLE}
             </Text>
           </Pressable>
           <Pressable
-            onPress={() => setActiveTab('pendingRequests')}
-            className={`flex-1 items-center border-b-2 py-3 ${activeTab === 'pendingRequests' ? "border-primary" : "border-transparent"}`}
+            onPress={() => setActiveTab("pendingRequests")}
+            className={`flex-1 items-center border-b-2 py-3 ${activeTab === "pendingRequests" ? "border-primary" : "border-transparent"}`}
           >
             <Text
-              className={`font-normal ${activeTab === 'pendingRequests' ? "font-extrabold text-primary" : "text-[#757575]"}`}
+              className={`font-normal ${activeTab === "pendingRequests" ? "font-extrabold text-primary" : "text-[#757575]"}`}
             >
               {TEXT_TRANSLATE_PENDING_REQUESTS.TITLE.MAIN_TITLE}
             </Text>
           </Pressable>
         </View>
 
-        {activeTab === 'createRequest' ? (
+        {activeTab === "createRequest" ? (
           <>
             <SectionComponent rootClassName="mx-5 my-2 rounded-2xl border border-gray-100 bg-white p-5 shadow-xl">
               <View className="flex-row items-center justify-between">
@@ -258,9 +278,12 @@ export default function CreateFundRequest() {
           </>
         ) : (
           <LoadingSectionWrapper
-            isLoading={pendingState.isLoadingRequests || pendingState.isFetchingRequests}
+            isLoading={
+              pendingState.isLoadingRequests || pendingState.isFetchingRequests
+            }
           >
-            {pendingState.pendingRequests && pendingState.pendingRequests.length > 0 ? (
+            {pendingState.pendingRequests &&
+            pendingState.pendingRequests.length > 0 ? (
               <FlatListCustom
                 isBottomTab={true}
                 isLoading={pendingState.isLoadingMore}
@@ -275,7 +298,9 @@ export default function CreateFundRequest() {
                 refreshing={pendingState.isFetchingRequests}
                 onRefresh={pendingHandler.refreshRequests}
                 onLoadMore={pendingHandler.handleLoadMore}
-                hasMore={pendingState.pendingRequests?.length === pendingState.pageSize}
+                hasMore={
+                  pendingState.pendingRequests?.length === pendingState.pageSize
+                }
               />
             ) : (
               <View className="mt-20 items-center justify-center p-6">
@@ -288,7 +313,6 @@ export default function CreateFundRequest() {
               </View>
             )}
           </LoadingSectionWrapper>
-
         )}
         <ModalLizeComponent
           ref={pendingState.detailModalizeRef}
@@ -329,15 +353,21 @@ export default function CreateFundRequest() {
                         color="#666"
                       />
                       <Text className="ml-1 text-sm text-gray-600">
-                        {formatTime(pendingState.selectedRequest?.createdDate)} ·{" "}
-                        {formatDateMonthYear(pendingState.selectedRequest?.createdDate)}
+                        {formatTime(pendingState.selectedRequest?.createdDate)}{" "}
+                        ·{" "}
+                        {formatDateMonthYear(
+                          pendingState.selectedRequest?.createdDate,
+                        )}
                       </Text>
                     </View>
                     <View className="flex-row items-center">
                       <MaterialIcons name="update" size={14} color="#666" />
                       <Text className="ml-1 text-sm text-gray-600">
-                        {formatTime(pendingState.selectedRequest?.updatedDate)} ·{" "}
-                        {formatDateMonthYear(pendingState.selectedRequest?.updatedDate)}
+                        {formatTime(pendingState.selectedRequest?.updatedDate)}{" "}
+                        ·{" "}
+                        {formatDateMonthYear(
+                          pendingState.selectedRequest?.updatedDate,
+                        )}
                       </Text>
                     </View>
                   </View>
@@ -347,12 +377,14 @@ export default function CreateFundRequest() {
                     <Text className="text-gray-600">Loại giao dịch:</Text>
                     <Text
                       className={`font-medium ${
-                        pendingState.selectedRequest?.type === TRANSACTION_TYPE_TEXT.INCOME
+                        pendingState.selectedRequest?.type ===
+                        TRANSACTION_TYPE_TEXT.INCOME
                           ? "text-green"
                           : "text-red"
                       }`}
                     >
-                      {pendingState.selectedRequest?.type === TRANSACTION_TYPE_TEXT.INCOME
+                      {pendingState.selectedRequest?.type ===
+                      TRANSACTION_TYPE_TEXT.INCOME
                         ? "Góp quỹ"
                         : "Rút quỹ"}
                     </Text>
@@ -362,12 +394,14 @@ export default function CreateFundRequest() {
                     <Text className="text-gray-600">Số tiền:</Text>
                     <Text
                       className={`font-medium ${
-                        pendingState.selectedRequest?.type === TRANSACTION_TYPE_TEXT.INCOME
+                        pendingState.selectedRequest?.type ===
+                        TRANSACTION_TYPE_TEXT.INCOME
                           ? "text-green"
                           : "text-red"
                       }`}
                     >
-                      {pendingState.selectedRequest?.type === TRANSACTION_TYPE_TEXT.INCOME
+                      {pendingState.selectedRequest?.type ===
+                      TRANSACTION_TYPE_TEXT.INCOME
                         ? `+ ${formatCurrency(pendingState.selectedRequest?.amount)}`
                         : `- ${formatCurrency(pendingState.selectedRequest?.amount)}`}
                     </Text>
