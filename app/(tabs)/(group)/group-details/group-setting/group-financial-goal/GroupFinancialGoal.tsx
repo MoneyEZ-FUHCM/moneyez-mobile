@@ -12,6 +12,7 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
   ActivityIndicator,
+  Pressable,
   RefreshControl,
   Text,
   TouchableOpacity,
@@ -37,6 +38,31 @@ export default function GroupFinancialGoal() {
     setRefreshing(true);
     await handler.refetch();
     setRefreshing(false);
+  };
+
+  const TABS = [
+    { label: "Đang hoạt động", type: "ACTIVE" },
+    { label: "Đã hoàn thành", type: "COMPLETED" },
+  ];
+
+  const renderTab = () => {
+    return (
+      <View className="mx-4 mt-4 flex-row rounded-xl bg-white">
+        {TABS.map((tab) => (
+          <Pressable
+            key={tab.type}
+            onPress={() => handler.setActiveTab(tab.type as any)}
+            className={`flex-1 items-center rounded-xl border-b-2 py-3 ${state.activeTab === tab.type ? "border-primary" : "border-transparent"}`}
+          >
+            <Text
+              className={`font-normal ${state.activeTab === tab.type ? "font-extrabold text-primary" : "text-[#757575]"}`}
+            >
+              {tab.label}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
+    );
   };
 
   const renderGoalProgress = () => {
@@ -85,13 +111,35 @@ export default function GroupFinancialGoal() {
           <View className="flex-row items-center justify-between">
             <View className="flex-row items-center space-x-2">
               <MaterialIcons name="calendar-today" size={20} color="#609084" />
-              <Text className="ml-2 text-[#000]">
+              <Text
+                className={`ml-2 ${
+                  state.isGoalCompleted
+                    ? "text-[#000]"
+                    : state.daysLeft?.days === 0 &&
+                        state.daysLeft?.hours === 0 &&
+                        state.daysLeft?.minutes === 0
+                      ? "text-red"
+                      : "text-[#000]"
+                }`}
+              >
                 {state.isGoalCompleted
                   ? LABELS.COMPLETED
-                  : LABELS.DAYS_LEFT.replace(
-                      "{{days}}",
-                      state.daysLeft.toString(),
-                    )}
+                  : state.daysLeft?.days === 0 &&
+                      state.daysLeft?.hours === 0 &&
+                      state.daysLeft?.minutes === 0
+                    ? LABELS.FAILED
+                    : state.daysLeft?.days === 0
+                      ? LABELS.TIMES_LEFT.replace(
+                          "{{hours}}",
+                          state.daysLeft?.hours.toString(),
+                        ).replace(
+                          "{{minutes}}",
+                          state.daysLeft?.minutes.toString(),
+                        )
+                      : LABELS.DAYS_LEFT.replace(
+                          "{{days}}",
+                          state.daysLeft?.days.toString(),
+                        )}
               </Text>
             </View>
             <Text className="text-[#848484]">
@@ -226,7 +274,7 @@ export default function GroupFinancialGoal() {
             <View style={{ width: 24 }}></View>
           </View>
         </SectionComponent>
-
+        {renderTab()}
         <LoadingSectionWrapper isLoading={state.isLoading}>
           <ScrollViewCustom
             showsVerticalScrollIndicator={false}

@@ -1,6 +1,7 @@
 const GROUP_FINANCIAL_GOAL_CONSTANT = {
   ERROR_CODE: {
     INVALID_DEADLINE: "InvalidDeadline",
+    INVALID_TARGET_AMOUNT: "InvalidTargetAmount",
   },
 
   TABS: [

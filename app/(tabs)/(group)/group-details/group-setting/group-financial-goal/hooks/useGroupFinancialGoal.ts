@@ -8,7 +8,7 @@ import {
 } from "@/services/financialGoal";
 import { router, useFocusEffect } from "expo-router";
 import moment from "moment";
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { BackHandler, ToastAndroid } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,6 +31,7 @@ export default function useGroupFinancialGoal() {
   const groupDetail = useSelector(selectCurrentGroup);
   const groupId = useMemo(() => groupDetail?.id || "", [groupDetail]);
   const modalizeRef = useRef<Modalize>(null);
+  const [activeTab, setActiveTab] = useState<"ACTIVE" | "ARCHIVED">("ACTIVE");
 
   // API Hooks
   const {
@@ -52,13 +53,19 @@ export default function useGroupFinancialGoal() {
 
   const hasExistingGoal = !!financialGoal;
 
-  const daysLeft = useMemo(
-    () =>
-      financialGoal
-        ? Math.max(0, moment(financialGoal.deadline).diff(moment(), "days"))
-        : 0,
-    [financialGoal],
-  );
+  const daysLeft = useMemo(() => {
+    if (!financialGoal) return { days: 0, hours: 0, minutes: 0 };
+
+    const now = moment();
+    const deadline = moment(financialGoal.deadline);
+    const duration = moment.duration(deadline.diff(now));
+
+    const days = Math.max(0, Math.floor(duration.asDays()));
+    const hours = Math.max(0, duration.hours());
+    const minutes = Math.max(0, duration.minutes());
+
+    return { days, hours, minutes };
+  }, [financialGoal]);
 
   const isGoalCompleted = useMemo(
     () => financialGoal?.currentAmount >= financialGoal?.targetAmount,
@@ -162,6 +169,7 @@ export default function useGroupFinancialGoal() {
       daysLeft,
       isGoalCompleted,
       modalizeRef,
+      activeTab,
     },
     handler: {
       handleNavigateToCreate,
@@ -175,6 +183,7 @@ export default function useGroupFinancialGoal() {
       formatCurrency,
       formatDate,
       refetch,
+      setActiveTab,
     },
   };
 }

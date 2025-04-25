@@ -99,7 +99,7 @@ export default function useGroupFinancialGoalForm() {
         TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.MESSAGE_ERROR
           .TARGET_AMOUNT_MUST_BE_GREATER_THAN_CURRENT,
         function (value) {
-          if (isCreateMode) return true;
+          // if (isCreateMode) return true;
 
           const targetAmount = value
             ? parseInt(value.toString().replace(/\D/g, ""))
@@ -179,11 +179,20 @@ export default function useGroupFinancialGoalForm() {
       dispatch(setGroupTabHidden(true));
       router.back();
     } catch (err: any) {
+      console.log("check err", err);
       const error = err?.data;
       if (error?.errorCode === ERROR_CODE.INVALID_DEADLINE) {
         ToastAndroid.show(
           TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.MESSAGE_ERROR
             .DEADLINE_MUST_BE_FUTURE,
+          ToastAndroid.SHORT,
+        );
+        return;
+      }
+      if (error?.errorCode === ERROR_CODE.INVALID_TARGET_AMOUNT) {
+        ToastAndroid.show(
+          TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.MESSAGE_ERROR
+            .TARGET_AMOUNT_MUST_BE_GREATER_THAN_CURRENT,
           ToastAndroid.SHORT,
         );
         return;
