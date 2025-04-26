@@ -25,7 +25,10 @@ import TEXT_TRANSLATE_PENDING_REQUESTS from "./PendingRequests.translate";
 import { TextAreaComponent } from "@/components/TextAreaComponent";
 import { Colors } from "@/helpers/constants/color";
 import { LinearGradient } from "expo-linear-gradient";
-import { TRANSACTION_STATUS, TRANSACTION_TYPE_TEXT } from "@/enums/globals";
+import {
+  TRANSACTION_STATUS,
+  TRANSACTION_TYPE_TEXT,
+} from "@/helpers/enums/globals";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const { TITLE, LABELS, BUTTON, MESSAGE_VALIDATE } =

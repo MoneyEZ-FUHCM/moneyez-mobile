@@ -1,7 +1,7 @@
 import { appInfo } from "@/helpers/constants/appInfos";
 import { Colors } from "@/helpers/constants/color";
 import { useGetSpendingModelQuery } from "@/services/spendingModel";
-import { SpendingModelData } from "@/types/spendingModel.types";
+import { SpendingModelData } from "@/helpers/types/spendingModel.types";
 import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { memo, useCallback, useEffect, useRef, useState } from "react";

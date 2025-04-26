@@ -7,13 +7,16 @@ import {
   SafeAreaViewCustom,
   SectionComponent,
 } from "@/components";
-import { TRANSACTION_STATUS, TRANSACTION_TYPE_TEXT } from "@/enums/globals";
+import {
+  TRANSACTION_STATUS,
+  TRANSACTION_TYPE_TEXT,
+} from "@/helpers/enums/globals";
 import {
   formatCurrency,
   formatDateMonthYear,
   formatTime,
 } from "@/helpers/libs";
-import { GroupTransaction } from "@/types/transaction.types";
+import { GroupTransaction } from "@/helpers/types/transaction.types";
 import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";

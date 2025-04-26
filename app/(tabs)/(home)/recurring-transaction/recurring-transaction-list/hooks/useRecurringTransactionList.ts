@@ -3,13 +3,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Alert, ToastAndroid } from "react-native";
 
 import { PATH_NAME } from "@/helpers/constants/pathname";
-import useHideTabbar from "@/hooks/useHideTabbar";
+import useHideTabbar from "@/helpers/hooks/useHideTabbar";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import {
   useDeleteRecurringTransactionMutation,
   useGetRecurringTransactionQuery,
 } from "@/services/recurringTransaction";
-import { RecurringTransaction } from "@/types/recurringTransaction.types";
+import { RecurringTransaction } from "@/helpers/types/recurringTransaction.types";
 import { Modalize } from "react-native-modalize";
 import { useDispatch } from "react-redux";
 import TEXT_TRANSLATE from "../RecurringTransactionList.translate";

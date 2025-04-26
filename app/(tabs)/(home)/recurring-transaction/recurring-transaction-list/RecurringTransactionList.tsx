@@ -9,11 +9,11 @@ import {
   ScrollViewCustom,
   SectionComponent,
 } from "@/components";
-import { TRANSACTION_TYPE } from "@/enums/globals";
+import { TRANSACTION_TYPE } from "@/helpers/enums/globals";
 import { Colors } from "@/helpers/constants/color";
 import { formatCurrencyInput, formatDate, formatTime } from "@/helpers/libs";
 import { useLazyGetSubCateByIdQuery } from "@/services/subCategory";
-import { RecurringTransaction } from "@/types/recurringTransaction.types";
+import { RecurringTransaction } from "@/helpers/types/recurringTransaction.types";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import useRecurringTransactionList from "./hooks/useRecurringTransactionList";
 import TEXT_TRANSLATE from "./RecurringTransactionList.translate";

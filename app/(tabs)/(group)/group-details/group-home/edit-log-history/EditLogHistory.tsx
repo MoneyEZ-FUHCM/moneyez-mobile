@@ -5,7 +5,7 @@ import {
   SectionComponent,
 } from "@/components";
 import { formatDateMonthYear, formatTime } from "@/helpers/libs";
-import { GroupLogs } from "@/types/group.type";
+import { GroupLogs } from "@/helpers/types/group.type";
 import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";

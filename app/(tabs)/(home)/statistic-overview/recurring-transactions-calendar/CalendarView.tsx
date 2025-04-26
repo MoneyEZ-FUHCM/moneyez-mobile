@@ -3,7 +3,7 @@ import {
   MarkedDates,
   Transaction,
   TransactionsByDate,
-} from "@/types/transaction.types";
+} from "@/helpers/types/transaction.types";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Calendar, DateData, LocaleConfig } from "react-native-calendars";

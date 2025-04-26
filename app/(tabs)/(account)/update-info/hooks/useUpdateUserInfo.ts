@@ -1,5 +1,5 @@
-import useLogout from "@/hooks/useLogout";
-import useUploadImage from "@/hooks/useUploadImage";
+import useLogout from "@/helpers/hooks/useLogout";
+import useUploadImage from "@/helpers/hooks/useUploadImage";
 import ACCOUNT_SCREEN_CONSTANT from "../../AccountScreen.constant";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import TEXT_TRANSLATE_ACCOUNT from "../../AccountScreen.translate";
@@ -11,7 +11,7 @@ import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { router } from "expo-router";
 import { setLoading } from "@/redux/slices/loadingSlice";
 import { ToastAndroid } from "react-native";
-import useHideTabbar from "@/hooks/useHideTabbar";
+import useHideTabbar from "@/helpers/hooks/useHideTabbar";
 
 const useUpdateUserInfo = () => {
   const { imageUrl, pickAndUploadImage } = useUploadImage();

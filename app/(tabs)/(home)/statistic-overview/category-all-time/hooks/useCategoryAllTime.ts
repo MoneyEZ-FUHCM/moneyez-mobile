@@ -1,8 +1,8 @@
-import { TRANSACTION_TYPE_TEXT } from "@/enums/globals";
+import { TRANSACTION_TYPE_TEXT } from "@/helpers/enums/globals";
 import { getRandomColor } from "@/helpers/libs";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { useGetReportTransactionAllTimeCategoryQuery } from "@/services/transaction";
-import { TransactionsReportCategoryItem } from "@/types/transaction.types";
+import { TransactionsReportCategoryItem } from "@/helpers/types/transaction.types";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { BackHandler, ScrollView } from "react-native";

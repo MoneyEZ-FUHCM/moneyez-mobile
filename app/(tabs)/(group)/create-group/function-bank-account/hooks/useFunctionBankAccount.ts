@@ -8,7 +8,7 @@ import {
   BankAccountType,
   BankType,
   CreateBankAccountPayload,
-} from "@/types/bankAccount.types";
+} from "@/helpers/types/bankAccount.types";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ScrollView, ToastAndroid } from "react-native";

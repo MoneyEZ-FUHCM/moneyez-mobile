@@ -8,12 +8,12 @@ import {
 } from "@/components";
 import TagInputComponent from "@/components/TagInputComponent";
 import { TextAreaComponent } from "@/components/TextAreaComponent";
-import { TRANSACTION_TYPE_TEXT } from "@/enums/globals";
+import { TRANSACTION_TYPE_TEXT } from "@/helpers/enums/globals";
 import { Colors } from "@/helpers/constants/color";
 import { formatCurrencyInput, formatIntervalInput } from "@/helpers/libs";
-import { CategoryListFilter } from "@/types/category.types";
-import { RecurringTransactionFormValues } from "@/types/recurringTransaction.types";
-import { Subcategory } from "@/types/subCategory";
+import { CategoryListFilter } from "@/helpers/types/category.types";
+import { RecurringTransactionFormValues } from "@/helpers/types/recurringTransaction.types";
+import { Subcategory } from "@/helpers/types/subCategory";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Formik, FormikProps } from "formik";
 import React, { useCallback, useEffect, useRef } from "react";

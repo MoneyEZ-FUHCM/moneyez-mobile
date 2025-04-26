@@ -7,7 +7,7 @@ import {
 } from "@/components";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { formatDate } from "@/helpers/libs";
-import { BankCardProps } from "@/types/bankAccount.types";
+import { BankCardProps } from "@/helpers/types/bankAccount.types";
 import {
   AntDesign,
   Feather,

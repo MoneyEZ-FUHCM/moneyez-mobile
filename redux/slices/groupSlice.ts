@@ -1,5 +1,5 @@
 import groupApi from "@/services/group";
-import { GroupDetail } from "@/types/group.type";
+import { GroupDetail } from "@/helpers/types/group.type";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 

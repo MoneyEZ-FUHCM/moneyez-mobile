@@ -3,7 +3,7 @@ import {
   SectionComponent,
   YearMonthSelector,
 } from "@/components";
-import { TRANSACTION_TYPE_TEXT } from "@/enums/globals";
+import { TRANSACTION_TYPE_TEXT } from "@/helpers/enums/globals";
 import { formatCurrency } from "@/helpers/libs";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";

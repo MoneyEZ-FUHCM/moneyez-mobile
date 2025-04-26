@@ -1,14 +1,17 @@
 import ArrowDown from "@/assets/icons/arrow-down-short-wide.png";
 import ArrowUp from "@/assets/icons/arrow-up-wide-short.png";
 import { SafeAreaViewCustom } from "@/components";
-import { TRANSACTION_STATUS, TRANSACTION_TYPE_TEXT } from "@/enums/globals";
+import {
+  TRANSACTION_STATUS,
+  TRANSACTION_TYPE_TEXT,
+} from "@/helpers/enums/globals";
 import { Colors } from "@/helpers/constants/color";
 import {
   formatCurrency,
   formatDateMonthYear,
   formatTime,
 } from "@/helpers/libs";
-import { GroupLogs } from "@/types/group.type";
+import { GroupLogs } from "@/helpers/types/group.type";
 import {
   AntDesign,
   FontAwesome,

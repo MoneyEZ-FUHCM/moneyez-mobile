@@ -1,12 +1,12 @@
-import { GROUP_ROLE, TRANSACTION_STATUS } from "@/enums/globals";
-import useHideGroupTabbar from "@/hooks/useHideGroupTabbar";
+import { GROUP_ROLE, TRANSACTION_STATUS } from "@/helpers/enums/globals";
+import useHideGroupTabbar from "@/helpers/hooks/useHideGroupTabbar";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { selectUserInfo } from "@/redux/slices/userSlice";
 import {
   useGetGroupTransactionQuery,
   useUpdateGroupTransactionStatusMutation,
 } from "@/services/transaction";
-import { GroupTransaction } from "@/types/transaction.types";
+import { GroupTransaction } from "@/helpers/types/transaction.types";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ToastAndroid } from "react-native";
 import { Modalize } from "react-native-modalize";

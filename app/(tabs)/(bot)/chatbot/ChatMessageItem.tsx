@@ -1,6 +1,6 @@
-import { CHAT_ROLE } from "@/enums/globals";
+import { CHAT_ROLE } from "@/helpers/enums/globals";
 import { formatFromNow, parseMarkdown } from "@/helpers/libs";
-import { Message } from "@/types/bot.types";
+import { Message } from "@/helpers/types/bot.types";
 import { memo } from "react";
 import { Pressable, Text, View } from "react-native";
 

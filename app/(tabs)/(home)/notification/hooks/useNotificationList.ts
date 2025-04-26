@@ -16,7 +16,7 @@ import { Modalize } from "react-native-modalize";
 import { useDispatch } from "react-redux";
 import NOTIFICATION_CONSTANTS from "../NotificationList.const";
 import TEXT_TRANSLATE_NOTICE from "../NotificationList.translate";
-import useHideTabbar from "@/hooks/useHideTabbar";
+import useHideTabbar from "@/helpers/hooks/useHideTabbar";
 
 type NotificationTabType = "all" | string;
 interface QueryParams {
