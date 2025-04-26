@@ -1,14 +1,14 @@
-import { GROUP_MEMBER_STATUS } from "@/enums/globals";
+import { GROUP_MEMBER_STATUS } from "@/helpers/enums/globals";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
-import useDebounce from "@/hooks/useDebounce";
+import useDebounce from "@/helpers/hooks/useDebounce";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { setLoading } from "@/redux/slices/loadingSlice";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";
 import { selectUserInfo } from "@/redux/slices/userSlice";
 import { useInviteMemberEmailMutation } from "@/services/group";
 import { useGetUsersQuery } from "@/services/user";
-import { GroupMember } from "@/types/group.type";
-import { UserInfo } from "@/types/user.types";
+import { GroupMember } from "@/helpers/types/group.type";
+import { UserInfo } from "@/helpers/types/user.types";
 import { router } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { ToastAndroid } from "react-native";

@@ -1,7 +1,15 @@
 import { useGetActiveQuizQuery, useSubmitQuizMutation } from "@/services/quiz";
 import { useGetSpendingModelQuery } from "@/services/spendingModel";
-import { AnswersState, Quiz, QuizAnswer, QuizAnswerOption, QuizSubmitRequest, QuizSubmitResponse, RecommendationResponse } from "@/types/quiz.types";
-import { SpendingModelData } from "@/types/spendingModel.types";
+import {
+  AnswersState,
+  Quiz,
+  QuizAnswer,
+  QuizAnswerOption,
+  QuizSubmitRequest,
+  QuizSubmitResponse,
+  RecommendationResponse,
+} from "@/helpers/types/quiz.types";
+import { SpendingModelData } from "@/helpers/types/spendingModel.types";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { router } from "expo-router";
 import { useState } from "react";
@@ -16,19 +24,29 @@ const calculateTotalSteps = (quiz: Quiz | null) => {
 const useQuiz = () => {
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [answers, setAnswers] = useState<AnswersState>({});
-  const [customAnswers, setCustomAnswers] = useState<{[questionId: string]: string}>({});
-  const [suggestedModel, setSuggestedModel] = useState<SpendingModelData | null>(null);
-  const [quizSubmitResponse, setQuizSubmitResponse] = useState<QuizSubmitResponse | null>(null);
-  const [recommendationData, setRecommendationData] = useState<RecommendationResponse | null>(null);
+  const [customAnswers, setCustomAnswers] = useState<{
+    [questionId: string]: string;
+  }>({});
+  const [suggestedModel, setSuggestedModel] =
+    useState<SpendingModelData | null>(null);
+  const [quizSubmitResponse, setQuizSubmitResponse] =
+    useState<QuizSubmitResponse | null>(null);
+  const [recommendationData, setRecommendationData] =
+    useState<RecommendationResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
-  
-  const { data: quizData, isLoading, refetch: refetchQuiz } = useGetActiveQuizQuery({});
+
+  const {
+    data: quizData,
+    isLoading,
+    refetch: refetchQuiz,
+  } = useGetActiveQuizQuery({});
   const { data: spendingModelsData } = useGetSpendingModelQuery({});
-  const [submitQuizMutation, { isLoading: isSubmitting }] = useSubmitQuizMutation();
-  
+  const [submitQuizMutation, { isLoading: isSubmitting }] =
+    useSubmitQuizMutation();
+
   const quiz = quizData?.data || null;
   const spendingModels = spendingModelsData?.items || [];
-  
+
   const totalSteps = calculateTotalSteps(quiz);
 
   const fetchActiveQuiz = () => {
@@ -37,7 +55,10 @@ const useQuiz = () => {
       .unwrap()
       .then((response) => {
         if (!response.data) {
-          ToastAndroid.show("Không có quiz nào hiện đang kích hoạt", ToastAndroid.SHORT);
+          ToastAndroid.show(
+            "Không có quiz nào hiện đang kích hoạt",
+            ToastAndroid.SHORT,
+          );
         }
       })
       .catch((err) => {
@@ -46,9 +67,11 @@ const useQuiz = () => {
         setError("Có lỗi khi load quiz");
       });
   };
-  
-  const getModelFromRecommendation = (modelId: string): SpendingModelData | null => {
-    const model = spendingModels.find(m => m.id === modelId);
+
+  const getModelFromRecommendation = (
+    modelId: string,
+  ): SpendingModelData | null => {
+    const model = spendingModels.find((m) => m.id === modelId);
     return model || null;
   };
 
@@ -66,36 +89,41 @@ const useQuiz = () => {
     }
   };
 
-  const selectAnswer = (questionId: string, answerOption: QuizAnswerOption | null, isCustom: boolean = false, customValue: string = ""): void => {
+  const selectAnswer = (
+    questionId: string,
+    answerOption: QuizAnswerOption | null,
+    isCustom: boolean = false,
+    customValue: string = "",
+  ): void => {
     setAnswers({
       ...answers,
       [questionId]: {
         option: answerOption,
-        customAnswer: isCustom ? customValue : (answerOption?.content || ""),
-        isCustom
+        customAnswer: isCustom ? customValue : answerOption?.content || "",
+        isCustom,
       },
     });
-    
+
     if (isCustom) {
       setCustomAnswers({
         ...customAnswers,
-        [questionId]: customValue
+        [questionId]: customValue,
       });
     }
   };
-  
+
   const updateCustomAnswer = (questionId: string, value: string): void => {
     setCustomAnswers({
       ...customAnswers,
-      [questionId]: value
+      [questionId]: value,
     });
-    
+
     if (answers[questionId]?.isCustom) {
       setAnswers({
         ...answers,
         [questionId]: {
           ...answers[questionId],
-          customAnswer: value
+          customAnswer: value,
         },
       });
     }
@@ -103,34 +131,37 @@ const useQuiz = () => {
 
   const handleQuizSubmission = async (): Promise<void> => {
     if (!quiz) return;
-    
+
     const payload: QuizSubmitRequest = {
       quizId: quiz.id,
       answers: Object.keys(answers).map((questionId): QuizAnswer => {
         const answer = answers[questionId];
-        
+
         return {
           questionId,
           answerOptionId: answer.isCustom ? null : answer.option?.id || null,
-          answerContent: answer.isCustom ? answer.customAnswer : (answer.option?.content || ""),
+          answerContent: answer.isCustom
+            ? answer.customAnswer
+            : answer.option?.content || "",
         };
       }),
     };
-    
+
     try {
       const response = await submitQuizMutation(payload).unwrap();
-      
+
       if (response.status === 200 && response.data) {
         setQuizSubmitResponse(response.data);
-        
+
         if (response.data.recommendedModel) {
           setRecommendationData(response.data.recommendedModel);
-          
-          const recommendedId = response?.data?.recommendedModel?.recommendedModel?.id;
+
+          const recommendedId =
+            response?.data?.recommendedModel?.recommendedModel?.id;
           const fullModel = getModelFromRecommendation(recommendedId);
           setSuggestedModel(fullModel);
         }
-        
+
         setCurrentStep(totalSteps - 1);
         ToastAndroid.show("Đã hoàn thành quiz thành công", ToastAndroid.SHORT);
       } else {
@@ -174,10 +205,11 @@ const useQuiz = () => {
   };
 
   const navigateToRecommendedModel = (): void => {
-    const recommendedModelId = quizSubmitResponse?.recommendedModel?.recommendedModel?.id;
+    const recommendedModelId =
+      quizSubmitResponse?.recommendedModel?.recommendedModel?.id;
     router.replace({
       pathname: PATH_NAME.HOME.PERSONAL_EXPENSES_MODEL as any,
-      params: { recommendedModelId }
+      params: { recommendedModelId },
     });
   };
 

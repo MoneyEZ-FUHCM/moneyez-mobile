@@ -1,6 +1,6 @@
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { useGetReportTransactionAllTimeQuery } from "@/services/transaction";
-import { TransactionsReportAllTime } from "@/types/transaction.types";
+import { TransactionsReportAllTime } from "@/helpers/types/transaction.types";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { BackHandler } from "react-native";

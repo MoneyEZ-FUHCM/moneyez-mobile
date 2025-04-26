@@ -3,7 +3,7 @@ import {
   SafeAreaViewCustom,
   SectionComponent,
 } from "@/components";
-import { CHATBOT_CONNECTION } from "@/enums/globals";
+import { CHATBOT_CONNECTION } from "@/helpers/enums/globals";
 import { AntDesign, Entypo, Octicons } from "@expo/vector-icons";
 import { ArrowCircleUp2 } from "iconsax-react-native";
 import React from "react";

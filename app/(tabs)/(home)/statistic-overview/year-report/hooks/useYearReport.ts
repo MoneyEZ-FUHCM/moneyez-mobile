@@ -1,7 +1,7 @@
 import { Colors } from "@/helpers/constants/color";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { useGetReportTransactionYearQuery } from "@/services/transaction";
-import { TransactionsReportMonthlyData } from "@/types/transaction.types";
+import { TransactionsReportMonthlyData } from "@/helpers/types/transaction.types";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { BackHandler } from "react-native";

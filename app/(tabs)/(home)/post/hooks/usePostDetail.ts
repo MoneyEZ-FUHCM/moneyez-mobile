@@ -1,7 +1,7 @@
-import useHideTabbar from "@/hooks/useHideTabbar";
+import useHideTabbar from "@/helpers/hooks/useHideTabbar";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { useGetPostDetailQuery } from "@/services/post";
-import { Post } from "@/types/post.types";
+import { Post } from "@/helpers/types/post.types";
 import { router, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";

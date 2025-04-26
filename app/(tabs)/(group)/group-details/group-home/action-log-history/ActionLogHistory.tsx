@@ -7,13 +7,16 @@ import {
   SafeAreaViewCustom,
   SectionComponent,
 } from "@/components";
-import { TRANSACTION_STATUS, TRANSACTION_TYPE_TEXT } from "@/enums/globals";
+import {
+  TRANSACTION_STATUS,
+  TRANSACTION_TYPE_TEXT,
+} from "@/helpers/enums/globals";
 import {
   formatCurrency,
   formatDateMonthYear,
   formatTime,
 } from "@/helpers/libs";
-import { GroupTransaction } from "@/types/transaction.types";
+import { GroupTransaction } from "@/helpers/types/transaction.types";
 import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
@@ -393,12 +396,12 @@ const ActionLogHistory = () => {
                 </View>
 
                 {state.selectedLog?.note && (
-                  <View>
-                    <Text className="mb-2 font-medium text-red">
-                      Lý do từ chối:
+                  <View className="flex-row">
+                    <Text className="mb-2 text-xs font-medium italic text-red">
+                      * {""}
                     </Text>
-                    <Text className="text-gray-600">
-                      {state.selectedLog?.note}
+                    <Text className="text-xs italic text-gray-600">
+                      Lưu ý: {state.selectedLog?.note}
                     </Text>
                   </View>
                 )}

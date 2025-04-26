@@ -6,7 +6,7 @@ import {
   useGetTransactionByIdQuery,
   useGetUserSpendingModelDetailQuery,
 } from "@/services/userSpendingModel";
-import { TransactionViewModel } from "@/types/transaction.types";
+import { TransactionViewModel } from "@/helpers/types/transaction.types";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";

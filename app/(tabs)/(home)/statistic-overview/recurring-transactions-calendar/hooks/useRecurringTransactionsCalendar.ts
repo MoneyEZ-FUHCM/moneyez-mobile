@@ -1,9 +1,7 @@
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
-import {
-  useGetRecurringTransactionsCalendarQuery,
-  useGetTransactionQuery,
-} from "@/services/transaction";
-import { Transaction } from "@/types/transaction.types";
+import { useGetRecurringTransactionQuery } from "@/services/recurringTransaction";
+import { useGetRecurringTransactionsCalendarQuery } from "@/services/transaction";
+import { Transaction } from "@/helpers/types/transaction.types";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { BackHandler } from "react-native";
@@ -27,7 +25,11 @@ const useRecurringTransactionsCalendar = () => {
     error,
     isLoading,
     refetch,
-  } = useGetTransactionQuery({ PageIndex: 1, PageSize: 20 });
+  } = useGetRecurringTransactionQuery({
+    PageIndex: 1,
+    PageSize: 20,
+    isActive: true,
+  });
   const {
     data: dateCalendarResponseData,
     error: recurringTransactionError,
@@ -58,16 +60,15 @@ const useRecurringTransactionsCalendar = () => {
   }, [selectedMonth, transactions]);
 
   useEffect(() => {
-    // Type assertion to ensure transactions are of type Transaction[]
     const fetchedTransactions =
-      (transactionsResponseData?.items as Transaction[]) || [];
+      (transactionsResponseData?.data?.data as Transaction[]) || [];
     setTransactions(fetchedTransactions);
   }, [transactionsResponseData]);
 
   useEffect(() => {
     const newTransactionsByDate = transactions.reduce(
       (acc, transaction) => {
-        const formattedDate = transaction.transactionDate.split("T")[0];
+        const formattedDate = transaction?.startDate?.split("T")[0];
         if (!acc[formattedDate]) acc[formattedDate] = [];
         acc[formattedDate].push(transaction);
         return acc;
@@ -81,9 +82,9 @@ const useRecurringTransactionsCalendar = () => {
   const getTransaction = (transactions: Transaction[]) => {
     const result = transactions.reduce(
       (acc, t) => {
-        if (t.type === "INCOME") {
+        if (t.type === (0 as any)) {
           acc.income += t.amount;
-        } else if (t.type === "EXPENSE") {
+        } else if (t.type === (1 as any)) {
           acc.expense += t.amount;
         }
         return acc;
@@ -97,18 +98,19 @@ const useRecurringTransactionsCalendar = () => {
   const caculateFinancialSummary = (month: number) => {
     const transactionsOnMonth =
       transactions.filter(
-        (t) => new Date(t.transactionDate).getMonth() + 1 === month,
+        (t) => new Date(t.startDate).getMonth() + 1 === month,
       ) || [];
 
     const result = transactionsOnMonth.reduce(
       (acc, t) => {
-        if (t.type === "INCOME") {
+        if (t.type === (0 as any)) {
           acc.income += t.amount;
-        } else if (t.type === "EXPENSE") {
+        } else if (t.type === (1 as any)) {
           acc.expense += t.amount;
         }
         return acc;
       },
+
       { income: 0, expense: 0 },
     );
     setTotalExpense(result.expense);

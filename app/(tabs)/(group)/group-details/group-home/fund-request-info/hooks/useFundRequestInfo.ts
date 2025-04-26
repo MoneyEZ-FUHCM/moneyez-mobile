@@ -6,8 +6,8 @@ import { useCallback, useMemo } from "react";
 import { BackHandler, ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import TEXT_TRANSLATE_FUND_REQUEST_INFO from "../FundRequestInfo.translate";
-import { GroupMember } from "@/types/group.type";
-import { GROUP_ROLE } from "@/enums/globals";
+import { GroupMember } from "@/helpers/types/group.type";
+import { GROUP_ROLE } from "@/helpers/enums/globals";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { selectUserInfo } from "@/redux/slices/userSlice";
 

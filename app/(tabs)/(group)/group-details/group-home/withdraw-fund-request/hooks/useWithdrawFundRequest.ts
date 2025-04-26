@@ -1,8 +1,10 @@
+import { GROUP_ROLE } from "@/helpers/enums/globals";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { setLoading } from "@/redux/slices/loadingSlice";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";
+import { selectUserInfo } from "@/redux/slices/userSlice";
 import {
   useGetGroupDetailQuery,
   useRequestFundMutation,
@@ -14,8 +16,6 @@ import { BackHandler, ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import WITH_DRAW_FUND_REQUEST_CONSTANT from "../WithDrawFundRequest.constant";
 import TEXT_TRANSLATE_WITH_DRAW_FUND_REQUEST from "../WithdrawFundRequest.translate";
-import { selectUserInfo } from "@/redux/slices/userSlice";
-import { GROUP_ROLE } from "@/enums/globals";
 
 interface FundRequestForm {
   amount: string;
@@ -96,12 +96,12 @@ const useWithdrawFundRequest = () => {
             pathname: GROUP_HOME.FUND_REQUEST_INFO as any,
             params: {
               id: currentGroup?.id,
-              amount: response?.data?.amount,
-              createdDate: response?.data?.bankAccount?.createdDate,
+              amount: numericAmount,
+              createdDate: response?.data?.createdDate,
               requestCode: response?.data?.requestCode,
-              accountNumber: response?.data?.bankAccount?.accountNumber,
-              bankName: response?.data?.bankAccount?.bankName,
-              accountHolderName: response?.data?.bankAccount?.accountHolderName,
+              accountNumber: response?.data?.accountNumber,
+              bankName: response?.data?.bankName,
+              accountHolderName: response?.data?.accountHolderName,
               description: values?.description,
               mode: "WITHDRAW",
             },

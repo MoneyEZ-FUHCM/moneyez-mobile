@@ -1,6 +1,6 @@
 import { PATH_NAME } from "@/helpers/constants/pathname";
-import useLogout from "@/hooks/useLogout";
-import useUploadImage from "@/hooks/useUploadImage";
+import useLogout from "@/helpers/hooks/useLogout";
+import useUploadImage from "@/helpers/hooks/useUploadImage";
 import { selectUserInfo } from "@/redux/slices/userSlice";
 import { router } from "expo-router";
 import { useCallback } from "react";

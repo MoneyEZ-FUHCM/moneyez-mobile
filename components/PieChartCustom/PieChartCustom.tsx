@@ -1,5 +1,5 @@
 import { formatCurrency } from "@/helpers/libs";
-import { BudgetCategory } from "@/types/category.types";
+import { BudgetCategory } from "@/helpers/types/category.types";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";

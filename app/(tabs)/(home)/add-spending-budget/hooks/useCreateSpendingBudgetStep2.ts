@@ -6,7 +6,7 @@ import {
   useCreateFinancialGoalMutation,
   useGetPersonalLimitBudgetSubcategoryQuery,
 } from "@/services/financialGoal";
-import { PersonalLimitBudgetSubcate } from "@/types/financialGoal.type";
+import { PersonalLimitBudgetSubcate } from "@/helpers/types/financialGoal.type";
 import { MaterialIcons } from "@expo/vector-icons";
 import { CommonActions, useNavigation } from "@react-navigation/native";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";

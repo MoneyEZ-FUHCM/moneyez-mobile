@@ -8,7 +8,7 @@ import {
 import {
   PersonalLimitBudgetSubcate,
   UpdateBudgetPayload,
-} from "@/types/financialGoal.type";
+} from "@/helpers/types/financialGoal.type";
 import { router, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useRef } from "react";
 import { ToastAndroid } from "react-native";

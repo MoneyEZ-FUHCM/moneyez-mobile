@@ -1,4 +1,4 @@
-import { GROUP_MEMBER_STATUS, GROUP_ROLE } from "@/enums/globals";
+import { GROUP_MEMBER_STATUS, GROUP_ROLE } from "@/helpers/enums/globals";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";
@@ -7,7 +7,7 @@ import {
   useGetGroupDetailQuery,
   useKickMemberMutation,
 } from "@/services/group";
-import { GroupMember } from "@/types/group.type";
+import { GroupMember } from "@/helpers/types/group.type";
 import { router } from "expo-router";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { ToastAndroid } from "react-native";

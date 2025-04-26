@@ -28,6 +28,11 @@ export default function WithdrawFundRequest() {
         if (!value) return true;
         const numericValue = Number(value.replace(/\./g, ""));
         return numericValue >= 10000;
+      })
+      .test("max-amount", "Giá trị cao nhất là 5.000.000đ", function (value) {
+        if (!value) return true;
+        const numericValue = Number(value.replace(/\./g, ""));
+        return numericValue <= 5000000;
       }),
     description: Yup.string()
       .required(MESSAGE_VALIDATE.DESCRIPTION_REQUIRED)

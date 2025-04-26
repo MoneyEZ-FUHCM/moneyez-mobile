@@ -1,4 +1,4 @@
-import { CHATBOT_CONNECTION } from "@/enums/globals";
+import { CHATBOT_CONNECTION } from "@/helpers/enums/globals";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { setConnectionStatus } from "@/redux/slices/systemSlice";
 import { store } from "@/redux/store";

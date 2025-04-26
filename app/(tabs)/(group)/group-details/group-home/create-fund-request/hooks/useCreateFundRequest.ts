@@ -1,4 +1,4 @@
-import { GROUP_ROLE } from "@/enums/globals";
+import { GROUP_ROLE } from "@/helpers/enums/globals";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
@@ -94,9 +94,9 @@ const useCreateFundRequest = () => {
             pathname: GROUP_HOME.FUND_REQUEST_INFO as any,
             params: {
               id: currentGroup?.id,
-              amount: response?.data?.amount,
-              createdDate: response?.data?.bankAccount?.createdDate,
-              requestCode: response?.data?.requestCode,
+              amount: response?.data?.transaction?.amount,
+              createdDate: response?.data?.transaction?.createdDate,
+              requestCode: response?.data?.transaction?.requestCode,
               accountNumber: response?.data?.bankAccount?.accountNumber,
               bankName: response?.data?.bankAccount?.bankName,
               accountHolderName: response?.data?.bankAccount?.accountHolderName,
