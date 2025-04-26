@@ -1,8 +1,11 @@
-import { TRANSACTION_TYPE, TRANSACTION_TYPE_TEXT } from "@/enums/globals";
+import {
+  TRANSACTION_TYPE,
+  TRANSACTION_TYPE_TEXT,
+} from "@/helpers/enums/globals";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { convertUTCToVietnamTime, parseCurrency } from "@/helpers/libs";
-import useUploadImage from "@/hooks/useUploadImage";
+import useUploadImage from "@/helpers/hooks/useUploadImage";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { setTransactionData } from "@/redux/slices/transactionSlice";
 import { selectCurrentUserSpendingModel } from "@/redux/slices/userSpendingModelSlice";
@@ -10,10 +13,10 @@ import {
   useGetCurrentCategoriesQuery,
   useGetSubCategoriesQuery,
 } from "@/services/userSpendingModel";
-import { CategoryListFilter } from "@/types/category.types";
-import { TransactionType } from "@/types/invidual.types";
-import { Subcategory } from "@/types/subCategory";
-import { TransactionPreviewPayload } from "@/types/transaction.types";
+import { CategoryListFilter } from "@/helpers/types/category.types";
+import { TransactionType } from "@/helpers/types/invidual.types";
+import { Subcategory } from "@/helpers/types/subCategory";
+import { TransactionPreviewPayload } from "@/helpers/types/transaction.types";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BackHandler, FlatList, ToastAndroid } from "react-native";

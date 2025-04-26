@@ -8,10 +8,13 @@ import {
   SectionComponent,
   SkeletonLoaderComponent,
 } from "@/components";
-import { TRANSACTION_TYPE, TRANSACTION_TYPE_TEXT } from "@/enums/globals";
+import {
+  TRANSACTION_TYPE,
+  TRANSACTION_TYPE_TEXT,
+} from "@/helpers/enums/globals";
 import { Colors } from "@/helpers/constants/color";
 import { formatCurrency, formatDate, formatDateTime } from "@/helpers/libs";
-import { TransactionViewModelDetail } from "@/types/transaction.types";
+import { TransactionViewModelDetail } from "@/helpers/types/transaction.types";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import {

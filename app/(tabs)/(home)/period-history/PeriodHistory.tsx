@@ -8,7 +8,7 @@ import {
 import { PieChartCustom } from "@/components/PieChartCustom/PieChartCustom";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { formatCurrency } from "@/helpers/libs";
-import { TransactionViewModel } from "@/types/transaction.types";
+import { TransactionViewModel } from "@/helpers/types/transaction.types";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import { ActivityIndicator, Pressable, Text, View } from "react-native";

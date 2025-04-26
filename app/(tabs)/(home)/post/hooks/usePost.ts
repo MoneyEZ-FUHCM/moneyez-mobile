@@ -1,6 +1,6 @@
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { useGetPostListQuery } from "@/services/post";
-import { Post } from "@/types/post.types";
+import { Post } from "@/helpers/types/post.types";
 import { router } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FlatList } from "react-native";

@@ -1,4 +1,4 @@
-import { TransactionPreviewPayload } from "@/types/transaction.types";
+import { TransactionPreviewPayload } from "@/helpers/types/transaction.types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface TransactionState {

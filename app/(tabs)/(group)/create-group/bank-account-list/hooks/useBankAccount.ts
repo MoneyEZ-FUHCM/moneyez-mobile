@@ -1,6 +1,6 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
-import useHideTabbar from "@/hooks/useHideTabbar";
+import useHideTabbar from "@/helpers/hooks/useHideTabbar";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import {
   useCancelWebHookMutation,
@@ -8,7 +8,7 @@ import {
   useGetBankAccountsQuery,
   useRegisterWebHookMutation,
 } from "@/services/bankAccounts";
-import { BankAccountType } from "@/types/bankAccount.types";
+import { BankAccountType } from "@/helpers/types/bankAccount.types";
 import * as Clipboard from "expo-clipboard";
 import { router } from "expo-router";
 import { useCallback, useRef, useState } from "react";

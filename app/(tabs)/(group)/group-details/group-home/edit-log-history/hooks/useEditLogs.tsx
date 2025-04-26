@@ -1,11 +1,11 @@
-import useHideGroupTabbar from "@/hooks/useHideGroupTabbar";
+import useHideGroupTabbar from "@/helpers/hooks/useHideGroupTabbar";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { useGetGroupLogsQuery } from "@/services/group";
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import EDIT_LOG_HISTORY_CONSTANT from "../EditLogHistory.constant";
 import { ToastAndroid } from "react-native";
-import { GroupLogs } from "@/types/group.type";
+import { GroupLogs } from "@/helpers/types/group.type";
 
 type NotificationTabType = "group" | "members" | string;
 

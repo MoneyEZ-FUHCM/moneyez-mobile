@@ -1,8 +1,8 @@
 import { LoadingWrapper } from "@/components";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
-import { useColorScheme } from "@/hooks/useColorScheme";
-import { useMomentLocale } from "@/hooks/useMomentLocale";
+import { useColorScheme } from "@/helpers/hooks/useColorScheme";
+import { useMomentLocale } from "@/helpers/hooks/useMomentLocale";
 import { store } from "@/redux/store";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import {

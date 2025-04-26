@@ -3,14 +3,14 @@ import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";
 import { selectUserInfo } from "@/redux/slices/userSlice";
 import { useContributeGroupMutation } from "@/services/group";
-import { GroupMember } from "@/types/group.type";
+import { GroupMember } from "@/helpers/types/group.type";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { BackHandler, ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import TEXT_TRANSLATE_GROUP_RATIO_MEMBER from "../GroupRatioMember.translate";
 import { setLoading } from "@/redux/slices/loadingSlice";
-import { GROUP_MEMBER_STATUS } from "@/enums/globals";
+import { GROUP_MEMBER_STATUS } from "@/helpers/enums/globals";
 
 export interface Member {
   id: number;

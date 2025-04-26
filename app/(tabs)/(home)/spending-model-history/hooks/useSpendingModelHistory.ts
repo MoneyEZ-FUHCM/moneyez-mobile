@@ -1,13 +1,13 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { formatCurrency, formatDate } from "@/helpers/libs";
-import useHideTabbar from "@/hooks/useHideTabbar";
+import useHideTabbar from "@/helpers/hooks/useHideTabbar";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { useGetUserSpendingModelQuery } from "@/services/userSpendingModel";
 import {
   SpendingModelHistoryState,
   UserSpendingModel,
-} from "@/types/spendingModel.types";
+} from "@/helpers/types/spendingModel.types";
 import { router } from "expo-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ToastAndroid } from "react-native";
