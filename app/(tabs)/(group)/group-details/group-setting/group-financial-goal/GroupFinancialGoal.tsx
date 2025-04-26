@@ -362,7 +362,7 @@ export default function GroupFinancialGoal() {
 
         <TouchableOpacity
           onPress={handler.handleNavigateToUpdate}
-          className="bg-pritext-primary mt-5 h-12 overflow-hidden rounded-lg"
+          className="mt-5 h-12 overflow-hidden rounded-lg bg-primary"
           activeOpacity={0.85}
         >
           <View className="absolute bottom-0 left-0 right-0 top-0 bg-black opacity-5" />

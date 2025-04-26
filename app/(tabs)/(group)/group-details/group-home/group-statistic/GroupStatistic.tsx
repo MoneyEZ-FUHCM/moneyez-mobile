@@ -18,7 +18,7 @@ export default function GroupStatisticPage() {
 
   return (
     <SafeAreaViewCustom rootClassName="bg-[#f5f7fa] flex-1">
-      <SectionComponent rootClassName="h-16 bg-white justify-center relative shadow-sm">
+      <SectionComponent rootClassName="h-14 bg-white justify-center relative shadow-sm">
         <Pressable
           onPress={handler.handleGoBack}
           className="absolute left-4 h-10 w-10 items-center justify-center rounded-full"
