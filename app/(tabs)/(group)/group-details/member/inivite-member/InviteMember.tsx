@@ -66,7 +66,7 @@ const CountdownDisplay = memo(({ createdDate }: { createdDate: string }) => {
   }, [createdDate]);
 
   return (
-    <Text className="text-sm font-medium text-[#b62d2d]">
+    <Text className="text-sm font-medium text-red">
       {isExpired ? "Lời mời đã hết hạn" : `Lời mời sẽ hết hạn sau ${countdown}`}
     </Text>
   );
@@ -156,7 +156,9 @@ const InviteMember = () => {
               {item?.userInfo?.email}
             </Text>
             {item.status === GROUP_MEMBER_STATUS.PENDING && (
-              <CountdownDisplay createdDate={item.createdDate} />
+              <CountdownDisplay
+                createdDate={item.updatedDate || item.createdDate}
+              />
             )}
           </View>
         </View>

@@ -1,14 +1,14 @@
-import { GROUP_MEMBER_STATUS } from "@/helpers/enums/globals";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
+import { GROUP_MEMBER_STATUS } from "@/helpers/enums/globals";
 import useDebounce from "@/helpers/hooks/useDebounce";
+import { GroupMember } from "@/helpers/types/group.type";
+import { UserInfo } from "@/helpers/types/user.types";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { setLoading } from "@/redux/slices/loadingSlice";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";
 import { selectUserInfo } from "@/redux/slices/userSlice";
 import { useInviteMemberEmailMutation } from "@/services/group";
 import { useGetUsersQuery } from "@/services/user";
-import { GroupMember } from "@/helpers/types/group.type";
-import { UserInfo } from "@/helpers/types/user.types";
 import { router } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { ToastAndroid } from "react-native";
@@ -176,7 +176,7 @@ const useInviteMemberByEmail = () => {
       if (pendingMember) {
         return {
           type: "COUNTDOWN",
-          createdDate: pendingMember.createdDate,
+          createdDate: pendingMember.updatedDate || pendingMember.createdDate,
         };
       }
 

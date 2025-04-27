@@ -61,11 +61,11 @@ export default function GroupStatisticPage() {
                       <View>
                         <ProgressCircleComponent
                           value={
-                            state.groupGoal === 0
-                              ? 0
-                              : state.groupCurrent >= state.groupGoal
+                            Math.floor(
+                              (state.groupCurrent / state.groupGoal > 1
                                 ? 1
-                                : state.groupCurrent / state.groupGoal
+                                : state.groupCurrent / state.groupGoal) * 100,
+                            ) / 100
                           }
                           size={70}
                           thickness={6}
@@ -141,6 +141,11 @@ export default function GroupStatisticPage() {
                   </Text>
                 </View>
               </View>
+              <View>
+                <Text>Đã góp: </Text>
+                <Text>Đã rút:</Text>
+                <Text>Còn lại:</Text>
+              </View>
 
               {state.members?.length > 0 ? (
                 <View className="space-y-1">
@@ -192,9 +197,13 @@ export default function GroupStatisticPage() {
                       <View className="rounded-lg p-1">
                         <ProgressCircleComponent
                           value={member.ratio / 100}
-                          size={52}
+                          // exactPercentage={member.ratio}
+                          size={60}
                           thickness={4}
                           showPercentage={true}
+                          percentageTextStyle={{
+                            fontSize: 12,
+                          }}
                         />
                       </View>
                     </View>
