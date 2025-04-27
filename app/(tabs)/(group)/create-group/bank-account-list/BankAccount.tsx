@@ -446,7 +446,9 @@ const BankAccount = () => {
             <TouchableOpacity
               className="h-14 w-14 items-center justify-center rounded-full bg-primary shadow-lg shadow-gray-400"
               onPress={() =>
-                router.navigate(PATH_NAME.ACCOUNT.FUNCTION_BANK_ACCOUNT as any)
+                router.navigate(
+                  PATH_NAME.GROUP.CREATE_FUNCTION_BANK_ACCOUNT as any,
+                )
               }
             >
               <MaterialCommunityIcons

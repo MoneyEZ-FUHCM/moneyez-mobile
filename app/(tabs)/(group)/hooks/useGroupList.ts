@@ -1,7 +1,9 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
-import { isValidGUID } from "@/helpers/libs";
+import { GROUP_MEMBER_STATUS } from "@/helpers/enums/globals";
 import useHideTabbar from "@/helpers/hooks/useHideTabbar";
+import { isValidGUID } from "@/helpers/libs";
+import { GroupDetail, GroupMember } from "@/helpers/types/group.type";
 import { setLoading } from "@/redux/slices/loadingSlice";
 import { setGroupTabHidden, setMainTabHidden } from "@/redux/slices/tabSlice";
 import {
@@ -9,7 +11,6 @@ import {
   useGetGroupsQuery,
   useLazyInviteMemberQRCodeAcceptQuery,
 } from "@/services/group";
-import { GroupDetail, GroupMember } from "@/helpers/types/group.type";
 import { Camera } from "expo-camera";
 import { router } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -17,7 +18,6 @@ import { ToastAndroid } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { useDispatch } from "react-redux";
 import TEXT_TRANSLATE_GROUP_LIST from "../GroupList.translate";
-import { GROUP_MEMBER_STATUS } from "@/helpers/enums/globals";
 
 const useGroupList = () => {
   const pageSize = 10;

@@ -32,18 +32,6 @@ const GroupRule = () => {
         contentContainerStyle={{ paddingBottom: 80 }}
       >
         <>
-          <LinearGradient
-            colors={[Colors.colors.secondary, Colors.colors.thirdly]}
-            className="mb-6 rounded-2xl bg-gradient-to-br from-primary to-secondary p-5 shadow-md"
-          >
-            <Text className="mb-2 text-xl font-bold">
-              Chào mừng bạn đến với MoneyEasy
-            </Text>
-            <Text className="text-base">
-              Vui lòng đọc kỹ các quy định dưới đây để hiểu rõ cách thức hoạt
-              động của nhóm trong ứng dụng MoneyEasy.
-            </Text>
-          </LinearGradient>
           <RuleSection
             title="Quy định chung"
             icon="shield-checkmark"
@@ -84,9 +72,9 @@ const GroupRule = () => {
               "Leader chỉ có thể cập nhật mục tiêu nhóm khi chưa đến deadline.",
               <>
                 Mục tiêu nhóm sẽ tự chuyển sang trạng thái
-                <Text className="font-bold text-green">Đã hoàn thành</Text>
+                <Text className="font-bold text-green"> Đã hoàn thành </Text>
                 sau khi ghi nhận đã đạt hoặc
-                <Text className="font-bold text-red">Chưa hoàn thành</Text>
+                <Text className="font-bold text-red"> Chưa hoàn thành </Text>
                 nếu nó đã hết hạn.
               </>,
             ]}
