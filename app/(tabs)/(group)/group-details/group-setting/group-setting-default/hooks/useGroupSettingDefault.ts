@@ -46,6 +46,11 @@ export default function useGroupSettings() {
     router.navigate(GROUP_SETTING.GROUP_FINANCIAL_GOAL as any);
   }, []);
 
+  const handleViewRule = useCallback(() => {
+    dispatch(setGroupTabHidden(true));
+    router.navigate(GROUP_SETTING.GROUP_RULE as any);
+  }, []);
+
   const handleCloseGroupFund = useCallback(async () => {
     dispatch(setLoading(true));
     try {
@@ -110,6 +115,7 @@ export default function useGroupSettings() {
       handleOpenModal,
       handleCloseModal,
       handleFinancialGoal,
+      handleViewRule,
     },
   };
 }

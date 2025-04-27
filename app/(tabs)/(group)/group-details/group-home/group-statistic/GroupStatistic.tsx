@@ -4,7 +4,8 @@ import {
   SafeAreaViewCustom,
   SectionComponent,
 } from "@/components";
-import { formatCurrency } from "@/helpers/libs";
+import { Colors } from "@/helpers/constants/color";
+import { formatCurrency, formatDate } from "@/helpers/libs";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
@@ -35,7 +36,7 @@ export default function GroupStatisticPage() {
       <LoadingSectionWrapper isLoading={state.isLoading}>
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 40 }}
+          contentContainerStyle={{ paddingBottom: 80 }}
         >
           <View className="space-y-4 p-4">
             <SectionComponent rootClassName="rounded-2xl bg-white p-5 shadow-md">
@@ -88,11 +89,29 @@ export default function GroupStatisticPage() {
                       </View>
                     </View>
                   </View>
-
+                  {state.createdDate && (
+                    <View className="mt-3 flex-row items-center justify-between rounded-lg bg-[#F5F7FA] p-3">
+                      <View className="flex-row items-center py-1">
+                        <MaterialIcons
+                          name="calendar-month"
+                          size={18}
+                          color={Colors.colors.primary}
+                        />
+                        <Text className="ml-2 font-medium text-gray-700">
+                          {LABELS.START_DATE}:{" "}
+                          {formatDate(state.createdDate, "DD.MM.YYYY")}
+                        </Text>
+                      </View>
+                    </View>
+                  )}
                   {state.dueDate && state.dueDate !== "N/A" && (
                     <View className="mt-3 flex-row items-center justify-between rounded-lg bg-[#F5F7FA] p-3">
                       <View className="flex-row items-center">
-                        <MaterialIcons name="event" size={18} color="#609084" />
+                        <MaterialIcons
+                          name="event"
+                          size={18}
+                          color={Colors.colors.primary}
+                        />
                         <Text className="ml-2 font-medium text-gray-700">
                           {LABELS.DUE_DATE}: {state.dueDate}
                         </Text>
@@ -142,9 +161,18 @@ export default function GroupStatisticPage() {
                 </View>
               </View>
               <View>
-                <Text>Đã góp: </Text>
-                <Text>Đã rút:</Text>
-                <Text>Còn lại:</Text>
+                <Text>
+                  Đã góp:{" "}
+                  {formatCurrency(state.groupDetail?.totalIncome as number)}
+                </Text>
+                <Text>
+                  Đã rút:{" "}
+                  {formatCurrency(state.groupDetail?.totalExpense as number)}
+                </Text>
+                <Text>
+                  Còn lại:
+                  {formatCurrency(state.groupDetail?.currentBalance as number)}
+                </Text>
               </View>
 
               {state.members?.length > 0 ? (
