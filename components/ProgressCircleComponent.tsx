@@ -83,7 +83,8 @@ const ProgressCircleComponent = ({
               percentageTextStyle,
             ]}
           >
-            {Math.round(progress * 100)}%
+            {/* {Math.round(progress * 100)}% */}
+            {value * 100}%
           </Text>
         ) : (
           <MaterialIcons
