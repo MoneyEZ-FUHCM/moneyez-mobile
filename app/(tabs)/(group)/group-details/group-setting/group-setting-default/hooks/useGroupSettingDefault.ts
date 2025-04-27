@@ -33,8 +33,15 @@ export default function useGroupSettings() {
   }, [groupDetail, userInfo]);
 
   const handleEditGroupInfo = useCallback(() => {
-    ToastAndroid.show("Tính năng này đang được phát triển", ToastAndroid.SHORT);
-  }, []);
+    dispatch(setGroupTabHidden(true));
+    router.navigate({
+      pathname: PATH_NAME.GROUP.CREATE_GROUP_STEP_1 as any,
+      params: { 
+        isEditMode: "true", 
+        groupId: groupDetail?.id,
+      }
+    });
+  }, [groupDetail, dispatch]);
 
   const handleUpdateContributionRate = useCallback(() => {
     dispatch(setGroupTabHidden(true));
