@@ -123,7 +123,7 @@ const useGroupHomeDefault = () => {
       router.navigate(PATH_NAME.GROUP_HOME.EDIT_LOG_HISTORY as any);
     }
   };
-
+  console.log("check groupTransaction?.items", groupTransaction?.items);
   return {
     state: {
       groupDetail,
