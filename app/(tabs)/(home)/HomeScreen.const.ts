@@ -20,12 +20,13 @@ const HOME_SCREEN_CONSTANTS = {
       icon: Coin1,
       url: HOME.SPENDING_MODEL_HISTORY,
     },
-    { label: "Thống kê", icon: Activity, url: HOME.STATISTIC_OVERVIEW },
     {
       label: "Thu chi định kì",
       icon: Calendar,
       url: HOME.RECURRING_TRANSACTION_LIST,
     },
+    { label: "Thống kê", icon: Activity, url: HOME.STATISTIC_OVERVIEW },
+
     // { label: "Quiz", icon: Bookmark, url: HOME.QUIZ },
     // { label: "Tính năng 6", icon: Card },
     // { label: "Tính năng 7", icon: Category },

@@ -286,6 +286,15 @@ const RecurringTransactionList = () => {
                 {formatTime(state.selectedTransaction?.startDate)}
               </Text>
             </View>
+            <View className="mb-3 flex-row items-center justify-between">
+              <Text className="text-gray-600">
+                {TEXT_TRANSLATE.LABEL.RECURRING_DATE}
+              </Text>
+              <Text className="font-semibold text-gray-800">
+                {formatDate(state.selectedTransaction?.nextOccurrence)} •{" "}
+                {formatTime(state.selectedTransaction?.nextOccurrence)}
+              </Text>
+            </View>
 
             {state.selectedTransaction.tags && (
               <View className="mb-3">
@@ -360,6 +369,8 @@ const RecurringTransactionList = () => {
         </View>
       );
     }
+
+    console.log("check groupedTransactions", groupedTransactions);
 
     return (
       <View className="flex-1">

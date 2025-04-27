@@ -1,9 +1,9 @@
-import { setMainTabHidden } from "@/redux/slices/tabSlice";
-import { useGetReportTransactionBalanceYearQuery } from "@/services/transaction";
 import { LineChartDataPoint } from "@/helpers/types/chart.types";
 import { TransactionsReportMonthlyBalance } from "@/helpers/types/transaction.types";
+import { setMainTabHidden } from "@/redux/slices/tabSlice";
+import { useGetReportTransactionBalanceYearQuery } from "@/services/transaction";
 import { router, useFocusEffect } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { BackHandler } from "react-native";
 import { useDispatch } from "react-redux";
 
@@ -117,15 +117,24 @@ const useBalanceReport = () => {
     }, [handleBack]),
   );
 
-  // Handle previous year
   const handlePreviousYear = () => {
     setCurrentYear((prevYear) => prevYear - 1);
   };
 
-  // Handle next year
   const handleNextYear = () => {
     setCurrentYear((prevYear) => prevYear + 1);
   };
+
+  const chartMaxValue = useMemo(() => {
+    if (!lineData || lineData.length === 0) return 0;
+
+    const maxAbsValue = Math.max(
+      ...lineData.map((item) => Math.abs(Number(item.value))),
+    );
+
+    const roundedValue = Math.ceil(maxAbsValue / 1000000) * 1000000;
+    return roundedValue + roundedValue * 0.1;
+  }, [lineData]);
 
   return {
     state: {
@@ -135,6 +144,7 @@ const useBalanceReport = () => {
       transactionsReportResponseData,
       error,
       isLoading,
+      chartMaxValue,
     },
     handler: {
       handlePreviousYear,

@@ -63,11 +63,11 @@ export default function useGroupFinancialGoal() {
 
   const TABS = [
     { label: "Đang hoạt động", type: "ACTIVE" },
-    { label: "Đã hoàn thành", type: "COMPLETED" },
+    { label: "Không hoạt động", type: "COMPLETED" },
   ];
 
   const COMPLETED_FILTERS = [
-    { label: "Đã lưu trữ", type: "ARCHIVED" },
+    { label: "Chưa hoàn thành", type: "ARCHIVED" },
     { label: "Đã hoàn thành", type: "COMPLETED" },
   ];
 
