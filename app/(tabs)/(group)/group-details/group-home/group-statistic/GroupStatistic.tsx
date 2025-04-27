@@ -4,13 +4,15 @@ import {
   SafeAreaViewCustom,
   SectionComponent,
 } from "@/components";
-import { formatCurrency } from "@/helpers/libs";
+import { Colors } from "@/helpers/constants/color";
+import { formatCurrency, formatDate } from "@/helpers/libs";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import TEXT_TRANSLATE_GROUP_STATISTIC from "./GroupStatistic.translate";
 import useGroupStatistic from "./hooks/useGroupStatistic";
+import { PieChart } from "react-native-gifted-charts";
 
 export default function GroupStatisticPage() {
   const { state, handler } = useGroupStatistic();
@@ -35,11 +37,11 @@ export default function GroupStatisticPage() {
       <LoadingSectionWrapper isLoading={state.isLoading}>
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 40 }}
+          contentContainerStyle={{ paddingBottom: 80 }}
         >
           <View className="space-y-4 p-4">
-            <SectionComponent rootClassName="rounded-2xl bg-white p-5 shadow-md">
-              {state.hasGroupName ? (
+            {state.hasGroupName && (
+              <SectionComponent rootClassName="rounded-2xl bg-white p-5 shadow-md">
                 <>
                   <View className="mb-3 flex-row items-center justify-between">
                     <Text className="text-lg font-bold">
@@ -88,11 +90,29 @@ export default function GroupStatisticPage() {
                       </View>
                     </View>
                   </View>
-
+                  {state.createdDate && (
+                    <View className="mt-3 flex-row items-center justify-between rounded-lg bg-[#F5F7FA] p-3">
+                      <View className="flex-row items-center py-1">
+                        <MaterialIcons
+                          name="calendar-month"
+                          size={18}
+                          color={Colors.colors.primary}
+                        />
+                        <Text className="ml-2 font-medium text-gray-700">
+                          {LABELS.START_DATE}:{" "}
+                          {formatDate(state.createdDate, "DD.MM.YYYY")}
+                        </Text>
+                      </View>
+                    </View>
+                  )}
                   {state.dueDate && state.dueDate !== "N/A" && (
                     <View className="mt-3 flex-row items-center justify-between rounded-lg bg-[#F5F7FA] p-3">
                       <View className="flex-row items-center">
-                        <MaterialIcons name="event" size={18} color="#609084" />
+                        <MaterialIcons
+                          name="event"
+                          size={18}
+                          color={Colors.colors.primary}
+                        />
                         <Text className="ml-2 font-medium text-gray-700">
                           {LABELS.DUE_DATE}: {state.dueDate}
                         </Text>
@@ -119,17 +139,119 @@ export default function GroupStatisticPage() {
                     </View>
                   )}
                 </>
-              ) : (
-                <View className="items-center py-3">
-                  <Text className="mb-3 text-base font-medium text-primary">
-                    Tổng số tiền đã đóng góp
-                  </Text>
-                  <Text className="mb-2 text-4xl font-bold text-[#2A3240]">
-                    {formatCurrency(state.groupCurrent)}
-                  </Text>
-                  <View className="mt-1 h-1 w-16 rounded-full bg-primary text-primary opacity-70" />
+              </SectionComponent>
+            )}
+            <SectionComponent rootClassName="rounded-2xl bg-white p-5 shadow-md">
+              <View className="mb-4 flex-row items-center justify-between">
+                <Text className="text-lg font-bold">Tổng quan</Text>
+              </View>
+              <View className="flex-row">
+                <View className="mr-2 flex-[0.35] items-center justify-center">
+                  {state.groupDetail?.totalIncome &&
+                  state.groupDetail.totalIncome > 0 ? (
+                    <PieChart
+                      data={[
+                        {
+                          value: Math.min(
+                            state.groupDetail.totalExpense ?? 0,
+                            state.groupDetail.totalIncome ?? 0,
+                          ),
+                          color: "#F87171",
+                        },
+                        {
+                          value: Math.max(
+                            (state.groupDetail.totalIncome ?? 0) -
+                              (state.groupDetail.totalExpense ?? 0),
+                            0,
+                          ),
+                          color: "#60A5FA",
+                        },
+                      ]}
+                      donut
+                      showText
+                      radius={60}
+                      innerRadius={30}
+                      sectionAutoFocus
+                    />
+                  ) : (
+                    <Text className="text-sm text-gray-400">
+                      Chưa có dữ liệu
+                    </Text>
+                  )}
                 </View>
-              )}
+
+                <View className="ml-5 flex-[0.65] justify-center space-y-6">
+                  <View className="flex-row items-center justify-between">
+                    <View className="flex-1 flex-row items-center gap-3">
+                      <View className="rounded-full bg-green/10 p-1.5">
+                        <MaterialIcons
+                          name="arrow-upward"
+                          size={16}
+                          color={Colors.colors.primary}
+                        />
+                      </View>
+                      <Text className="text-sm font-medium text-green">
+                        Đã góp:
+                      </Text>
+                    </View>
+                    <Text
+                      className="min-w-[100px] text-right text-base font-semibold text-green"
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                    >
+                      {formatCurrency(state.groupDetail?.totalIncome ?? 0)}
+                    </Text>
+                  </View>
+
+                  {/* Đã rút */}
+                  <View className="flex-row items-center justify-between">
+                    <View className="flex-1 flex-row items-center gap-3">
+                      <View className="rounded-full bg-red/10 p-1.5">
+                        <MaterialIcons
+                          name="arrow-downward"
+                          size={16}
+                          color={Colors.colors.red}
+                        />
+                      </View>
+                      <Text className="text-sm font-medium text-red">
+                        Đã rút:
+                      </Text>
+                    </View>
+                    <Text
+                      className="min-w-[100px] text-right text-base font-semibold text-red"
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                    >
+                      {formatCurrency(state.groupDetail?.totalExpense ?? 0)}
+                    </Text>
+                  </View>
+
+                  {/* Còn lại */}
+                  <View className="border-t border-gray-200 pt-4">
+                    <View className="flex-row items-center justify-between">
+                      <View className="flex-1 flex-row items-center gap-3">
+                        <View className="rounded-full bg-blue-100 p-1.5">
+                          <MaterialIcons
+                            name="account-balance-wallet"
+                            size={16}
+                            color={Colors.colors.primary}
+                          />
+                        </View>
+                        <Text className="text-sm font-bold text-blue-400">
+                          Còn lại:
+                        </Text>
+                      </View>
+                      <Text
+                        className="min-w-[100px] text-right text-base font-bold text-blue-400"
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                      >
+                        {formatCurrency(state.groupDetail?.currentBalance ?? 0)}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
             </SectionComponent>
 
             <SectionComponent rootClassName="rounded-2xl bg-white p-5 shadow-md">
@@ -140,11 +262,6 @@ export default function GroupStatisticPage() {
                     {state.members?.length || 0} người
                   </Text>
                 </View>
-              </View>
-              <View>
-                <Text>Đã góp: </Text>
-                <Text>Đã rút:</Text>
-                <Text>Còn lại:</Text>
               </View>
 
               {state.members?.length > 0 ? (

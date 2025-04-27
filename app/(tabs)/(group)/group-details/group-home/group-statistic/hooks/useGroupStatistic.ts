@@ -55,6 +55,7 @@ export default function useGroupStatistic() {
   const groupCurrent =
     activeFinancialGoal?.currentAmount ?? groupDetail?.currentBalance ?? 0;
   const deadlineDate = activeFinancialGoal?.deadline ?? null;
+  const createdDate = activeFinancialGoal?.createdDate ?? null;
 
   const dueDate = formatDate(deadlineDate, "DD.MM.YYYY");
 
@@ -131,6 +132,8 @@ export default function useGroupStatistic() {
       isGoalActive,
       hasFinancialGoal,
       hasGroupName,
+      groupDetail,
+      createdDate,
     },
     handler: {
       handleGoBack,

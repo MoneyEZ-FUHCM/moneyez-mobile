@@ -4,6 +4,7 @@ import {
   SectionComponent,
   SpaceComponent,
 } from "@/components";
+import { Colors } from "@/helpers/constants/color";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import { Pressable, Text, View } from "react-native";
@@ -32,7 +33,11 @@ export default function GroupSettingsDefault() {
                   className="flex-row items-center px-4 py-3"
                 >
                   <View className="mr-4 h-10 w-10 items-center justify-center rounded-full">
-                    <MaterialIcons name="edit" size={20} color="#609084" />
+                    <MaterialIcons
+                      name="edit"
+                      size={20}
+                      color={Colors.colors.primary}
+                    />
                   </View>
                   <View className="flex-1">
                     <Text className="text-base font-medium">
@@ -53,7 +58,7 @@ export default function GroupSettingsDefault() {
                   className="flex-row items-center px-4 py-3"
                 >
                   <View className="mr-4 h-10 w-10 items-center justify-center rounded-full">
-                    <MaterialIcons name="percent" size={20} color="#609084" />
+                    <MaterialIcons name="percent" size={20} color={Colors.colors.primary} />
                   </View>
                   <View className="flex-1">
                     <Text className="text-base font-medium">
@@ -77,7 +82,11 @@ export default function GroupSettingsDefault() {
                   className="flex-row items-center px-4 py-3"
                 >
                   <View className="mr-4 h-10 w-10 items-center justify-center rounded-full">
-                    <MaterialIcons name="flag" size={20} color="#609084" />
+                    <MaterialIcons
+                      name="flag"
+                      size={20}
+                      color={Colors.colors.primary}
+                    />
                   </View>
                   <View className="flex-1">
                     <Text className="text-base font-medium">
@@ -85,6 +94,31 @@ export default function GroupSettingsDefault() {
                         TEXT_TRANSLATE_GROUP_SETTINGS.OPTION
                           .GROUP_FINANCIAL_GOAL
                       }
+                    </Text>
+                  </View>
+                  <MaterialIcons
+                    name="chevron-right"
+                    size={20}
+                    color="#9e9e9e"
+                  />
+                </Pressable>
+              </SectionComponent>
+              <SpaceComponent height={10} />
+              <SectionComponent rootClassName="bg-white rounded-xl shadow-sm">
+                <Pressable
+                  onPress={handler.handleViewRule}
+                  className="flex-row items-center px-4 py-3"
+                >
+                  <View className="mr-4 h-10 w-10 items-center justify-center rounded-full">
+                    <MaterialIcons
+                      name="rule"
+                      size={20}
+                      color={Colors.colors.primary}
+                    />
+                  </View>
+                  <View className="flex-1">
+                    <Text className="text-base font-medium">
+                      {TEXT_TRANSLATE_GROUP_SETTINGS.OPTION.RULE}
                     </Text>
                   </View>
                   <MaterialIcons

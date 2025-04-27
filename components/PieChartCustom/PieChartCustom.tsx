@@ -106,7 +106,6 @@ const RenderDetailComponent = ({
 const PieChartCustom = React.memo(({ data, title }: PieChartCustomProps) => {
   const { state, handler } = usePieChart(data);
 
-  // Xử lý việc nhấn vào item trong chi tiết
   const handleLegendItemPress = (index: number) => {
     handler.handlePress(index);
   };
