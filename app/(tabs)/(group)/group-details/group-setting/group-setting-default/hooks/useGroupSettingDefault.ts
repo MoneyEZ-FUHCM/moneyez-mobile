@@ -33,8 +33,15 @@ export default function useGroupSettings() {
   }, [groupDetail, userInfo]);
 
   const handleEditGroupInfo = useCallback(() => {
-    ToastAndroid.show("Tính năng này đang được phát triển", ToastAndroid.SHORT);
-  }, []);
+    dispatch(setGroupTabHidden(true));
+    router.navigate({
+      pathname: PATH_NAME.GROUP.CREATE_GROUP_STEP_1 as any,
+      params: { 
+        isEditMode: "true", 
+        groupId: groupDetail?.id,
+      }
+    });
+  }, [groupDetail, dispatch]);
 
   const handleUpdateContributionRate = useCallback(() => {
     dispatch(setGroupTabHidden(true));
@@ -44,6 +51,11 @@ export default function useGroupSettings() {
   const handleFinancialGoal = useCallback(() => {
     dispatch(setGroupTabHidden(true));
     router.navigate(GROUP_SETTING.GROUP_FINANCIAL_GOAL as any);
+  }, []);
+
+  const handleViewRule = useCallback(() => {
+    dispatch(setGroupTabHidden(true));
+    router.navigate(GROUP_SETTING.GROUP_RULE as any);
   }, []);
 
   const handleCloseGroupFund = useCallback(async () => {
@@ -110,6 +122,7 @@ export default function useGroupSettings() {
       handleOpenModal,
       handleCloseModal,
       handleFinancialGoal,
+      handleViewRule,
     },
   };
 }

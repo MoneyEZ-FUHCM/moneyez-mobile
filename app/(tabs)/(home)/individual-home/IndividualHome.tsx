@@ -178,7 +178,10 @@ export default function IndividualHome() {
                 <>
                   {"Chào bạn mình là MewMo. Số dư hiện tại của bạn là"}{" "}
                   <Text className="font-medium text-green">
-                    {state.currentUserSpendingModelData?.totalSpent}.
+                    {formatCurrency(
+                      state.currentUserSpendingModelData?.totalSaving,
+                    )}
+                    .
                   </Text>
                 </>
               }

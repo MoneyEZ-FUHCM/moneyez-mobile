@@ -6,6 +6,7 @@ const TEXT_TRANSLATE_GROUP_SETTINGS = {
     EDIT_GROUP_INFO: "Chỉnh sửa thông tin nhóm",
     UPDATE_CONTRIBUTION_RATE: "Cập nhật tỉ lệ đóng góp",
     GROUP_FINANCIAL_GOAL: "Thiết lập mục tiêu nhóm",
+    RULE: "Quy định nhóm",
     CLOSE_GROUP_FUND: "Rời nhóm",
   },
   NAV: {

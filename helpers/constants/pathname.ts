@@ -103,6 +103,7 @@ const PATH_NAME = {
       "group-details/group-setting/group-financial-goal/GroupFinancialGoal",
     GROUP_FINANCIAL_GOAL_FORM:
       "group-details/group-setting/group-financial-goal/GroupFinancialGoalForm",
+    GROUP_RULE: "group-details/group-setting/group-rule/GroupRule",
   },
   MEMBER: {
     GROUP_MEMBER: "group-details/member/group-member/GroupMember",

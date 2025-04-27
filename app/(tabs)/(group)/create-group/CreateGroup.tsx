@@ -2,7 +2,7 @@ import {
   InputComponent,
   ModalLizeComponent,
   SafeAreaViewCustom,
-  SectionComponent,
+  SectionComponent
 } from "@/components";
 import { TextAreaComponent } from "@/components/TextAreaComponent";
 import { Colors } from "@/helpers/constants/color";
@@ -12,7 +12,6 @@ import {
   FontAwesome,
   MaterialIcons,
 } from "@expo/vector-icons";
-import { router } from "expo-router";
 import { Formik } from "formik";
 import React, { useMemo } from "react";
 import {
@@ -128,12 +127,14 @@ const CreateGroup = () => {
         {/* Header */}
         <SectionComponent rootClassName="relative flex-row bg-white items-center justify-center h-14 px-5 shadow-sm">
           <TouchableOpacity
-            onPress={router.back}
+            onPress={handler.handleBack}
             className="absolute left-2 rounded-full p-2 active:opacity-75"
           >
             <AntDesign name="arrowleft" size={24} />
           </TouchableOpacity>
-          <Text className="text-lg font-bold">{TITLE.CREATE_NEW_GROUP}</Text>
+          <Text className="text-lg font-bold">
+            {state.isEditMode ? TITLE.UPDATE_GROUP : TITLE.CREATE_NEW_GROUP}
+          </Text>
         </SectionComponent>
 
         <Formik
@@ -170,8 +171,8 @@ const CreateGroup = () => {
                   inputClass="text-sm text-gray-800"
                 />
                 <TouchableOpacity
-                  className="rounded-lg"
                   onPress={handler.handleOpenBankSelect}
+                  disabled={state.isEditMode}
                 >
                   <InputComponent
                     name="accountBankId"
@@ -180,10 +181,10 @@ const CreateGroup = () => {
                     isRequired
                     containerClass="mb-5"
                     labelClass="text-sm text-gray-600"
-                    inputClass="text-sm text-gray-800"
+                    inputClass={`text-sm ${state.isEditMode ? 'text-gray-500' : 'text-gray-800'}`}
                     editable={false}
                     rightIcon={
-                      <Feather name="chevron-down" size={20} color="#777" />
+                      !state.isEditMode && <Feather name="chevron-down" size={20} color="#777" />
                     }
                     value={
                       values.bankName && values.bankAccountNumber
@@ -211,13 +212,14 @@ const CreateGroup = () => {
                   className="w-full items-center rounded-lg bg-primary py-3 shadow-lg"
                 >
                   <Text className="text-lg font-semibold text-white">
-                    {BUTTON.NEXT}
+                    {state.isEditMode ? BUTTON.UPDATE : BUTTON.NEXT}
                   </Text>
                 </TouchableOpacity>
               </View>
             </KeyboardAvoidingView>
           )}
         </Formik>
+
         <ModalLizeComponent
           panGestureEnabled={state.isAtTop}
           scrollViewProps={{

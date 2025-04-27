@@ -17,51 +17,86 @@ const COLORS = {
   TEXT_LIGHT: "#666666",
   BORDER: "#E0E0E0",
 };
-const CountdownDisplay = memo(({ createdDate }: { createdDate: string }) => {
-  const [countdown, setCountdown] = useState("");
-  const [isExpired, setIsExpired] = useState(false);
+const CountdownDisplay = memo(
+  ({
+    createdDate,
+    email,
+    onReInvite,
+    selectedForInvite,
+  }: {
+    createdDate: string;
+    email: string;
+    onReInvite?: (email: string) => void;
+    selectedForInvite: string[];
+  }) => {
+    const [countdown, setCountdown] = useState("");
+    const [isExpired, setIsExpired] = useState(false);
 
-  useEffect(() => {
-    const expireTime = new Date(createdDate).getTime() + 24 * 60 * 60 * 1000;
+    useEffect(() => {
+      const expireTime = new Date(createdDate).getTime() + 24 * 60 * 60 * 1000;
 
-    const updateCountdown = () => {
-      const now = Date.now();
-      const remainingTime = expireTime - now;
+      const updateCountdown = () => {
+        const now = Date.now();
+        const remainingTime = expireTime - now;
 
-      if (remainingTime <= 0) {
-        setIsExpired(true);
-        setCountdown("");
-        return true;
-      }
+        if (remainingTime <= 0) {
+          setIsExpired(true);
+          setCountdown("");
+          return true;
+        }
 
-      const hours = String(
-        Math.floor(remainingTime / (1000 * 60 * 60)),
-      ).padStart(2, "0");
-      const minutes = String(
-        Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60)),
-      ).padStart(2, "0");
-      const seconds = String(
-        Math.floor((remainingTime % (1000 * 60)) / 1000),
-      ).padStart(2, "0");
+        const hours = String(
+          Math.floor(remainingTime / (1000 * 60 * 60)),
+        ).padStart(2, "0");
+        const minutes = String(
+          Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60)),
+        ).padStart(2, "0");
+        const seconds = String(
+          Math.floor((remainingTime % (1000 * 60)) / 1000),
+        ).padStart(2, "0");
 
-      setCountdown(`${hours}:${minutes}:${seconds}`);
-      return false;
-    };
-    if (updateCountdown()) return;
+        setCountdown(`${hours}:${minutes}:${seconds}`);
+        return false;
+      };
+      if (updateCountdown()) return;
 
-    const interval = setInterval(updateCountdown, 1000);
-    return () => clearInterval(interval);
-  }, [createdDate]);
+      const interval = setInterval(updateCountdown, 1000);
+      return () => clearInterval(interval);
+    }, [createdDate]);
 
-  return (
-    <Text className="text-sm font-medium text-red">
-      {isExpired ? "Lời mời đã hết hạn" : `Lời mời sẽ hết hạn sau ${countdown}`}
-    </Text>
-  );
-});
+    if (isExpired && onReInvite) {
+      return (
+        <TouchableOpacity
+          onPress={() => onReInvite(email)}
+          className={`h-8 w-8 items-center justify-center rounded-full ${
+            selectedForInvite.includes(email) ? "bg-[#E6F3F0]" : "bg-[#F0F0F0]"
+          }`}
+        >
+          {selectedForInvite.includes(email) ? (
+            <Feather name="minus" size={20} color={COLORS.PRIMARY} />
+          ) : (
+            <Feather name="plus" size={20} color={COLORS.PRIMARY} />
+          )}
+        </TouchableOpacity>
+      );
+    }
+
+    return (
+      <Text className="text-sm font-medium text-red">
+        {isExpired
+          ? "Lời mời đã hết hạn"
+          : `Lời mời sẽ hết hạn sau ${countdown}`}
+      </Text>
+    );
+  },
+);
 const InviteMemberByEmail: React.FC = () => {
   const { handler, state } = useInviteMemberByEmail();
   const userInfo = useSelector(selectUserInfo);
+
+  const handleReInvite = (email: string) => {
+    handler.toggleInvite({ email });
+  };
 
   useHideGroupTabbar();
 
@@ -181,7 +216,12 @@ const InviteMemberByEmail: React.FC = () => {
                     {inviteStatus.message}
                   </Text>
                 ) : (
-                  <CountdownDisplay createdDate={inviteStatus.createdDate!} />
+                  <CountdownDisplay
+                    email={item?.email}
+                    onReInvite={handleReInvite}
+                    createdDate={inviteStatus.createdDate!}
+                    selectedForInvite={state.selectedForInvite}
+                  />
                 )}
               </View>
             )}

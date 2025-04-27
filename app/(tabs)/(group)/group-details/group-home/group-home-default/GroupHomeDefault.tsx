@@ -333,8 +333,10 @@ const GroupHomeDefault = () => {
             <View className="flex-row items-center rounded-full bg-gray-50 px-3 py-1.5">
               <MaterialIcons name="access-time" size={12} color="#666" />
               <Text className="ml-1 text-xs font-medium text-gray-600">
-                {formatTime(activity?.createdDate)} ·{" "}
-                {formatDateMonthYear(activity?.createdDate)}
+                {formatTime(activity?.updatedDate || activity?.createdDate)} ·{" "}
+                {formatDateMonthYear(
+                  activity?.updatedDate || activity?.createdDate,
+                )}
               </Text>
             </View>
           </>

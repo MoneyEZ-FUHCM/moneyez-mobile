@@ -24,8 +24,10 @@ const useGroupHomeDefault = () => {
   } = useGetGroupDetailQuery({ id }, { skip: !id });
 
   useLayoutEffect(() => {
-    dispatch(setCurrentGroup(groupDetailInfo?.data));
-  }, [dispatch]);
+    if (groupDetailInfo?.data) {
+      dispatch(setCurrentGroup(groupDetailInfo.data));
+    }
+  }, [dispatch, groupDetailInfo]);
 
   const groupDetail = useSelector(selectCurrentGroup);
   const groupMembers: GroupMember[] = groupDetail?.groupMembers || [];

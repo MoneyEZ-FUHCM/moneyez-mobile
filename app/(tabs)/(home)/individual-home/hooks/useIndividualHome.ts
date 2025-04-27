@@ -2,10 +2,7 @@ import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { formatCurrency } from "@/helpers/libs";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
-import {
-  useGetPersonalFinancialGoalsQuery,
-  useGetPersonalFinancialGoalUserSpendingModelQuery,
-} from "@/services/financialGoal";
+import { useGetPersonalFinancialGoalUserSpendingModelQuery } from "@/services/financialGoal";
 import {
   useGetCurrentUserSpendingModelChartQuery,
   useGetCurrentUserSpendingModelQuery,
@@ -79,6 +76,7 @@ const useIndividualHome = () => {
         (currentUserSpendingModel?.data?.totalIncome ?? 0) -
           (currentUserSpendingModel?.data?.totalExpense ?? 0),
       ),
+      totalSaving: currentUserSpendingModelChart?.data?.totalSaving || 0,
     };
   }, [currentUserSpendingModelChart]);
 

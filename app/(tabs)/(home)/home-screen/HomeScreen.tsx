@@ -66,7 +66,7 @@ const HomeScreen = () => {
 
   return (
     <GestureHandlerRootView>
-      <SafeAreaViewCustom rootClassName="relative">
+      <SafeAreaViewCustom rootClassName="relative bg-gray-50">
         <ScrollViewCustom
           isBottomTab
           showsVerticalScrollIndicator={false}
@@ -78,7 +78,7 @@ const HomeScreen = () => {
           }
         >
           <SectionComponent
-            rootClassName="relative flex-1 "
+            rootClassName="relative flex-1"
             style={{
               height: appInfo.sizes.HEIGHT * 0.35,
             }}

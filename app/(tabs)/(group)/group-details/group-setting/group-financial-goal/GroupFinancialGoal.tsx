@@ -221,12 +221,14 @@ export default function GroupFinancialGoal() {
         <View className="items-center">
           <ProgressCircleComponent
             value={
-              state.financialGoal.currentAmount /
-                state.financialGoal.targetAmount >
-              1
-                ? 1
-                : state.financialGoal.currentAmount /
-                  state.financialGoal.targetAmount
+              Math.floor(
+                (state.financialGoal.currentAmount /
+                  state.financialGoal.targetAmount >
+                1
+                  ? 1
+                  : state.financialGoal.currentAmount /
+                    state.financialGoal.targetAmount) * 100,
+              ) / 100
             }
             size={100}
             thickness={5}
@@ -554,12 +556,14 @@ export default function GroupFinancialGoal() {
                 <View className="mb-5 items-center">
                   <ProgressCircleComponent
                     value={
-                      state.selectedCompletedGoal.currentAmount /
-                        state.selectedCompletedGoal.targetAmount >
-                      1
-                        ? 1
-                        : state.selectedCompletedGoal.currentAmount /
-                          state.selectedCompletedGoal.targetAmount
+                      Math.floor(
+                        (state.selectedCompletedGoal.currentAmount /
+                          state.selectedCompletedGoal.targetAmount >
+                        1
+                          ? 1
+                          : state.selectedCompletedGoal.currentAmount /
+                            state.selectedCompletedGoal.targetAmount) * 100,
+                      ) / 100
                     }
                     size={120}
                     thickness={8}

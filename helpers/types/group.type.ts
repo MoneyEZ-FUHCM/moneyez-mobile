@@ -35,6 +35,8 @@ export interface GroupDetail {
   visibility: string;
   imageUrl: string;
   isGoalActive: boolean;
+  totalIncome: number;
+  totalExpense: number;
   groupMembers: any[];
 }
 
