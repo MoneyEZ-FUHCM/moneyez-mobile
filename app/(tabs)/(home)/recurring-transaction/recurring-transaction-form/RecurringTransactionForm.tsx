@@ -121,7 +121,7 @@ const RecurringTransactionForm = () => {
                 formikRef.current?.setFieldValue("frequencyType", option.value);
               }}
               accessibilityLabel={`Frequency ${option.label}`}
-              className={`m-1 w-44 rounded-lg px-4 py-2 ${
+              className={`m-1 w-[155px] rounded-lg px-4 py-2 ${
                 formikRef.current?.values.frequencyType === option.value
                   ? "bg-primary"
                   : "bg-gray-100"

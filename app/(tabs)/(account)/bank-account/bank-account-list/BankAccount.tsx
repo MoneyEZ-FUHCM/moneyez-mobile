@@ -347,8 +347,8 @@ const BankAccount = () => {
                 </Text>
                 <View className="space-y-2">
                   <Text className="text-gray-600">
-                    • Người dùng cần cho phép API truy cập thông tin giao dịch
-                    từ ngân hàng để hệ thống tự động cập nhật
+                    • Người dùng cần cho phép MoneyEz truy cập thông tin giao
+                    dịch từ ngân hàng để hệ thống tự động cập nhật.
                   </Text>
                 </View>
               </View>
@@ -360,7 +360,7 @@ const BankAccount = () => {
                 <View className="space-y-2">
                   <Text className="text-gray-600">
                     • Giao dịch sẽ được xác nhận qua webhook từ ngân hàng, đảm
-                    bảo dữ liệu được đồng bộ và minh bạch
+                    bảo dữ liệu được đồng bộ và minh bạch.
                   </Text>
                 </View>
               </View>
@@ -370,9 +370,9 @@ const BankAccount = () => {
                 </Text>
                 <View className="space-y-2">
                   <Text className="text-gray-600">
-                    • Người dùng có trách nhiệm bảo vệ thông tin đăng nhập và dữ
-                    liệu cá nhân; EzMoney cam kết sử dụng thông tin chỉ cho mục
-                    đích theo dõi giao dịch
+                    • Người dùng có trách nhiệm bảo vệ thông tin đăng nhập và
+                    mật khẩu. EzMoney cam kết sử dụng thông tin chỉ cho mục đích
+                    liên kết ngân hàng.
                   </Text>
                 </View>
               </View>
@@ -382,8 +382,8 @@ const BankAccount = () => {
                 </Text>
                 <View className="space-y-2">
                   <Text className="text-gray-600">
-                    • Mọi giao dịch nạp, rút sẽ được cập nhật tự động vào ứng
-                    dụng sau khi được xác thực qua API
+                    • Mọi giao dịch nạp, rút sẽ được cập nhật tự động vào ví
+                    người dùng sau khi được xác thực qua API.
                   </Text>
                 </View>
               </View>

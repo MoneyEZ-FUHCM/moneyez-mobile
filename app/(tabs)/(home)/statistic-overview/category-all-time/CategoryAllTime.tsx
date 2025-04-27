@@ -96,7 +96,7 @@ const CategoryAllTimeScreen = () => {
                       {formatCurrency(selectedItem.amount)}
                     </Text>
                     <Text className="text-sm font-bold text-gray-500">
-                      {selectedItem.percentage}%
+                      {selectedItem.percentage}
                     </Text>
                   </View>
                 );
