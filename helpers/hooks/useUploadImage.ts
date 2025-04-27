@@ -119,6 +119,7 @@ const useUploadImage = () => {
 
   return {
     imageUrl,
+    setImageUrl,
     pickAndUploadImage,
     deleteImage,
   };
