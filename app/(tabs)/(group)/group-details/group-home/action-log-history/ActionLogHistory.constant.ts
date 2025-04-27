@@ -1,4 +1,4 @@
-import { TRANSACTION_STATUS } from "@/enums/globals";
+import { TRANSACTION_STATUS } from "@/helpers/enums/globals";
 
 const ACTION_LOG_HISTORY_CONSTANT = {
   TABS: [

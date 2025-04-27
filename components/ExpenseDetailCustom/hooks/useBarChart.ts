@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useGetPersonalFinancialGoalChartQuery } from "@/services/financialGoal";
-import { ChartDataItem } from "@/types/financialGoal.type";
+import { ChartDataItem } from "@/helpers/types/financialGoal.type";
 
 const STATISTIC_TYPES = {
   week: "Tuần",

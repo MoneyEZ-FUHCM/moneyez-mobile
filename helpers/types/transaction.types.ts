@@ -1,4 +1,4 @@
-import { TRANSACTION_STATUS } from "@/enums/globals";
+import { TRANSACTION_STATUS } from "@/helpers/enums/globals";
 import { TransactionType } from "./invidual.types";
 
 export interface Transaction {

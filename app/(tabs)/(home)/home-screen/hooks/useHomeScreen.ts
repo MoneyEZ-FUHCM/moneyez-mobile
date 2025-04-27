@@ -6,7 +6,7 @@ import { selectCurrentUserSpendingModel } from "@/redux/slices/userSpendingModel
 import { useUpdateFcmTokenMutation } from "@/services/auth";
 import { useGetGroupsQuery } from "@/services/group";
 import { useGetCurrentUserSpendingModelQuery } from "@/services/userSpendingModel";
-import { GroupDetail } from "@/types/group.type";
+import { GroupDetail } from "@/helpers/types/group.type";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import dayjs from "dayjs";
 import { router } from "expo-router";

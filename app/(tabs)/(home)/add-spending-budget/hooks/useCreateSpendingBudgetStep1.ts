@@ -5,9 +5,9 @@ import { PATH_NAME } from "@/helpers/constants/pathname";
 import { useGetCurrentCategoriesQuery } from "@/services/userSpendingModel";
 import { useGetPersonalFinancialGoalsQuery } from "@/services/financialGoal";
 import TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP1 from "../CreateSpendingBudgetStep1.translate";
-import { Category } from "@/types/category.types";
-import { Subcategory } from "@/types/subCategory";
-import { FinancialGoal } from "@/types/financialGoal.type";
+import { Category } from "@/helpers/types/category.types";
+import { Subcategory } from "@/helpers/types/subCategory";
+import { FinancialGoal } from "@/helpers/types/financialGoal.type";
 
 export interface CategoryItem {
   id: string;

@@ -17,6 +17,7 @@ const TEXT_TRANSLATE = {
     AMOUNT: "Số tiền",
     FREQUENCY: "Tần suất",
     START_DATE: "Ngày bắt đầu",
+    RECURRING_DATE: "Chu kỳ kế tiếp",
     END_DATE: "Ngày kết thúc",
     DESCRIPTION: "Mô tả",
     TAGS: "Thẻ",

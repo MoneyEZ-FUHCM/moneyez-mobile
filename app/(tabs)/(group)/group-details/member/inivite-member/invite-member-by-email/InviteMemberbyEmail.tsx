@@ -1,5 +1,5 @@
 import { FlatListCustom, SafeAreaViewCustom } from "@/components";
-import useHideGroupTabbar from "@/hooks/useHideGroupTabbar";
+import useHideGroupTabbar from "@/helpers/hooks/useHideGroupTabbar";
 import { selectUserInfo } from "@/redux/slices/userSlice";
 import AntDesign from "@expo/vector-icons/build/AntDesign";
 import Feather from "@expo/vector-icons/build/Feather";

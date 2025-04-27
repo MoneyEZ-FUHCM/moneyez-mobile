@@ -1,6 +1,6 @@
 import { Colors } from "@/helpers/constants/color";
 import { formatCurrency, formatDateMonth } from "@/helpers/libs";
-import { ChartDataItem } from "@/types/financialGoal.type";
+import { ChartDataItem } from "@/helpers/types/financialGoal.type";
 import React, { useCallback, useMemo } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { BarChart } from "react-native-gifted-charts";

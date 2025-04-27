@@ -3,7 +3,7 @@ import { PATH_NAME } from "@/helpers/constants/pathname";
 import { setLoading } from "@/redux/slices/loadingSlice";
 import { setEmail } from "@/redux/slices/userSlice";
 import { useRegisterMutation } from "@/services/auth";
-import { RegisterRequest } from "@/types/auth.types";
+import { RegisterRequest } from "@/helpers/types/auth.types";
 import { router } from "expo-router";
 import { useState } from "react";
 import { ToastAndroid } from "react-native";

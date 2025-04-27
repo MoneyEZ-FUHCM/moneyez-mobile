@@ -1,4 +1,4 @@
-import { VALID_ROLE } from "@/enums/globals";
+import { VALID_ROLE } from "@/helpers/enums/globals";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { setLoading, setShowSplash } from "@/redux/slices/loadingSlice";
@@ -8,7 +8,7 @@ import {
   useLoginGoogleMutation,
   useLoginMutation,
 } from "@/services/auth";
-import { AuthRequest } from "@/types/auth.types";
+import { AuthRequest } from "@/helpers/types/auth.types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getMessaging } from "@react-native-firebase/messaging";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";

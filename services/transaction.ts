@@ -3,7 +3,7 @@ import apiSlice from "@/redux/slices/apiSlice";
 import {
   transformCommonResponse,
   transformTransactionsResponse,
-} from "@/types/system.types";
+} from "@/helpers/types/system.types";
 import {
   GroupTransaction,
   TransactionsReportAllTime,
@@ -11,7 +11,7 @@ import {
   TransactionsReportCategoryYear,
   TransactionsReportYearlyBalance,
   TransactionsReportYearlyData,
-} from "@/types/transaction.types";
+} from "@/helpers/types/transaction.types";
 
 const { HTTP_METHOD } = COMMON_CONSTANT;
 const transactionApi = apiSlice.injectEndpoints({

@@ -51,6 +51,7 @@ const BalanceReport = () => {
             endOpacity={0.1}
             noOfSections={3}
             yAxisThickness={0}
+            maxValue={state.chartMaxValue}
             xAxisThickness={0}
             hideDataPoints={false}
             verticalLinesColor="rgba(0, 0, 0, 0.05)"

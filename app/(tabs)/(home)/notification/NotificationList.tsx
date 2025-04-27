@@ -7,7 +7,7 @@ import {
   SpaceComponent,
 } from "@/components";
 import { Colors } from "@/helpers/constants/color";
-import { Notification } from "@/types/notification.type";
+import { Notification } from "@/helpers/types/notification.type";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { Bookmark, Forbidden2 } from "iconsax-react-native";
 import React from "react";

@@ -1,4 +1,5 @@
 export interface RecurringTransaction {
+  nextOccurrence: string;
   id: string;
   userId: string;
   subcategoryId: string;

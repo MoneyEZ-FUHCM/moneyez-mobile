@@ -8,13 +8,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useCreateGroupMutation } from "@/services/group";
 import { setLoading } from "@/redux/slices/loadingSlice";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
-import useUploadImage from "@/hooks/useUploadImage";
+import useUploadImage from "@/helpers/hooks/useUploadImage";
 import { setGroupTabHidden, setMainTabHidden } from "@/redux/slices/tabSlice";
 import { Modalize } from "react-native-modalize";
 import FUNCTION_BANK_ACCOUNT_CONSTANT from "../../(account)/bank-account/function-bank-account/FunctionBankAccount.constant";
 import { useGetBankAccountsQuery } from "@/services/bankAccounts";
-import useDebounce from "@/hooks/useDebounce";
-import { CreateGroupPayload } from "@/types/group.type";
+import useDebounce from "@/helpers/hooks/useDebounce";
+import { CreateGroupPayload } from "@/helpers/types/group.type";
 import { setOtpCode } from "@/redux/slices/systemSlice";
 import { selectOtpCode } from "@/redux/hooks/systemSelector";
 

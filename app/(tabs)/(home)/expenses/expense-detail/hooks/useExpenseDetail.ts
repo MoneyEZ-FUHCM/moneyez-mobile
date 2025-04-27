@@ -10,7 +10,7 @@ import {
 import {
   FinancialGoal,
   PersonalTransactionFinancialGoals,
-} from "@/types/financialGoal.type";
+} from "@/helpers/types/financialGoal.type";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { BackHandler, ToastAndroid } from "react-native";

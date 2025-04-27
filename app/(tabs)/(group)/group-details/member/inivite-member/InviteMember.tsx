@@ -6,11 +6,11 @@ import {
   SectionComponent,
   SpaceComponent,
 } from "@/components";
-import { GROUP_MEMBER_STATUS, GROUP_ROLE } from "@/enums/globals";
+import { GROUP_MEMBER_STATUS, GROUP_ROLE } from "@/helpers/enums/globals";
 import { Colors } from "@/helpers/constants/color";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { formatCurrency, formatDate } from "@/helpers/libs";
-import { GroupMember } from "@/types/group.type";
+import { GroupMember } from "@/helpers/types/group.type";
 import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { memo, useEffect, useRef, useState } from "react";

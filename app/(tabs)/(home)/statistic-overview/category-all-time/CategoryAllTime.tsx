@@ -1,5 +1,5 @@
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
-import { TRANSACTION_TYPE_TEXT } from "@/enums/globals";
+import { TRANSACTION_TYPE_TEXT } from "@/helpers/enums/globals";
 import { formatCurrency } from "@/helpers/libs";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
@@ -96,7 +96,7 @@ const CategoryAllTimeScreen = () => {
                       {formatCurrency(selectedItem.amount)}
                     </Text>
                     <Text className="text-sm font-bold text-gray-500">
-                      {selectedItem.percentage}%
+                      {selectedItem.percentage}
                     </Text>
                   </View>
                 );

@@ -1,5 +1,5 @@
 import { SectionComponent, TypingIndicatorComponent } from "@/components";
-import { Message } from "@/types/bot.types";
+import { Message } from "@/helpers/types/bot.types";
 import { ArrowDown2 } from "iconsax-react-native";
 import React, { useMemo } from "react";
 import { Animated, FlatList, TouchableOpacity, View } from "react-native";

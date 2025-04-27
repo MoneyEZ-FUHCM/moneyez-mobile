@@ -1,4 +1,4 @@
-import { TRANSACTION_TYPE_TEXT } from "@/enums/globals";
+import { TRANSACTION_TYPE_TEXT } from "@/helpers/enums/globals";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { selectUserInfo } from "@/redux/slices/userSlice";
 import { useGetPendingRequestQuery } from "@/services/group";
@@ -21,11 +21,14 @@ const usePendingRequests = () => {
     isLoading: isLoadingRequests,
     refetch: refetchRequests,
     isFetching: isFetchingRequests,
-  } = useGetPendingRequestQuery({
-    id: currentGroup?.id,
-    PageIndex: pageIndex,
-    PageSize: pageSize
-  }, { skip: !currentGroup?.id });
+  } = useGetPendingRequestQuery(
+    {
+      id: currentGroup?.id,
+      PageIndex: pageIndex,
+      PageSize: pageSize,
+    },
+    { skip: !currentGroup?.id },
+  );
 
   useEffect(() => {
     if (pendingRequestsData?.data?.data) {
@@ -35,7 +38,7 @@ const usePendingRequests = () => {
         setPendingRequests((prevRequests) => {
           const existingIds = new Set(prevRequests.map((item) => item.id));
           const newItems = pendingRequestsData.data.data.filter(
-            (item: any) => !existingIds.has(item.id)
+            (item: any) => !existingIds.has(item.id),
           );
           return [...prevRequests, ...newItems];
         });
@@ -47,9 +50,10 @@ const usePendingRequests = () => {
   const filteredPendingRequests = useMemo(() => {
     if (!pendingRequests || !userInfo) return [];
 
-    return pendingRequests.filter(request =>
-      request.type === TRANSACTION_TYPE_TEXT.INCOME &&
-      request.userId === userInfo.id
+    return pendingRequests.filter(
+      (request) =>
+        request.type === TRANSACTION_TYPE_TEXT.INCOME &&
+        request.userId === userInfo.id,
     );
   }, [pendingRequests, userInfo]);
 
@@ -75,11 +79,20 @@ const usePendingRequests = () => {
   }, [refetchRequests]);
 
   const handleLoadMore = useCallback(() => {
-    if (!isLoadingRequests && !isLoadingMore && pendingRequestsData?.data?.data?.length === pageSize) {
+    if (
+      !isLoadingRequests &&
+      !isLoadingMore &&
+      pendingRequestsData?.data?.data?.length === pageSize
+    ) {
       setIsLoadingMore(true);
       setPageIndex((prev) => prev + 1);
     }
-  }, [isLoadingRequests, isLoadingMore, pendingRequestsData?.data?.data?.length, pageSize]);
+  }, [
+    isLoadingRequests,
+    isLoadingMore,
+    pendingRequestsData?.data?.data?.length,
+    pageSize,
+  ]);
 
   return {
     state: {
@@ -89,14 +102,14 @@ const usePendingRequests = () => {
       isFetchingRequests,
       isLoadingMore,
       detailModalizeRef,
-      pageSize
+      pageSize,
     },
     handler: {
       handleOpenDetailModal,
       handleCloseDetailModal,
       refreshRequests,
-      handleLoadMore
-    }
+      handleLoadMore,
+    },
   };
 };
 

@@ -3,8 +3,8 @@ import apiSlice from "@/redux/slices/apiSlice";
 import {
   FinancialGoal,
   PersonalTransactionFinancialGoals,
-} from "@/types/financialGoal.type";
-import { transformCommonResponse } from "@/types/system.types";
+} from "@/helpers/types/financialGoal.type";
+import { transformCommonResponse } from "@/helpers/types/system.types";
 
 const { HTTP_METHOD } = COMMON_CONSTANT;
 const financialGoalApi = apiSlice.injectEndpoints({

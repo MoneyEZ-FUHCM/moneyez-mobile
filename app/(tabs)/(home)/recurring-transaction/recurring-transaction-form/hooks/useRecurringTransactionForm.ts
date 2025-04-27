@@ -1,4 +1,7 @@
-import { TRANSACTION_TYPE, TRANSACTION_TYPE_TEXT } from "@/enums/globals";
+import {
+  TRANSACTION_TYPE,
+  TRANSACTION_TYPE_TEXT,
+} from "@/helpers/enums/globals";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { convertUTCToVietnamTime, parseCurrency } from "@/helpers/libs";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
@@ -11,11 +14,11 @@ import {
   useGetCurrentCategoriesQuery,
   useGetSubCategoriesQuery,
 } from "@/services/userSpendingModel";
-import { CategoryListFilter } from "@/types/category.types";
+import { CategoryListFilter } from "@/helpers/types/category.types";
 import {
   RecurringTransactionFormValues,
   RecurringTransactionPayload,
-} from "@/types/recurringTransaction.types";
+} from "@/helpers/types/recurringTransaction.types";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FlatList, ToastAndroid } from "react-native";

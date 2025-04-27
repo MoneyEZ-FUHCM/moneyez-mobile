@@ -9,11 +9,11 @@ import {
   ScrollViewCustom,
   SectionComponent,
 } from "@/components";
-import { TRANSACTION_TYPE } from "@/enums/globals";
+import { TRANSACTION_TYPE } from "@/helpers/enums/globals";
 import { Colors } from "@/helpers/constants/color";
 import { formatCurrencyInput, formatDate, formatTime } from "@/helpers/libs";
 import { useLazyGetSubCateByIdQuery } from "@/services/subCategory";
-import { RecurringTransaction } from "@/types/recurringTransaction.types";
+import { RecurringTransaction } from "@/helpers/types/recurringTransaction.types";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import useRecurringTransactionList from "./hooks/useRecurringTransactionList";
 import TEXT_TRANSLATE from "./RecurringTransactionList.translate";
@@ -286,6 +286,15 @@ const RecurringTransactionList = () => {
                 {formatTime(state.selectedTransaction?.startDate)}
               </Text>
             </View>
+            <View className="mb-3 flex-row items-center justify-between">
+              <Text className="text-gray-600">
+                {TEXT_TRANSLATE.LABEL.RECURRING_DATE}
+              </Text>
+              <Text className="font-semibold text-gray-800">
+                {formatDate(state.selectedTransaction?.nextOccurrence)} •{" "}
+                {formatTime(state.selectedTransaction?.nextOccurrence)}
+              </Text>
+            </View>
 
             {state.selectedTransaction.tags && (
               <View className="mb-3">
@@ -360,6 +369,8 @@ const RecurringTransactionList = () => {
         </View>
       );
     }
+
+    console.log("check groupedTransactions", groupedTransactions);
 
     return (
       <View className="flex-1">

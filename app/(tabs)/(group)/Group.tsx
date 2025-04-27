@@ -8,11 +8,15 @@ import {
   SpaceComponent,
 } from "@/components";
 import VisibilityIcon from "@/components/GroupListCustom/VisibilityIcon";
-import { GROUP_MEMBER_STATUS, GROUP_ROLE, GROUP_STATUS } from "@/enums/globals";
+import {
+  GROUP_MEMBER_STATUS,
+  GROUP_ROLE,
+  GROUP_STATUS,
+} from "@/helpers/enums/globals";
 import { appInfo } from "@/helpers/constants/appInfos";
 import { Colors } from "@/helpers/constants/color";
 import { formatCurrency } from "@/helpers/libs";
-import { GroupMember } from "@/types/group.type";
+import { GroupMember } from "@/helpers/types/group.type";
 import {
   AntDesign,
   Ionicons,

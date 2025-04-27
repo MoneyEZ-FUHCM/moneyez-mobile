@@ -1,4 +1,4 @@
-import { UserSpendingModel } from "@/types/spendingModel.types";
+import { UserSpendingModel } from "@/helpers/types/spendingModel.types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import userSpendingModelApi from "@/services/userSpendingModel";
@@ -18,7 +18,10 @@ const userSpendingModelSlice = createSlice({
     clearCurrentModel: (state) => {
       state.currentModel = null;
     },
-    setCurrentModel: (state, action: PayloadAction<UserSpendingModel | null>) => {
+    setCurrentModel: (
+      state,
+      action: PayloadAction<UserSpendingModel | null>,
+    ) => {
       state.currentModel = action.payload;
     },
   },
@@ -32,7 +35,9 @@ const userSpendingModelSlice = createSlice({
   },
 });
 
-export const selectCurrentUserSpendingModel = (state: RootState) => state.userSpendingModel.currentModel;
+export const selectCurrentUserSpendingModel = (state: RootState) =>
+  state.userSpendingModel.currentModel;
 
-export const { clearCurrentModel, setCurrentModel } = userSpendingModelSlice.actions;
+export const { clearCurrentModel, setCurrentModel } =
+  userSpendingModelSlice.actions;
 export default userSpendingModelSlice.reducer;

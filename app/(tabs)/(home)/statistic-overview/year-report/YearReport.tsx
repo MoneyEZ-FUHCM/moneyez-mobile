@@ -36,7 +36,6 @@ const YearReportScreen = () => {
             onNext={handler.handleNextYear}
           />
         </SectionComponent>
-
         <View className="mx-4 mt-4 flex-row overflow-hidden rounded-lg bg-gray-200">
           <Pressable
             onPress={() => handler.setActiveTab("EXPENSE")}
@@ -69,7 +68,6 @@ const YearReportScreen = () => {
             </Text>
           </Pressable>
         </View>
-
         <SectionComponent rootClassName="mt-4 bg-white p-4 rounded-lg mx-4 overflow-hidden">
           <BarChart
             data={state.updateBarData ?? []}
@@ -80,7 +78,15 @@ const YearReportScreen = () => {
             initialSpacing={5}
             minHeight={1}
             isAnimated
-            noOfSections={5}
+            maxValue={state.chartMaxValue}
+            noOfSections={3}
+            formatYLabel={(value) => {
+              const absValue = Math.abs(Number(value));
+              if (absValue >= 1000000)
+                return `${(absValue / 1000000).toFixed(0)}M`;
+              if (absValue >= 1000) return `${(absValue / 1000).toFixed(0)}K`;
+              return `${absValue}`;
+            }}
             barBorderRadius={4}
             yAxisThickness={0}
             xAxisThickness={0}

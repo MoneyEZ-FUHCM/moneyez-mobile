@@ -1,5 +1,5 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
-import useHideGroupTabbar from "@/hooks/useHideGroupTabbar";
+import useHideGroupTabbar from "@/helpers/hooks/useHideGroupTabbar";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { useInviteMemberQRCodeMutation } from "@/services/group";
 import AsyncStorage from "@react-native-async-storage/async-storage";

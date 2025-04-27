@@ -1,4 +1,4 @@
-import { GROUP_ROLE, TRANSACTION_STATUS } from "@/enums/globals";
+import { GROUP_ROLE, TRANSACTION_STATUS } from "@/helpers/enums/globals";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { selectCurrentGroup, setCurrentGroup } from "@/redux/slices/groupSlice";
 import { setLoading } from "@/redux/slices/loadingSlice";
@@ -6,7 +6,7 @@ import { setGroupTabHidden } from "@/redux/slices/tabSlice";
 import { selectUserInfo } from "@/redux/slices/userSlice";
 import { useGetGroupDetailQuery, useGetGroupLogsQuery } from "@/services/group";
 import { useGetGroupTransactionQuery } from "@/services/transaction";
-import { GroupMember } from "@/types/group.type";
+import { GroupMember } from "@/helpers/types/group.type";
 import { router, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { ToastAndroid } from "react-native";
@@ -32,7 +32,8 @@ const useGroupHomeDefault = () => {
   const userInfo = useSelector(selectUserInfo);
 
   const isLeader = !!groupMembers?.find(
-    (member) => member.userInfo.id === userInfo?.id && member.role === GROUP_ROLE.LEADER,
+    (member) =>
+      member.userInfo.id === userInfo?.id && member.role === GROUP_ROLE.LEADER,
   );
 
   const {

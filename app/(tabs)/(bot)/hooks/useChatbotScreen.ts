@@ -4,14 +4,14 @@ import {
   startConnection,
   stopConnection,
 } from "@/configs/signalR";
-import { CHAT_ROLE, CHATBOT_CONNECTION } from "@/enums/globals";
-import useHideTabbar from "@/hooks/useHideTabbar";
+import { CHAT_ROLE, CHATBOT_CONNECTION } from "@/helpers/enums/globals";
+import useHideTabbar from "@/helpers/hooks/useHideTabbar";
 import { setIsThinking } from "@/redux/slices/systemSlice";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { selectUserInfo } from "@/redux/slices/userSlice";
 import { RootState } from "@/redux/store";
 import { useGetBotHistoryQuery } from "@/services/bot";
-import { Message } from "@/types/bot.types";
+import { Message } from "@/helpers/types/bot.types";
 import { router } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Animated, FlatList } from "react-native";

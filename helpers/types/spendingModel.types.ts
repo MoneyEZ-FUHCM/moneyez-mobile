@@ -1,4 +1,4 @@
-import { PERIOD_UNIT } from "@/enums/globals";
+import { PERIOD_UNIT } from "@/helpers/enums/globals";
 import { BaseResponse } from "./system.types";
 
 export interface SpendingModel {

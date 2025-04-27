@@ -1,6 +1,6 @@
 import { appInfo } from "@/helpers/constants/appInfos";
-import { QuizSubmitResponse } from "@/types/quiz.types";
-import { SpendingModelData } from "@/types/spendingModel.types";
+import { QuizSubmitResponse } from "@/helpers/types/quiz.types";
+import { SpendingModelData } from "@/helpers/types/spendingModel.types";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { memo, useEffect, useState } from "react";

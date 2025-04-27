@@ -1,4 +1,4 @@
-import { GROUP_FINANCIAL_GOAL_STATUS } from "@/enums/globals";
+import { GROUP_FINANCIAL_GOAL_STATUS } from "@/helpers/enums/globals";
 import { convertUTCToVietnamTime, formatCurrencyInput } from "@/helpers/libs";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";

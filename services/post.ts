@@ -1,8 +1,8 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import apiSlice from "@/redux/slices/apiSlice";
-import { ChatMessageHistory } from "@/types/bot.types";
-import { Post } from "@/types/post.types";
-import { transformCommonResponse } from "@/types/system.types";
+import { ChatMessageHistory } from "@/helpers/types/bot.types";
+import { Post } from "@/helpers/types/post.types";
+import { transformCommonResponse } from "@/helpers/types/system.types";
 
 const { HTTP_METHOD } = COMMON_CONSTANT;
 const postApi = apiSlice.injectEndpoints({

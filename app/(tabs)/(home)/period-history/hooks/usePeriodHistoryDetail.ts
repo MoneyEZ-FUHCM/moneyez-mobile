@@ -1,4 +1,4 @@
-import { TRANSACTION_TYPE } from "@/enums/globals";
+import { TRANSACTION_TYPE } from "@/helpers/enums/globals";
 import { formatCurrency, formatDate, formatTime } from "@/helpers/libs";
 import { setImageView } from "@/redux/slices/systemSlice";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
@@ -7,7 +7,7 @@ import {
   useGetTransactionByIdQuery,
   useGetUserSpendingModelDetailQuery,
 } from "@/services/userSpendingModel";
-import { TransactionViewModelDetail } from "@/types/transaction.types";
+import { TransactionViewModelDetail } from "@/helpers/types/transaction.types";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ToastAndroid } from "react-native";

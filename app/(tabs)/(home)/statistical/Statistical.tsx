@@ -1,6 +1,11 @@
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
-import { formatCurrency, formatDate, formatDateMonthYear, formatTime } from "@/helpers/libs";
-import { Transaction } from "@/types/transaction.types";
+import {
+  formatCurrency,
+  formatDate,
+  formatDateMonthYear,
+  formatTime,
+} from "@/helpers/libs";
+import { Transaction } from "@/helpers/types/transaction.types";
 import { EvilIcons, MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
@@ -30,43 +35,46 @@ export default function Statistical() {
               <Text
                 className={`text-base font-bold ${netAmount >= 0 ? "text-emerald-600" : "text-rose-600"}`}
               >
-                {netAmount >= 0 ? "+" : ""}{formatCurrency(netAmount)}
+                {netAmount >= 0 ? "+" : ""}
+                {formatCurrency(netAmount)}
               </Text>
             </View>
 
-            {transactions.length > 0 && transactions.map((item: Transaction) => (
-              <View
-                key={item.id}
-                className="mb-2 flex-row items-center justify-between rounded-lg bg-white p-3 pl-1 shadow-sm"
-              >
-                <View className="flex-row items-center">
-                  <View className="flex-[0.6] flex-row items-center">
-                    <MaterialIcons
-                      name={item.subcategoryIcon ?? "attach-money"}
-                      size={36}
-                      color={Colors.colors.primary}
-                    />
-                    <View className="ml-3">
-                      <Text className="text-base font-semibold text-gray-900">
-                        {item.subcategoryName || item.description}
-                      </Text>
-                      <Text className="text-sm text-gray-500">
-                        {formatDateMonthYear(item.createdDate)}{" "}·{" "}{formatTime(item.createdDate)}
+            {transactions.length > 0 &&
+              transactions.map((item: Transaction) => (
+                <View
+                  key={item.id}
+                  className="mb-2 flex-row items-center justify-between rounded-lg bg-white p-3 pl-1 shadow-sm"
+                >
+                  <View className="flex-row items-center">
+                    <View className="flex-[0.6] flex-row items-center">
+                      <MaterialIcons
+                        name={item.subcategoryIcon ?? "attach-money"}
+                        size={36}
+                        color={Colors.colors.primary}
+                      />
+                      <View className="ml-3">
+                        <Text className="text-base font-semibold text-gray-900">
+                          {item.subcategoryName || item.description}
+                        </Text>
+                        <Text className="text-sm text-gray-500">
+                          {formatDateMonthYear(item.createdDate)} ·{" "}
+                          {formatTime(item.createdDate)}
+                        </Text>
+                      </View>
+                    </View>
+
+                    <View className="flex-[0.4] items-end">
+                      <Text
+                        className={`text-base font-bold ${item.type === "EXPENSE" ? "text-rose-600" : "text-emerald-600"}`}
+                      >
+                        {item.type === "EXPENSE" ? "-" : "+"}
+                        {formatCurrency(item.amount)}
                       </Text>
                     </View>
                   </View>
-
-                  <View className="flex-[0.4] items-end">
-                    <Text
-                      className={`text-base font-bold ${item.type === "EXPENSE" ? "text-rose-600" : "text-emerald-600"}`}
-                    >
-                      {item.type === "EXPENSE" ? "-" : "+"}
-                      {formatCurrency(item.amount)}
-                    </Text>
-                  </View>
                 </View>
-              </View>
-            ))}
+              ))}
           </View>
         );
       })}
@@ -76,14 +84,17 @@ export default function Statistical() {
   return (
     <SafeAreaViewCustom rootClassName="flex-1 bg-gray-50">
       <SectionComponent rootClassName="h-14 bg-white shadow-sm justify-center">
-        <View className="flex-row items-center justify-center relative px-4">
-          <Pressable onPress={handler.handleBack} className="p-2 absolute left-4">
+        <View className="relative flex-row items-center justify-center px-4">
+          <Pressable
+            onPress={handler.handleBack}
+            className="absolute left-4 p-2"
+          >
             <MaterialIcons name="arrow-back" size={24} color="black" />
           </Pressable>
-          <Text className="text-lg font-bold justify-center text-center">
+          <Text className="justify-center text-center text-lg font-bold">
             {TEXT_TRANSLATE_STATISTICAL.TITLE.STATISTICAL}
           </Text>
-          <View/>
+          <View />
         </View>
       </SectionComponent>
 

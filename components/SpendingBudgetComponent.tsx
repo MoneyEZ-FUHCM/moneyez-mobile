@@ -1,7 +1,7 @@
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
 import { Colors } from "@/helpers/constants/color";
 import { formatCurrency } from "@/helpers/libs";
-import { FinancialGoal } from "@/types/financialGoal.type";
+import { FinancialGoal } from "@/helpers/types/financialGoal.type";
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { Pressable, Text, View } from "react-native";

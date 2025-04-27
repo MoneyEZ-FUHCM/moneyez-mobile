@@ -3,7 +3,7 @@ import {
   MarkedDates,
   Transaction,
   TransactionsByDate,
-} from "@/types/transaction.types";
+} from "@/helpers/types/transaction.types";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Calendar, DateData, LocaleConfig } from "react-native-calendars";
@@ -72,7 +72,7 @@ const CalendarView: React.FC = () => {
           <Text className="mb-1 text-sm font-semibold text-gray-600">
             {TEXT_TRANSLATE_STATISTICAL.LABELS.EXPENSE}
           </Text>
-          <Text className="text-red text-base font-bold">
+          <Text className="text-base font-bold text-red">
             {formatCurrency(state.totalExpense)}
           </Text>
         </View>

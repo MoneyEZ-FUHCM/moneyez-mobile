@@ -18,7 +18,7 @@ import {
 import { ProgressBar } from "react-native-paper";
 import TEXT_TRANSLATE_GROUP_RATIO_MEMBER from "./GroupRatioMember.translate";
 import useGroupRatioMember from "./hooks/useGroupRatioMember";
-import { GroupMember } from "@/types/group.type";
+import { GroupMember } from "@/helpers/types/group.type";
 
 const SliderTooltip = ({ value }: { value: number }) => (
   <View

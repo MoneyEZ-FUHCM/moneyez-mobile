@@ -1,7 +1,7 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import apiSlice from "@/redux/slices/apiSlice";
-import { Notification } from "@/types/notification.type";
-import { transformCommonResponse } from "@/types/system.types";
+import { Notification } from "@/helpers/types/notification.type";
+import { transformCommonResponse } from "@/helpers/types/system.types";
 
 const { HTTP_METHOD } = COMMON_CONSTANT;
 const notificationApi = apiSlice.injectEndpoints({

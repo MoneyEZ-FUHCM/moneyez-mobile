@@ -7,11 +7,11 @@ import {
   SpaceComponent,
 } from "@/components";
 import { TextAreaComponent } from "@/components/TextAreaComponent";
-import { TRANSACTION_TYPE_TEXT } from "@/enums/globals";
+import { TRANSACTION_TYPE_TEXT } from "@/helpers/enums/globals";
 import { Colors } from "@/helpers/constants/color";
 import { formatCurrencyInput } from "@/helpers/libs";
-import { CategoryListFilter } from "@/types/category.types";
-import { Subcategory } from "@/types/subCategory";
+import { CategoryListFilter } from "@/helpers/types/category.types";
+import { Subcategory } from "@/helpers/types/subCategory";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import { Formik } from "formik";

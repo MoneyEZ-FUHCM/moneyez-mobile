@@ -6,7 +6,7 @@ import {
   SectionComponent,
 } from "@/components";
 import { Colors } from "@/helpers/constants/color";
-import { UserSpendingModel } from "@/types/spendingModel.types";
+import { UserSpendingModel } from "@/helpers/types/spendingModel.types";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";

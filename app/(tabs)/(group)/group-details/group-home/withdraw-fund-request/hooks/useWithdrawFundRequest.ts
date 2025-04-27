@@ -1,4 +1,4 @@
-import { GROUP_ROLE } from "@/enums/globals";
+import { GROUP_ROLE } from "@/helpers/enums/globals";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";

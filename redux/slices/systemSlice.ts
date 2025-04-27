@@ -1,4 +1,4 @@
-import { CHATBOT_CONNECTION } from "@/enums/globals";
+import { CHATBOT_CONNECTION } from "@/helpers/enums/globals";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface SystemState {

@@ -8,7 +8,7 @@ import {
   MarkedDates,
   Transaction,
   TransactionsByDate,
-} from "@/types/transaction.types";
+} from "@/helpers/types/transaction.types";
 import TEXT_TRANSLATE_STATISTICAL from "./Statistical.translate";
 
 const CalendarView: React.FC = () => {
