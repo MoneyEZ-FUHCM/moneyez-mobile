@@ -96,7 +96,7 @@ export default function useGroupRemind() {
             target: target,
             checked: !hasFundedEnough && !isCurrentUser,
             userId: member.userId,
-            disabled: hasFundedEnough || isCurrentUser,
+            disabled: isCurrentUser,
           };
         });
       setMembers(mappedMembers);
@@ -150,20 +150,19 @@ export default function useGroupRemind() {
         }
 
         const memberData = checkedMembers.map((member) => {
-          let finalAmount = amount;
-
-          if (isGoalActive && hasFinancialGoal) {
-            const remaining = member.target - member.contributed;
-            if (finalAmount > remaining && remaining > 0) {
-              finalAmount = remaining;
-            } else if (remaining <= 0) {
-              finalAmount = 0;
-            }
-          }
+          // let finalAmount = amount;
+          // if (isGoalActive && hasFinancialGoal) {
+          //   const remaining = member.target - member.contributed;
+          //   if (finalAmount > remaining && remaining > 0) {
+          //     finalAmount = remaining;
+          //   } else if (remaining <= 0) {
+          //     finalAmount = 0;
+          //   }
+          // }
 
           return {
             memberId: member.userId,
-            amount: finalAmount,
+            amount,
           };
         });
 

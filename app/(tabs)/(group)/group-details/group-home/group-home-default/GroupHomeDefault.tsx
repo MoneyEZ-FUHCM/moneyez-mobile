@@ -318,8 +318,8 @@ const GroupHomeDefault = () => {
             }`}
           >
             {activity?.type === TRANSACTION_TYPE_TEXT.INCOME
-              ? `+ ${formatCurrency(activity?.amount)}`
-              : `- ${formatCurrency(activity?.amount)}`}
+              ? `+${formatCurrency(activity?.amount)}`
+              : `-${formatCurrency(activity?.amount)}`}
           </Text>
         </View>
       </View>
