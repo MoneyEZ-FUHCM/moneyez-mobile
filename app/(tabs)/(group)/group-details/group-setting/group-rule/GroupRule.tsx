@@ -37,9 +37,25 @@ const GroupRule = () => {
             icon="shield-checkmark"
             iconColor={Colors.colors.blue}
             items={[
-              "MoneyEasy sẽ không đứng ra giữ tiền quỹ trong nhóm mà leader sẽ là người trực tiếp quản lý.",
-              "MoneyEasy sẽ đóng vai trò là một ứng dụng ghi chú để minh bạch các giao dịch trong nhóm.",
-              "MoneyEasy sẽ không can thiệp vào tranh chấp phát sinh giữa các thành viên. Điều này được ghi nhận trong thỏa thuận nhóm.",
+              <Text>
+                <Text className="font-bold text-primary">MoneyEZ</Text> sẽ không
+                đứng ra giữ tiền quỹ trong nhóm mà trưởng nhóm sẽ là người trực
+                tiếp quản lý.
+              </Text>,
+              <Text>
+                <Text className="font-bold text-primary">MoneyEZ</Text> sẽ đóng
+                vai trò là một ứng dụng ghi chú để minh bạch các giao dịch trong
+                nhóm.
+              </Text>,
+              <Text>
+                <Text className="font-bold text-primary">MoneyEZ</Text> sẽ
+                <Text className="font-bold text-primary">
+                  {" "}
+                  không can thiệp
+                </Text>{" "}
+                vào tranh chấp phát sinh giữa các thành viên. Điều này được ghi
+                nhận trong thỏa thuận nhóm.
+              </Text>,
             ]}
           />
           <RuleSection
@@ -58,9 +74,14 @@ const GroupRule = () => {
             icon="people"
             iconColor={Colors.colors.green}
             items={[
-              "Việc tham gia nhóm đồng nghĩa với việc đồng ý toàn bộ điều khoản do trưởng nhóm quy định.",
+              <>
+                Việc tham gia nhóm đồng nghĩa với việc,{" "}
+                <Text className="font-bold text-primary">
+                  đồng ý toàn bộ điều khoản do trưởng nhóm quy định.
+                </Text>
+              </>,
               "Trưởng nhóm sẽ có toàn quyền quyết định các giao dịch trên nhóm.",
-              "Giao dịch nạp / rút quỹ được xác nhận thông qua hệ thống open banking hoặc leader sẽ xác nhận.",
+              "Giao dịch nạp / rút quỹ được xác nhận thông qua hệ thống open banking hoặc trưởng nhóm sẽ xác nhận.",
             ]}
           />
           <RuleSection
@@ -68,8 +89,8 @@ const GroupRule = () => {
             icon="flag"
             iconColor={Colors.colors.pink}
             items={[
-              "Chỉ leader mới có quyền quản lý mục tiêu nhóm.",
-              "Leader chỉ có thể cập nhật mục tiêu nhóm khi chưa đến deadline.",
+              "Chỉ trưởng nhóm mới có quyền quản lý mục tiêu nhóm.",
+              "Trưởng nhóm chỉ có thể cập nhật mục tiêu nhóm khi chưa đến hạn.",
               <>
                 Mục tiêu nhóm sẽ tự chuyển sang trạng thái
                 <Text className="font-bold text-green"> Đã hoàn thành </Text>

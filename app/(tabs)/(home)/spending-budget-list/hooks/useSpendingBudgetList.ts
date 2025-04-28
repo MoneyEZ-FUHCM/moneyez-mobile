@@ -13,9 +13,10 @@ import { FinancialGoal } from "@/helpers/types/financialGoal.type";
 import { Subcategory } from "@/helpers/types/subCategory";
 import { MaterialIcons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BackHandler } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import { Modalize } from "react-native-modalize";
 
 interface BudgetItem {
   id: string;
@@ -47,6 +48,11 @@ const useSpendingBudget = () => {
   const dispatch = useDispatch();
   const currentSpendingModel = useSelector(selectCurrentUserSpendingModel);
   const { HOME } = PATH_NAME;
+  const modalizeRef = useRef<Modalize>(null);
+
+  const openRulesModal = () => {
+    modalizeRef.current?.open();
+  };
 
   const {
     data: financialGoalsData,
@@ -183,6 +189,7 @@ const useSpendingBudget = () => {
         cycleInfo,
         budgetSections,
         isLoading,
+        modalizeRef,
       }),
       [cycleInfo, budgetSections, isLoading],
     ),
@@ -191,6 +198,7 @@ const useSpendingBudget = () => {
       handleBack,
       handleBudgetPress,
       handleRefresh,
+      openRulesModal,
     },
   };
 };
