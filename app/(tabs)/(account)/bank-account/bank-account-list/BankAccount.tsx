@@ -246,7 +246,7 @@ const BankAccount = () => {
   return (
     <GestureHandlerRootView>
       <SafeAreaViewCustom rootClassName="bg-gray-50 relative">
-        <SectionComponent rootClassName="flex-row relative justify-center items-center h-14 px-4">
+        <SectionComponent rootClassName="flex-row relative justify-center bg-white items-center h-14 px-4">
           <TouchableOpacity
             onPress={handler.handleBack}
             className="absolute bottom-[17px] left-4"
@@ -336,7 +336,7 @@ const BankAccount = () => {
                 <View className="space-y-2">
                   <Text className="text-gray-600">
                     • Liên kết tài khoản ngân hàng nhằm ghi nhận giao dịch một
-                    cách tự động và chính xác trên ứng dụng EzMoney
+                    cách tự động và chính xác trên ứng dụng MoneyEZ
                   </Text>
                 </View>
               </View>

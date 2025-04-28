@@ -36,6 +36,11 @@ const useBankAccount = () => {
   const { BANK_LIST, ERROR_CODE } = BANK_ACCOUNT_CONSTANT;
   const { MESSAGE_ERROR, MESSAGE_SUCCESS } = TEXT_TRANSLATE_BANK_ACCOUNT;
   const [isRefetching, setIsRefetching] = useState(false);
+  const modalizeRef = useRef<Modalize>(null);
+
+  const openRulesModal = () => {
+    modalizeRef.current?.open();
+  };
 
   const { data, isLoading, refetch } = useGetBankAccountsQuery({
     PageIndex: 1,
@@ -222,6 +227,7 @@ const useBankAccount = () => {
       selectedAccount,
       isLoading,
       isRefetching,
+      modalizeRef,
     },
     handler: {
       handleBack,
@@ -234,6 +240,7 @@ const useBankAccount = () => {
       handleWebhook,
       handleConfirmUnlink,
       handleRefetch,
+      openRulesModal,
     },
   };
 };

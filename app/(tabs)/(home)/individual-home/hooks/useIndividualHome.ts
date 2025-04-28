@@ -8,8 +8,9 @@ import {
   useGetCurrentUserSpendingModelQuery,
 } from "@/services/userSpendingModel";
 import { router, useFocusEffect } from "expo-router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BackHandler, ToastAndroid } from "react-native";
+import { Modalize } from "react-native-modalize";
 import { useDispatch } from "react-redux";
 
 const useIndividualHome = () => {
@@ -17,6 +18,12 @@ const useIndividualHome = () => {
   const dispatch = useDispatch();
   const { SYSTEM_ERROR } = COMMON_CONSTANT;
   const [isRefetching, setIsRefetching] = useState(false);
+  const modalizeRef = useRef<Modalize>(null);
+
+  const openRulesModal = () => {
+    modalizeRef.current?.open();
+  };
+
   const {
     data: currentUserSpendingModelChart,
     isLoading,
@@ -142,6 +149,7 @@ const useIndividualHome = () => {
       actualCategories,
       personalFinancialGoalsData,
       isRefetching,
+      modalizeRef,
     },
     handler: {
       handleGoBack,
@@ -150,6 +158,7 @@ const useIndividualHome = () => {
       handleHistoryPress,
       handleSpendingBudgetPress,
       handleRefetch,
+      openRulesModal,
     },
   };
 };

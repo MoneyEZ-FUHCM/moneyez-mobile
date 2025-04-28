@@ -1,14 +1,14 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
-import { setMainTabHidden } from "@/redux/slices/tabSlice";
-import {
-  useCreateBankAccountMutation,
-  useUpdateBankAccountMutation,
-} from "@/services/bankAccounts";
 import {
   BankAccountType,
   BankType,
   CreateBankAccountPayload,
 } from "@/helpers/types/bankAccount.types";
+import { setMainTabHidden } from "@/redux/slices/tabSlice";
+import {
+  useCreateBankAccountMutation,
+  useUpdateBankAccountMutation,
+} from "@/services/bankAccounts";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ScrollView, ToastAndroid } from "react-native";
@@ -22,6 +22,11 @@ const useFunctionBankAccount = (params: any) => {
   const [selectedBank, setSelectedBank] = useState(null);
   const [searchText, setSearchText] = useState<string>("");
   const [isAtTop, setIsAtTop] = useState(true);
+  const modalizeRef = useRef<Modalize>(null);
+
+  const openRulesModal = () => {
+    modalizeRef.current?.open();
+  };
 
   const bankSelectModalRef = useRef<Modalize>(null);
   const scrollRef = useRef<ScrollView>(null);
@@ -189,6 +194,7 @@ const useFunctionBankAccount = (params: any) => {
       BANK_LIST,
       editMode,
       FORM_NAME,
+      modalizeRef,
     },
     handler: {
       handleScroll,
@@ -199,6 +205,7 @@ const useFunctionBankAccount = (params: any) => {
       handleSubmitRef,
       setSearchText,
       validationSchema,
+      openRulesModal,
     },
   };
 };
