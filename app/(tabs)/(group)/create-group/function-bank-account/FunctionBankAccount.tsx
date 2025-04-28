@@ -4,7 +4,7 @@ import {
   SafeAreaViewCustom,
   SectionComponent,
 } from "@/components";
-import { Feather, MaterialIcons } from "@expo/vector-icons";
+import { Feather, FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { Formik } from "formik";
 import React from "react";
@@ -19,10 +19,65 @@ import {
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import TEXT_TRANSLATE_FUNCTION_BANK_ACCOUNT from "./FunctionBankAccount.translate";
 import useFunctionBankAccount from "./hooks/useFunctionBankAccount";
+import { Colors } from "@/helpers/constants/color";
 
 const FunctionBankAccount = () => {
   const params = useLocalSearchParams();
   const { state, handler } = useFunctionBankAccount(params);
+
+  const renderRulesContent = () => {
+    return (
+      <View className="p-5">
+        <Text className="mb-4 text-center text-xl font-bold text-black">
+          Tài khoản ngân hàng
+        </Text>
+
+        <View className="mb-4">
+          <View className="mb-2 flex-row items-center">
+            <MaterialIcons
+              name="check-circle"
+              size={20}
+              color={Colors.colors.primary}
+            />
+            <Text className="ml-2 mr-2 text-base">
+              Hệ thống chỉ hỗ trợ tạo và xác thực với ngân hàng Sandbox của nhóm
+              (EzMoney Bank Sandbox).
+            </Text>
+          </View>
+
+          <View className="mb-2 flex-row items-center">
+            <MaterialIcons
+              name="check-circle"
+              size={20}
+              color={Colors.colors.primary}
+            />
+            <Text className="ml-2 mr-2 text-base">
+              Để liên kết được ngân hàng thì hệ thống cần xác thực đúng số tài
+              khoản và chủ tài khoản của phía ngân hàng Sandbox.
+            </Text>
+          </View>
+
+          <View className="mb-2 flex-row items-center">
+            <MaterialIcons
+              name="check-circle"
+              size={20}
+              color={Colors.colors.primary}
+            />
+            <Text className="ml-2 mr-2 text-base">
+              Mỗi người dùng chỉ được thêm 3 tài khoản ngân hàng.
+            </Text>
+          </View>
+        </View>
+
+        <TouchableOpacity
+          className="mt-5 rounded-lg bg-primary py-3"
+          onPress={() => state.modalizeRef.current?.close()}
+        >
+          <Text className="text-center font-medium text-white">Đóng</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   const BankSelectModal = ({
     setFieldValue,
@@ -74,11 +129,8 @@ const FunctionBankAccount = () => {
   return (
     <GestureHandlerRootView>
       <SafeAreaViewCustom rootClassName="flex-1 bg-gray-50">
-        <SectionComponent rootClassName="flex-row relative justify-center items-center h-14 px-4">
-          <TouchableOpacity
-            onPress={() => router.back()}
-            className="absolute bottom-[17px] left-4"
-          >
+        <SectionComponent rootClassName="flex-row relative bg-white justify-between items-center h-14 px-4">
+          <TouchableOpacity onPress={() => router.back()}>
             <MaterialIcons name="arrow-back" size={24} />
           </TouchableOpacity>
           <Text className="text-lg font-bold">
@@ -86,6 +138,9 @@ const FunctionBankAccount = () => {
               ? "Chỉnh sửa tài khoản ngân hàng"
               : "Thêm tài khoản ngân hàng"}
           </Text>
+          <Pressable onPress={handler.openRulesModal}>
+            <FontAwesome6 name="circle-question" size={24} />
+          </Pressable>
         </SectionComponent>
         <SectionComponent rootClassName="flex-1 p-6">
           <Formik
@@ -225,6 +280,9 @@ const FunctionBankAccount = () => {
           </Pressable>
         </SectionComponent>
       </SafeAreaViewCustom>
+      <ModalLizeComponent ref={state.modalizeRef}>
+        {renderRulesContent()}
+      </ModalLizeComponent>
     </GestureHandlerRootView>
   );
 };

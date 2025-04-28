@@ -63,12 +63,12 @@ const DatePickerFinancialGoalComponent: React.FC<
           value={
             field.value
               ? new Date(field.value)
-              : new Date(Date.now() + 86400000)
+              : new Date(Date.now() + 86400000 * 3)
           }
           mode="date"
           is24Hour={true}
           display="default"
-          minimumDate={new Date(Date.now() + 86400000)}
+          minimumDate={new Date(Date.now() + 86400000 * 3)}
           maximumDate={maxDate}
           onChange={handleChange}
         />

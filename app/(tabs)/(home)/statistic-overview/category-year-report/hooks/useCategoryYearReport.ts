@@ -26,6 +26,10 @@ const useCategoryYearReport = () => {
     useGetReportTransactionCategoryYearQuery({ year: currentYear, type });
 
   useEffect(() => {
+    refetch();
+  }, [type, refetch]);
+
+  useEffect(() => {
     const rawCategories =
       transactionsReportResponseData?.items?.categories || [];
 

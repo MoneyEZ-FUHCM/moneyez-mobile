@@ -101,8 +101,8 @@ const ActionLogHistory = () => {
               }`}
             >
               {activity?.type === TRANSACTION_TYPE_TEXT.INCOME
-                ? `+ ${formatCurrency(activity?.amount)}`
-                : `- ${formatCurrency(activity?.amount)}`}
+                ? `+${formatCurrency(activity?.amount)}`
+                : `-${formatCurrency(activity?.amount)}`}
             </Text>
           </View>
         </View>
@@ -314,8 +314,8 @@ const ActionLogHistory = () => {
                       }`}
                     >
                       {state.selectedLog?.type === TRANSACTION_TYPE_TEXT.INCOME
-                        ? `+ ${formatCurrency(state.selectedLog?.amount)}`
-                        : `- ${formatCurrency(state.selectedLog?.amount)}`}
+                        ? `+${formatCurrency(state.selectedLog?.amount)}`
+                        : `-${formatCurrency(state.selectedLog?.amount)}`}
                     </Text>
                   </View>
                   {state.selectedLog?.accountBankName && (

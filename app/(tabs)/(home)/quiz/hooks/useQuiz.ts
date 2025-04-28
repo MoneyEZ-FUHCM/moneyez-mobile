@@ -62,7 +62,6 @@ const useQuiz = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
         ToastAndroid.show("Có lỗi khi load quiz", ToastAndroid.SHORT);
         setError("Có lỗi khi load quiz");
       });
@@ -166,11 +165,9 @@ const useQuiz = () => {
         ToastAndroid.show("Đã hoàn thành quiz thành công", ToastAndroid.SHORT);
       } else {
         ToastAndroid.show("Lỗi khi submit quiz", ToastAndroid.SHORT);
-        console.log(response.message);
       }
     } catch (err) {
       ToastAndroid.show("Lỗi khi submit quiz", ToastAndroid.SHORT);
-      console.log(err);
     }
   };
 

@@ -1,3 +1,4 @@
+import { formatPercentage } from "@/helpers/libs";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Text, View } from "react-native";
@@ -55,6 +56,7 @@ const ProgressCircleComponent = ({
     [progress, isSaving],
   );
   const animatedIconColor = progress === 0 ? "#d6d6d6" : animatedColor;
+  console.log("check value123", value.toFixed(4));
 
   return (
     <View className="flex-1 items-center justify-center">
@@ -84,7 +86,7 @@ const ProgressCircleComponent = ({
             ]}
           >
             {/* {Math.round(progress * 100)}% */}
-            {value * 100}%
+            {formatPercentage(value)}%{/* {(value * 100).toFixed(2)}% */}
           </Text>
         ) : (
           <MaterialIcons

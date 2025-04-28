@@ -123,3 +123,16 @@ export const isValidGUID = (token: string) => {
     token,
   );
 };
+
+export const formatPercentage = (value: number) => {
+  const multiplied = value * 100;
+  const decimalPart = multiplied.toString().split(".")[1];
+
+  if (!decimalPart) {
+    return multiplied.toFixed(0);
+  } else if (decimalPart.length === 1) {
+    return multiplied.toFixed(1);
+  } else {
+    return multiplied.toFixed(2);
+  }
+};

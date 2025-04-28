@@ -20,9 +20,15 @@ const DatePickerRecurringTransaction: React.FC<
     createdDate?: string;
     endDate?: string;
   }
-> = ({ name, label, containerClass, labelClass, isRequired = false }) => {
+> = ({
+  name,
+  label,
+  containerClass,
+  labelClass,
+  isRequired = false,
+  maximumDate,
+}) => {
   const [showPicker, setShowPicker] = useState(false);
-  const [mode, setMode] = useState<"date" | "time">("date");
   const [field, meta, helpers] = useField(name);
 
   const handleChange = (event: DateTimePickerEvent, date?: Date) => {
@@ -32,14 +38,8 @@ const DatePickerRecurringTransaction: React.FC<
     }
 
     if (date) {
-      if (mode === "date") {
-        setMode("time");
-        setShowPicker(true);
-        helpers.setValue(date);
-      } else {
-        setShowPicker(false);
-        helpers.setValue(date);
-      }
+      setShowPicker(false);
+      helpers.setValue(date);
     }
   };
 
@@ -58,16 +58,13 @@ const DatePickerRecurringTransaction: React.FC<
           className={`h-10 flex-row items-center rounded-md border px-3 ${
             meta.touched && meta.error ? "border-red" : "border-gray-300"
           }`}
-          onPress={() => {
-            setMode("date");
-            setShowPicker(true);
-          }}
+          onPress={() => setShowPicker(true)}
         >
           <Calendar size="20" color="#609084" />
           <Text className="ml-2 text-[13px] text-black">
             {field.value
-              ? new Date(field.value).toLocaleString("vi-VN")
-              : "Chọn ngày giờ"}
+              ? new Date(field.value).toLocaleDateString("vi-VN")
+              : "Chọn ngày"}
           </Text>
         </TouchableOpacity>
       </View>
@@ -76,10 +73,11 @@ const DatePickerRecurringTransaction: React.FC<
         <DateTimePicker
           testID="dateTimePicker"
           value={field.value ? new Date(field.value) : new Date()}
-          mode={mode}
+          mode="date"
           is24Hour={true}
           display="default"
           minimumDate={new Date()}
+          maximumDate={maximumDate}
           onChange={handleChange}
         />
       )}

@@ -1,7 +1,7 @@
+import { Transaction } from "@/helpers/types/transaction.types";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { useGetRecurringTransactionQuery } from "@/services/recurringTransaction";
 import { useGetRecurringTransactionsCalendarQuery } from "@/services/transaction";
-import { Transaction } from "@/helpers/types/transaction.types";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { BackHandler } from "react-native";
@@ -36,6 +36,10 @@ const useRecurringTransactionsCalendar = () => {
     isLoading: recurringTransactionIsLoading,
     refetch: recurringTransactionRefetch,
   } = useGetRecurringTransactionsCalendarQuery({});
+
+  useEffect(() => {
+    recurringTransactionRefetch();
+  }, [dateCalendarResponseData]);
 
   const handleBack = useCallback(() => {
     router.back();

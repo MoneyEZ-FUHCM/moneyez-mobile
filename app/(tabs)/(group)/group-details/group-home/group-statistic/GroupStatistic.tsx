@@ -234,7 +234,7 @@ export default function GroupStatisticPage() {
                           <MaterialIcons
                             name="account-balance-wallet"
                             size={16}
-                            color={Colors.colors.primary}
+                            color={Colors.colors.blue}
                           />
                         </View>
                         <Text className="text-sm font-bold text-blue-400">
@@ -312,6 +312,8 @@ export default function GroupStatisticPage() {
                       </View>
 
                       <View className="rounded-lg p-1">
+                        <Text>{member.ratio}</Text>
+
                         <ProgressCircleComponent
                           value={member.ratio / 100}
                           // exactPercentage={member.ratio}

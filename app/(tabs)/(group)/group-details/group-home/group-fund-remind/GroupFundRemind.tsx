@@ -68,9 +68,11 @@ export default function GroupRemindPage() {
                 <View>
                   <ProgressCircleComponent
                     value={
-                      state.groupCurrent >= state.groupGoal
-                        ? 1
-                        : state.groupCurrent / state.groupGoal
+                      Math.floor(
+                        (state.groupCurrent / state.groupGoal > 1
+                          ? 1
+                          : state.groupCurrent / state.groupGoal) * 100,
+                      ) / 100
                     }
                     size={60}
                     thickness={4}

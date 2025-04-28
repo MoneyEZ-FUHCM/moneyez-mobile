@@ -22,6 +22,11 @@ import { setLoading } from "@/redux/slices/loadingSlice";
 const useBankAccount = () => {
   const dispatch = useDispatch();
   useHideTabbar();
+  const modalizeRef = useRef<Modalize>(null);
+
+  const openRulesModal = () => {
+    modalizeRef.current?.open();
+  };
 
   const [selectedAccount, setSelectedAccount] =
     useState<BankAccountType | null>(null);
@@ -221,6 +226,7 @@ const useBankAccount = () => {
       selectedAccount,
       isLoading,
       isRefetching,
+      modalizeRef,
     },
     handler: {
       handleBack,
@@ -233,6 +239,7 @@ const useBankAccount = () => {
       handleWebhook,
       handleConfirmUnlink,
       handleRefetch,
+      openRulesModal,
     },
   };
 };
