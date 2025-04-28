@@ -19,8 +19,8 @@ const UpdateUserInfo = () => {
   const primary = "#609084";
 
   return (
-    <SafeAreaViewCustom rootClassName="relative">
-      <SectionComponent rootClassName="flex-row relative justify-center items-center h-14 px-4">
+    <SafeAreaViewCustom rootClassName="relative bg-gray-50">
+      <SectionComponent rootClassName="flex-row relative justify-center items-center bg-white h-14 px-4">
         <TouchableOpacity
           onPress={handler.handleBack}
           className="absolute bottom-[17px] left-4"
