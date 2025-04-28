@@ -26,8 +26,6 @@ export default function useGroupFinancialGoalForm() {
     goalId?: string;
   }>();
 
-  console.log("check goalId", goalId);
-
   const isCreateMode = !goalId || mode === "create";
   const [initialValues, setInitialValues] = useState({
     name: "",
@@ -158,7 +156,6 @@ export default function useGroupFinancialGoalForm() {
           currentAmount: 0,
           deadline: convertUTCToVietnamTime(values.deadline),
         };
-        console.log("check createPayload", createPayload);
         await createGroupFinancialGoal(createPayload).unwrap();
         ToastAndroid.show(
           TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL.MESSAGE_SUCCESS.CREATE_SUCCESS,
