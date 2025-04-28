@@ -312,8 +312,6 @@ export default function GroupStatisticPage() {
                       </View>
 
                       <View className="rounded-lg p-1">
-                        <Text>{member.ratio}</Text>
-
                         <ProgressCircleComponent
                           value={member.ratio / 100}
                           // exactPercentage={member.ratio}

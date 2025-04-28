@@ -77,7 +77,7 @@ const useNotificationList = (isHidden: boolean = false) => {
       id: notice?.id,
       title: notice?.title,
       type: notice?.type,
-      message: notice?.message?.toLowerCase(),
+      message: notice?.message,
       isRead: notice?.isRead,
       formattedDate: formatDate(notice?.createdDate),
       formattedTime: formatTime(notice?.createdDate),

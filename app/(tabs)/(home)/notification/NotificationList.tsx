@@ -39,13 +39,14 @@ export default function NotificationList() {
   } = handler;
 
   const highlightText = (text: string, highlightStyle: any) => {
-    const parts = text.split(/\[|\]/);
+    const parts = text.split(/(\[.*?\]|".*?")/);
 
     return parts.map((part: string, index: number) => {
       if (index % 2 === 1) {
+        const cleanPart = part.slice(1, -1);
         return (
           <Text key={index} style={highlightStyle}>
-            {part}
+            {cleanPart}
           </Text>
         );
       } else {
@@ -79,7 +80,10 @@ export default function NotificationList() {
             })}
           </Text>
           <Text className="mt-1 text-sm text-[#1e1e1e]">
-            {item?.message?.charAt(0)?.toUpperCase() + item?.message?.slice(1)}
+            {highlightText(item?.message, {
+              color: Colors.colors.primary,
+              fontWeight: "bold",
+            })}
           </Text>
           <SpaceComponent height={3} />
           <View className="mt-2 flex-row justify-end gap-2">
