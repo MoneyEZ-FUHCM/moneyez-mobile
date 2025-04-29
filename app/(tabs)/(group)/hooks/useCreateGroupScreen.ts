@@ -164,6 +164,7 @@ const useCreateGroupScreen = () => {
           };
           const res = await updateGroup(updatePayload).unwrap();
           if (res?.status === HTTP_STATUS.SUCCESS.OK) {
+            await refetchGroupDetail();
             ToastAndroid.show(
               SUCCESS_MESSAGES.GROUP_UPDATED_SUCCESSFULLY,
               ToastAndroid.SHORT,
@@ -184,7 +185,6 @@ const useCreateGroupScreen = () => {
             );
           }
         }
-        await refetchGroupDetail();
         router.replace({
           pathname: PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT as any,
           params: { id: isEditMode ? groupId : res?.data?.id },
