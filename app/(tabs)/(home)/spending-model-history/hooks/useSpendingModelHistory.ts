@@ -1,13 +1,13 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
-import { formatCurrency, formatDate } from "@/helpers/libs";
 import useHideTabbar from "@/helpers/hooks/useHideTabbar";
-import { setMainTabHidden } from "@/redux/slices/tabSlice";
-import { useGetUserSpendingModelQuery } from "@/services/userSpendingModel";
+import { formatCurrency, formatDate } from "@/helpers/libs";
 import {
   SpendingModelHistoryState,
   UserSpendingModel,
 } from "@/helpers/types/spendingModel.types";
+import { setMainTabHidden } from "@/redux/slices/tabSlice";
+import { useGetUserSpendingModelQuery } from "@/services/userSpendingModel";
 import { router } from "expo-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ToastAndroid } from "react-native";
@@ -34,12 +34,17 @@ const useSpendingModelHistory = () => {
     error,
     isLoading,
     refetch,
-  } = useGetUserSpendingModelQuery({ PageIndex: 1, PageSize: 20 });
+  } = useGetUserSpendingModelQuery(
+    { PageIndex: 1, PageSize: 50 },
+    {
+      refetchOnFocus: true,
+      refetchOnReconnect: true,
+    },
+  );
 
   const filters = useMemo(() => {
     const modelNames = new Set<string>();
     modelNames.add(COMMON_CONSTANT.FILTER.FILTER_ALL);
-
     allSpendingModels.forEach((model) => {
       if (model.modelName) {
         modelNames.add(model.modelName.toUpperCase());
@@ -106,6 +111,28 @@ const useSpendingModelHistory = () => {
     }
   }, [spendingData]);
 
+  const filterSpendingModelsByYear = useMemo(() => {
+    if (!spendingModelsByYear || spendingModelsByYear.length === 0) return [];
+
+    if (activeFilter === COMMON_CONSTANT.FILTER.FILTER_ALL) {
+      return spendingModelsByYear;
+    }
+
+    return spendingModelsByYear
+      .map(({ year, userSpendingModels }) => {
+        const filterModels = userSpendingModels.filter(
+          (model) =>
+            model.modelName?.toUpperCase() === activeFilter.toUpperCase(),
+        );
+
+        return {
+          year,
+          userSpendingModels: filterModels,
+        };
+      })
+      .filter((group) => group.userSpendingModels.length > 0);
+  }, [activeFilter, spendingModelsByYear]);
+
   const handleViewPeriodHistory = (userSpendingId: string) => {
     const model = allSpendingModels.find(
       (model) => model.id === userSpendingId,
@@ -154,6 +181,7 @@ const useSpendingModelHistory = () => {
       error,
       isLoadingHistory,
       isRefetching,
+      filterSpendingModelsByYear,
     },
     handler: {
       formatCurrency,
