@@ -75,6 +75,13 @@ const userSpendingModelApi = apiSlice.injectEndpoints({
         method: HTTP_METHOD.GET,
       }),
     }),
+    cancelUserSpendingModel: builder.mutation({
+      query: ({ spendingModelId }) => ({
+        url: `user-spending-models/cancel?spendingModelId=${spendingModelId}`,
+        method: HTTP_METHOD.GET,
+      }),
+      invalidatesTags: ["UserSpendingModel"],
+    }),
   }),
 });
 
@@ -88,6 +95,7 @@ export const {
   useCreateUserSpendingModelMutation,
   useGetSubCategoriesQuery,
   useGetCurrentCategoriesQuery,
+  useCancelUserSpendingModelMutation,
 } = userSpendingModelApi;
 
 export default userSpendingModelApi;

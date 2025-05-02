@@ -19,16 +19,25 @@ const useUploadImage = () => {
   const { SYSTEM_ERROR } = COMMON_CONSTANT;
   const dispatch = useDispatch();
   const PATH_FIREBASE = "/EzMoney";
+  const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
   const uploadImageToStorage = async (file: any) => {
     try {
       const response = await fetch(file?.uri);
       const blob = await response.blob();
+
+      if (blob.size > MAX_FILE_SIZE) {
+        ToastAndroid.show("Kích thước ảnh vượt quá 5MB", ToastAndroid.SHORT);
+        return null;
+      }
+
       const storageRef = ref(storage, `${PATH_FIREBASE}/${file.fileName}`);
       await uploadBytes(storageRef, blob);
       const downloadURL = await getDownloadURL(storageRef);
       return downloadURL;
-    } catch (error) {}
+    } catch (error) {
+      return null;
+    }
   };
 
   const requestPermission = async (type: "camera" | "library") => {
@@ -53,24 +62,36 @@ const useUploadImage = () => {
       let result: ImagePicker.ImagePickerResult;
       if (type === "camera") {
         result = await ImagePicker.launchCameraAsync({
-          mediaTypes: "images",
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
           allowsEditing: true,
           aspect: undefined,
-          quality: 1,
+          quality: 0.8,
+          exif: false,
         });
       } else {
         result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: "images",
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
           allowsEditing: true,
           aspect: undefined,
-          quality: 1,
+          quality: 0.8,
+          exif: false,
         });
       }
 
       if (!result.canceled && result.assets?.length) {
-        return result.assets[0];
+        const selectedAsset = result.assets[0];
+
+        if (selectedAsset.fileSize && selectedAsset.fileSize > MAX_FILE_SIZE) {
+          ToastAndroid.show("Kích thước ảnh vượt quá 5MB", ToastAndroid.SHORT);
+          return null;
+        }
+
+        return selectedAsset;
       }
-    } catch (error) {}
+      return null;
+    } catch (error) {
+      return null;
+    }
   };
 
   const pickAndUploadImage = async () => {
@@ -94,11 +115,16 @@ const useUploadImage = () => {
     dispatch(setLoading(true));
     try {
       const file = await pickImage(type);
-      if (!file) return;
+      if (!file) {
+        dispatch(setLoading(false));
+        return;
+      }
 
       const downloadURL = await uploadImageToStorage(file);
       if (downloadURL) {
         setImageUrl(downloadURL);
+      } else {
+        ToastAndroid.show("Không thể tải ảnh lên", ToastAndroid.SHORT);
       }
     } catch (error) {
       ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);

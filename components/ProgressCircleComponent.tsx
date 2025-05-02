@@ -56,7 +56,6 @@ const ProgressCircleComponent = ({
     [progress, isSaving],
   );
   const animatedIconColor = progress === 0 ? "#d6d6d6" : animatedColor;
-  console.log("check value123", value.toFixed(4));
 
   return (
     <View className="flex-1 items-center justify-center">
