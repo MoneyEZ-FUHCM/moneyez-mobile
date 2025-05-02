@@ -1,6 +1,5 @@
 import ArrowDown from "@/assets/icons/arrow-trend-down.png";
 import ArrowUp from "@/assets/icons/arrow-trend-up.png";
-import Admin from "@/assets/images/logo/avatar_admin.jpg";
 import {
   SafeAreaViewCustom,
   ScrollViewCustom,
@@ -12,6 +11,7 @@ import { appInfo } from "@/helpers/constants/appInfos";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { formatCurrency, formatDate } from "@/helpers/libs";
 import { Feather } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { Coin, Eye, EyeSlash } from "iconsax-react-native";
 import React from "react";
@@ -23,10 +23,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import TEXT_TRANSLATE_HOME from "../HomeScreen.translate";
 import PostList from "../post/PostList";
 import useHomeScreen from "./hooks/useHomeScreen";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const HomeScreen = () => {
   const { state, handler } = useHomeScreen();
@@ -86,15 +86,22 @@ const HomeScreen = () => {
             <View className="h-40 bg-thirdly/70 px-5">
               <View className="mt-5 flex-row items-center justify-between">
                 <View className="flex-row items-center gap-2">
-                  <Image
-                    source={
-                      state?.userInfo?.avatarUrl
-                        ? { uri: state.userInfo.avatarUrl }
-                        : Admin
-                    }
-                    className="h-12 w-12 rounded-full"
-                    resizeMode="cover"
-                  />
+                  {state.userInfo?.avatarUrl ? (
+                    <Image
+                      source={state.userInfo.avatarUrl as any}
+                      className="h-12 w-12 rounded-full"
+                      resizeMode="cover"
+                    />
+                  ) : (
+                    <LinearGradient
+                      colors={["#609084", "#4A7A70"]}
+                      className="h-12 w-12 items-center justify-center rounded-full shadow-md"
+                    >
+                      <Text className="text-2xl font-semibold uppercase text-white">
+                        {state.userInfo?.fullName?.charAt(0)}
+                      </Text>
+                    </LinearGradient>
+                  )}
                   <View>
                     <Text className="text-[12px]">{TITLE.HELLO}</Text>
                     <Text className="text-base">
