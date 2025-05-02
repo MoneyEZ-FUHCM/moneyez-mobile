@@ -88,7 +88,7 @@ const HomeScreen = () => {
                 <View className="flex-row items-center gap-2">
                   {state.userInfo?.avatarUrl ? (
                     <Image
-                      source={state.userInfo.avatarUrl as any}
+                      source={{ uri: state.userInfo.avatarUrl }}
                       className="h-12 w-12 rounded-full"
                       resizeMode="cover"
                     />

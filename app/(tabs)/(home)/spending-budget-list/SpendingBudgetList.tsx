@@ -217,7 +217,6 @@ export default function SpendingBudget() {
                   {section?.items &&
                     section?.items?.length > 0 &&
                     section?.items?.map((item) => {
-                      console.log("check item", item);
                       const progressPercent =
                         item?.currentAmount / item?.targetAmount;
                       return (

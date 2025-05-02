@@ -1,4 +1,3 @@
-import Admin from "@/assets/images/logo/avatar_admin.jpg";
 import {
   DatePickerComponent,
   InputComponent,
@@ -8,12 +7,12 @@ import {
   SpaceComponent,
 } from "@/components";
 import { MaterialIcons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { Formik } from "formik";
 import { Buildings, Call, User } from "iconsax-react-native";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import TEXT_TRANSLATE_ACCOUNT from "../AccountScreen.translate";
 import useUpdateUserInfo from "./hooks/useUpdateUserInfo";
-import { LinearGradient } from "expo-linear-gradient";
 
 const UpdateUserInfo = () => {
   const { state, handler } = useUpdateUserInfo();
