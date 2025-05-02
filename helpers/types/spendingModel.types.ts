@@ -29,14 +29,16 @@ export interface SpendingModel {
 // }
 
 export interface UserSpendingModel {
+  status: string;
   id: string;
   modelId: string;
-  modelName: string;
+  name: string;
   startDate: string;
   endDate: string;
   totalIncome: number;
   totalExpense: number;
   spendingModelId?: string;
+  isDeleted: boolean;
 }
 
 export interface SpendingModelCategory {
