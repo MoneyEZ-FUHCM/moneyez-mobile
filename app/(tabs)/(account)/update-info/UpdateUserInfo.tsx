@@ -13,6 +13,7 @@ import { Buildings, Call, User } from "iconsax-react-native";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import TEXT_TRANSLATE_ACCOUNT from "../AccountScreen.translate";
 import useUpdateUserInfo from "./hooks/useUpdateUserInfo";
+import { LinearGradient } from "expo-linear-gradient";
 
 const UpdateUserInfo = () => {
   const { state, handler } = useUpdateUserInfo();
@@ -36,20 +37,25 @@ const UpdateUserInfo = () => {
           <TouchableOpacity onPress={handler.pickAndUploadImage}>
             {state.imageUrl ? (
               <Image
-                src={state.imageUrl}
+                source={{ uri: state.imageUrl }}
+                className="mb-1 h-28 w-28 rounded-full"
+                resizeMode="cover"
+              />
+            ) : state.userInfo?.avatarUrl ? (
+              <Image
+                source={{ uri: state.userInfo.avatarUrl }}
                 className="mb-1 h-28 w-28 rounded-full"
                 resizeMode="cover"
               />
             ) : (
-              <Image
-                source={
-                  state?.userInfo?.avatarUrl
-                    ? { uri: state.userInfo.avatarUrl }
-                    : Admin
-                }
-                className="mb-1 h-28 w-28 rounded-full"
-                resizeMode="cover"
-              />
+              <LinearGradient
+                colors={["#609084", "#4A7A70"]}
+                className="h-28 w-28 items-center justify-center rounded-full shadow-md"
+              >
+                <Text className="mt-3 text-5xl font-semibold uppercase text-white">
+                  {state.userInfo?.fullName?.charAt(0)}
+                </Text>
+              </LinearGradient>
             )}
           </TouchableOpacity>
           <View className="items-center gap-[-2px]">
