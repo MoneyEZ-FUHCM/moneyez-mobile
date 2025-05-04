@@ -77,8 +77,8 @@ const userSpendingModelApi = apiSlice.injectEndpoints({
     }),
     cancelUserSpendingModel: builder.mutation({
       query: ({ spendingModelId }) => ({
-        url: `user-spending-models/cancel?spendingModelId=${spendingModelId}`,
-        method: HTTP_METHOD.GET,
+        url: `/user-spending-models/cancel?spendingModelId=${spendingModelId}&isBypassGoal=true`,
+        method: HTTP_METHOD.DELETE,
       }),
       invalidatesTags: ["UserSpendingModel"],
     }),

@@ -1,41 +1,57 @@
 import {
   FlatListCustom,
   LoadingSectionWrapper,
+  ModalLizeComponent,
   SafeAreaViewCustom,
   SectionComponent,
 } from "@/components";
 import { Colors } from "@/helpers/constants/color";
 import { UserSpendingModel } from "@/helpers/types/spendingModel.types";
-import { FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import React from "react";
+import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import React, { useRef } from "react";
+import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import {
-  Pressable,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+  GestureHandlerRootView,
+  Swipeable,
+} from "react-native-gesture-handler";
 import { PieChart } from "react-native-gifted-charts";
 import { ActivityIndicator } from "react-native-paper";
 import useSpendingModelHistory from "./hooks/useSpendingModelHistory";
 import TEXT_TRANSLATE_SPENDING_MODEL_HISTORY from "./SpendingModelHistory.translate";
 
-export default function SpendingModelList() {
+const SpendingModelHistory = () => {
   const { state, handler } = useSpendingModelHistory();
-  handler.useHideTabbar();
+  const swipeRef = useRef<Swipeable>(null);
 
   const renderSpendingModelItem = ({
     spendingModel,
   }: {
     spendingModel: UserSpendingModel;
   }) => {
+    const renderRightActions = () => {
+      if (spendingModel.status === "EXPIRED") {
+        return null;
+      }
+
+      return (
+        <View className="flex h-full w-20 items-center justify-center rounded-r-2xl bg-red">
+          <MaterialIcons name="delete" size={24} color="white" />
+        </View>
+      );
+    };
+
+    const handleSwipeOpen = () => {
+      swipeRef?.current?.close();
+      handler.handleOpenModalRemoveSpendingModel(spendingModel);
+    };
+
     const pieData = [
       { value: spendingModel?.totalIncome, color: "#5be98f", text: "Thu" },
       { value: spendingModel?.totalExpense, color: "#F87171", text: "Chi" },
     ];
-    console.log("check spendingModel", spendingModel);
-    return (
-      <View className="mb-4 overflow-hidden rounded-2xl bg-white shadow-sm">
+
+    const spendingModelContent = (
+      <View className="overflow-hidden rounded-2xl bg-white shadow-sm">
         <View className="border-b border-gray-100 p-4">
           <View className="flex-row items-center justify-between">
             <Text className="text-lg font-semibold text-gray-800">
@@ -49,7 +65,7 @@ export default function SpendingModelList() {
               </Text>
             </View>
           </View>
-          {spendingModel.status !== "ACTIVE" && (
+          {/* {spendingModel.status !== "EXPIRED" && (
             <View className="mt-2 flex-row items-center">
               <View
                 className={`mr-2 rounded-full ${spendingModel.status === "EXPIRED" ? "bg-yellow-500/10" : "bg-red-500/10"} p-1`}
@@ -72,7 +88,7 @@ export default function SpendingModelList() {
                 {spendingModel.status === "EXPIRED" ? "Đã hết hạn" : "Đã xóa"}
               </Text>
             </View>
-          )}
+          )} */}
         </View>
 
         <View className="p-4">
@@ -156,6 +172,24 @@ export default function SpendingModelList() {
         </View>
       </View>
     );
+
+    return (
+      <View>
+        {spendingModel.status !== "EXPIRED" ? (
+          <Swipeable
+            ref={swipeRef}
+            renderRightActions={renderRightActions}
+            rightThreshold={40}
+            onSwipeableOpen={handleSwipeOpen}
+            overshootRight={false}
+          >
+            {spendingModelContent}
+          </Swipeable>
+        ) : (
+          spendingModelContent
+        )}
+      </View>
+    );
   };
 
   const renderMainTabs = () => (
@@ -195,167 +229,125 @@ export default function SpendingModelList() {
     </SectionComponent>
   );
 
-  const renderNonAvailableFilters = () => {
-    if (state.activeTab !== "unavailable") return null;
-
-    return (
-      <SectionComponent rootClassName="mb-4">
-        <Text className="mb-2 text-sm font-bold text-gray-600">
-          Lọc theo trạng thái:
-        </Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <View className="flex-row space-x-2">
-            <Pressable
-              onPress={() => handler.setNonAvailableFilter("all")}
-              className={`rounded-lg px-5 py-2 ${
-                state.nonAvailableFilter === "all"
-                  ? "bg-primary shadow-sm"
-                  : "border border-gray-200 bg-white"
-              }`}
-            >
-              <Text
-                className={`text-sm font-medium ${
-                  state.nonAvailableFilter === "all"
-                    ? "text-white"
-                    : "text-gray-600"
-                }`}
-              >
-                Tất cả
-              </Text>
-            </Pressable>
-            <Pressable
-              onPress={() => handler.setNonAvailableFilter("expired")}
-              className={`flex-row items-center space-x-1 rounded-lg px-5 py-2 ${
-                state.nonAvailableFilter === "expired"
-                  ? "bg-primary shadow-sm"
-                  : "border border-gray-200 bg-white"
-              }`}
-            >
-              <MaterialIcons
-                name="date-range"
-                size={20}
-                color={
-                  state.nonAvailableFilter === "expired" ? "white" : "gray"
-                }
-              />
-              <Text
-                className={`text-sm font-medium ${
-                  state.nonAvailableFilter === "expired"
-                    ? "text-white"
-                    : "text-gray-600"
-                }`}
-              >
-                Đã hết hạn
-              </Text>
-            </Pressable>
-            <Pressable
-              onPress={() => handler.setNonAvailableFilter("deleted")}
-              className={`flex-row items-center space-x-1 rounded-lg px-5 py-2 ${
-                state.nonAvailableFilter === "deleted"
-                  ? "bg-primary shadow-sm"
-                  : "border border-gray-200 bg-white"
-              }`}
-            >
-              <Ionicons
-                name="trash-bin"
-                size={20}
-                color={
-                  state.nonAvailableFilter === "deleted" ? "white" : "gray"
-                }
-              />
-              <Text
-                className={`text-sm font-medium ${
-                  state.nonAvailableFilter === "deleted"
-                    ? "text-white"
-                    : "text-gray-600"
-                }`}
-              >
-                Đã xóa
-              </Text>
-            </Pressable>
-          </View>
-        </ScrollView>
-      </SectionComponent>
-    );
-  };
-
   return (
-    <SafeAreaViewCustom rootClassName="bg-gray-50">
-      <SectionComponent rootClassName="bg-white">
-        <View className="relative h-14 flex-row items-center justify-center px-4">
-          <Pressable
-            onPress={handler.handleBack}
-            className="absolute left-4 h-10 w-10 items-center justify-center rounded-full active:bg-gray-100"
-          >
-            <MaterialIcons name="arrow-back" size={24} />
-          </Pressable>
-          <Text className="text-lg font-semibold text-gray-800">
-            {TEXT_TRANSLATE_SPENDING_MODEL_HISTORY.TITLE.SPENDING_MODEL_HISTORY}
-          </Text>
-        </View>
-      </SectionComponent>
-
-      {state.isLoading ? (
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color={Colors.colors.primary} />
-          <Text className="mt-3 text-gray-600">Đang tải dữ liệu...</Text>
-        </View>
-      ) : state.spendingModels.length > 0 ? (
-        <LoadingSectionWrapper isLoading={state.isRefetching}>
-          <FlatListCustom<UserSpendingModel>
-            showsVerticalScrollIndicator={false}
-            data={state.filteredModels ?? []}
-            renderItem={({ item }) =>
-              renderSpendingModelItem({ spendingModel: item })
-            }
-            keyExtractor={(item) => item.id}
-            ListHeaderComponent={
-              <>
-                {renderMainTabs()}
-                {renderNonAvailableFilters()}
-              </>
-            }
-            contentContainerStyle={{
-              padding: 16,
-            }}
-            refreshing={state.isRefetching}
-            onRefresh={handler.handleRefetch}
-            ListEmptyComponent={
-              <View className="flex-1 items-center justify-center rounded-2xl bg-white px-6 py-10 shadow-md">
-                <FontAwesome
-                  name="inbox"
-                  size={50}
-                  color={Colors.colors.primary}
-                />
-                <Text className="mt-6 text-xl font-semibold text-gray-700">
-                  Không có dữ liệu
-                </Text>
-                <Text className="mt-2 text-center text-sm leading-relaxed text-gray-500">
-                  Hiện tại không có dữ liệu để hiển thị. Hãy thử lại sau.
-                </Text>
-              </View>
-            }
-          />
-        </LoadingSectionWrapper>
-      ) : (
-        <View className="mb-5 flex-1 items-center justify-center p-8">
-          <FontAwesome name="inbox" size={50} color={Colors.colors.primary} />
-          <Text className="mt-4 text-lg font-semibold text-gray-800">
-            Chưa có dữ liệu
-          </Text>
-          <Text className="mt-2 text-center text-base text-gray-500">
-            Không có mô hình chi tiêu nào để hiển thị
-          </Text>
-          <TouchableOpacity
-            className="mt-6 rounded-lg bg-primary px-6 py-3"
-            onPress={handler.handleCreateNew}
-          >
-            <Text className="font-medium text-white">
-              Tạo mô hình chi tiêu mới
+    <GestureHandlerRootView>
+      <SafeAreaViewCustom rootClassName="bg-gray-50">
+        <SectionComponent rootClassName="bg-white">
+          <View className="relative h-14 flex-row items-center justify-center px-4">
+            <Pressable
+              onPress={handler.handleBack}
+              className="absolute left-4 h-10 w-10 items-center justify-center rounded-full active:bg-gray-100"
+            >
+              <MaterialIcons name="arrow-back" size={24} />
+            </Pressable>
+            <Text className="text-lg font-semibold text-gray-800">
+              {
+                TEXT_TRANSLATE_SPENDING_MODEL_HISTORY.TITLE
+                  .SPENDING_MODEL_HISTORY
+              }
             </Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    </SafeAreaViewCustom>
+          </View>
+        </SectionComponent>
+
+        {state.isLoading ? (
+          <View className="flex-1 items-center justify-center">
+            <ActivityIndicator size="large" color={Colors.colors.primary} />
+            <Text className="mt-3 text-gray-600">Đang tải dữ liệu...</Text>
+          </View>
+        ) : state.spendingModels.length > 0 ? (
+          <LoadingSectionWrapper isLoading={state.isRefetching}>
+            <FlatListCustom<UserSpendingModel>
+              showsVerticalScrollIndicator={false}
+              data={state.filteredModels ?? []}
+              renderItem={({ item }) =>
+                renderSpendingModelItem({ spendingModel: item })
+              }
+              keyExtractor={(item) => item.id}
+              ListHeaderComponent={
+                <>
+                  {renderMainTabs()}
+                  {/* {renderNonAvailableFilters()} */}
+                </>
+              }
+              contentContainerStyle={{
+                padding: 16,
+              }}
+              refreshing={state.isRefetching}
+              onRefresh={handler.handleRefetch}
+              ListEmptyComponent={
+                <View className="flex-1 items-center justify-center rounded-2xl bg-white px-6 py-10 shadow-md">
+                  <FontAwesome
+                    name="inbox"
+                    size={50}
+                    color={Colors.colors.primary}
+                  />
+                  <Text className="mt-6 text-xl font-semibold text-gray-700">
+                    Không có dữ liệu
+                  </Text>
+                  <Text className="mt-2 text-center text-sm leading-relaxed text-gray-500">
+                    Hiện tại không có dữ liệu để hiển thị. Hãy thử lại sau.
+                  </Text>
+                </View>
+              }
+            />
+          </LoadingSectionWrapper>
+        ) : (
+          <View className="mb-5 flex-1 items-center justify-center p-8">
+            <FontAwesome name="inbox" size={50} color={Colors.colors.primary} />
+            <Text className="mt-4 text-lg font-semibold text-gray-800">
+              Chưa có dữ liệu
+            </Text>
+            <Text className="mt-2 text-center text-base text-gray-500">
+              Không có mô hình chi tiêu nào để hiển thị
+            </Text>
+            <TouchableOpacity
+              className="mt-6 rounded-lg bg-primary px-6 py-3"
+              onPress={handler.handleCreateNew}
+            >
+              <Text className="font-medium text-white">
+                Tạo mô hình chi tiêu mới
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        <ModalLizeComponent ref={state.modalizeRef}>
+          <View className="p-6">
+            <Text className="mb-4 text-center text-lg font-bold text-gray-900">
+              Xác nhận hủy mô hình chi tiêu
+            </Text>
+            <Text className="mb-6 text-center text-gray-600">
+              Bạn có chắc chắn muốn hủy mô hình chi tiêu{" "}
+              <Text className="font-bold text-primary">
+                {state.selectedSpendingModel?.name}
+              </Text>{" "}
+              này?
+            </Text>
+            <View className="flex-row gap-4">
+              <TouchableOpacity
+                className="flex-1 rounded-lg border border-gray-200 py-3"
+                onPress={() => handler.handleCloseModal()}
+              >
+                <Text className="text-center font-medium text-gray-700">
+                  Hủy
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="flex-1 rounded-lg bg-red py-3"
+                onPress={() =>
+                  handler.handleDeleteSpendingModel(
+                    state.selectedSpendingModel?.spendingModelId,
+                  )
+                }
+              >
+                <Text className="text-center font-medium text-white">Xóa</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ModalLizeComponent>
+      </SafeAreaViewCustom>
+    </GestureHandlerRootView>
   );
-}
+};
+
+export default SpendingModelHistory;
