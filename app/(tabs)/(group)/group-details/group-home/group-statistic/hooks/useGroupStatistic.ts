@@ -2,12 +2,15 @@ import { formatDate } from "@/helpers/libs";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";
 import { useGetGroupFinancialGoalQuery } from "@/services/financialGoal";
+import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
 import { router, useFocusEffect } from "expo-router";
-import moment from "moment";
 import { useCallback, useEffect, useMemo } from "react";
 import { BackHandler, ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import TEXT_TRANSLATE_GROUP_STATISTIC from "../GroupStatistic.translate";
+
+dayjs.extend(duration);
 
 export interface StatisticMemberData {
   id: string;
@@ -23,17 +26,22 @@ export interface StatisticMemberData {
 export default function useGroupStatistic() {
   const dispatch = useDispatch();
   const groupDetail = useSelector(selectCurrentGroup);
-  const isGoalActive = groupDetail?.isGoalActive || false;
-  const groupId = groupDetail?.id || "";
+  const groupId = groupDetail?.id ?? "";
+  const isGoalActive = groupDetail?.isGoalActive ?? false;
 
   const {
     data: financialGoalData,
-    isLoading: isGoalLoading,
+    isLoading,
     error,
+    refetch,
   } = useGetGroupFinancialGoalQuery(
     { groupId },
     { skip: !groupId || !isGoalActive },
   );
+
+  useEffect(() => {
+    if (groupId && isGoalActive) refetch();
+  }, [groupId, isGoalActive]);
 
   useEffect(() => {
     if (error) {
@@ -44,58 +52,57 @@ export default function useGroupStatistic() {
     }
   }, [error]);
 
-  const activeFinancialGoal = useMemo(() => {
-    return (
-      financialGoalData?.data?.find((goal: any) => !goal.isDeleted) || null
-    );
-  }, [financialGoalData]);
+  const activeGoal = useMemo(() => {
+    const goal = financialGoalData?.data?.find((g: any) => !g.isDeleted);
+    return {
+      name: goal?.name?.trim() ?? "",
+      target: goal?.targetAmount ?? 0,
+      current: goal?.currentAmount ?? groupDetail?.currentBalance ?? 0,
+      deadline: goal?.deadline ?? null,
+      createdDate: goal?.createdDate ?? null,
+    };
+  }, [financialGoalData, groupDetail]);
 
-  const goalName = activeFinancialGoal?.name ?? "";
-  const groupGoal = activeFinancialGoal?.targetAmount ?? 0;
-  const groupCurrent =
-    activeFinancialGoal?.currentAmount ?? groupDetail?.currentBalance ?? 0;
-  const deadlineDate = activeFinancialGoal?.deadline ?? null;
-
-  const dueDate = formatDate(deadlineDate, "DD.MM.YYYY");
+  const remain = isGoalActive
+    ? Math.max(0, activeGoal.target - activeGoal.current)
+    : 0;
 
   const remainDays = useMemo(() => {
-    if (!deadlineDate) return { days: 0, hours: 0, minutes: 0 };
+    if (!activeGoal.deadline) return { days: 0, hours: 0, minutes: 0 };
 
-    const now = moment();
-    const deadline = moment(deadlineDate);
-    const duration = moment.duration(deadline.diff(now));
+    const now = dayjs();
+    const deadline = dayjs(activeGoal.deadline);
+    const diff = deadline.diff(now);
+    const dur = dayjs.duration(diff);
 
     return {
-      days: Math.max(0, Math.floor(duration.asDays())),
-      hours: Math.max(0, duration.hours()),
-      minutes: Math.max(0, duration.minutes()),
+      days: Math.max(0, dur.days()),
+      hours: Math.max(0, dur.hours()),
+      minutes: Math.max(0, dur.minutes()),
     };
-  }, [deadlineDate]);
-
-  const remain = isGoalActive ? Math.max(0, groupGoal - groupCurrent) : 0;
+  }, [activeGoal.deadline]);
 
   const members: StatisticMemberData[] = useMemo(() => {
-    if (!groupDetail?.groupMembers) return [];
-    return groupDetail.groupMembers
-      .filter((m) => m.status === "ACTIVE")
-      .map((member) => {
-        const target = isGoalActive
-          ? (member.contributionPercentage / 100) * groupGoal
-          : 0;
-        const hasFundedEnough =
-          member.totalContribution >= target && target > 0;
-        return {
-          id: member.id,
-          avatar: undefined,
-          name: member.userInfo.fullName,
-          ratio: member.contributionPercentage,
-          contributed: member.totalContribution,
-          target,
-          userId: member.userId,
-          hasFundedEnough,
-        };
-      });
-  }, [groupDetail, isGoalActive, groupGoal]);
+    return (
+      groupDetail?.groupMembers
+        ?.filter((m) => m.status === "ACTIVE")
+        .map((member) => {
+          const target = isGoalActive
+            ? (member.contributionPercentage / 100) * activeGoal.target
+            : 0;
+          return {
+            id: member.id,
+            avatar: undefined,
+            name: member.userInfo.fullName,
+            ratio: member.contributionPercentage,
+            contributed: member.totalContribution,
+            target,
+            userId: member.userId,
+            hasFundedEnough: member.totalContribution >= target && target > 0,
+          };
+        }) ?? []
+    );
+  }, [groupDetail, isGoalActive, activeGoal.target]);
 
   const handleGoBack = useCallback(() => {
     router.back();
@@ -108,29 +115,27 @@ export default function useGroupStatistic() {
         handleGoBack();
         return true;
       };
-
       BackHandler.addEventListener("hardwareBackPress", onBackPress);
       return () =>
         BackHandler.removeEventListener("hardwareBackPress", onBackPress);
     }, [handleGoBack]),
   );
 
-  const hasGroupName = goalName.trim() !== "";
-  const hasFinancialGoal = !!financialGoalData?.data?.length;
-
   return {
     state: {
-      goalName,
-      groupGoal,
-      groupCurrent,
+      goalName: activeGoal.name,
+      groupGoal: activeGoal.target,
+      groupCurrent: activeGoal.current,
       remain,
-      dueDate,
+      dueDate: formatDate(activeGoal.deadline, "DD.MM.YYYY"),
       remainDays,
       members,
-      isLoading: isGoalLoading,
+      isLoading,
       isGoalActive,
-      hasFinancialGoal,
-      hasGroupName,
+      hasFinancialGoal: !!financialGoalData?.data?.length,
+      hasGroupName: !!activeGoal.name,
+      groupDetail,
+      createdDate: activeGoal.createdDate,
     },
     handler: {
       handleGoBack,

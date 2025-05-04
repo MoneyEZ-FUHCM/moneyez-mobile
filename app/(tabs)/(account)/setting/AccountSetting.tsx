@@ -1,13 +1,7 @@
-import Admin from "@/assets/images/logo/avatar_admin.jpg";
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
 import { appInfo } from "@/helpers/constants/appInfos";
-import {
-  ArrowRight2,
-  Bank,
-  Calendar,
-  LogoutCurve,
-  TagUser,
-} from "iconsax-react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { ArrowRight2, Bank, LogoutCurve, TagUser } from "iconsax-react-native";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import TEXT_TRANSLATE_ACCOUNT from "../AccountScreen.translate";
 import useAccountScreen from "./hooks/useAccountScreen";
@@ -25,12 +19,6 @@ const SETTING_OPTIONS = [
     title: "Tài khoản ngân hàng",
     description: "Số tài khoản, tên ngân hàng, chi nhánh,...",
   },
-  // {
-  //   id: 3,
-  //   icon: <Calendar size="20" color="white" variant="Bold" />,
-  //   title: "Thu chi định kỳ",
-  //   description: "Quản lý các khoản thu chi định kỳ",
-  // },
 ];
 
 const AccountSetting = () => {
@@ -43,15 +31,23 @@ const AccountSetting = () => {
         style={{ height: appInfo.sizes.HEIGHT * 0.42 }}
       >
         <View className="flex-1 items-center justify-center gap-1">
-          <Image
-            source={
-              state?.userInfo?.avatarUrl
-                ? { uri: state.userInfo.avatarUrl }
-                : Admin
-            }
-            className="mb-1 h-48 w-48 rounded-full"
-            resizeMode="cover"
-          />
+          {state.userInfo?.avatarUrl ? (
+            <Image
+              source={{ uri: state.userInfo.avatarUrl }}
+              className="mb-1 h-48 w-48 rounded-full"
+              resizeMode="cover"
+            />
+          ) : (
+            <LinearGradient
+              colors={["#609084", "#4A7A70"]}
+              className="h-48 w-48 items-center justify-center rounded-full shadow-md"
+            >
+              <Text className="mt-5 text-8xl font-semibold uppercase text-white">
+                {state.userInfo?.fullName?.charAt(0)}
+              </Text>
+            </LinearGradient>
+          )}
+
           <Text className="text-2xl font-semibold">
             {state?.userInfo?.fullName}
           </Text>

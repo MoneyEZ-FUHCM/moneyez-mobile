@@ -53,7 +53,7 @@ const TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL = {
     TARGET_AMOUNT_REQUIRED: "Vui lòng nhập số tiền mục tiêu",
     TARGET_AMOUNT_MUST_GREATER_THAN_ZERO: "Số tiền mục tiêu phải lớn hơn 0",
     TARGET_AMOUNT_MUST_BE_GREATER_THAN_CURRENT:
-      "Số tiền mục tiêu phải lớn hơn hoặc bằng số tiền hiện tại",
+      "Số tiền mục tiêu phải lớn hơn số tiền của quỹ nhóm hiện tại",
     CURRENT_AMOUNT_REQUIRED: "Vui lòng nhập số tiền hiện tại",
     CURRENT_AMOUNT_MUST_GREATER_THAN_ZERO: "Số tiền hiện tại không được âm",
     DEADLINE_REQUIRED: "Vui lòng chọn thời hạn",

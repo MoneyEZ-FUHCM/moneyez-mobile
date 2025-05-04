@@ -1,25 +1,32 @@
-import { useState, useEffect, useCallback, useRef, useMemo } from "react";
-import { Keyboard, ToastAndroid } from "react-native";
-import { router, useFocusEffect } from "expo-router";
-import * as Yup from "yup";
-import { PATH_NAME } from "@/helpers/constants/pathname";
-import TEXT_TRANSLATE_CREATE_GROUP from "../create-group/CreateGroup.translate";
-import { useDispatch, useSelector } from "react-redux";
-import { useCreateGroupMutation } from "@/services/group";
-import { setLoading } from "@/redux/slices/loadingSlice";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
-import useUploadImage from "@/helpers/hooks/useUploadImage";
-import { setGroupTabHidden, setMainTabHidden } from "@/redux/slices/tabSlice";
-import { Modalize } from "react-native-modalize";
-import FUNCTION_BANK_ACCOUNT_CONSTANT from "../../(account)/bank-account/function-bank-account/FunctionBankAccount.constant";
-import { useGetBankAccountsQuery } from "@/services/bankAccounts";
+import { PATH_NAME } from "@/helpers/constants/pathname";
 import useDebounce from "@/helpers/hooks/useDebounce";
+import useUploadImage from "@/helpers/hooks/useUploadImage";
 import { CreateGroupPayload } from "@/helpers/types/group.type";
-import { setOtpCode } from "@/redux/slices/systemSlice";
 import { selectOtpCode } from "@/redux/hooks/systemSelector";
+import { setLoading } from "@/redux/slices/loadingSlice";
+import { setOtpCode } from "@/redux/slices/systemSlice";
+import { setGroupTabHidden, setMainTabHidden } from "@/redux/slices/tabSlice";
+import { useGetBankAccountsQuery } from "@/services/bankAccounts";
+import {
+  useCreateGroupMutation,
+  useGetGroupDetailQuery,
+  useUpdateGroupMutation,
+} from "@/services/group";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { BackHandler, Keyboard, ToastAndroid } from "react-native";
+import { Modalize } from "react-native-modalize";
+import { useDispatch, useSelector } from "react-redux";
+import * as Yup from "yup";
+import FUNCTION_BANK_ACCOUNT_CONSTANT from "../../(account)/bank-account/function-bank-account/FunctionBankAccount.constant";
+import TEXT_TRANSLATE_CREATE_GROUP from "../create-group/CreateGroup.translate";
 
 const useCreateGroupScreen = () => {
   const { MESSAGE_VALIDATE, SUCCESS_MESSAGES } = TEXT_TRANSLATE_CREATE_GROUP;
+  const params = useLocalSearchParams();
+  const isEditMode = params?.isEditMode === "true";
+  const groupId = params?.groupId as string;
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [searchText, setSearchText] = useState<string>("");
   const searchQuery = useDebounce(searchText, 500);
@@ -28,20 +35,58 @@ const useCreateGroupScreen = () => {
   const bankSelectModalRef = useRef<Modalize>(null);
   const { BANK_LIST } = FUNCTION_BANK_ACCOUNT_CONSTANT;
   const formikRef = useRef<any>(null);
+
   const { data: bankAccounts, refetch } = useGetBankAccountsQuery({
     PageIndex: 1,
     PageSize: 100,
   });
+
+  const {
+    data: groupData,
+    isLoading: isLoadingGroupData,
+    refetch: refetchGroupDetail,
+  } = useGetGroupDetailQuery(
+    { id: groupId },
+    { skip: !isEditMode || !groupId },
+  );
+
   const dispatch = useDispatch();
   const [createGroup] = useCreateGroupMutation();
+  const [updateGroup] = useUpdateGroupMutation();
   const { HTTP_STATUS, SYSTEM_ERROR } = COMMON_CONSTANT;
-  const { imageUrl, pickAndUploadImage } = useUploadImage();
+  const { imageUrl, pickAndUploadImage, setImageUrl } = useUploadImage();
   const [showRuleModal, setShowRuleModal] = useState(false);
   const [showOtpModal, setShowOtpModal] = useState(false);
   const [currentValues, setCurrentValues] = useState<any>(null);
   const ruleModalRef = useRef<Modalize>(null);
   const otpModalRef = useRef<Modalize>(null);
   const otpCode = useSelector(selectOtpCode);
+
+  useEffect(() => {
+    if (isEditMode && groupData?.data) {
+      const group = groupData.data;
+
+      if (formikRef.current) {
+        formikRef.current.setValues({
+          name: group.name || "",
+          description: group.description || "",
+          accountBankId: group.bankAccount?.id || "",
+          bankName: group.bankAccount?.bankName || "",
+          bankAccountNumber: group.bankAccount?.accountNumber || "",
+          image: group.imageUrl || "",
+        });
+      }
+
+      if (group.imageUrl) {
+        setImageUrl(group.imageUrl);
+      }
+    }
+  }, [isEditMode, groupData, formikRef]);
+
+  const handleBack = () => {
+    dispatch(setGroupTabHidden(false));
+    router.back();
+  };
 
   const mappedAccounts = useMemo(() => {
     return bankAccounts?.items
@@ -63,6 +108,19 @@ const useCreateGroupScreen = () => {
     useCallback(() => {
       dispatch(setMainTabHidden(true));
     }, [dispatch]),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        handleBack();
+        return true;
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [handleBack]),
   );
 
   useEffect(() => {
@@ -90,48 +148,50 @@ const useCreateGroupScreen = () => {
     description: Yup.string()
       .trim()
       .required(MESSAGE_VALIDATE.DESCRIPTION_REQUIRED),
-    currentBalance: Yup.string()
-      .trim()
-      .required(MESSAGE_VALIDATE.CURRENT_BALANCE_REQUIRED),
   });
-
-  const handleCreateGroup = useCallback(async (values: CreateGroupPayload) => {
-    setCurrentValues(values);
-    ruleModalRef.current?.open();
-    setShowRuleModal(true);
-  }, []);
-
-  const handleAcceptRules = useCallback(async () => {
-    ruleModalRef.current?.close();
-    setShowRuleModal(false);
-    otpModalRef.current?.open();
-    setShowOtpModal(true);
-  }, []);
 
   const handleProcessCreateGroup = useCallback(
     async (values: CreateGroupPayload) => {
       dispatch(setLoading(true));
       try {
-        const updatePayload = {
-          ...values,
-          image: imageUrl,
-          currentBalance: 0,
-          accountBankId: values.accountBankId,
-        };
-        const res = await createGroup(updatePayload).unwrap();
-        if (res?.status === HTTP_STATUS.SUCCESS.CREATED) {
-          ToastAndroid.show(
-            SUCCESS_MESSAGES.GROUP_CREATED_SUCCESSFULLY,
-            ToastAndroid.SHORT,
-          );
-          await refetch();
-          router.replace({
-            pathname: PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT as any,
-            params: { id: res?.data?.id },
-          });
-          dispatch(setMainTabHidden(true));
-          dispatch(setGroupTabHidden(false));
+        let res;
+        if (isEditMode) {
+          const updatePayload = {
+            ...values,
+            image: imageUrl || values.image,
+            accountBankId: values.accountBankId,
+            id: groupId,
+          };
+          const res = await updateGroup(updatePayload).unwrap();
+          if (res?.status === HTTP_STATUS.SUCCESS.OK) {
+            await refetchGroupDetail();
+            ToastAndroid.show(
+              SUCCESS_MESSAGES.GROUP_UPDATED_SUCCESSFULLY,
+              ToastAndroid.SHORT,
+            );
+          }
+        } else {
+          const createPayload = {
+            ...values,
+            image: imageUrl || values.image,
+            currentBalance: 0,
+            accountBankId: values.accountBankId,
+          };
+          res = await createGroup(createPayload).unwrap();
+          if (res?.status === HTTP_STATUS.SUCCESS.CREATED) {
+            ToastAndroid.show(
+              SUCCESS_MESSAGES.GROUP_CREATED_SUCCESSFULLY,
+              ToastAndroid.SHORT,
+            );
+          }
         }
+        router.replace({
+          pathname: PATH_NAME.GROUP_HOME.GROUP_HOME_DEFAULT as any,
+          params: { id: isEditMode ? groupId : res?.data?.id },
+        });
+
+        dispatch(setMainTabHidden(true));
+        dispatch(setGroupTabHidden(false));
       } catch (err) {
         ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
       } finally {
@@ -139,8 +199,31 @@ const useCreateGroupScreen = () => {
         ruleModalRef.current?.close();
       }
     },
-    [createGroup, dispatch, imageUrl, refetch],
+    [createGroup, updateGroup, dispatch, imageUrl, isEditMode, groupId],
   );
+
+  const handleCreateGroup = useCallback(
+    (values: CreateGroupPayload) => {
+      if (isEditMode) {
+        setCurrentValues(values);
+        setTimeout(() => {
+          handleProcessCreateGroup(values);
+        }, 0);
+      } else {
+        setCurrentValues(values);
+        ruleModalRef.current?.open();
+        setShowRuleModal(true);
+      }
+    },
+    [isEditMode, handleProcessCreateGroup],
+  );
+
+  const handleAcceptRules = useCallback(async () => {
+    ruleModalRef.current?.close();
+    setShowRuleModal(false);
+    otpModalRef.current?.open();
+    setShowOtpModal(true);
+  }, []);
 
   const handleVerifyOtp = useCallback(async () => {
     if (otpCode.length !== 5 || !/^[0-9]+$/.test(otpCode)) {
@@ -166,9 +249,17 @@ const useCreateGroupScreen = () => {
   };
 
   const handleOpenBankSelect = useCallback(() => {
+    if (isEditMode) {
+      ToastAndroid.show(
+        MESSAGE_VALIDATE.ACCOUNT_NUMBER_CANNOT_CHANGED,
+        ToastAndroid.SHORT,
+      );
+      return;
+    }
+
     setSearchText("");
     bankSelectModalRef.current?.open();
-  }, []);
+  }, [isEditMode]);
 
   const handleCloseModal = () => {
     if (isAtTop) {
@@ -227,6 +318,9 @@ const useCreateGroupScreen = () => {
       otpModalRef,
       otpCode,
       currentValues,
+      isEditMode,
+      isLoadingGroupData,
+      groupData: groupData?.data,
     },
     handler: {
       validationSchema,
@@ -242,6 +336,7 @@ const useCreateGroupScreen = () => {
       handleVerifyOtp,
       setOtpCode: (value: string) => dispatch(setOtpCode(value)),
       handleProcessCreateGroup,
+      handleBack,
     },
   };
 };

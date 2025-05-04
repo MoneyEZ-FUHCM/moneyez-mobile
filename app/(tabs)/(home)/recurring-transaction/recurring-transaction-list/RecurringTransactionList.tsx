@@ -9,11 +9,11 @@ import {
   ScrollViewCustom,
   SectionComponent,
 } from "@/components";
-import { TRANSACTION_TYPE } from "@/helpers/enums/globals";
 import { Colors } from "@/helpers/constants/color";
+import { TRANSACTION_TYPE } from "@/helpers/enums/globals";
 import { formatCurrencyInput, formatDate, formatTime } from "@/helpers/libs";
-import { useLazyGetSubCateByIdQuery } from "@/services/subCategory";
 import { RecurringTransaction } from "@/helpers/types/recurringTransaction.types";
+import { useLazyGetSubCateByIdQuery } from "@/services/subCategory";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import useRecurringTransactionList from "./hooks/useRecurringTransactionList";
 import TEXT_TRANSLATE from "./RecurringTransactionList.translate";
@@ -190,7 +190,7 @@ const RecurringTransactionList = () => {
               <View className="mt-2 flex-row items-center">
                 <MaterialIcons name="date-range" size={12} color="#666" />
                 <Text className="ml-1 text-xs text-gray-500">
-                  {formatDate(item?.startDate)} • {formatTime(item?.startDate)}
+                  {formatDate(item?.startDate)}
                 </Text>
               </View>
             </View>
@@ -282,8 +282,16 @@ const RecurringTransactionList = () => {
                 {TEXT_TRANSLATE.LABEL.START_DATE}
               </Text>
               <Text className="font-semibold text-gray-800">
-                {formatDate(state.selectedTransaction?.startDate)} •{" "}
-                {formatTime(state.selectedTransaction?.startDate)}
+                {formatDate(state.selectedTransaction?.startDate)}
+              </Text>
+            </View>
+            <View className="mb-3 flex-row items-center justify-between">
+              <Text className="text-gray-600">
+                {TEXT_TRANSLATE.LABEL.RECURRING_DATE}
+              </Text>
+              <Text className="font-semibold text-gray-800">
+                {formatDate(state.selectedTransaction?.nextOccurrence)} •{" "}
+                {formatTime(state.selectedTransaction?.nextOccurrence)}
               </Text>
             </View>
 

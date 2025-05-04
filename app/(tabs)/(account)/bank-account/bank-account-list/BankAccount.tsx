@@ -12,18 +12,81 @@ import { BankCardProps } from "@/helpers/types/bankAccount.types";
 import {
   AntDesign,
   Feather,
+  FontAwesome6,
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import TEXT_TRANSLATE_BANK_ACCOUNT from "./BankAccount.translate";
 import useBankAccount from "./hooks/useBankAccount";
+import { Colors } from "@/helpers/constants/color";
 
 const BankAccount = () => {
   const { state, handler } = useBankAccount();
+
+  const renderRulesContent = () => {
+    return (
+      <View className="p-5">
+        <Text className="mb-4 text-center text-xl font-bold text-black">
+          Tài khoản ngân hàng
+        </Text>
+
+        <View className="mb-4">
+          <View className="mb-2 flex-row items-center">
+            <MaterialIcons
+              name="check-circle"
+              size={20}
+              color={Colors.colors.primary}
+            />
+            <Text className="ml-2 mr-2 text-base">
+              Hệ thống chỉ hỗ trợ tạo và xác thực với ngân hàng Sandbox của nhóm
+              (EzMoney Bank Sandbox).
+            </Text>
+          </View>
+
+          <View className="mb-2 flex-row items-center">
+            <MaterialIcons
+              name="check-circle"
+              size={20}
+              color={Colors.colors.primary}
+            />
+            <Text className="ml-2 mr-2 text-base">
+              Để liên kết được ngân hàng thì hệ thống cần xác thực đúng số tài
+              khoản và chủ tài khoản của phía ngân hàng Sandbox.
+            </Text>
+          </View>
+
+          <View className="mb-2 flex-row items-center">
+            <MaterialIcons
+              name="check-circle"
+              size={20}
+              color={Colors.colors.primary}
+            />
+            <Text className="ml-2 mr-2 text-base">
+              Mỗi người dùng chỉ được thêm 3 tài khoản ngân hàng.
+            </Text>
+          </View>
+        </View>
+
+        <TouchableOpacity
+          className="mt-5 rounded-lg bg-primary py-3"
+          onPress={() => state.modalizeRef.current?.close()}
+        >
+          <Text className="text-center font-medium text-white">Đóng</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   const BankCard = ({ item, onPress }: BankCardProps) => {
     return (
@@ -246,16 +309,16 @@ const BankAccount = () => {
   return (
     <GestureHandlerRootView>
       <SafeAreaViewCustom rootClassName="bg-gray-50 relative">
-        <SectionComponent rootClassName="flex-row relative justify-center items-center h-14 px-4">
-          <TouchableOpacity
-            onPress={handler.handleBack}
-            className="absolute bottom-[17px] left-4"
-          >
+        <SectionComponent rootClassName="flex-row relative justify-between bg-white items-center h-14 px-4">
+          <TouchableOpacity onPress={handler.handleBack}>
             <MaterialIcons name="arrow-back" size={24} />
           </TouchableOpacity>
           <Text className="text-lg font-bold">
             {TEXT_TRANSLATE_ACCOUNT.TITLE.BANK_ACCOUNT}
           </Text>
+          <Pressable onPress={handler.openRulesModal}>
+            <FontAwesome6 name="circle-question" size={24} />
+          </Pressable>
         </SectionComponent>
         <LoadingSectionWrapper
           isLoading={state.isLoading || state.isRefetching}
@@ -336,7 +399,7 @@ const BankAccount = () => {
                 <View className="space-y-2">
                   <Text className="text-gray-600">
                     • Liên kết tài khoản ngân hàng nhằm ghi nhận giao dịch một
-                    cách tự động và chính xác trên ứng dụng EzMoney
+                    cách tự động và chính xác trên ứng dụng MoneyEZ
                   </Text>
                 </View>
               </View>
@@ -347,8 +410,8 @@ const BankAccount = () => {
                 </Text>
                 <View className="space-y-2">
                   <Text className="text-gray-600">
-                    • Người dùng cần cho phép API truy cập thông tin giao dịch
-                    từ ngân hàng để hệ thống tự động cập nhật
+                    • Người dùng cần cho phép MoneyEz truy cập thông tin giao
+                    dịch từ ngân hàng để hệ thống tự động cập nhật.
                   </Text>
                 </View>
               </View>
@@ -360,7 +423,7 @@ const BankAccount = () => {
                 <View className="space-y-2">
                   <Text className="text-gray-600">
                     • Giao dịch sẽ được xác nhận qua webhook từ ngân hàng, đảm
-                    bảo dữ liệu được đồng bộ và minh bạch
+                    bảo dữ liệu được đồng bộ và minh bạch.
                   </Text>
                 </View>
               </View>
@@ -370,9 +433,9 @@ const BankAccount = () => {
                 </Text>
                 <View className="space-y-2">
                   <Text className="text-gray-600">
-                    • Người dùng có trách nhiệm bảo vệ thông tin đăng nhập và dữ
-                    liệu cá nhân; EzMoney cam kết sử dụng thông tin chỉ cho mục
-                    đích theo dõi giao dịch
+                    • Người dùng có trách nhiệm bảo vệ thông tin đăng nhập và
+                    mật khẩu. EzMoney cam kết sử dụng thông tin chỉ cho mục đích
+                    liên kết ngân hàng.
                   </Text>
                 </View>
               </View>
@@ -382,8 +445,8 @@ const BankAccount = () => {
                 </Text>
                 <View className="space-y-2">
                   <Text className="text-gray-600">
-                    • Mọi giao dịch nạp, rút sẽ được cập nhật tự động vào ứng
-                    dụng sau khi được xác thực qua API
+                    • Mọi giao dịch nạp, rút sẽ được cập nhật tự động vào ví
+                    người dùng sau khi được xác thực qua API.
                   </Text>
                 </View>
               </View>
@@ -459,6 +522,9 @@ const BankAccount = () => {
           </SectionComponent>
         )}
       </SafeAreaViewCustom>
+      <ModalLizeComponent ref={state.modalizeRef}>
+        {renderRulesContent()}
+      </ModalLizeComponent>
     </GestureHandlerRootView>
   );
 };

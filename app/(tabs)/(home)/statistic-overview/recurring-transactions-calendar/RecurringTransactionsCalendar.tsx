@@ -69,10 +69,10 @@ export default function RecurringTransactionsCalendar() {
                           >
                             {item.subcategoryName || item.description}
                           </Text>
-                          <Text className="mt-1 text-xs text-gray-500">
+                          {/* <Text className="mt-1 text-xs text-gray-500">
                             {formatDateMonthYear(item.createdDate)} ·{" "}
                             {formatTime(item.createdDate)}
-                          </Text>
+                          </Text> */}
                         </View>
                       </View>
                       <View className="ml-3">

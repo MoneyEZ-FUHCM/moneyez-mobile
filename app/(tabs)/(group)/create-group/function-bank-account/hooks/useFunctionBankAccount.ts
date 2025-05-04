@@ -27,7 +27,11 @@ const useFunctionBankAccount = (params: any) => {
   const scrollRef = useRef<ScrollView>(null);
   const formikRef = useRef<any>(null);
   const handleSubmitRef = useRef<() => void>(() => {});
+  const modalizeRef = useRef<Modalize>(null);
 
+  const openRulesModal = () => {
+    modalizeRef.current?.open();
+  };
   const { SYSTEM_ERROR, HTTP_STATUS } = COMMON_CONSTANT;
   const { BANK_LIST, ERROR_CODE, FORM_NAME } = FUNCTION_BANK_ACCOUNT_CONSTANT;
   const { MESSAGE_ERROR, MESSAGE_SUCCESS } =
@@ -189,6 +193,7 @@ const useFunctionBankAccount = (params: any) => {
       BANK_LIST,
       editMode,
       FORM_NAME,
+      modalizeRef,
     },
     handler: {
       handleScroll,
@@ -199,6 +204,7 @@ const useFunctionBankAccount = (params: any) => {
       handleSubmitRef,
       setSearchText,
       validationSchema,
+      openRulesModal,
     },
   };
 };

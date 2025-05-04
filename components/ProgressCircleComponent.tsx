@@ -1,3 +1,4 @@
+import { formatPercentage } from "@/helpers/libs";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Text, View } from "react-native";
@@ -83,7 +84,8 @@ const ProgressCircleComponent = ({
               percentageTextStyle,
             ]}
           >
-            {Math.round(progress * 100)}%
+            {/* {Math.round(progress * 100)}% */}
+            {formatPercentage(value)}%{/* {(value * 100).toFixed(2)}% */}
           </Text>
         ) : (
           <MaterialIcons

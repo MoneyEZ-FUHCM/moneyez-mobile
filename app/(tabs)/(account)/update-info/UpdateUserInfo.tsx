@@ -1,4 +1,3 @@
-import Admin from "@/assets/images/logo/avatar_admin.jpg";
 import {
   DatePickerComponent,
   InputComponent,
@@ -8,6 +7,7 @@ import {
   SpaceComponent,
 } from "@/components";
 import { MaterialIcons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { Formik } from "formik";
 import { Buildings, Call, User } from "iconsax-react-native";
 import { Image, Text, TouchableOpacity, View } from "react-native";
@@ -19,8 +19,8 @@ const UpdateUserInfo = () => {
   const primary = "#609084";
 
   return (
-    <SafeAreaViewCustom rootClassName="relative">
-      <SectionComponent rootClassName="flex-row relative justify-center items-center h-14 px-4">
+    <SafeAreaViewCustom rootClassName="relative bg-gray-50">
+      <SectionComponent rootClassName="flex-row relative justify-center items-center bg-white h-14 px-4">
         <TouchableOpacity
           onPress={handler.handleBack}
           className="absolute bottom-[17px] left-4"
@@ -36,20 +36,25 @@ const UpdateUserInfo = () => {
           <TouchableOpacity onPress={handler.pickAndUploadImage}>
             {state.imageUrl ? (
               <Image
-                src={state.imageUrl}
+                source={{ uri: state.imageUrl }}
+                className="mb-1 h-28 w-28 rounded-full"
+                resizeMode="cover"
+              />
+            ) : state.userInfo?.avatarUrl ? (
+              <Image
+                source={{ uri: state.userInfo.avatarUrl }}
                 className="mb-1 h-28 w-28 rounded-full"
                 resizeMode="cover"
               />
             ) : (
-              <Image
-                source={
-                  state?.userInfo?.avatarUrl
-                    ? { uri: state.userInfo.avatarUrl }
-                    : Admin
-                }
-                className="mb-1 h-28 w-28 rounded-full"
-                resizeMode="cover"
-              />
+              <LinearGradient
+                colors={["#609084", "#4A7A70"]}
+                className="h-28 w-28 items-center justify-center rounded-full shadow-md"
+              >
+                <Text className="mt-3 text-5xl font-semibold uppercase text-white">
+                  {state.userInfo?.fullName?.charAt(0)}
+                </Text>
+              </LinearGradient>
             )}
           </TouchableOpacity>
           <View className="items-center gap-[-2px]">

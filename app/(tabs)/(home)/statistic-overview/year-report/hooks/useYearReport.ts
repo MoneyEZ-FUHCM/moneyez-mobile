@@ -1,9 +1,9 @@
 import { Colors } from "@/helpers/constants/color";
+import { TransactionsReportMonthlyData } from "@/helpers/types/transaction.types";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { useGetReportTransactionYearQuery } from "@/services/transaction";
-import { TransactionsReportMonthlyData } from "@/helpers/types/transaction.types";
 import { router, useFocusEffect } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { BackHandler } from "react-native";
 import { useDispatch } from "react-redux";
 
@@ -146,6 +146,17 @@ const useYearReport = () => {
     }),
   );
 
+  const chartMaxValue = useMemo(() => {
+    if (!barData || barData.length === 0) return 0;
+
+    const maxAbsValue = Math.max(
+      ...barData.map((item: { value: number }) => Math.abs(Number(item.value))),
+    );
+
+    const roundedValue = Math.ceil(maxAbsValue / 1000000) * 1000000;
+    return roundedValue + roundedValue * 0.1;
+  }, [barData]);
+
   return {
     state: {
       currentYear,
@@ -153,6 +164,7 @@ const useYearReport = () => {
       barData,
       quarterlyDetails,
       updateBarData,
+      chartMaxValue,
     },
     handler: {
       handlePreviousYear,

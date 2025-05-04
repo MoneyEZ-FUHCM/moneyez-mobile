@@ -1,126 +1,97 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
-import { formatCurrency, formatDate } from "@/helpers/libs";
+import { USER_SPENDING_MODEL_STATUS } from "@/helpers/enums/globals";
 import useHideTabbar from "@/helpers/hooks/useHideTabbar";
+import { formatCurrency, formatDate } from "@/helpers/libs";
+import { UserSpendingModel } from "@/helpers/types/spendingModel.types";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
-import { useGetUserSpendingModelQuery } from "@/services/userSpendingModel";
 import {
-  SpendingModelHistoryState,
-  UserSpendingModel,
-} from "@/helpers/types/spendingModel.types";
+  useCancelUserSpendingModelMutation,
+  useGetCurrentUserSpendingModelQuery,
+  useGetUserSpendingModelQuery,
+} from "@/services/userSpendingModel";
 import { router } from "expo-router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ToastAndroid } from "react-native";
+import { Modalize } from "react-native-modalize";
 import { useDispatch } from "react-redux";
 
 const useSpendingModelHistory = () => {
-  const [spendingModelsByYear, setSpendingModelsByYear] = useState<
-    SpendingModelHistoryState["spendingModelsByYear"]
-  >([]);
-  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
-  const [activeFilter, setActiveFilter] = useState(
-    COMMON_CONSTANT.FILTER.FILTER_ALL,
-  );
-  const [allSpendingModels, setAllSpendingModels] = useState<
-    UserSpendingModel[]
-  >([]);
+  const { SYSTEM_ERROR } = COMMON_CONSTANT;
+  const [spendingModels, setSpendingModels] = useState([]);
   const [isRefetching, setIsRefetching] = useState(false);
-
+  const [activeTab, setActiveTab] = useState("available");
+  const [nonAvailableFilter, setNonAvailableFilter] = useState("all");
+  const modalizeRef = useRef<Modalize>(null);
   const { HOME } = PATH_NAME;
   const dispatch = useDispatch();
+  useHideTabbar();
+  const [cancelModel] = useCancelUserSpendingModelMutation();
+  const [selectedSpendingModel, setSelectedSpendingModel] =
+    useState<UserSpendingModel | null>(null);
+
+  const { refetch: refetchSpendingModel } = useGetCurrentUserSpendingModelQuery(
+    undefined,
+    {},
+  );
 
   const {
     data: spendingData,
     error,
     isLoading,
     refetch,
-  } = useGetUserSpendingModelQuery({ PageIndex: 1, PageSize: 20 });
+  } = useGetUserSpendingModelQuery(
+    { PageIndex: 1, PageSize: 100 },
+    {
+      refetchOnFocus: true,
+      refetchOnReconnect: true,
+    },
+  );
 
-  const filters = useMemo(() => {
-    const modelNames = new Set<string>();
-    modelNames.add(COMMON_CONSTANT.FILTER.FILTER_ALL);
-
-    allSpendingModels.forEach((model) => {
-      if (model.modelName) {
-        modelNames.add(model.modelName.toUpperCase());
-      }
-    });
-
-    return Array.from(modelNames).map((name) => ({
-      id: name,
-      label:
-        name === COMMON_CONSTANT.FILTER.FILTER_ALL
-          ? COMMON_CONSTANT.FILTER.FILTER_ALL_LABEL
-          : name,
-    }));
-  }, [allSpendingModels]);
-
-  // Process API data into grouped spending models
   useEffect(() => {
-    setIsLoadingHistory(true);
+    refetch();
+  }, []);
+
+  useEffect(() => {
     if (spendingData?.items) {
-      const models = spendingData.items?.map((model: any) => ({
+      const models = spendingData.items.map((model: any) => ({
         ...model,
         totalIncome: model?.totalIncome ?? 0,
         totalExpense: model?.totalExpense ?? 0,
+        status: determineModelStatus(model),
       }));
 
-      const allModels: UserSpendingModel[] = [];
-      const groups: { [key: string]: UserSpendingModel[] } = {};
-
-      models.forEach((model: any) => {
-        const startDate = new Date(model?.startDate);
-        let year = "Unknown";
-
-        if (!isNaN(startDate.getTime())) {
-          year = startDate.getFullYear().toString();
-        }
-
-        const userSpendingModel: UserSpendingModel = {
-          id: model?.id,
-          modelId: model.spendingModelId,
-          modelName: model.name,
-          totalIncome: model.totalIncome,
-          totalExpense: model.totalExpense,
-          startDate: model.startDate,
-          endDate: model.endDate,
-        };
-
-        allModels.push(userSpendingModel);
-
-        if (!groups[year]) {
-          groups[year] = [];
-        }
-        groups[year].push(userSpendingModel);
-      });
-
-      setAllSpendingModels(allModels);
-
-      const groupedArray = Object.keys(groups).map((year) => ({
-        year,
-        userSpendingModels: groups[year],
-      }));
-
-      setSpendingModelsByYear(groupedArray);
-      setIsLoadingHistory(false);
+      setSpendingModels(models as any);
     }
   }, [spendingData]);
 
-  const handleViewPeriodHistory = (userSpendingId: string) => {
-    const model = allSpendingModels.find(
-      (model) => model.id === userSpendingId,
-    );
+  const determineModelStatus = (model: UserSpendingModel) => {
+    if (model.status === USER_SPENDING_MODEL_STATUS.CANCELED) {
+      return USER_SPENDING_MODEL_STATUS.CANCELED;
+    }
+
+    if (model.status === USER_SPENDING_MODEL_STATUS.EXPIRED) {
+      return USER_SPENDING_MODEL_STATUS.EXPIRED;
+    }
+
+    return USER_SPENDING_MODEL_STATUS.ACTIVE;
+  };
+
+  const handleViewSpendingDetail = (spendingModelId: string) => {
     dispatch(setMainTabHidden(true));
 
     router.push({
       pathname: HOME.PERIOD_HISTORY as any,
       params: {
-        userSpendingId: userSpendingId,
-        startDate: formatDate(model?.startDate),
-        endDate: formatDate(model?.endDate),
-        totalIncome: model?.totalIncome,
-        totalExpense: model?.totalExpense,
+        userSpendingId: spendingModelId,
       },
+    });
+  };
+
+  const handleCreateNew = () => {
+    dispatch(setMainTabHidden(true));
+    router.push({
+      pathname: HOME.PERSONAL_EXPENSES_MODEL as any,
     });
   };
 
@@ -145,25 +116,102 @@ const useSpendingModelHistory = () => {
     });
   }, [refetch, isRefetching]);
 
+  const filteredModels = useMemo(() => {
+    if (!spendingModels) return;
+
+    if (activeTab === "available") {
+      return spendingModels.filter(
+        (model: UserSpendingModel) =>
+          model.status === USER_SPENDING_MODEL_STATUS.ACTIVE,
+      );
+    } else {
+      const nonActiveModels = spendingModels.filter(
+        (model: UserSpendingModel) =>
+          model.status !== USER_SPENDING_MODEL_STATUS.ACTIVE,
+      );
+
+      if (nonAvailableFilter === "all") {
+        return nonActiveModels;
+      } else if (nonAvailableFilter === "expired") {
+        return nonActiveModels.filter(
+          (model: UserSpendingModel) =>
+            model.status === USER_SPENDING_MODEL_STATUS.EXPIRED,
+        );
+      } else if (nonAvailableFilter === "deleted") {
+        return nonActiveModels.filter(
+          (model: UserSpendingModel) => model.isDeleted,
+        );
+      }
+
+      return nonActiveModels;
+    }
+  }, [spendingModels, activeTab, nonAvailableFilter]);
+
+  const handleOpenModalRemoveSpendingModel = useCallback(
+    (spendingModel: UserSpendingModel) => {
+      modalizeRef.current?.open();
+      setSelectedSpendingModel(spendingModel);
+    },
+    [],
+  );
+
+  const handleCloseModal = useCallback(() => {
+    modalizeRef.current?.close();
+    dispatch(setMainTabHidden(true));
+  }, []);
+
+  const handleDeleteSpendingModel = async (spendingModelId?: string) => {
+    if (!spendingModelId) return;
+    try {
+      const res = await cancelModel({
+        spendingModelId: spendingModelId,
+      }).unwrap();
+
+      setSpendingModels((prevModels: any) =>
+        prevModels.map((model: any) =>
+          model.id === spendingModelId
+            ? { ...model, status: USER_SPENDING_MODEL_STATUS.ACTIVE }
+            : model,
+        ),
+      );
+
+      ToastAndroid.show(
+        "Đã xóa mô hình chi tiêu thành công",
+        ToastAndroid.SHORT,
+      );
+      handleCloseModal();
+    } catch (error) {
+      console.error("Failed to delete spending model:", error);
+      ToastAndroid.show("Không thể xóa mô hình chi tiêu", ToastAndroid.SHORT);
+    }
+  };
+
   return {
     state: {
-      spendingModelsByYear,
-      filters,
-      activeFilter,
+      spendingModels,
       isLoading,
       error,
-      isLoadingHistory,
       isRefetching,
+      activeTab,
+      nonAvailableFilter,
+      filteredModels,
+      modalizeRef,
+      selectedSpendingModel,
     },
     handler: {
       formatCurrency,
       formatDate,
-      setActiveFilter,
       handleBack,
+      handleCreateNew,
       refetch,
-      handleViewPeriodHistory,
+      handleViewSpendingDetail,
       useHideTabbar,
       handleRefetch,
+      setActiveTab,
+      setNonAvailableFilter,
+      handleCloseModal,
+      handleOpenModalRemoveSpendingModel,
+      handleDeleteSpendingModel,
     },
   };
 };

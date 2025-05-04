@@ -2,6 +2,7 @@ const TEXT_TRANSLATE_CREATE_GROUP = {
   // Title
   TITLE: {
     CREATE_NEW_GROUP: "Tạo nhóm mới",
+    UPDATE_GROUP: "Chỉnh sửa thông tin nhóm",
     GROUP_FUNDS: "Quỹ của nhóm",
   },
 
@@ -17,6 +18,7 @@ const TEXT_TRANSLATE_CREATE_GROUP = {
     WITHDRAW: "Rút quỹ",
     ACTIVATE: "Kích hoạt",
     VIEW_ALL: "Xem tất cả",
+    UPDATE: "Cập nhật"
   },
 
   // Placeholder
@@ -56,6 +58,7 @@ const TEXT_TRANSLATE_CREATE_GROUP = {
     CURRENT_BALANCE_REQUIRED: "Số dư hiện tại không được để trống",
     CURRENT_BALANCE_INVALID: "Số dư hiện tại phải là một số hợp lệ",
     ALL_FIELDS_REQUIRED: "Vui lòng điền đầy đủ và chính xác tất cả các trường.",
+    ACCOUNT_NUMBER_CANNOT_CHANGED: "Không thể thay đổi tài khoản ngân hàng khi chỉnh sửa nhóm",
   },
   // Error Messages
   ERROR_MESSAGES: {
@@ -66,6 +69,7 @@ const TEXT_TRANSLATE_CREATE_GROUP = {
 
   SUCCESS_MESSAGES: {
     GROUP_CREATED_SUCCESSFULLY: "Nhóm đã được tạo thành công",
+    GROUP_UPDATED_SUCCESSFULLY: "Nhóm đã được cập nhật thành công",
     CONTRIBUTION_SUCCESSFUL: "Góp quỹ thành công",
     WITHDRAWAL_SUCCESSFUL: "Rút quỹ thành công",
   },

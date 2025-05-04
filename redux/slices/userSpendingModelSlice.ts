@@ -1,7 +1,7 @@
 import { UserSpendingModel } from "@/helpers/types/spendingModel.types";
+import userSpendingModelApi from "@/services/userSpendingModel";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
-import userSpendingModelApi from "@/services/userSpendingModel";
 
 interface UserSpendingModelState {
   currentModel: UserSpendingModel | null;
@@ -30,6 +30,12 @@ const userSpendingModelSlice = createSlice({
       userSpendingModelApi.endpoints.getCurrentUserSpendingModel.matchFulfilled,
       (state, action) => {
         state.currentModel = action.payload.data;
+      },
+    );
+    builder.addMatcher(
+      userSpendingModelApi.endpoints.cancelUserSpendingModel.matchFulfilled,
+      (state, action) => {
+        state.currentModel = null;
       },
     );
   },

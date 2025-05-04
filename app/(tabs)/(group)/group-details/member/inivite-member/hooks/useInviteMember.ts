@@ -1,5 +1,6 @@
-import { GROUP_MEMBER_STATUS, GROUP_ROLE } from "@/helpers/enums/globals";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
+import { GROUP_MEMBER_STATUS, GROUP_ROLE } from "@/helpers/enums/globals";
+import { GroupMember } from "@/helpers/types/group.type";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";
 import { selectUserInfo } from "@/redux/slices/userSlice";
@@ -7,7 +8,6 @@ import {
   useGetGroupDetailQuery,
   useKickMemberMutation,
 } from "@/services/group";
-import { GroupMember } from "@/helpers/types/group.type";
 import { router } from "expo-router";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { ToastAndroid } from "react-native";
@@ -136,6 +136,7 @@ const useInviteMember = () => {
   }, [dispatch]);
 
   const handleOpenMemberDetails = (member: GroupMember) => {
+    if (member.status.includes(GROUP_MEMBER_STATUS.PENDING)) return;
     setSelectedMember(member);
     memberDetailsModalRef.current?.open();
     dispatch(setGroupTabHidden(true));

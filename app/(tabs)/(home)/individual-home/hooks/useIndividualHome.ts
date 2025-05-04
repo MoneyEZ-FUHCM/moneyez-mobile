@@ -2,17 +2,15 @@ import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { formatCurrency } from "@/helpers/libs";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
-import {
-  useGetPersonalFinancialGoalsQuery,
-  useGetPersonalFinancialGoalUserSpendingModelQuery,
-} from "@/services/financialGoal";
+import { useGetPersonalFinancialGoalUserSpendingModelQuery } from "@/services/financialGoal";
 import {
   useGetCurrentUserSpendingModelChartQuery,
   useGetCurrentUserSpendingModelQuery,
 } from "@/services/userSpendingModel";
 import { router, useFocusEffect } from "expo-router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BackHandler, ToastAndroid } from "react-native";
+import { Modalize } from "react-native-modalize";
 import { useDispatch } from "react-redux";
 
 const useIndividualHome = () => {
@@ -20,6 +18,12 @@ const useIndividualHome = () => {
   const dispatch = useDispatch();
   const { SYSTEM_ERROR } = COMMON_CONSTANT;
   const [isRefetching, setIsRefetching] = useState(false);
+  const modalizeRef = useRef<Modalize>(null);
+
+  const openRulesModal = () => {
+    modalizeRef.current?.open();
+  };
+
   const {
     data: currentUserSpendingModelChart,
     isLoading,
@@ -79,6 +83,7 @@ const useIndividualHome = () => {
         (currentUserSpendingModel?.data?.totalIncome ?? 0) -
           (currentUserSpendingModel?.data?.totalExpense ?? 0),
       ),
+      totalSaving: currentUserSpendingModelChart?.data?.totalSaving || 0,
     };
   }, [currentUserSpendingModelChart]);
 
@@ -144,6 +149,7 @@ const useIndividualHome = () => {
       actualCategories,
       personalFinancialGoalsData,
       isRefetching,
+      modalizeRef,
     },
     handler: {
       handleGoBack,
@@ -152,6 +158,7 @@ const useIndividualHome = () => {
       handleHistoryPress,
       handleSpendingBudgetPress,
       handleRefetch,
+      openRulesModal,
     },
   };
 };
