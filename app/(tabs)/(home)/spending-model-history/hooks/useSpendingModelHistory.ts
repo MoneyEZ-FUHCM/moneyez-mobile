@@ -7,11 +7,13 @@ import { UserSpendingModel } from "@/helpers/types/spendingModel.types";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import {
   useCancelUserSpendingModelMutation,
+  useGetCurrentUserSpendingModelQuery,
   useGetUserSpendingModelQuery,
 } from "@/services/userSpendingModel";
 import { router } from "expo-router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ToastAndroid } from "react-native";
+import { Modalize } from "react-native-modalize";
 import { useDispatch } from "react-redux";
 
 const useSpendingModelHistory = () => {
@@ -20,11 +22,18 @@ const useSpendingModelHistory = () => {
   const [isRefetching, setIsRefetching] = useState(false);
   const [activeTab, setActiveTab] = useState("available");
   const [nonAvailableFilter, setNonAvailableFilter] = useState("all");
-
+  const modalizeRef = useRef<Modalize>(null);
   const { HOME } = PATH_NAME;
   const dispatch = useDispatch();
-
+  useHideTabbar();
   const [cancelModel] = useCancelUserSpendingModelMutation();
+  const [selectedSpendingModel, setSelectedSpendingModel] =
+    useState<UserSpendingModel | null>(null);
+
+  const { refetch: refetchSpendingModel } = useGetCurrentUserSpendingModelQuery(
+    undefined,
+    {},
+  );
 
   const {
     data: spendingData,
@@ -86,14 +95,6 @@ const useSpendingModelHistory = () => {
     });
   };
 
-  const handleCancelModel = async () => {
-    try {
-      // await cancelModel(spendingModelId)
-    } catch (err: any) {
-      ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
-    }
-  };
-
   const handleBack = () => {
     dispatch(setMainTabHidden(false));
     router.back();
@@ -146,6 +147,45 @@ const useSpendingModelHistory = () => {
     }
   }, [spendingModels, activeTab, nonAvailableFilter]);
 
+  const handleOpenModalRemoveSpendingModel = useCallback(
+    (spendingModel: UserSpendingModel) => {
+      modalizeRef.current?.open();
+      setSelectedSpendingModel(spendingModel);
+    },
+    [],
+  );
+
+  const handleCloseModal = useCallback(() => {
+    modalizeRef.current?.close();
+    dispatch(setMainTabHidden(true));
+  }, []);
+
+  const handleDeleteSpendingModel = async (spendingModelId?: string) => {
+    if (!spendingModelId) return;
+    try {
+      const res = await cancelModel({
+        spendingModelId: spendingModelId,
+      }).unwrap();
+
+      setSpendingModels((prevModels: any) =>
+        prevModels.map((model: any) =>
+          model.id === spendingModelId
+            ? { ...model, status: USER_SPENDING_MODEL_STATUS.ACTIVE }
+            : model,
+        ),
+      );
+
+      ToastAndroid.show(
+        "Đã xóa mô hình chi tiêu thành công",
+        ToastAndroid.SHORT,
+      );
+      handleCloseModal();
+    } catch (error) {
+      console.error("Failed to delete spending model:", error);
+      ToastAndroid.show("Không thể xóa mô hình chi tiêu", ToastAndroid.SHORT);
+    }
+  };
+
   return {
     state: {
       spendingModels,
@@ -155,6 +195,8 @@ const useSpendingModelHistory = () => {
       activeTab,
       nonAvailableFilter,
       filteredModels,
+      modalizeRef,
+      selectedSpendingModel,
     },
     handler: {
       formatCurrency,
@@ -167,7 +209,9 @@ const useSpendingModelHistory = () => {
       handleRefetch,
       setActiveTab,
       setNonAvailableFilter,
-      handleCancelModel,
+      handleCloseModal,
+      handleOpenModalRemoveSpendingModel,
+      handleDeleteSpendingModel,
     },
   };
 };

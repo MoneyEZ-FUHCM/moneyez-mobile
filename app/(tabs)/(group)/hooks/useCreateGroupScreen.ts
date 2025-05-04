@@ -194,7 +194,6 @@ const useCreateGroupScreen = () => {
         dispatch(setGroupTabHidden(false));
       } catch (err) {
         ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
-        console.log(err);
       } finally {
         dispatch(setLoading(false));
         ruleModalRef.current?.close();
