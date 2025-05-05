@@ -2,16 +2,12 @@ import { formatDate } from "@/helpers/libs";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";
 import { useGetGroupFinancialGoalQuery } from "@/services/financialGoal";
-import dayjs from "dayjs";
-import duration from "dayjs/plugin/duration";
 import { router, useFocusEffect } from "expo-router";
 import moment from "moment";
 import { useCallback, useEffect, useMemo } from "react";
 import { BackHandler, ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import TEXT_TRANSLATE_GROUP_STATISTIC from "../GroupStatistic.translate";
-
-dayjs.extend(duration);
 
 export interface StatisticMemberData {
   id: string;
