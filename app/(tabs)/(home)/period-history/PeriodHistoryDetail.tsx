@@ -8,11 +8,11 @@ import {
   SectionComponent,
   SkeletonLoaderComponent,
 } from "@/components";
+import { Colors } from "@/helpers/constants/color";
 import {
   TRANSACTION_TYPE,
   TRANSACTION_TYPE_TEXT,
 } from "@/helpers/enums/globals";
-import { Colors } from "@/helpers/constants/color";
 import { formatCurrency, formatDate, formatDateTime } from "@/helpers/libs";
 import { TransactionViewModelDetail } from "@/helpers/types/transaction.types";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
@@ -25,7 +25,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import {
+  GestureHandlerRootView,
+  Swipeable,
+} from "react-native-gesture-handler";
 import usePeriodHistoryDetail from "./hooks/usePeriodHistoryDetail";
 import TEXT_TRANSLATE_PERIOD_HISTORY from "./PeriodHistory.translate";
 
@@ -37,35 +40,77 @@ export default function PeriodHistoryDetail() {
   }: {
     item: TransactionViewModelDetail;
   }) => {
-    return (
-      <TouchableOpacity
-        onPress={() => handler.handleNavigateTransactionDetail(item.id)}
-        className="flex-row items-center justify-between border-b border-[#f0f0f0] py-3"
-      >
-        <View className="flex-1 flex-row items-center gap-1.5">
-          <View className="h-12 w-12 items-center justify-center rounded-full">
-            <MaterialIcons name={item?.icon as any} size={30} color="#609084" />
-          </View>
-          <View className="flex-1">
-            <Text className="text-base font-medium text-black">
-              {item?.subcategory
-                ? item.subcategory.charAt(0).toUpperCase() +
-                  item.subcategory.slice(1)
-                : ""}
-            </Text>
-            <View className="flex-row">
-              <Text className="mr-3 text-sm text-[#929292]">{item?.date}</Text>
-              <Text className="text-sm text-[#929292]">• {item?.time}</Text>
+    const renderRightActions = () => {
+      return (
+        <View className="flex h-full w-20 items-center justify-center rounded-r-2xl bg-red">
+          <MaterialIcons name="delete" size={24} color="white" />
+        </View>
+      );
+    };
+
+    const handleSwipeOpen = () => {
+      state.swipeRef?.current?.close();
+      handler.handleOpenModalRemoveTransaction(item.id);
+    };
+
+    const transactionDetail = (
+      <View className="overflow-hidden rounded-2xl bg-white shadow-sm">
+        <TouchableOpacity
+          onPress={() => handler.handleNavigateTransactionDetail(item.id)}
+          className="flex-row items-center justify-between border-b border-[#f0f0f0] py-3"
+        >
+          <View className="flex-1 flex-row items-center gap-1.5">
+            <View className="h-12 w-12 items-center justify-center rounded-full">
+              <MaterialIcons
+                name={item?.icon as any}
+                size={30}
+                color={Colors.colors.primary}
+              />
+            </View>
+            <View className="mr-3 flex-1">
+              <Text
+                className="text-ellipsis text-base font-medium text-black"
+                numberOfLines={1}
+              >
+                {item?.subcategory
+                  ? item.subcategory.charAt(0).toUpperCase() +
+                    item.subcategory.slice(1)
+                  : ""}
+              </Text>
+              <View className="flex-row">
+                <Text className="mr-3 text-sm text-[#929292]">
+                  {item?.date}
+                </Text>
+                <Text className="text-sm text-[#929292]">• {item?.time}</Text>
+              </View>
             </View>
           </View>
-        </View>
-        <Text
-          className={`text-base font-semibold ${item?.type === "income" ? "text-green" : "text-red"}`}
-        >
-          {item?.type === "income" ? "+" : "-"}{" "}
-          {handler.formatCurrency(item?.amount)}
-        </Text>
-      </TouchableOpacity>
+          <Text
+            className={`text-base font-semibold ${item?.type === "income" ? "text-green" : "text-red"}`}
+          >
+            {item?.type === "income" ? "+" : "-"}
+            {handler.formatCurrency(item?.amount)}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+
+    return (
+      <View>
+        {state.activeTab !== "unavailable" ? (
+          <Swipeable
+            ref={state.swipeRef}
+            renderRightActions={renderRightActions}
+            rightThreshold={40}
+            onSwipeableOpen={handleSwipeOpen}
+            overshootRight={false}
+          >
+            {transactionDetail}
+          </Swipeable>
+        ) : (
+          transactionDetail
+        )}
+      </View>
     );
   };
 
@@ -232,7 +277,7 @@ export default function PeriodHistoryDetail() {
           </Text>
           <Text className="text-lg font-bold text-[#00a010]">
             {state.modelDetails?.income !== 0
-              ? `+ ${handler.formatCurrency(state.modelDetails.income)}`
+              ? `+${handler.formatCurrency(state.modelDetails.income)}`
               : handler.formatCurrency(state.modelDetails.income)}
           </Text>
         </View>
@@ -242,7 +287,7 @@ export default function PeriodHistoryDetail() {
           </Text>
           <Text className="text-lg font-bold text-[#cc0000]">
             {state.modelDetails?.expense !== 0
-              ? `- ${handler.formatCurrency(state.modelDetails?.expense)}`
+              ? `-${handler.formatCurrency(state.modelDetails?.expense)}`
               : handler.formatCurrency(state.modelDetails?.expense)}
           </Text>
         </View>
@@ -303,7 +348,7 @@ export default function PeriodHistoryDetail() {
                   {renderSummary()}
                   {renderFilters()}
                 </View>
-                <Text className="text-lg font-semibold text-[#609084]">
+                <Text className="text-lg font-semibold text-primary">
                   Danh sách giao dịch ({state.totalCount})
                 </Text>
               </View>
@@ -462,6 +507,38 @@ export default function PeriodHistoryDetail() {
               <ImageViewerComponent images={state.transactionDetail?.images} />
             </>
           )}
+        </ModalLizeComponent>
+        <ModalLizeComponent ref={state.deleteModalizeRef}>
+          <View className="p-6">
+            <Text className="mb-4 text-center text-lg font-bold text-gray-900">
+              Xác nhận xóa giao dịch này
+            </Text>
+            <Text className="mb-6 text-center text-gray-600">
+              Bạn có chắc chắn muốn xóa giao dịch{" "}
+              <Text className="font-bold text-primary">
+                {state.transactionDetail?.subcategoryName}
+              </Text>{" "}
+              ?
+            </Text>
+            <View className="flex-row gap-4">
+              <TouchableOpacity
+                className="flex-1 rounded-lg border border-gray-200 py-3"
+                onPress={() => state.deleteModalizeRef?.current?.close()}
+              >
+                <Text className="text-center font-medium text-gray-700">
+                  Hủy
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="flex-1 rounded-lg bg-red py-3"
+                onPress={() =>
+                  handler.handleDeleteTransaction(state.transactionDetail?.id)
+                }
+              >
+                <Text className="text-center font-medium text-white">Xóa</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </ModalLizeComponent>
       </SafeAreaViewCustom>
     </GestureHandlerRootView>

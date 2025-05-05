@@ -1,5 +1,4 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
-import apiSlice from "@/redux/slices/apiSlice";
 import {
   transformCommonResponse,
   transformTransactionsResponse,
@@ -12,6 +11,7 @@ import {
   TransactionsReportYearlyBalance,
   TransactionsReportYearlyData,
 } from "@/helpers/types/transaction.types";
+import apiSlice from "@/redux/slices/apiSlice";
 
 const { HTTP_METHOD } = COMMON_CONSTANT;
 const transactionApi = apiSlice.injectEndpoints({
@@ -126,6 +126,13 @@ const transactionApi = apiSlice.injectEndpoints({
       transformResponse: (response) =>
         transformTransactionsResponse<Number[]>(response),
     }),
+    deletePersonalTransaction: builder.mutation({
+      query: (transactionId) => ({
+        url: `/transactions/user/${transactionId}`,
+        method: HTTP_METHOD.DELETE,
+      }),
+      invalidatesTags: ["transaction"],
+    }),
   }),
 });
 
@@ -143,6 +150,7 @@ export const {
   useGetReportTransactionAllTimeQuery,
   useGetReportTransactionBalanceYearQuery,
   useGetRecurringTransactionsCalendarQuery,
+  useDeletePersonalTransactionMutation,
 } = transactionApi;
 
 export default transactionApi;
