@@ -10,6 +10,7 @@ import { TransactionViewModel } from "@/helpers/types/transaction.types";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
+import { useGetPersonalFinancialGoalUserSpendingModelQuery } from "@/services/financialGoal";
 
 const formatTransaction = (item: TransactionViewModel) => {
   return {
@@ -51,6 +52,14 @@ const usePeriodHistory = () => {
     { id: userSpendingId },
     { skip: !userSpendingId },
   );
+
+  const { data: personalFinancialGoals } =
+    useGetPersonalFinancialGoalUserSpendingModelQuery(
+      {
+        id: userSpendingId,
+      },
+      { skip: !userSpendingId },
+    );
 
   const {
     data: userSpendingModelDetail,
