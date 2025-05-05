@@ -2,6 +2,7 @@ import Admin from "@/assets/images/logo/avatar_admin.jpg";
 import {
   BarChartExpenseCustom,
   FlatListCustom,
+  LoadingSectionWrapper,
   ProgressCircleComponent,
   SafeAreaViewCustom,
   SectionComponent,
@@ -306,40 +307,44 @@ export default function ExpenseDetail() {
           {TEXT_TRANSLATE_EXPENSE_DETAIL.HEADER_TITLE}
         </Text>
       </SectionComponent>
-      <SectionComponent rootClassName="bg-[#fafafa] rounded-lg">
-        {state.financialGoalDetail && (
-          <FlatListCustom
-            showsVerticalScrollIndicator={false}
-            data={state.personalTransactionFinancialGoals ?? []}
-            isBottomTab={true}
-            hasMore={
-              state.getPersonalTransactionFinancialGoals?.items?.length ===
-              state.pageSize
-            }
-            isLoading={state.isLoadingMore}
-            ListHeaderComponent={renderListHeader}
-            keyExtractor={(item, index) =>
-              item.id?.toString() || index.toString()
-            }
-            renderItem={renderTransactionItem}
-            onLoadMore={handler.handleLoadMore}
-            refreshing={false}
-            onRefresh={handler.handleRefresh}
-            ListEmptyComponent={
-              <View className="flex-1 items-center justify-center p-6">
-                <View className="mb-4 h-20 w-20 items-center justify-center rounded-full bg-gray-100">
-                  <AntDesign
-                    name="file1"
-                    size={32}
-                    color={Colors.colors.primary}
-                  />
+      <LoadingSectionWrapper
+        isLoading={state.isLoadingScreen || state.isLoading}
+      >
+        <SectionComponent rootClassName="bg-[#fafafa] rounded-lg">
+          {state.financialGoalDetail && (
+            <FlatListCustom
+              showsVerticalScrollIndicator={false}
+              data={state.personalTransactionFinancialGoals ?? []}
+              isBottomTab={true}
+              hasMore={
+                state.getPersonalTransactionFinancialGoals?.items?.length ===
+                state.pageSize
+              }
+              isLoading={state.isLoadingMore}
+              ListHeaderComponent={renderListHeader}
+              keyExtractor={(item, index) =>
+                item.id?.toString() || index.toString()
+              }
+              renderItem={renderTransactionItem}
+              onLoadMore={handler.handleLoadMore}
+              refreshing={false}
+              onRefresh={handler.handleRefresh}
+              ListEmptyComponent={
+                <View className="flex-1 items-center justify-center p-6">
+                  <View className="mb-4 h-20 w-20 items-center justify-center rounded-full bg-gray-100">
+                    <AntDesign
+                      name="file1"
+                      size={32}
+                      color={Colors.colors.primary}
+                    />
+                  </View>
+                  <Text>Không có dữ liệu</Text>
                 </View>
-                <Text>Không có dữ liệu</Text>
-              </View>
-            }
-          />
-        )}
-      </SectionComponent>
+              }
+            />
+          )}
+        </SectionComponent>
+      </LoadingSectionWrapper>
     </SafeAreaViewCustom>
   );
 }

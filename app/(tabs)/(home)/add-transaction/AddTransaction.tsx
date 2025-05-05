@@ -7,8 +7,8 @@ import {
   SpaceComponent,
 } from "@/components";
 import { TextAreaComponent } from "@/components/TextAreaComponent";
-import { TRANSACTION_TYPE_TEXT } from "@/helpers/enums/globals";
 import { Colors } from "@/helpers/constants/color";
+import { TRANSACTION_TYPE_TEXT } from "@/helpers/enums/globals";
 import { formatCurrencyInput } from "@/helpers/libs";
 import { CategoryListFilter } from "@/helpers/types/category.types";
 import { Subcategory } from "@/helpers/types/subCategory";
@@ -272,7 +272,7 @@ export default function AddTransaction() {
         }}
       </Formik>
       <SectionComponent rootClassName=" px-5 rounded-lg absolute bottom-5 w-full flex-1">
-        <Pressable
+        <TouchableOpacity
           onPress={() => handler.handleSubmitRef.current()}
           className="h-12 items-center justify-center rounded-lg bg-primary"
         >
@@ -281,7 +281,7 @@ export default function AddTransaction() {
               ? TEXT_TRANSLATE_ADD_TRANSACTION.BUTTON.ADD_EXPENSE
               : TEXT_TRANSLATE_ADD_TRANSACTION.BUTTON.ADD_INCOME}
           </Text>
-        </Pressable>
+        </TouchableOpacity>
       </SectionComponent>
     </SafeAreaViewCustom>
   );

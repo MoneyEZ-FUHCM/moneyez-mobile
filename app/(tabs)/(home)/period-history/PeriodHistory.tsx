@@ -11,9 +11,19 @@ import { formatCurrency } from "@/helpers/libs";
 import { TransactionViewModel } from "@/helpers/types/transaction.types";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import usePeriodHistory from "./hooks/usePeriodHistory";
 import TEXT_TRANSLATE_PERIOD_HISTORY from "./PeriodHistory.translate";
+import { Colors } from "@/helpers/constants/color";
+import { PATH_NAME } from "@/helpers/constants/pathname";
+import { router } from "expo-router";
+import SpendingBudgetComponent from "@/components/SpendingBudgetComponent";
 
 export default function PeriodHistory() {
   const { state, handler } = usePeriodHistory();
@@ -25,8 +35,11 @@ export default function PeriodHistory() {
         <View className="h-12 w-12 items-center justify-center rounded-full">
           <MaterialIcons name={item?.icon as any} size={30} color="#609084" />
         </View>
-        <View className="flex-1">
-          <Text className="text-base font-medium text-black">
+        <View className="mr-3 flex-1">
+          <Text
+            className="text-ellipsis text-base font-medium text-black"
+            numberOfLines={1}
+          >
             {item?.subcategory
               ? item.subcategory.charAt(0).toUpperCase() +
                 item.subcategory.slice(1)
@@ -39,9 +52,9 @@ export default function PeriodHistory() {
         </View>
       </View>
       <Text
-        className={`text-base font-semibold ${item?.type === "income" ? "text-[#00a010]" : "text-[#cc0000]"}`}
+        className={`text-base font-semibold ${item?.type === "income" ? "text-green" : "text-red"}`}
       >
-        {item?.type === "income" ? "+" : "-"}{" "}
+        {item?.type === "income" ? "+" : "-"}
         {handler.formatCurrency(item?.amount)}
       </Text>
     </View>

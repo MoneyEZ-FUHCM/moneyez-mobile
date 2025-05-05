@@ -8,7 +8,7 @@ import {
 import { Colors } from "@/helpers/constants/color";
 import { UserSpendingModel } from "@/helpers/types/spendingModel.types";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
-import React, { useRef } from "react";
+import React from "react";
 import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import {
   GestureHandlerRootView,
@@ -21,7 +21,6 @@ import TEXT_TRANSLATE_SPENDING_MODEL_HISTORY from "./SpendingModelHistory.transl
 
 const SpendingModelHistory = () => {
   const { state, handler } = useSpendingModelHistory();
-  const swipeRef = useRef<Swipeable>(null);
 
   const renderSpendingModelItem = ({
     spendingModel,
@@ -41,7 +40,7 @@ const SpendingModelHistory = () => {
     };
 
     const handleSwipeOpen = () => {
-      swipeRef?.current?.close();
+      state.swipeRef?.current?.close();
       handler.handleOpenModalRemoveSpendingModel(spendingModel);
     };
 
@@ -95,7 +94,7 @@ const SpendingModelHistory = () => {
           <View className="flex-row items-center justify-center">
             <View className="mr-2 flex-row items-center justify-center">
               <View className="flex h-24 w-24 items-center justify-center">
-                {spendingModel?.totalIncome && spendingModel?.totalExpense ? (
+                {spendingModel?.totalIncome || spendingModel?.totalExpense ? (
                   <PieChart
                     isAnimated
                     data={pieData}
@@ -177,7 +176,7 @@ const SpendingModelHistory = () => {
       <View>
         {spendingModel.status !== "EXPIRED" ? (
           <Swipeable
-            ref={swipeRef}
+            ref={state.swipeRef}
             renderRightActions={renderRightActions}
             rightThreshold={40}
             onSwipeableOpen={handleSwipeOpen}

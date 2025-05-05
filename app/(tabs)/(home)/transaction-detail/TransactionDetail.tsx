@@ -10,7 +10,7 @@ import { formatCurrency, formatDate, formatDateTime } from "@/helpers/libs";
 import { MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
-import { Image, Pressable, Text, View } from "react-native";
+import { Image, Pressable, Text, TouchableOpacity, View } from "react-native";
 import TEXT_TRANSLATE_TRANSACTION_DETAIL from "./TransactionDetail.translate";
 import useTransactionDetail from "./hooks/useTransactionDetail";
 
@@ -136,14 +136,14 @@ const TransactionDetail = () => {
         )}
       </>
       <SectionComponent rootClassName=" px-5 rounded-lg absolute bottom-5 w-full flex-1">
-        <Pressable
+        <TouchableOpacity
           onPress={handler.handleCreateTransaction}
           className="h-12 items-center justify-center rounded-lg bg-primary"
         >
           <Text className="text-base font-semibold text-white">
             {TEXT_TRANSLATE_TRANSACTION_DETAIL.BUTTON.CONFRIM}
           </Text>
-        </Pressable>
+        </TouchableOpacity>
       </SectionComponent>
     </SafeAreaViewCustom>
   );

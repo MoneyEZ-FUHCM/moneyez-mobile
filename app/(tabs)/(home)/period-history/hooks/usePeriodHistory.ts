@@ -26,7 +26,7 @@ const formatTransaction = (item: TransactionViewModel) => {
 
 const usePeriodHistory = () => {
   const params = useLocalSearchParams();
-  const { userSpendingId } = params;
+  const { userSpendingId, activeTab } = params;
 
   const dispatch = useDispatch();
   const [transactions, setTransactions] = useState<TransactionViewModel[]>([]);
@@ -102,7 +102,7 @@ const usePeriodHistory = () => {
     dispatch(setMainTabHidden(true));
     router.push({
       pathname: PATH_NAME.HOME.PERIOD_HISTORY_DETAIL as any,
-      params: { userSpendingId },
+      params: { userSpendingId, activeTab },
     });
   };
 

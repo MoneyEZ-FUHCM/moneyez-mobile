@@ -1,5 +1,9 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { PATH_NAME } from "@/helpers/constants/pathname";
+import {
+  FinancialGoal,
+  PersonalTransactionFinancialGoals,
+} from "@/helpers/types/financialGoal.type";
 import { setBudgetStatisticType } from "@/redux/slices/budgetSlice";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import {
@@ -7,10 +11,6 @@ import {
   useGetPersonalLimitBudgetSubcategoryQuery,
   useGetPersonalTransactionFinancialGoalsQuery,
 } from "@/services/financialGoal";
-import {
-  FinancialGoal,
-  PersonalTransactionFinancialGoals,
-} from "@/helpers/types/financialGoal.type";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { BackHandler, ToastAndroid } from "react-native";
@@ -37,23 +37,29 @@ const useExpenseDetail = () => {
     data: financialGoalDetail,
     refetch: refetchGoalsById,
     isFetching: isFetchingFinancialGoalById,
+    isLoading: isLoadingFinancialGoal,
   } = useGetFinancialGoalByIdQuery({ id: budgetId }, { skip: !budgetId });
 
-  const { data: personalTransactionData, refetch: refetchTransactions } =
-    useGetPersonalTransactionFinancialGoalsQuery(
-      {
-        id: budgetId,
-        PageIndex: pageIndex,
-        PageSize: 50,
-      },
-      { skip: !budgetId },
-    );
+  const {
+    data: personalTransactionData,
+    isLoading: isLoadingPersonalTransaction,
+    refetch: refetchTransactions,
+  } = useGetPersonalTransactionFinancialGoalsQuery(
+    {
+      id: budgetId,
+      PageIndex: pageIndex,
+      PageSize: 50,
+    },
+    { skip: !budgetId },
+  );
 
-  const { data: personalLimitBudgetSubcate } =
-    useGetPersonalLimitBudgetSubcategoryQuery(
-      { id: subCategoryId },
-      { skip: !subCategoryId },
-    );
+  const {
+    data: personalLimitBudgetSubcate,
+    isLoading: isLoadingPersonalLimitBudget,
+  } = useGetPersonalLimitBudgetSubcategoryQuery(
+    { id: subCategoryId },
+    { skip: !subCategoryId },
+  );
 
   useEffect(() => {
     if (budgetId && subCategoryId) {
@@ -170,6 +176,10 @@ const useExpenseDetail = () => {
       pageSize,
       isFetchingRefresh: isFetchingFinancialGoalById,
       budgetId,
+      isLoadingScreen:
+        isLoadingFinancialGoal ||
+        isLoadingPersonalLimitBudget ||
+        isLoadingPersonalLimitBudget,
     },
     handler: {
       setIsLoading,

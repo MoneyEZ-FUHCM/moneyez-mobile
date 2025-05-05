@@ -1,16 +1,21 @@
+import { COMMON_CONSTANT } from "@/helpers/constants/common";
 import { TRANSACTION_TYPE } from "@/helpers/enums/globals";
 import { formatCurrency, formatDate, formatTime } from "@/helpers/libs";
+import { TransactionViewModelDetail } from "@/helpers/types/transaction.types";
 import { setImageView } from "@/redux/slices/systemSlice";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
-import { useGetTransactionDetailQuery } from "@/services/transaction";
+import {
+  useDeletePersonalTransactionMutation,
+  useGetTransactionDetailQuery,
+} from "@/services/transaction";
 import {
   useGetTransactionByIdQuery,
   useGetUserSpendingModelDetailQuery,
 } from "@/services/userSpendingModel";
-import { TransactionViewModelDetail } from "@/helpers/types/transaction.types";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ToastAndroid } from "react-native";
+import { Swipeable } from "react-native-gesture-handler";
 import { Modalize } from "react-native-modalize";
 import { useDispatch } from "react-redux";
 
@@ -43,9 +48,10 @@ const formatTransaction = (item: TransactionViewModelDetail) => {
 
 const usePeriodHistoryDetail = () => {
   const params = useLocalSearchParams();
-  const { userSpendingId } = params;
+  const { userSpendingId, activeTab } = params;
   const dispatch = useDispatch();
 
+  const { SYSTEM_ERROR } = COMMON_CONSTANT;
   const [transactions, setTransactions] = useState<
     TransactionViewModelDetail[]
   >([]);
@@ -65,11 +71,15 @@ const usePeriodHistoryDetail = () => {
   const [pageIndex, setPageIndex] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const modalizeRef = useRef<Modalize>(null);
+  const deleteModalizeRef = useRef<Modalize>(null);
+  const swipeRef = useRef<Swipeable>(null);
   const [selectedTransactionId, setSelectedTransactionId] = useState<
     string | null
   >(null);
 
   const pageSize = 10;
+
+  const [deleteTransaction] = useDeletePersonalTransactionMutation();
 
   useFocusEffect(
     useCallback(() => {
@@ -233,6 +243,34 @@ const usePeriodHistoryDetail = () => {
     dispatch(setImageView(true));
   }, []);
 
+  const handleOpenModalRemoveTransaction = useCallback(
+    (transactionId: string) => {
+      deleteModalizeRef.current?.open();
+      setSelectedTransactionId(transactionId);
+    },
+    [],
+  );
+
+  const handleDeleteTransaction = async (transactionId?: string) => {
+    if (!transactionId) return;
+    try {
+      await deleteTransaction(transactionId).unwrap();
+      setTransactions((prevTrans: any) =>
+        prevTrans.filter((tran: any) => tran.id !== transactionId),
+      );
+      refetch();
+      ToastAndroid.show("Đã xóa giao dịch thành công", ToastAndroid.SHORT);
+      deleteModalizeRef?.current?.close();
+    } catch (err: any) {
+      const error = err?.data;
+      if (error?.errorCode === "TransactionNotFound") {
+        ToastAndroid.show("Giao dịch không tồn tại", ToastAndroid.SHORT);
+        return;
+      }
+      ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
+    }
+  };
+
   return {
     state: {
       transactions,
@@ -253,6 +291,9 @@ const usePeriodHistoryDetail = () => {
       modalizeRef,
       transactionDetail: transactionDetail?.data,
       isLoadingTransactionDetail: isFetchingTransactionDetail,
+      swipeRef,
+      deleteModalizeRef,
+      activeTab,
     },
     handler: {
       formatCurrency,
@@ -265,6 +306,8 @@ const usePeriodHistoryDetail = () => {
       handleFilterPress,
       handleNavigateTransactionDetail,
       handleSetImageView,
+      handleOpenModalRemoveTransaction,
+      handleDeleteTransaction,
     },
   };
 };

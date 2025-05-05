@@ -7,12 +7,12 @@ import { UserSpendingModel } from "@/helpers/types/spendingModel.types";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import {
   useCancelUserSpendingModelMutation,
-  useGetCurrentUserSpendingModelQuery,
   useGetUserSpendingModelQuery,
 } from "@/services/userSpendingModel";
 import { router } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ToastAndroid } from "react-native";
+import { Swipeable } from "react-native-gesture-handler";
 import { Modalize } from "react-native-modalize";
 import { useDispatch } from "react-redux";
 
@@ -23,17 +23,13 @@ const useSpendingModelHistory = () => {
   const [activeTab, setActiveTab] = useState("available");
   const [nonAvailableFilter, setNonAvailableFilter] = useState("all");
   const modalizeRef = useRef<Modalize>(null);
+  const swipeRef = useRef<Swipeable>(null);
   const { HOME } = PATH_NAME;
   const dispatch = useDispatch();
   useHideTabbar();
   const [cancelModel] = useCancelUserSpendingModelMutation();
   const [selectedSpendingModel, setSelectedSpendingModel] =
     useState<UserSpendingModel | null>(null);
-
-  const { refetch: refetchSpendingModel } = useGetCurrentUserSpendingModelQuery(
-    undefined,
-    {},
-  );
 
   const {
     data: spendingData,
@@ -84,6 +80,7 @@ const useSpendingModelHistory = () => {
       pathname: HOME.PERIOD_HISTORY as any,
       params: {
         userSpendingId: spendingModelId,
+        activeTab: activeTab,
       },
     });
   };
@@ -163,10 +160,9 @@ const useSpendingModelHistory = () => {
   const handleDeleteSpendingModel = async (spendingModelId?: string) => {
     if (!spendingModelId) return;
     try {
-      const res = await cancelModel({
+      await cancelModel({
         spendingModelId: spendingModelId,
       }).unwrap();
-
       setSpendingModels((prevModels: any) =>
         prevModels.map((model: any) =>
           model.id === spendingModelId
@@ -176,13 +172,24 @@ const useSpendingModelHistory = () => {
       );
 
       ToastAndroid.show(
-        "Đã xóa mô hình chi tiêu thành công",
+        "Đã hủy mô hình chi tiêu thành công",
         ToastAndroid.SHORT,
       );
       handleCloseModal();
-    } catch (error) {
-      console.error("Failed to delete spending model:", error);
-      ToastAndroid.show("Không thể xóa mô hình chi tiêu", ToastAndroid.SHORT);
+    } catch (err: any) {
+      const error = err?.data;
+      if (error?.errorCode === "CannotCancelSpendingModelHasTransactionToday") {
+        ToastAndroid.show(
+          "Không thể huỷ mô hình chi tiêu vì đã có giao dịch phát sinh trong hôm nay",
+          ToastAndroid.SHORT,
+        );
+        return;
+      }
+      if (error?.errorCode === "SpendingModelNotFound") {
+        ToastAndroid.show("Mô hình chi tiêu không tồn tại", ToastAndroid.SHORT);
+        return;
+      }
+      ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
     }
   };
 
@@ -197,6 +204,7 @@ const useSpendingModelHistory = () => {
       filteredModels,
       modalizeRef,
       selectedSpendingModel,
+      swipeRef,
     },
     handler: {
       formatCurrency,

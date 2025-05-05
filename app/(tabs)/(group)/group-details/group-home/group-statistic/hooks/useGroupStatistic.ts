@@ -2,15 +2,12 @@ import { formatDate } from "@/helpers/libs";
 import { selectCurrentGroup } from "@/redux/slices/groupSlice";
 import { setGroupTabHidden } from "@/redux/slices/tabSlice";
 import { useGetGroupFinancialGoalQuery } from "@/services/financialGoal";
-import dayjs from "dayjs";
-import duration from "dayjs/plugin/duration";
 import { router, useFocusEffect } from "expo-router";
+import moment from "moment";
 import { useCallback, useEffect, useMemo } from "react";
 import { BackHandler, ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import TEXT_TRANSLATE_GROUP_STATISTIC from "../GroupStatistic.translate";
-
-dayjs.extend(duration);
 
 export interface StatisticMemberData {
   id: string;
@@ -69,16 +66,14 @@ export default function useGroupStatistic() {
 
   const remainDays = useMemo(() => {
     if (!activeGoal.deadline) return { days: 0, hours: 0, minutes: 0 };
-
-    const now = dayjs();
-    const deadline = dayjs(activeGoal.deadline);
-    const diff = deadline.diff(now);
-    const dur = dayjs.duration(diff);
+    const now = moment();
+    const deadline = moment(activeGoal.deadline);
+    const duration = moment.duration(deadline.diff(now));
 
     return {
-      days: Math.max(0, dur.days()),
-      hours: Math.max(0, dur.hours()),
-      minutes: Math.max(0, dur.minutes()),
+      days: Math.max(0, Math.floor(duration.asDays())),
+      hours: Math.max(0, duration.hours()),
+      minutes: Math.max(0, duration.minutes()),
     };
   }, [activeGoal.deadline]);
 
