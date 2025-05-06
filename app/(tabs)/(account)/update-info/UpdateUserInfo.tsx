@@ -23,7 +23,7 @@ const UpdateUserInfo = () => {
       <SectionComponent rootClassName="flex-row relative justify-center items-center bg-white h-14 px-4">
         <TouchableOpacity
           onPress={handler.handleBack}
-          className="absolute bottom-[17px] left-4"
+          className="absolute left-4 rounded-full bg-gray-50 p-2"
         >
           <MaterialIcons name="arrow-back" size={24} />
         </TouchableOpacity>

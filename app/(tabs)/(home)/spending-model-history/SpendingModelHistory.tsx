@@ -157,7 +157,7 @@ const SpendingModelHistory = () => {
             </View>
           </View>
 
-          <Pressable
+          <TouchableOpacity
             className="mt-4 flex-row items-center justify-center rounded-xl bg-superlight p-3"
             onPress={() => handler.handleViewSpendingDetail(spendingModel?.id)}
           >
@@ -169,7 +169,7 @@ const SpendingModelHistory = () => {
               size={18}
               color={Colors.colors.primary}
             />
-          </Pressable>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -237,7 +237,7 @@ const SpendingModelHistory = () => {
           <View className="relative h-14 flex-row items-center justify-center px-4">
             <Pressable
               onPress={handler.handleBack}
-              className="absolute left-4 h-10 w-10 items-center justify-center rounded-full active:bg-gray-100"
+              className="absolute left-4 rounded-full bg-gray-50 p-2"
             >
               <MaterialIcons name="arrow-back" size={24} />
             </Pressable>

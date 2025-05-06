@@ -54,7 +54,7 @@ const useUpdateExpense = () => {
   const BudgetSchema = Yup.object().shape({
     amount: Yup.string()
       .required("Vui lòng nhập số tiền tối đa")
-      .test("is-valid-amount", "hihi", (value) => {
+      .test("is-valid-amount", "Số tiền phải lớn hơn 0", (value) => {
         const numericValue = value ? parseInt(value.replace(/\D/g, "")) : 0;
         return numericValue > 0;
       }),

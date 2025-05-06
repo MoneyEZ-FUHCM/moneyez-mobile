@@ -11,7 +11,14 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { Formik } from "formik";
 import React from "react";
-import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import * as Yup from "yup";
 import TEXT_TRANSLATE_GROUP_REMIND from "./GroupFundRemind.translate";
 import useGroupRemind from "./hooks/useGroupFundRemind";
@@ -42,9 +49,12 @@ export default function GroupRemindPage() {
       {/* HEADER */}
       <SectionComponent rootClassName="h-14 bg-white justify-center relative">
         <View className="flex-row items-center justify-between px-5">
-          <Pressable onPress={handler.handleGoBack}>
+          <TouchableOpacity
+            onPress={handler.handleGoBack}
+            className="rounded-full bg-gray-50 p-2"
+          >
             <MaterialIcons name="arrow-back" size={24} />
-          </Pressable>
+          </TouchableOpacity>
           <Text className="text-lg font-bold">
             {TEXT_TRANSLATE_GROUP_REMIND.TITLE.GROUP_REMIND}
           </Text>

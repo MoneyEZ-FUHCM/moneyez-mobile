@@ -105,12 +105,12 @@ export default function NotificationList() {
     <GestureHandlerRootView>
       <SafeAreaViewCustom rootClassName="bg-[#fafafa]">
         <SectionComponent rootClassName="h-14 bg-white items-center justify-center relative">
-          <Pressable
+          <TouchableOpacity
             onPress={handleGoBack}
-            className="absolute left-3 rounded-full p-2"
+            className="absolute left-4 rounded-full bg-gray-50 p-2"
           >
             <MaterialIcons name="arrow-back" size={24} />
-          </Pressable>
+          </TouchableOpacity>
           <Text className="text-xl font-semibold text-black">
             Thông báo ({data?.totalCount})
           </Text>

@@ -6,7 +6,13 @@ import {
 import { formatCurrency } from "@/helpers/libs";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import {
+  Pressable,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { BarChart } from "react-native-gifted-charts";
 import useYearReport from "./hooks/useYearReport";
 import TEXT_TRANSLATE_YEAR_REPORT from "./YearReport.translate";
@@ -18,9 +24,12 @@ const YearReportScreen = () => {
     <SafeAreaViewCustom rootClassName="flex-1 bg-gray-50">
       <SectionComponent rootClassName="h-14 bg-white shadow-sm justify-center">
         <View className="flex-row items-center justify-between px-4">
-          <Pressable onPress={handler.handleBack} className="p-2">
+          <TouchableOpacity
+            onPress={handler.handleBack}
+            className="rounded-full bg-gray-50 p-2"
+          >
             <MaterialIcons name="arrow-back" size={24} color="black" />
-          </Pressable>
+          </TouchableOpacity>
           <Text className="text-lg font-bold text-gray-900">
             {TEXT_TRANSLATE_YEAR_REPORT.TITLE.YEAR_REPORT}
           </Text>

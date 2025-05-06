@@ -1,6 +1,7 @@
 import { FlatListCustom, SafeAreaViewCustom } from "@/components";
 import useHideGroupTabbar from "@/helpers/hooks/useHideGroupTabbar";
 import { selectUserInfo } from "@/redux/slices/userSlice";
+import { MaterialIcons } from "@expo/vector-icons";
 import AntDesign from "@expo/vector-icons/build/AntDesign";
 import Feather from "@expo/vector-icons/build/Feather";
 import { LinearGradient } from "expo-linear-gradient";
@@ -124,8 +125,11 @@ const InviteMemberByEmail: React.FC = () => {
 
   const renderHeader = () => (
     <View className="h-14 flex-row items-center justify-between bg-white px-4 shadow-sm">
-      <TouchableOpacity onPress={handler.handleBack} className="p-2">
-        <AntDesign name="arrowleft" size={24} color={COLORS.TEXT_DARK} />
+      <TouchableOpacity
+        onPress={handler.handleBack}
+        className="rounded-full bg-gray-50 p-2"
+      >
+        <MaterialIcons name="arrow-back" size={24} />
       </TouchableOpacity>
       <Text className="text-lg font-bold text-black">Mời thành viên</Text>
       <View className="w-8" />

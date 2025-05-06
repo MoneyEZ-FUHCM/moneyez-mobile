@@ -41,7 +41,7 @@ const HeaderSection = memo(
       <View className="flex-row items-center justify-between px-5">
         {onBack ? (
           <TouchableOpacity
-            className="h-10 w-10 items-center justify-center rounded-full"
+            className="h-10 w-10 items-center justify-center rounded-full bg-gray-50 p-2"
             activeOpacity={0.7}
             onPress={onBack}
           >

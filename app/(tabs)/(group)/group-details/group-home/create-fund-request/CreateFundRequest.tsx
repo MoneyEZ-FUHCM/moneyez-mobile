@@ -163,7 +163,10 @@ export default function CreateFundRequest() {
     <GestureHandlerRootView>
       <SafeAreaViewCustom rootClassName="bg-[#f9f9f9] relative">
         <SectionComponent rootClassName="flex-row relative justify-center items-center bg-white h-14 px-4">
-          <TouchableOpacity onPress={handleBack} className="absolute left-4">
+          <TouchableOpacity
+            onPress={handleBack}
+            className="absolute left-4 rounded-full bg-gray-50 p-2"
+          >
             <MaterialIcons name="arrow-back" size={24} />
           </TouchableOpacity>
           <Text className="text-lg font-bold">{TITLE.MAIN_TITLE}</Text>

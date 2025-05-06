@@ -11,6 +11,7 @@ import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import RenderHTML from "react-native-render-html";
 import usePostDetail from "./hooks/usePostDetail";
 import TEXT_TRANSLATE_POST from "./post.translate";
+import { TouchableOpacity } from "react-native";
 
 const PostDetail = () => {
   const { state, handler } = usePostDetail();
@@ -20,9 +21,12 @@ const PostDetail = () => {
       {/* Header */}
       <SectionComponent rootClassName="h-14 bg-white justify-center shadow-md">
         <View className="flex-row items-center justify-between px-4">
-          <Pressable onPress={() => handler.handleBack()}>
+          <TouchableOpacity
+            onPress={() => handler.handleBack()}
+            className="rounded-full bg-gray-50 p-2"
+          >
             <MaterialIcons name="arrow-back" size={24} />
-          </Pressable>
+          </TouchableOpacity>
           <Text className="text-lg font-bold">
             {TEXT_TRANSLATE_POST.TITLE.POST}
           </Text>

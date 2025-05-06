@@ -97,8 +97,6 @@ const PATH_NAME = {
   GROUP_SETTING: {
     GROUP_SETTING_DEFAULT:
       "group-details/group-setting/group-setting-default/GroupSettingDefault",
-    GROUP_RATIO_MEMBER:
-      "group-details/group-setting/group-ratio-member/GroupRatioMember",
     GROUP_FINANCIAL_GOAL:
       "group-details/group-setting/group-financial-goal/GroupFinancialGoal",
     GROUP_FINANCIAL_GOAL_FORM:

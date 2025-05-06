@@ -8,7 +8,7 @@ import {
 } from "@/helpers/libs";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import CalendarView from "./CalendarView";
 import TEXT_TRANSLATE_STATISTICAL from "./Statistical.translate";
 import useStatistical from "./hooks/useStatistical";
@@ -98,9 +98,12 @@ export default function Statistical() {
   return (
     <SafeAreaViewCustom rootClassName="flex-1 bg-gray-50">
       <SectionComponent rootClassName="h-14 bg-white shadow-sm justify-center relative">
-        <Pressable onPress={handler.handleBack} className="absolute left-4 p-2">
+        <TouchableOpacity
+          onPress={handler.handleBack}
+          className="absolute left-4 rounded-full bg-gray-50 p-2"
+        >
           <MaterialIcons name="arrow-back" size={24} color="black" />
-        </Pressable>
+        </TouchableOpacity>
         <View className="items-center justify-between">
           <Text className="text-lg font-bold">
             {TEXT_TRANSLATE_STATISTICAL.TITLE.STATISTICAL}

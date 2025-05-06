@@ -301,7 +301,7 @@ export default function ExpenseDetail() {
       <SectionComponent rootClassName="relative bg-white shadow-md h-14 flex-row items-center justify-center">
         <TouchableOpacity
           onPress={handler.handleBack}
-          className="absolute left-3 rounded-full p-2"
+          className="absolute left-4 rounded-full bg-gray-50 p-2"
         >
           <MaterialIcons name="arrow-back" size={24} />
         </TouchableOpacity>

@@ -22,9 +22,12 @@ const TransactionDetail = () => {
     <SafeAreaViewCustom rootClassName="relative">
       <SectionComponent rootClassName="h-14 bg-white justify-center">
         <View className="flex-row items-center justify-between px-5">
-          <Pressable onPress={() => router.back()}>
+          <TouchableOpacity
+            onPress={() => router.back()}
+            className="rounded-full bg-gray-50 p-2"
+          >
             <MaterialIcons name="arrow-back" size={24} />
-          </Pressable>
+          </TouchableOpacity>
           <Text className="text-lg font-bold">
             {TEXT_TRANSLATE_TRANSACTION_DETAIL.TITLE.TITLE_DETAIL}
           </Text>

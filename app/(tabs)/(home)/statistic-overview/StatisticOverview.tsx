@@ -6,7 +6,13 @@ import { formatCurrency } from "@/helpers/libs";
 import { MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useCallback } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import {
+  Pressable,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ActivityIndicator } from "react-native-paper";
 import * as Progress from "react-native-progress";
@@ -19,12 +25,12 @@ const StatisticOverview = () => {
     () => (
       <SectionComponent rootClassName="h-14 bg-white justify-center items-center shadow-sm">
         <View className="relative h-full flex-row items-center px-5">
-          <Pressable
+          <TouchableOpacity
             onPress={handler.handleBack}
-            className="absolute left-4 h-10 w-10 items-center justify-center rounded-full active:bg-gray-100"
+            className="absolute left-4 rounded-full bg-gray-50 p-2"
           >
             <MaterialIcons name="arrow-back" size={24} color="#333" />
-          </Pressable>
+          </TouchableOpacity>
           <View className="flex-1 items-center">
             <Text className="text-lg font-bold">Báo cáo thống kê</Text>
           </View>

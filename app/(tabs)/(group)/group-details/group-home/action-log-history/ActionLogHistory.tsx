@@ -175,7 +175,7 @@ const ActionLogHistory = () => {
         <SectionComponent rootClassName="h-14 bg-white items-center justify-center relative">
           <Pressable
             onPress={() => router.back()}
-            className="absolute left-3 rounded-full p-2"
+            className="absolute left-3 rounded-full bg-gray-50 p-2"
           >
             <MaterialIcons name="arrow-back" size={24} />
           </Pressable>

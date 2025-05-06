@@ -2,7 +2,7 @@ import {
   InputComponent,
   ModalLizeComponent,
   SafeAreaViewCustom,
-  SectionComponent
+  SectionComponent,
 } from "@/components";
 import { TextAreaComponent } from "@/components/TextAreaComponent";
 import { Colors } from "@/helpers/constants/color";
@@ -128,7 +128,7 @@ const CreateGroup = () => {
         <SectionComponent rootClassName="relative flex-row bg-white items-center justify-center h-14 px-5 shadow-sm">
           <TouchableOpacity
             onPress={handler.handleBack}
-            className="absolute left-2 rounded-full p-2 active:opacity-75"
+            className="absolute left-4 rounded-full bg-gray-50 p-2"
           >
             <AntDesign name="arrowleft" size={24} />
           </TouchableOpacity>
@@ -181,10 +181,12 @@ const CreateGroup = () => {
                     isRequired
                     containerClass="mb-5"
                     labelClass="text-sm text-gray-600"
-                    inputClass={`text-sm ${state.isEditMode ? 'text-gray-500' : 'text-gray-800'}`}
+                    inputClass={`text-sm ${state.isEditMode ? "text-gray-500" : "text-gray-800"}`}
                     editable={false}
                     rightIcon={
-                      !state.isEditMode && <Feather name="chevron-down" size={20} color="#777" />
+                      !state.isEditMode && (
+                        <Feather name="chevron-down" size={20} color="#777" />
+                      )
                     }
                     value={
                       values.bankName && values.bankAccountNumber

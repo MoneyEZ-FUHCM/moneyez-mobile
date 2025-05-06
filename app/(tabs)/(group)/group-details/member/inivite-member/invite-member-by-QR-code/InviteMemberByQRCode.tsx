@@ -19,8 +19,11 @@ const InviteMemberByQRCode = () => {
   return (
     <SafeAreaViewCustom rootClassName="bg-gray-50">
       <SectionComponent rootClassName="flex-row bg-white justify-between items-center h-16 px-6 shadow-sm">
-        <TouchableOpacity onPress={() => router.back()}>
-          <AntDesign name="arrowleft" size={24} color="#000000" />
+        <TouchableOpacity
+          onPress={() => router.back()}
+          className="rounded-full bg-gray-50 p-2"
+        >
+          <AntDesign name="arrowleft" size={24} />
         </TouchableOpacity>
         <View className="flex-row items-center">
           <Text className="text-xl font-bold text-black">
