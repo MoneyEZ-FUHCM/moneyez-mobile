@@ -4,7 +4,7 @@ const TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP2 = {
     MAIN_TITLE: "Tạo ngân sách",
     SETUP_LIMIT: "Thiết lập hạn mức",
     SETUP_DESCRIPTION:
-      "Dựa theo mô hình sử dụng bạn đang chọn, MoneyEz sẽ đưa ra mức ngân sách tối đa khác nhau.",
+      "Dựa theo mô hình sử dụng bạn đang chọn, MoneyEZ sẽ đưa ra mức ngân sách tối đa khác nhau.",
   },
 
   // Button

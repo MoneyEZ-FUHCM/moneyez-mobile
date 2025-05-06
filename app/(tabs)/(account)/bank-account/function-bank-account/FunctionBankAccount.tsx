@@ -130,7 +130,10 @@ const FunctionBankAccount = () => {
     <GestureHandlerRootView>
       <SafeAreaViewCustom rootClassName="flex-1 bg-gray-50">
         <SectionComponent rootClassName="flex-row relative bg-white justify-between items-center h-14 px-4">
-          <TouchableOpacity onPress={() => router.back()}>
+          <TouchableOpacity
+            onPress={() => router.back()}
+            className="rounded-full bg-gray-50 p-2"
+          >
             <MaterialIcons name="arrow-back" size={24} />
           </TouchableOpacity>
           <Text className="text-lg font-bold">

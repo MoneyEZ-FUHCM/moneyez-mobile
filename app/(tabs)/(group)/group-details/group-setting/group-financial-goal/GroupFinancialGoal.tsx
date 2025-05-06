@@ -437,12 +437,12 @@ export default function GroupFinancialGoal() {
           <View className="flex-row items-center justify-between px-5">
             <TouchableOpacity
               onPress={handler.handleGoBack}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              className="rounded-full bg-gray-50 p-2"
             >
               <MaterialIcons name="arrow-back" size={24} />
             </TouchableOpacity>
             <Text className="text-lg font-bold">{TITLE.FINANCIAL_GOAL}</Text>
-            <View style={{ width: 24 }}></View>
+            <View className="w-6" />
           </View>
         </SectionComponent>
         {renderTab()}

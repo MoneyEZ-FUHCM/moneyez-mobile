@@ -309,7 +309,10 @@ const BankAccount = () => {
     <GestureHandlerRootView>
       <SafeAreaViewCustom rootClassName="bg-gray-50 relative">
         <SectionComponent rootClassName="flex-row relative justify-between bg-white items-center h-14 px-4">
-          <TouchableOpacity onPress={handler.handleBack}>
+          <TouchableOpacity
+            onPress={handler.handleBack}
+            className="rounded-full bg-gray-50 p-2"
+          >
             <MaterialIcons name="arrow-back" size={24} />
           </TouchableOpacity>
           <Text className="text-lg font-bold">
