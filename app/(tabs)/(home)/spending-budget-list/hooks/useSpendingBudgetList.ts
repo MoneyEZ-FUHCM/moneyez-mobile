@@ -4,19 +4,19 @@ import {
   formatDateMonth,
   formatDateMonthYear,
 } from "@/helpers/libs";
-import { setMainTabHidden } from "@/redux/slices/tabSlice";
-import { selectCurrentUserSpendingModel } from "@/redux/slices/userSpendingModelSlice";
-import { useGetPersonalFinancialGoalsQuery } from "@/services/financialGoal";
-import { useGetCurrentCategoriesQuery } from "@/services/userSpendingModel";
 import { Category } from "@/helpers/types/category.types";
 import { FinancialGoal } from "@/helpers/types/financialGoal.type";
 import { Subcategory } from "@/helpers/types/subCategory";
+import { setMainTabHidden } from "@/redux/slices/tabSlice";
+import { selectCurrentUserSpendingModel } from "@/redux/slices/userSpendingModelSlice";
+import { useGetPersonalFinancialGoalUserSpendingModelQuery } from "@/services/financialGoal";
+import { useGetCurrentCategoriesQuery } from "@/services/userSpendingModel";
 import { MaterialIcons } from "@expo/vector-icons";
-import { router, useFocusEffect } from "expo-router";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BackHandler } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
 import { Modalize } from "react-native-modalize";
+import { useDispatch, useSelector } from "react-redux";
 
 interface BudgetItem {
   id: string;
@@ -45,6 +45,8 @@ interface SubcategoryMapItem {
 }
 
 const useSpendingBudget = () => {
+  const { userSpendingId, activeTab } = useLocalSearchParams();
+
   const dispatch = useDispatch();
   const currentSpendingModel = useSelector(selectCurrentUserSpendingModel);
   const { HOME } = PATH_NAME;
@@ -54,11 +56,19 @@ const useSpendingBudget = () => {
     modalizeRef.current?.open();
   };
 
+  // const {
+  //   data: financialGoalsData,
+  //   isLoading: isLoadingGoals,
+  //   refetch: refetchGoals,
+  // } = useGetPersonalFinancialGoalsQuery({ PageIndex: 1, PageSize: 20 });
+
   const {
     data: financialGoalsData,
     isLoading: isLoadingGoals,
-    refetch: refetchGoals,
-  } = useGetPersonalFinancialGoalsQuery({ PageIndex: 1, PageSize: 20 });
+    refetch: refetchPersonalFinancialGoals,
+  } = useGetPersonalFinancialGoalUserSpendingModelQuery({
+    id: userSpendingId || currentSpendingModel?.id,
+  });
 
   const { data: categoriesData, isLoading: isLoadingCategories } =
     useGetCurrentCategoriesQuery({});
@@ -156,7 +166,7 @@ const useSpendingBudget = () => {
 
   useFocusEffect(
     useCallback(() => {
-      refetchGoals();
+      refetchPersonalFinancialGoals();
       const onBackPress = () => {
         handleBack();
         return true;
@@ -172,7 +182,11 @@ const useSpendingBudget = () => {
     (budgetId: string, subCategoryId: string) => {
       router.navigate({
         pathname: PATH_NAME.HOME.EXPENSES_DETAIL as any,
-        params: { budgetId: budgetId, subCategoryId: subCategoryId },
+        params: {
+          budgetId: budgetId,
+          subCategoryId: subCategoryId,
+          activeTab: activeTab,
+        },
       });
     },
     [],
@@ -180,8 +194,8 @@ const useSpendingBudget = () => {
 
   const handleRefresh = useCallback(() => {
     setIsLoading(true);
-    refetchGoals().finally(() => setIsLoading(false));
-  }, [refetchGoals]);
+    refetchPersonalFinancialGoals().finally(() => setIsLoading(false));
+  }, [refetchPersonalFinancialGoals]);
 
   return {
     state: useMemo(
@@ -190,8 +204,9 @@ const useSpendingBudget = () => {
         budgetSections,
         isLoading,
         modalizeRef,
+        activeTab,
       }),
-      [cycleInfo, budgetSections, isLoading],
+      [cycleInfo, budgetSections, isLoading, activeTab],
     ),
     handler: {
       handleAddBudget,

@@ -1,12 +1,13 @@
 import { PATH_NAME } from "@/helpers/constants/pathname";
 import { formatCurrency, formatDate, formatTime } from "@/helpers/libs";
+import { TransactionViewModel } from "@/helpers/types/transaction.types";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
+import { useGetPersonalFinancialGoalUserSpendingModelQuery } from "@/services/financialGoal";
 import {
   useGetCurrentUserSpendingModelChartDetailQuery,
   useGetTransactionByIdQuery,
   useGetUserSpendingModelDetailQuery,
 } from "@/services/userSpendingModel";
-import { TransactionViewModel } from "@/helpers/types/transaction.types";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -52,6 +53,14 @@ const usePeriodHistory = () => {
     { skip: !userSpendingId },
   );
 
+  const { data: personalFinancialGoals } =
+    useGetPersonalFinancialGoalUserSpendingModelQuery(
+      {
+        id: userSpendingId,
+      },
+      { skip: !userSpendingId },
+    );
+
   const {
     data: userSpendingModelDetail,
     refetch,
@@ -64,9 +73,6 @@ const usePeriodHistory = () => {
   useFocusEffect(
     useCallback(() => {
       dispatch(setMainTabHidden(true));
-      return () => {
-        dispatch(setMainTabHidden(false));
-      };
     }, [dispatch]),
   );
 
@@ -126,6 +132,17 @@ const usePeriodHistory = () => {
       },
     );
 
+  const handleSpendingBudgetPress = () => {
+    dispatch(setMainTabHidden(true));
+    router.push({
+      pathname: PATH_NAME.HOME.SPENDING_BUDGET_LIST as any,
+      params: {
+        userSpendingId: userSpendingId,
+        activeTab: activeTab,
+      },
+    });
+  };
+
   return {
     state: {
       transactions,
@@ -139,12 +156,15 @@ const usePeriodHistory = () => {
       error,
       currentUserSpendingModelChart: currentUserSpendingModelChartDetail,
       categories: actualCategories || [],
+      personalFinancialGoals: personalFinancialGoals?.items || [],
+      activeTab,
     },
     handler: {
       formatCurrency,
       handleBack,
       navigateToPeriodHistoryDetail,
       handleRefetch,
+      handleSpendingBudgetPress,
     },
   };
 };

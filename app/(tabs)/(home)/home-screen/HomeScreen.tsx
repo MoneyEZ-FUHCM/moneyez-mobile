@@ -235,14 +235,16 @@ const HomeScreen = () => {
               {state.currentSpendingModel?.totalIncome !== undefined &&
                 state.currentSpendingModel?.totalExpense !== undefined &&
                 !state.isLoadingSpendingModel && (
-                  <Text
-                    className="absolute bottom-3 right-3 font-semibold text-primary"
+                  <TouchableOpacity
+                    className="absolute bottom-3 right-3 font-semibold"
                     onPress={() =>
                       router.navigate(PATH_NAME.HOME.INDIVIDUAL_HOME as any)
                     }
                   >
-                    {BUTTON.DETAIL}
-                  </Text>
+                    <Text className="font-semibold text-primary">
+                      {BUTTON.DETAIL}
+                    </Text>
+                  </TouchableOpacity>
                 )}
             </View>
           </SectionComponent>

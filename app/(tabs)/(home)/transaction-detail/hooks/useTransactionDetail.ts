@@ -6,30 +6,23 @@ import { setImageView } from "@/redux/slices/systemSlice";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import { selectCurrentUserSpendingModel } from "@/redux/slices/userSpendingModelSlice";
 import { CommonActions, useNavigation } from "@react-navigation/native";
-import { useFocusEffect, useLocalSearchParams } from "expo-router";
+import { useFocusEffect } from "expo-router";
 import { useCallback } from "react";
 import { ToastAndroid } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import TEXT_TRANSLATE_ADD_TRANSACTION from "../../add-transaction/AddTransaction.translate";
 
-import {
-  useCreateTransactionMutation,
-  useGetTransactionDetailQuery,
-} from "@/services/transaction";
+import { useCreateTransactionMutation } from "@/services/transaction";
 
 const useTransactionDetail = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const { transactionId } = useLocalSearchParams();
 
   const transactionData = useSelector(selectTransactionData);
   const currentUserSpendingModel = useSelector(selectCurrentUserSpendingModel);
 
   const { HTTP_STATUS, SYSTEM_ERROR } = COMMON_CONSTANT;
   const { MESSAGE_SUCCESS } = TEXT_TRANSLATE_ADD_TRANSACTION;
-
-  const { data: transactionDetail, isLoading: isLoadingTransactionDetail } =
-    useGetTransactionDetailQuery({ transactionId });
 
   const [createTransaction] = useCreateTransactionMutation();
 
@@ -89,8 +82,6 @@ const useTransactionDetail = () => {
 
   return {
     state: {
-      isLoadingTransactionDetail,
-      transactionDetail: transactionDetail?.data,
       transactionData,
     },
     handler: {

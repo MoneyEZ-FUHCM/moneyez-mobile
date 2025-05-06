@@ -9,7 +9,6 @@ import React, { useEffect, useRef } from "react";
 import { Animated, Image, SafeAreaView, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { SplashScreen } from "./SplashScreenCustom/SplashScreen";
-import * as Linking from "expo-linking";
 
 const SplashScreenLoading = () => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -54,28 +53,6 @@ const SplashScreenLoading = () => {
       }),
     ]).start();
   }, []);
-
-  // useEffect(() => {
-  //   const handleDeepLink = (event) => {
-  //     console.log("check evenet", event);
-  //     let url = event.url ?? event;
-  //     const { pathnames } = Linking.parse(url);
-  //     console.log("check pathnames", pathnames);
-  //     if (pathnames[0] === "daylalinhthamgianhom") {
-  //       console.log("hihihi");
-  //     }
-  //   };
-
-  //   Linking.getInitialURL().then((url) => {
-  //     if (url) handleDeepLink({ url });
-  //   });
-
-  //   const subscription = Linking.addEventListener("url", handleDeepLink);
-
-  //   return () => {
-  //     subscription.remove();
-  //   };
-  // }, []);
 
   if (isShowSplash) return <SplashScreen />;
 

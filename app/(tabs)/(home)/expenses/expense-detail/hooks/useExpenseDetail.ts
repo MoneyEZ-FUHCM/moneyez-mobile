@@ -27,7 +27,7 @@ const useExpenseDetail = () => {
   >([]);
 
   const dispatch = useDispatch();
-  const { budgetId, subCategoryId } = useLocalSearchParams();
+  const { budgetId, subCategoryId, activeTab } = useLocalSearchParams();
 
   const pageSize = 10;
 
@@ -131,14 +131,6 @@ const useExpenseDetail = () => {
       const data = financialGoalDetail?.data;
       const limitBudget = personalLimitBudgetSubcate?.data?.limitBudget;
 
-      if (!data || !limitBudget) {
-        ToastAndroid.show(
-          "Không thể cập nhật ngay lúc này. Vui lòng thử lại.",
-          ToastAndroid.SHORT,
-        );
-        return;
-      }
-
       const isOverLimit = data.currentAmount > limitBudget;
       const isTargetReached = data.targetAmount - data.currentAmount <= 0;
 
@@ -180,6 +172,7 @@ const useExpenseDetail = () => {
         isLoadingFinancialGoal ||
         isLoadingPersonalLimitBudget ||
         isLoadingPersonalLimitBudget,
+      activeTab,
     },
     handler: {
       setIsLoading,
