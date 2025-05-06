@@ -6,6 +6,7 @@ import {
 } from "@/components";
 import { ImageViewerComponent } from "@/components/ImageViewerComponent";
 import { Colors } from "@/helpers/constants/color";
+import { TRANSACTION_TYPE } from "@/helpers/enums/globals";
 import { formatCurrency, formatDate, formatDateTime } from "@/helpers/libs";
 import { MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -44,7 +45,9 @@ const TransactionDetail = () => {
               <Text className="font-semibold">
                 {state.transactionData?.description}
               </Text>
-              <Text className="text-base font-bold text-red">
+              <Text
+                className={`text-base font-bold ${state.transactionData?.type === TRANSACTION_TYPE.INCOME ? "text-green" : "text-red"}`}
+              >
                 {formatCurrency(state.transactionData?.amount ?? 0)}
               </Text>
             </View>

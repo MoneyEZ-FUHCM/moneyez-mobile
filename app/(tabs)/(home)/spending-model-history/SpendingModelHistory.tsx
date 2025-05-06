@@ -50,7 +50,9 @@ const SpendingModelHistory = () => {
     ];
 
     const spendingModelContent = (
-      <View className="overflow-hidden rounded-2xl bg-white shadow-sm">
+      <View
+        className={`${state.activeTab === "unavailable" && "mb-5"} overflow-hidden rounded-2xl bg-white shadow-sm`}
+      >
         <View className="border-b border-gray-100 p-4">
           <View className="flex-row items-center justify-between">
             <Text className="text-lg font-semibold text-gray-800">

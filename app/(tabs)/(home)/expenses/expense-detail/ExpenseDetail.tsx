@@ -87,8 +87,8 @@ export default function ExpenseDetail() {
                   {calculateRemainingDays(
                     state.financialGoalDetail?.deadline,
                   ) === 0 ? (
-                    <Text className="text-sm font-bold text-green">
-                      Đã hoàn thành
+                    <Text className="text-sm font-bold text-blue-500">
+                      Mục tiêu đã hết hạn
                     </Text>
                   ) : (
                     <>
@@ -168,19 +168,21 @@ export default function ExpenseDetail() {
               </View>
             </View>
           </View>
-          <View className="absolute right-0 top-0">
-            <TouchableOpacity
-              onPress={() =>
-                handler.handleNavigateAndUpdate(state.financialGoalDetail)
-              }
-            >
-              <FontAwesome6
-                name="edit"
-                size={20}
-                color={Colors.colors.primary}
-              />
-            </TouchableOpacity>
-          </View>
+          {state.activeTab !== "unavailable" && (
+            <View className="absolute right-0 top-0">
+              <TouchableOpacity
+                onPress={() =>
+                  handler.handleNavigateAndUpdate(state.financialGoalDetail)
+                }
+              >
+                <FontAwesome6
+                  name="edit"
+                  size={20}
+                  color={Colors.colors.primary}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </SectionComponent>
       <SectionComponent rootClassName="bg-white mx-4 px-2 py-5 rounded-lg mb-2">
