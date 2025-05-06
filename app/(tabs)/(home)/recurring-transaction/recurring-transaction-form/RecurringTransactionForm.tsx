@@ -54,13 +54,13 @@ const RecurringTransactionForm = () => {
     () => (
       <SectionComponent rootClassName="h-14 bg-white justify-center items-center relative">
         <View className="flex-row items-center px-4">
-          <Pressable
+          <TouchableOpacity
             onPress={handler.handleBack}
             accessibilityLabel="Go back"
-            className="absolute left-4"
+            className="absolute left-4 rounded-full bg-gray-50 p-2"
           >
             <MaterialIcons name="arrow-back" size={24} />
-          </Pressable>
+          </TouchableOpacity>
           <View className="flex-1 items-center">
             <Text className="text-lg font-bold">
               {state.isEditing

@@ -1,14 +1,9 @@
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
 import { Colors } from "@/helpers/constants/color";
-import {
-  formatCurrency,
-  formatDate,
-  formatDateMonthYear,
-  formatTime,
-} from "@/helpers/libs";
+import { formatCurrency, formatDate } from "@/helpers/libs";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import CalendarView from "./CalendarView";
 import useRecurringTransactionsCalendar from "./hooks/useRecurringTransactionsCalendar";
 import TEXT_TRANSLATE_RECURRING_TRANSACTIONS from "./RecurringTransactionsCalendar.translate";
@@ -98,9 +93,12 @@ export default function RecurringTransactionsCalendar() {
   return (
     <SafeAreaViewCustom rootClassName="bg-gray-50">
       <SectionComponent rootClassName="h-14 bg-white shadow-sm justify-center relative">
-        <Pressable onPress={handler.handleBack} className="absolute left-4 p-2">
+        <TouchableOpacity
+          onPress={handler.handleBack}
+          className="absolute left-4 rounded-full bg-gray-50 p-2"
+        >
           <MaterialIcons name="arrow-back" size={24} color="black" />
-        </Pressable>
+        </TouchableOpacity>
         <View className="items-center justify-between">
           <Text className="text-lg font-bold">
             {TEXT_TRANSLATE_RECURRING_TRANSACTIONS.TITLE.RECURRING_TRANSACTIONS}

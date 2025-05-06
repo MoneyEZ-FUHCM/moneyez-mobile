@@ -115,18 +115,20 @@ export default function SpendingBudget() {
   return (
     <GestureHandlerRootView>
       <SafeAreaViewCustom rootClassName="bg-[#f9f9f9]">
-        {/* Header */}
         <SectionComponent rootClassName="h-14 bg-white justify-center px-5">
           <View className="flex-row items-center justify-between">
-            <Pressable onPress={handleBack}>
+            <TouchableOpacity
+              onPress={handleBack}
+              className="rounded-full bg-gray-50 p-2"
+            >
               <MaterialIcons name="arrow-back" size={24} />
-            </Pressable>
+            </TouchableOpacity>
             <Text className="text-lg font-bold">
               {TEXT_TRANSLATE_SPENDING_BUDGET.TITLE.MAIN_TITLE}
             </Text>
-            <Pressable onPress={handler.openRulesModal}>
+            <TouchableOpacity onPress={handler.openRulesModal} className="p-2">
               <FontAwesome6 name="circle-question" size={24} />
-            </Pressable>
+            </TouchableOpacity>
           </View>
         </SectionComponent>
         <LoadingSectionWrapper isLoading={isLoading}>
@@ -148,7 +150,7 @@ export default function SpendingBudget() {
                     nữa hết chu kỳ
                   </Text>
                 </View>
-                <Pressable
+                <TouchableOpacity
                   onPress={handleAddBudget}
                   className="flex-row items-center rounded-full bg-emerald-50 px-3 py-2"
                 >
@@ -156,7 +158,7 @@ export default function SpendingBudget() {
                   <Text className="ml-1.5 text-sm font-medium text-emerald-700">
                     {TEXT_TRANSLATE_SPENDING_BUDGET.BUTTON.ADD_BUDGET}
                   </Text>
-                </Pressable>
+                </TouchableOpacity>
               </View>
             </SectionComponent>
           ) : (
@@ -176,11 +178,11 @@ export default function SpendingBudget() {
           <ScrollViewCustom
             showsVerticalScrollIndicator={false}
             isBottomTab={false}
+            contentContainerStyle={{ paddingBottom: 180 }}
             refreshControl={
               <RefreshControl refreshing={false} onRefresh={handleRefresh} />
             }
           >
-            {/* Budget Sections */}
             <View className="m-4">
               {budgetSections &&
                 budgetSections?.length > 0 &&

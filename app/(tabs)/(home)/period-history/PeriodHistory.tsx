@@ -13,7 +13,13 @@ import { formatCurrency } from "@/helpers/libs";
 import { TransactionViewModel } from "@/helpers/types/transaction.types";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import usePeriodHistory from "./hooks/usePeriodHistory";
 import TEXT_TRANSLATE_PERIOD_HISTORY from "./PeriodHistory.translate";
 
@@ -156,9 +162,12 @@ export default function PeriodHistory() {
       <SafeAreaViewCustom rootClassName="flex-1 bg-[#fafafa]">
         <SectionComponent rootClassName="h-14 bg-white justify-center">
           <View className="flex-row items-center justify-between px-5">
-            <Pressable onPress={handler.handleBack}>
+            <TouchableOpacity
+              onPress={handler.handleBack}
+              className="rounded-full bg-gray-50 p-2"
+            >
               <MaterialIcons name="arrow-back" size={24} />
-            </Pressable>
+            </TouchableOpacity>
             <Text className="text-lg font-bold">
               {modelDetails?.startDate} - {modelDetails?.endDate}
             </Text>
@@ -179,9 +188,12 @@ export default function PeriodHistory() {
     <SafeAreaViewCustom rootClassName="flex-1 bg-[#fafafa]">
       <SectionComponent rootClassName="h-14 bg-white justify-center">
         <View className="flex-row items-center justify-between px-5">
-          <Pressable onPress={handler.handleBack}>
+          <TouchableOpacity
+            onPress={handler.handleBack}
+            className="rounded-full bg-gray-50 p-2"
+          >
             <MaterialIcons name="arrow-back" size={24} />
-          </Pressable>
+          </TouchableOpacity>
           <Text className="text-lg font-bold">
             {modelDetails.startDate} - {modelDetails.endDate}
           </Text>

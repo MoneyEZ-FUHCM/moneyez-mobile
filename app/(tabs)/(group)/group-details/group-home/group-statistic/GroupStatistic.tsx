@@ -9,7 +9,14 @@ import { formatCurrency, formatDate } from "@/helpers/libs";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import TEXT_TRANSLATE_GROUP_STATISTIC from "./GroupStatistic.translate";
 import useGroupStatistic from "./hooks/useGroupStatistic";
 import { PieChart } from "react-native-gifted-charts";
@@ -21,12 +28,12 @@ export default function GroupStatisticPage() {
   return (
     <SafeAreaViewCustom rootClassName="bg-[#f5f7fa] flex-1">
       <SectionComponent rootClassName="h-14 bg-white justify-center relative shadow-sm">
-        <Pressable
+        <TouchableOpacity
           onPress={handler.handleGoBack}
-          className="absolute left-4 h-10 w-10 items-center justify-center rounded-full"
+          className="absolute left-4 rounded-full bg-gray-50 p-2"
         >
           <MaterialIcons name="arrow-back" size={24} />
-        </Pressable>
+        </TouchableOpacity>
         <View className="items-center justify-between">
           <Text className="text-lg font-bold">
             {TEXT_TRANSLATE_GROUP_STATISTIC.TITLE.GROUP_STATISTIC}

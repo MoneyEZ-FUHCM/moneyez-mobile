@@ -440,9 +440,9 @@ const InviteMember = () => {
         <SectionComponent rootClassName="flex-row justify-between items-center h-14 bg-white px-4 shadow-sm">
           <TouchableOpacity
             onPress={handler.handleBack}
-            className="p-2 active:opacity-50"
+            className="rounded-full bg-gray-50 p-2"
           >
-            <Ionicons name="arrow-back" size={24} color="black" />
+            <Ionicons name="arrow-back" size={24} />
           </TouchableOpacity>
           <Text className="text-lg font-bold text-gray-900">
             {TEXT_TRANSLATE_INVITE_MEMBER.INVITE_MEMBER.HEADER}

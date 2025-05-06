@@ -9,7 +9,7 @@ import { GroupLogs } from "@/helpers/types/group.type";
 import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
-import { Image, Pressable, Text, View } from "react-native";
+import { Image, Pressable, Text, TouchableOpacity, View } from "react-native";
 import TEXT_TRANSLATE_EDIT_LOG_HISTORY from "./EditLogHistory.translate";
 import useEditLogs from "./hooks/useEditLogs";
 import { Colors } from "@/helpers/constants/color";
@@ -102,12 +102,12 @@ const EditLogHistory = () => {
   return (
     <SafeAreaViewCustom rootClassName="bg-[#fafafa]">
       <SectionComponent rootClassName="h-14 bg-white items-center justify-center relative">
-        <Pressable
+        <TouchableOpacity
           onPress={() => router.back()}
-          className="absolute left-3 rounded-full p-2"
+          className="absolute left-4 rounded-full bg-gray-50 p-2"
         >
           <MaterialIcons name="arrow-back" size={24} />
-        </Pressable>
+        </TouchableOpacity>
         <Text className="text-lg font-semibold text-black">
           {TEXT_TRANSLATE_EDIT_LOG_HISTORY.TITLE.EDIT_LOG_HISTORY}
         </Text>
