@@ -318,9 +318,9 @@ const BankAccount = () => {
           <Text className="text-lg font-bold">
             {TEXT_TRANSLATE_BANK_ACCOUNT.TITLE.BANK_ACCOUNT}
           </Text>
-          <Pressable onPress={handler.openRulesModal}>
+          <TouchableOpacity onPress={handler.openRulesModal} className="p-2">
             <FontAwesome6 name="circle-question" size={24} />
-          </Pressable>
+          </TouchableOpacity>
         </SectionComponent>
         <LoadingSectionWrapper
           isLoading={state.isLoading || state.isRefetching}

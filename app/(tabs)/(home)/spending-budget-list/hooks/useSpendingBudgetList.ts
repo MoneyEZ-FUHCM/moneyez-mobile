@@ -56,6 +56,12 @@ const useSpendingBudget = () => {
     modalizeRef.current?.open();
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(setMainTabHidden(true));
+    }, [dispatch]),
+  );
+
   // const {
   //   data: financialGoalsData,
   //   isLoading: isLoadingGoals,

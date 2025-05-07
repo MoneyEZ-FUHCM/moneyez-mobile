@@ -135,14 +135,9 @@ const CalendarView: React.FC = () => {
         maxDate={"2025-12-31"}
         markingType={"period"}
         markedDates={getMarkedDates()}
-        disableMonthChange={true} // 👈 prevents swiping to change months
-        hideArrows={true}
         onMonthChange={(month: any) => {
           handler.handleMonthChange(month);
         }}
-        // onDayPress={(day) => {
-        //     // Add day press handling here if needed
-        // }}
         dayComponent={({
           date,
           state: dateState,

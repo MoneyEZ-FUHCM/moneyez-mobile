@@ -22,7 +22,7 @@ const SpendingBudgetComponent = ({
   };
 
   return (
-    <View className="mx-4 rounded-2xl bg-white p-4 shadow-md">
+    <View className="mx-4 rounded-2xl bg-white p-4">
       <View className="mb-4 border-b border-gray-100 pb-3">
         <Pressable
           className="flex-row items-center justify-between"
