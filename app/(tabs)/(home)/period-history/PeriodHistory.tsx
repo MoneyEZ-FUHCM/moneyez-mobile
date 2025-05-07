@@ -1,5 +1,4 @@
 import {
-  BudgetSummaryComponent,
   FlatListCustom,
   SafeAreaViewCustom,
   SectionComponent,
@@ -9,7 +8,6 @@ import { PieChartCustom } from "@/components/PieChartCustom/PieChartCustom";
 import SpendingBudgetComponent from "@/components/SpendingBudgetComponent";
 import { Colors } from "@/helpers/constants/color";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
-import { formatCurrency } from "@/helpers/libs";
 import { TransactionViewModel } from "@/helpers/types/transaction.types";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
@@ -112,7 +110,7 @@ export default function PeriodHistory() {
         </>
       )}
 
-      <SectionComponent rootClassName="my-3">
+      {/* <SectionComponent rootClassName="my-3">
         <BudgetSummaryComponent
           summaryText={
             <>
@@ -127,7 +125,7 @@ export default function PeriodHistory() {
           onPressButton1={() => {}}
           onPressButton2={() => {}}
         />
-      </SectionComponent>
+      </SectionComponent> */}
 
       {/* Transactions Header */}
       <View className="flex-row items-center justify-between">

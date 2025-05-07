@@ -115,21 +115,19 @@ export default function SpendingBudget() {
   return (
     <GestureHandlerRootView>
       <SafeAreaViewCustom rootClassName="bg-[#f9f9f9]">
-        <SectionComponent rootClassName="h-14 bg-white justify-center px-5">
-          <View className="flex-row items-center justify-between">
-            <TouchableOpacity
-              onPress={handleBack}
-              className="rounded-full bg-gray-50 p-2"
-            >
-              <MaterialIcons name="arrow-back" size={24} />
-            </TouchableOpacity>
-            <Text className="text-lg font-bold">
-              {TEXT_TRANSLATE_SPENDING_BUDGET.TITLE.MAIN_TITLE}
-            </Text>
-            <TouchableOpacity onPress={handler.openRulesModal} className="p-2">
-              <FontAwesome6 name="circle-question" size={24} />
-            </TouchableOpacity>
-          </View>
+        <SectionComponent rootClassName="flex-row relative justify-between bg-white items-center h-14 px-4">
+          <TouchableOpacity
+            onPress={handler.handleBack}
+            className="rounded-full bg-gray-50 p-2"
+          >
+            <MaterialIcons name="arrow-back" size={24} />
+          </TouchableOpacity>
+          <Text className="text-lg font-bold">
+            {TEXT_TRANSLATE_SPENDING_BUDGET.TITLE.MAIN_TITLE}
+          </Text>
+          <TouchableOpacity onPress={handler.openRulesModal} className="p-2">
+            <FontAwesome6 name="circle-question" size={24} />
+          </TouchableOpacity>
         </SectionComponent>
         <LoadingSectionWrapper isLoading={isLoading}>
           {state.activeTab !== "unavailable" ? (
