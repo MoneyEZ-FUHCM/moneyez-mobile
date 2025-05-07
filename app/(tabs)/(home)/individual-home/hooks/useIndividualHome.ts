@@ -88,16 +88,12 @@ const useIndividualHome = () => {
   }, [currentUserSpendingModelChart]);
 
   const handleHistoryPress = () => {
-    if (currentUserSpendingModel) {
-      router.push({
-        pathname: HOME.PERIOD_HISTORY_DETAIL as any,
-        params: {
-          userSpendingId: currentUserSpendingModel?.data?.id,
-        },
-      });
-    } else {
-      router.navigate(HOME.SPENDING_MODEL_HISTORY as any);
-    }
+    router.push({
+      pathname: HOME.PERIOD_HISTORY_DETAIL as any,
+      params: {
+        userSpendingId: currentUserSpendingModel?.data?.id,
+      },
+    });
   };
 
   const actualCategories = currentUserSpendingModelData?.categories?.filter(
@@ -110,7 +106,12 @@ const useIndividualHome = () => {
 
   const handleSpendingBudgetPress = () => {
     dispatch(setMainTabHidden(true));
-    router.push(HOME.SPENDING_BUDGET_LIST as any);
+    router.push({
+      pathname: HOME.SPENDING_BUDGET_LIST as any,
+      params: {
+        userSpendingId: currentUserSpendingModel?.data?.id,
+      },
+    });
   };
 
   const handleRefetch = useCallback(async () => {

@@ -1,13 +1,15 @@
-import { useState, useCallback, useMemo, useEffect } from "react";
-import { router } from "expo-router";
-import { MaterialIcons } from "@expo/vector-icons";
 import { PATH_NAME } from "@/helpers/constants/pathname";
-import { useGetCurrentCategoriesQuery } from "@/services/userSpendingModel";
-import { useGetPersonalFinancialGoalsQuery } from "@/services/financialGoal";
-import TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP1 from "../CreateSpendingBudgetStep1.translate";
 import { Category } from "@/helpers/types/category.types";
-import { Subcategory } from "@/helpers/types/subCategory";
 import { FinancialGoal } from "@/helpers/types/financialGoal.type";
+import { Subcategory } from "@/helpers/types/subCategory";
+import { selectCurrentUserSpendingModel } from "@/redux/slices/userSpendingModelSlice";
+import { useGetPersonalFinancialGoalUserSpendingModelQuery } from "@/services/financialGoal";
+import { useGetCurrentCategoriesQuery } from "@/services/userSpendingModel";
+import { MaterialIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
+import TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP1 from "../CreateSpendingBudgetStep1.translate";
 
 export interface CategoryItem {
   id: string;
@@ -31,6 +33,7 @@ const ITEMS_PER_PAGE = 3;
 
 const useCreateSpendingBudgetStep1 = () => {
   const { HOME } = PATH_NAME;
+  const currentSpendingModel = useSelector(selectCurrentUserSpendingModel);
 
   const [isLoading, setIsLoading] = useState(true);
   const [state, setState] = useState({
@@ -42,7 +45,9 @@ const useCreateSpendingBudgetStep1 = () => {
     useGetCurrentCategoriesQuery({});
 
   const { data: financialGoalsData, isLoading: isLoadingGoals } =
-    useGetPersonalFinancialGoalsQuery({ PageIndex: 1, PageSize: 100 });
+    useGetPersonalFinancialGoalUserSpendingModelQuery({
+      id: currentSpendingModel?.id,
+    });
 
   useEffect(() => {
     if (

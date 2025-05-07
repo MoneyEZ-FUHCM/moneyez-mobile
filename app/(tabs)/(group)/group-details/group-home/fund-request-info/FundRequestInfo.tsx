@@ -48,7 +48,7 @@ export default function FundRequestInfoPage() {
       <SectionComponent rootClassName="h-16 bg-white justify-center shadow-sm">
         <View className="flex-row items-center justify-between px-4">
           <TouchableOpacity
-            className="rounded-full p-2"
+            className="rounded-full bg-gray-50 p-2"
             onPress={handler.handleBack}
           >
             <MaterialIcons name="arrow-back" size={24} color="#333" />

@@ -8,7 +8,7 @@ import {
 import { Colors } from "@/helpers/constants/color";
 import { UserSpendingModel } from "@/helpers/types/spendingModel.types";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
-import React, { useRef } from "react";
+import React from "react";
 import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import {
   GestureHandlerRootView,
@@ -21,7 +21,6 @@ import TEXT_TRANSLATE_SPENDING_MODEL_HISTORY from "./SpendingModelHistory.transl
 
 const SpendingModelHistory = () => {
   const { state, handler } = useSpendingModelHistory();
-  const swipeRef = useRef<Swipeable>(null);
 
   const renderSpendingModelItem = ({
     spendingModel,
@@ -41,7 +40,7 @@ const SpendingModelHistory = () => {
     };
 
     const handleSwipeOpen = () => {
-      swipeRef?.current?.close();
+      state.swipeRef?.current?.close();
       handler.handleOpenModalRemoveSpendingModel(spendingModel);
     };
 
@@ -51,7 +50,9 @@ const SpendingModelHistory = () => {
     ];
 
     const spendingModelContent = (
-      <View className="overflow-hidden rounded-2xl bg-white shadow-sm">
+      <View
+        className={`${state.activeTab === "unavailable" && "mb-5"} overflow-hidden rounded-2xl bg-white shadow-sm`}
+      >
         <View className="border-b border-gray-100 p-4">
           <View className="flex-row items-center justify-between">
             <Text className="text-lg font-semibold text-gray-800">
@@ -95,7 +96,7 @@ const SpendingModelHistory = () => {
           <View className="flex-row items-center justify-center">
             <View className="mr-2 flex-row items-center justify-center">
               <View className="flex h-24 w-24 items-center justify-center">
-                {spendingModel?.totalIncome && spendingModel?.totalExpense ? (
+                {spendingModel?.totalIncome || spendingModel?.totalExpense ? (
                   <PieChart
                     isAnimated
                     data={pieData}
@@ -156,7 +157,7 @@ const SpendingModelHistory = () => {
             </View>
           </View>
 
-          <Pressable
+          <TouchableOpacity
             className="mt-4 flex-row items-center justify-center rounded-xl bg-superlight p-3"
             onPress={() => handler.handleViewSpendingDetail(spendingModel?.id)}
           >
@@ -168,7 +169,7 @@ const SpendingModelHistory = () => {
               size={18}
               color={Colors.colors.primary}
             />
-          </Pressable>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -177,7 +178,7 @@ const SpendingModelHistory = () => {
       <View>
         {spendingModel.status !== "EXPIRED" ? (
           <Swipeable
-            ref={swipeRef}
+            ref={state.swipeRef}
             renderRightActions={renderRightActions}
             rightThreshold={40}
             onSwipeableOpen={handleSwipeOpen}
@@ -236,7 +237,7 @@ const SpendingModelHistory = () => {
           <View className="relative h-14 flex-row items-center justify-center px-4">
             <Pressable
               onPress={handler.handleBack}
-              className="absolute left-4 h-10 w-10 items-center justify-center rounded-full active:bg-gray-100"
+              className="absolute left-4 rounded-full bg-gray-50 p-2"
             >
               <MaterialIcons name="arrow-back" size={24} />
             </Pressable>

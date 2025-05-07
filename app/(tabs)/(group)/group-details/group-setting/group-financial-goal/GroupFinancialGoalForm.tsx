@@ -11,7 +11,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { Formik } from "formik";
 import React from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import TEXT_TRANSLATE_GROUP_FINANCIAL_GOAL from "./GroupFinancialGoal.translate";
 import useGroupFinancialGoalForm from "./hooks/useGroupFinancialGoalForm";
 
@@ -27,9 +27,12 @@ export default function GroupFinancialGoalForm() {
       {/* Header */}
       <SectionComponent rootClassName="h-14 bg-white justify-center relative">
         <View className="flex-row items-center justify-between px-5">
-          <Pressable onPress={handler.handleGoBack}>
+          <TouchableOpacity
+            onPress={handler.handleGoBack}
+            className="rounded-full bg-gray-50 p-2"
+          >
             <MaterialIcons name="arrow-back" size={24} />
-          </Pressable>
+          </TouchableOpacity>
           <Text className="text-lg font-bold">
             {state.isCreateMode ? TITLE.CREATE_GOAL : TITLE.UPDATE_GOAL}
           </Text>

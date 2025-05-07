@@ -15,7 +15,6 @@ export default function GroupSettingLayout() {
       }}
     >
       <Stack.Screen name={PATH_NAME.GROUP_SETTING.GROUP_SETTING_DEFAULT} />
-      <Stack.Screen name={PATH_NAME.GROUP_SETTING.GROUP_RATIO_MEMBER} />
     </Stack>
   );
 }

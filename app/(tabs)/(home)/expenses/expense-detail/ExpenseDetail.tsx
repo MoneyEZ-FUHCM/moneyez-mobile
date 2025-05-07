@@ -2,6 +2,7 @@ import Admin from "@/assets/images/logo/avatar_admin.jpg";
 import {
   BarChartExpenseCustom,
   FlatListCustom,
+  LoadingSectionWrapper,
   ProgressCircleComponent,
   SafeAreaViewCustom,
   SectionComponent,
@@ -86,8 +87,8 @@ export default function ExpenseDetail() {
                   {calculateRemainingDays(
                     state.financialGoalDetail?.deadline,
                   ) === 0 ? (
-                    <Text className="text-sm font-bold text-green">
-                      Đã hoàn thành
+                    <Text className="text-sm font-bold text-blue-500">
+                      Mục tiêu đã hết hạn
                     </Text>
                   ) : (
                     <>
@@ -167,19 +168,21 @@ export default function ExpenseDetail() {
               </View>
             </View>
           </View>
-          <View className="absolute right-0 top-0">
-            <TouchableOpacity
-              onPress={() =>
-                handler.handleNavigateAndUpdate(state.financialGoalDetail)
-              }
-            >
-              <FontAwesome6
-                name="edit"
-                size={20}
-                color={Colors.colors.primary}
-              />
-            </TouchableOpacity>
-          </View>
+          {state.activeTab !== "unavailable" && (
+            <View className="absolute right-0 top-0">
+              <TouchableOpacity
+                onPress={() =>
+                  handler.handleNavigateAndUpdate(state.financialGoalDetail)
+                }
+              >
+                <FontAwesome6
+                  name="edit"
+                  size={20}
+                  color={Colors.colors.primary}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </SectionComponent>
       <SectionComponent rootClassName="bg-white mx-4 px-2 py-5 rounded-lg mb-2">
@@ -298,7 +301,7 @@ export default function ExpenseDetail() {
       <SectionComponent rootClassName="relative bg-white shadow-md h-14 flex-row items-center justify-center">
         <TouchableOpacity
           onPress={handler.handleBack}
-          className="absolute left-3 rounded-full p-2"
+          className="absolute left-4 rounded-full bg-gray-50 p-2"
         >
           <MaterialIcons name="arrow-back" size={24} />
         </TouchableOpacity>
@@ -306,40 +309,44 @@ export default function ExpenseDetail() {
           {TEXT_TRANSLATE_EXPENSE_DETAIL.HEADER_TITLE}
         </Text>
       </SectionComponent>
-      <SectionComponent rootClassName="bg-[#fafafa] rounded-lg">
-        {state.financialGoalDetail && (
-          <FlatListCustom
-            showsVerticalScrollIndicator={false}
-            data={state.personalTransactionFinancialGoals ?? []}
-            isBottomTab={true}
-            hasMore={
-              state.getPersonalTransactionFinancialGoals?.items?.length ===
-              state.pageSize
-            }
-            isLoading={state.isLoadingMore}
-            ListHeaderComponent={renderListHeader}
-            keyExtractor={(item, index) =>
-              item.id?.toString() || index.toString()
-            }
-            renderItem={renderTransactionItem}
-            onLoadMore={handler.handleLoadMore}
-            refreshing={false}
-            onRefresh={handler.handleRefresh}
-            ListEmptyComponent={
-              <View className="flex-1 items-center justify-center p-6">
-                <View className="mb-4 h-20 w-20 items-center justify-center rounded-full bg-gray-100">
-                  <AntDesign
-                    name="file1"
-                    size={32}
-                    color={Colors.colors.primary}
-                  />
+      <LoadingSectionWrapper
+        isLoading={state.isLoadingScreen || state.isLoading}
+      >
+        <SectionComponent rootClassName="bg-[#fafafa] rounded-lg">
+          {state.financialGoalDetail && (
+            <FlatListCustom
+              showsVerticalScrollIndicator={false}
+              data={state.personalTransactionFinancialGoals ?? []}
+              isBottomTab={true}
+              hasMore={
+                state.getPersonalTransactionFinancialGoals?.items?.length ===
+                state.pageSize
+              }
+              isLoading={state.isLoadingMore}
+              ListHeaderComponent={renderListHeader}
+              keyExtractor={(item, index) =>
+                item.id?.toString() || index.toString()
+              }
+              renderItem={renderTransactionItem}
+              onLoadMore={handler.handleLoadMore}
+              refreshing={false}
+              onRefresh={handler.handleRefresh}
+              ListEmptyComponent={
+                <View className="flex-1 items-center justify-center p-6">
+                  <View className="mb-4 h-20 w-20 items-center justify-center rounded-full bg-gray-100">
+                    <AntDesign
+                      name="file1"
+                      size={32}
+                      color={Colors.colors.primary}
+                    />
+                  </View>
+                  <Text>Không có dữ liệu</Text>
                 </View>
-                <Text>Không có dữ liệu</Text>
-              </View>
-            }
-          />
-        )}
-      </SectionComponent>
+              }
+            />
+          )}
+        </SectionComponent>
+      </LoadingSectionWrapper>
     </SafeAreaViewCustom>
   );
 }

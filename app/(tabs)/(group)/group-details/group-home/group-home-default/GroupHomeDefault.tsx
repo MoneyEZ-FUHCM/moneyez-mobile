@@ -1,11 +1,11 @@
 import ArrowDown from "@/assets/icons/arrow-down-short-wide.png";
 import ArrowUp from "@/assets/icons/arrow-up-wide-short.png";
 import { SafeAreaViewCustom } from "@/components";
+import { Colors } from "@/helpers/constants/color";
 import {
   TRANSACTION_STATUS,
   TRANSACTION_TYPE_TEXT,
 } from "@/helpers/enums/globals";
-import { Colors } from "@/helpers/constants/color";
 import {
   formatCurrency,
   formatDateMonthYear,
@@ -63,9 +63,9 @@ const GroupHomeDefault = () => {
     <View className="relative z-10 h-14 items-center justify-center bg-white shadow-sm">
       <TouchableOpacity
         onPress={() => router.back()}
-        className="absolute left-4 h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow-sm"
+        className="absolute left-4 rounded-full bg-gray-50 p-2"
       >
-        <AntDesign name="arrowleft" size={24} />
+        <MaterialIcons name="arrow-back" size={24} />
       </TouchableOpacity>
       <Text className="text-center text-lg font-bold">
         {state.groupDetail?.name}

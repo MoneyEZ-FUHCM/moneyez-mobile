@@ -4,31 +4,35 @@ import {
   SectionComponent,
   SpaceComponent,
 } from "@/components";
+import { Colors } from "@/helpers/constants/color";
 import { formatCurrency, formatCurrencyInput } from "@/helpers/libs";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Formik } from "formik";
 import React from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import TEXT_TRANSLATE_UPDATE_EXPENSE from "./UpdateExpense.translate";
 import useUpdateExpense from "./hooks/useUpdateExpense";
-import { Colors } from "@/helpers/constants/color";
 
-const EditBudgetScreen = () => {
+const UpdateExpense = () => {
   const { state, handler } = useUpdateExpense();
 
   return (
-    <SafeAreaViewCustom rootClassName="flex-1 bg-[#f9f9f9]">
-      <SectionComponent rootClassName="h-14 bg-white justify-center px-5">
+    <SafeAreaViewCustom rootClassName="bg-gray-50">
+      <SectionComponent rootClassName="h-16 bg-white justify-center px-4 shadow-sm border-b border-gray-100">
         <View className="flex-row items-center justify-between">
-          <Pressable onPress={handler.handleBack}>
+          <TouchableOpacity
+            onPress={handler.handleBack}
+            className="rounded-full bg-gray-50 p-2"
+          >
             <MaterialIcons name="arrow-back" size={24} />
-          </Pressable>
-          <Text className="text-lg font-bold">
+          </TouchableOpacity>
+          <Text className="text-lg font-bold text-gray-800">
             {TEXT_TRANSLATE_UPDATE_EXPENSE.HEADER_TITLE}
           </Text>
           <SpaceComponent width={24} />
         </View>
       </SectionComponent>
+
       <Formik
         innerRef={(ref) => (state.formikRef.current = ref)}
         initialValues={state.initialValues}
@@ -41,37 +45,50 @@ const EditBudgetScreen = () => {
         {({ handleSubmit }) => {
           handler.handleSubmitRef.current = handleSubmit;
           return (
-            <>
-              <SectionComponent rootClassName="bg-white my-2 rounded-lg p-4">
-                <View className="mb-4">
-                  <Text className="text-base font-semibold text-black">
+            <View className="flex-1 pt-4">
+              <SectionComponent rootClassName="bg-white mx-4 mb-4 rounded-xl p-5 shadow-sm">
+                <View>
+                  <Text className="mb-1 text-base font-bold text-gray-800">
                     {TEXT_TRANSLATE_UPDATE_EXPENSE.SETUP_LIMIT}
                   </Text>
-                  <Text className="text-sm text-gray-500">
+                  <Text className="text-sm leading-5 text-gray-500">
                     {TEXT_TRANSLATE_UPDATE_EXPENSE.SETUP_LIMIT_DESCRIPTION}
                   </Text>
                 </View>
               </SectionComponent>
-              <SectionComponent rootClassName="bg-white mx-4 my-2 rounded-lg py-2">
-                <View className="flex-row items-center rounded-lg p-3">
-                  <View className="mr-3 rounded-lg bg-superlight p-2">
-                    <MaterialIcons
-                      name={state.budget?.icon as any}
-                      size={32}
-                      color={Colors.colors.primary}
-                    />
+
+              <SectionComponent rootClassName="bg-white mx-4 rounded-xl shadow-sm overflow-hidden">
+                <View className="flex-row items-center justify-between border-b border-gray-100 p-4">
+                  <View className="flex-row items-center">
+                    <View className="mr-3 rounded-xl bg-blue-50 p-3">
+                      <MaterialIcons
+                        name={state.budget?.icon as any}
+                        size={28}
+                        color={Colors.colors.primary}
+                      />
+                    </View>
+                    <View>
+                      <Text className="mb-1 text-xs text-gray-500">
+                        {TEXT_TRANSLATE_UPDATE_EXPENSE.CATEGORY}
+                      </Text>
+                      <Text className="text-base font-bold text-gray-800">
+                        {state.budget?.name}
+                      </Text>
+                    </View>
                   </View>
-                  <View className="flex-1">
-                    <Text className="text-sm text-gray-500">
-                      {TEXT_TRANSLATE_UPDATE_EXPENSE.CATEGORY}
+
+                  <View className="items-end">
+                    <Text className="mb-1 text-xs text-gray-500">
+                      Mục tiêu hiện tại:
                     </Text>
-                    <Text className="font-bold text-black">
-                      {state.budget?.name}
+                    <Text className="text-base font-bold text-primary">
+                      {formatCurrency(state.budget?.amount)}
                     </Text>
                   </View>
                 </View>
-                <View className="mx-4">
-                  <Text className="text-sm text-text-gray">
+
+                <View className="border-b border-gray-100 px-4 py-3">
+                  <Text className="text-sm leading-5 text-gray-500">
                     Số tiền tối đa bạn có thể đặt mục tiêu cho danh mục này là{" "}
                     <Text className="font-bold text-primary">
                       {formatCurrency(
@@ -80,29 +97,32 @@ const EditBudgetScreen = () => {
                     </Text>
                   </Text>
                 </View>
-                <SectionComponent rootClassName="bg-white rounded-lg p-4">
+
+                <SectionComponent rootClassName="p-4">
                   <InputComponent
                     name="amount"
                     label={"Số tiền tối đa"}
                     placeholder={"Nhập số tiền tối đa"}
                     inputMode="numeric"
                     isRequired
-                    labelClass="text-text-gray text-[12px] font-bold"
-                    inputClass="rounded-[10px]"
+                    labelClass="text-gray-500 text-xs font-bold"
+                    inputClass="rounded-lg border border-gray-200 bg-gray-50 px-3 text-md"
                     formatter={formatCurrencyInput}
                   />
                 </SectionComponent>
               </SectionComponent>
-            </>
+            </View>
           );
         }}
       </Formik>
-      <SectionComponent rootClassName=" px-5 rounded-lg absolute bottom-5 w-full flex-1">
+
+      <SectionComponent rootClassName="px-4 py-5 absolute bottom-0 left-0 right-0 bg-white bg-opacity-90 border-t border-gray-100">
         <Pressable
           onPress={() => handler.handleSubmitRef.current()}
-          className="h-12 items-center justify-center rounded-lg bg-primary"
+          className="h-14 items-center justify-center rounded-xl bg-primary shadow"
+          android_ripple={{ color: "rgba(255, 255, 255, 0.2)" }}
         >
-          <Text className="text-base font-semibold text-white">
+          <Text className="text-base font-bold text-white">
             {TEXT_TRANSLATE_UPDATE_EXPENSE.EDIT}
           </Text>
         </Pressable>
@@ -111,4 +131,4 @@ const EditBudgetScreen = () => {
   );
 };
 
-export default EditBudgetScreen;
+export default UpdateExpense;

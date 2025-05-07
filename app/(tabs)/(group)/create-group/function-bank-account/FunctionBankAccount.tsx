@@ -130,7 +130,10 @@ const FunctionBankAccount = () => {
     <GestureHandlerRootView>
       <SafeAreaViewCustom rootClassName="flex-1 bg-gray-50">
         <SectionComponent rootClassName="flex-row relative bg-white justify-between items-center h-14 px-4">
-          <TouchableOpacity onPress={() => router.back()}>
+          <TouchableOpacity
+            onPress={() => router.back()}
+            className="rounded-full bg-gray-50 p-2"
+          >
             <MaterialIcons name="arrow-back" size={24} />
           </TouchableOpacity>
           <Text className="text-lg font-bold">
@@ -138,9 +141,9 @@ const FunctionBankAccount = () => {
               ? "Chỉnh sửa tài khoản ngân hàng"
               : "Thêm tài khoản ngân hàng"}
           </Text>
-          <Pressable onPress={handler.openRulesModal}>
+          <TouchableOpacity onPress={handler.openRulesModal} className="p-2">
             <FontAwesome6 name="circle-question" size={24} />
-          </Pressable>
+          </TouchableOpacity>
         </SectionComponent>
         <SectionComponent rootClassName="flex-1 p-6">
           <Formik
@@ -268,7 +271,7 @@ const FunctionBankAccount = () => {
           />
         </ModalLizeComponent>
         <SectionComponent rootClassName=" px-5 rounded-lg absolute bottom-5 w-full flex-1">
-          <Pressable
+          <TouchableOpacity
             onPress={() => handler.handleSubmitRef.current()}
             className="h-12 items-center justify-center rounded-lg bg-primary"
           >
@@ -277,7 +280,7 @@ const FunctionBankAccount = () => {
                 ? TEXT_TRANSLATE_FUNCTION_BANK_ACCOUNT.BUTTON.UPDATE
                 : TEXT_TRANSLATE_FUNCTION_BANK_ACCOUNT.BUTTON.CONFIRM}
             </Text>
-          </Pressable>
+          </TouchableOpacity>
         </SectionComponent>
       </SafeAreaViewCustom>
       <ModalLizeComponent ref={state.modalizeRef}>

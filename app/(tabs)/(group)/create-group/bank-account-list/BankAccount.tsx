@@ -136,7 +136,9 @@ const BankAccount = () => {
               <View className="mt-2 flex-row items-center">
                 <View className="rounded-md bg-gray-100 px-2 py-1">
                   <Text className="text-sm font-medium text-gray-700">
-                    {item?.accountNumber}
+                    {item?.accountNumber
+                      ? `${item.accountNumber.slice(0, 6)}...`
+                      : ""}
                   </Text>
                 </View>
                 <TouchableOpacity
@@ -309,15 +311,18 @@ const BankAccount = () => {
     <GestureHandlerRootView>
       <SafeAreaViewCustom rootClassName="bg-gray-50 relative">
         <SectionComponent rootClassName="flex-row relative justify-between bg-white items-center h-14 px-4">
-          <TouchableOpacity onPress={handler.handleBack}>
+          <TouchableOpacity
+            onPress={handler.handleBack}
+            className="rounded-full bg-gray-50 p-2"
+          >
             <MaterialIcons name="arrow-back" size={24} />
           </TouchableOpacity>
           <Text className="text-lg font-bold">
             {TEXT_TRANSLATE_BANK_ACCOUNT.TITLE.BANK_ACCOUNT}
           </Text>
-          <Pressable onPress={handler.openRulesModal}>
+          <TouchableOpacity onPress={handler.openRulesModal} className="p-2">
             <FontAwesome6 name="circle-question" size={24} />
-          </Pressable>
+          </TouchableOpacity>
         </SectionComponent>
         <LoadingSectionWrapper
           isLoading={state.isLoading || state.isRefetching}
@@ -470,7 +475,7 @@ const BankAccount = () => {
                 onPress={handler.handleConfirmLink}
               >
                 <Text className="text-center font-medium text-white">
-                  Tôi dồng ý
+                  Tôi đồng ý
                 </Text>
               </TouchableOpacity>
             </View>

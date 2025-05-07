@@ -1,6 +1,12 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Pressable, RefreshControl, Text, View } from "react-native";
+import {
+  Pressable,
+  RefreshControl,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 
 import {
@@ -72,9 +78,12 @@ const RecurringTransactionList = () => {
     () => (
       <SectionComponent rootClassName="bg-white justify-center items-center relative">
         <View className="relative h-14 flex-row items-center px-5">
-          <Pressable onPress={handler.handleBack} className="absolute left-4">
+          <TouchableOpacity
+            onPress={handler.handleBack}
+            className="absolute left-4 rounded-full bg-gray-50 p-2"
+          >
             <MaterialIcons name="arrow-back" size={24} />
-          </Pressable>
+          </TouchableOpacity>
           <View className="flex-1 items-center">
             <Text className="text-lg font-bold">
               {TEXT_TRANSLATE.TITLE.RECURRING_TRANSACTION_LIST}
@@ -406,6 +415,7 @@ const RecurringTransactionList = () => {
         {renderHeader()}
 
         <ScrollViewCustom
+          showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingVertical: 16, paddingBottom: 30 }}
           isBottomTab={false}
           refreshControl={

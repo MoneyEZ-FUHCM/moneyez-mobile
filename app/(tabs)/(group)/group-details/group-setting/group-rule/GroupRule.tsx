@@ -1,7 +1,6 @@
 import { SafeAreaViewCustom, SectionComponent } from "@/components";
 import { Colors } from "@/helpers/constants/color";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import {
   ScrollView,
@@ -20,7 +19,7 @@ const GroupRule = () => {
       <SectionComponent rootClassName="flex-row relative justify-center items-center h-14 px-4 bg-white">
         <TouchableOpacity
           onPress={handler.handleBack}
-          className="absolute bottom-[17px] left-4"
+          className="absolute left-4 rounded-full bg-gray-50 p-2"
         >
           <MaterialIcons name="arrow-back" size={24} />
         </TouchableOpacity>

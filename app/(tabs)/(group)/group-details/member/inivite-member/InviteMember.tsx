@@ -6,12 +6,13 @@ import {
   SectionComponent,
   SpaceComponent,
 } from "@/components";
-import { GROUP_MEMBER_STATUS, GROUP_ROLE } from "@/helpers/enums/globals";
 import { Colors } from "@/helpers/constants/color";
 import { PATH_NAME } from "@/helpers/constants/pathname";
+import { GROUP_MEMBER_STATUS, GROUP_ROLE } from "@/helpers/enums/globals";
 import { formatCurrency, formatDate } from "@/helpers/libs";
 import { GroupMember } from "@/helpers/types/group.type";
 import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import React, { memo, useEffect, useRef, useState } from "react";
 import {
@@ -135,14 +136,22 @@ const InviteMember = () => {
         <View
           className={`${item.status === GROUP_MEMBER_STATUS.ACTIVE ? "flex-[0.6]" : ""} flex-row items-center space-x-3`}
         >
-          <Image
-            source={
-              item?.userInfo?.avatarUrl
-                ? { uri: item.userInfo.avatarUrl }
-                : AdminAvatar
-            }
-            className="h-12 w-12 rounded-full"
-          />
+          {item?.userInfo?.avatarUrl ? (
+            <Image
+              source={{ uri: item.userInfo.avatarUrl }}
+              className="h-12 w-12 rounded-full"
+            />
+          ) : (
+            <LinearGradient
+              colors={["#609084", "#4A7A70"]}
+              className="h-12 w-12 items-center justify-center rounded-full shadow-md"
+            >
+              <Text className="text-2xl font-semibold uppercase text-white">
+                {item?.userInfo?.fullName?.charAt(0)}
+              </Text>
+            </LinearGradient>
+          )}
+
           <View>
             {item.role === "LEADER" && (
               <Text className="text-xs font-medium text-primary">
@@ -440,9 +449,9 @@ const InviteMember = () => {
         <SectionComponent rootClassName="flex-row justify-between items-center h-14 bg-white px-4 shadow-sm">
           <TouchableOpacity
             onPress={handler.handleBack}
-            className="p-2 active:opacity-50"
+            className="rounded-full bg-gray-50 p-2"
           >
-            <Ionicons name="arrow-back" size={24} color="black" />
+            <Ionicons name="arrow-back" size={24} />
           </TouchableOpacity>
           <Text className="text-lg font-bold text-gray-900">
             {TEXT_TRANSLATE_INVITE_MEMBER.INVITE_MEMBER.HEADER}

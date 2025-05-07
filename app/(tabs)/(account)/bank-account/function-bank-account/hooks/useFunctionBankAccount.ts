@@ -4,6 +4,7 @@ import {
   BankType,
   CreateBankAccountPayload,
 } from "@/helpers/types/bankAccount.types";
+import { setLoading } from "@/redux/slices/loadingSlice";
 import { setMainTabHidden } from "@/redux/slices/tabSlice";
 import {
   useCreateBankAccountMutation,
@@ -107,8 +108,13 @@ const useFunctionBankAccount = (params: any) => {
 
   const handleCreateBankAccount = useCallback(
     async (payload: CreateBankAccountPayload) => {
+      dispatch(setLoading(true));
+      const updatePayload = {
+        ...payload,
+        accountHolderName: payload.accountHolderName.toUpperCase(),
+      };
       try {
-        const res = await createBankAccount(payload).unwrap();
+        const res = await createBankAccount(updatePayload).unwrap();
         if (res?.status === HTTP_STATUS.SUCCESS.CREATED) {
           ToastAndroid.show(
             MESSAGE_SUCCESS.ADD_BANK_ACCOUNT_SUCCESS,
@@ -133,6 +139,8 @@ const useFunctionBankAccount = (params: any) => {
           return;
         }
         ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
+      } finally {
+        dispatch(setLoading(false));
       }
     },
     [],

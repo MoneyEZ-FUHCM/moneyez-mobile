@@ -1,17 +1,23 @@
 import {
-  BudgetSummaryComponent,
   FlatListCustom,
   SafeAreaViewCustom,
   SectionComponent,
   SpaceComponent,
 } from "@/components";
 import { PieChartCustom } from "@/components/PieChartCustom/PieChartCustom";
+import SpendingBudgetComponent from "@/components/SpendingBudgetComponent";
+import { Colors } from "@/helpers/constants/color";
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
-import { formatCurrency } from "@/helpers/libs";
 import { TransactionViewModel } from "@/helpers/types/transaction.types";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import usePeriodHistory from "./hooks/usePeriodHistory";
 import TEXT_TRANSLATE_PERIOD_HISTORY from "./PeriodHistory.translate";
 
@@ -25,8 +31,11 @@ export default function PeriodHistory() {
         <View className="h-12 w-12 items-center justify-center rounded-full">
           <MaterialIcons name={item?.icon as any} size={30} color="#609084" />
         </View>
-        <View className="flex-1">
-          <Text className="text-base font-medium text-black">
+        <View className="mr-3 flex-1">
+          <Text
+            className="text-ellipsis text-base font-medium text-black"
+            numberOfLines={1}
+          >
             {item?.subcategory
               ? item.subcategory.charAt(0).toUpperCase() +
                 item.subcategory.slice(1)
@@ -39,9 +48,9 @@ export default function PeriodHistory() {
         </View>
       </View>
       <Text
-        className={`text-base font-semibold ${item?.type === "income" ? "text-[#00a010]" : "text-[#cc0000]"}`}
+        className={`text-base font-semibold ${item?.type === "income" ? "text-green" : "text-red"}`}
       >
-        {item?.type === "income" ? "+" : "-"}{" "}
+        {item?.type === "income" ? "+" : "-"}
         {handler.formatCurrency(item?.amount)}
       </Text>
     </View>
@@ -68,8 +77,40 @@ export default function PeriodHistory() {
           />
         </View>
       </SectionComponent>
+      {state.personalFinancialGoals &&
+      state.personalFinancialGoals?.length > 0 ? (
+        <View className="-mx-5">
+          <SpendingBudgetComponent
+            data={state.personalFinancialGoals}
+            onHeaderPress={handler.handleSpendingBudgetPress}
+          />
+          <SpaceComponent height={22} />
+        </View>
+      ) : (
+        <>
+          <View className="rounded-xl bg-white shadow-sm">
+            <View className="px-4 pt-4">
+              <Text className="text-base font-bold">Ngân sách chi tiêu</Text>
+            </View>
 
-      <SectionComponent rootClassName="my-3">
+            <View className="items-center justify-center px-4 py-5">
+              <View className="h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+                <MaterialIcons
+                  name="account-balance-wallet"
+                  size={32}
+                  color={Colors.colors.primary}
+                />
+              </View>
+              <Text className="mt-4 text-base font-medium text-gray-900">
+                Chưa có ngân sách nào
+              </Text>
+            </View>
+          </View>
+          <SpaceComponent height={22} />
+        </>
+      )}
+
+      {/* <SectionComponent rootClassName="my-3">
         <BudgetSummaryComponent
           summaryText={
             <>
@@ -84,7 +125,7 @@ export default function PeriodHistory() {
           onPressButton1={() => {}}
           onPressButton2={() => {}}
         />
-      </SectionComponent>
+      </SectionComponent> */}
 
       {/* Transactions Header */}
       <View className="flex-row items-center justify-between">
@@ -119,9 +160,12 @@ export default function PeriodHistory() {
       <SafeAreaViewCustom rootClassName="flex-1 bg-[#fafafa]">
         <SectionComponent rootClassName="h-14 bg-white justify-center">
           <View className="flex-row items-center justify-between px-5">
-            <Pressable onPress={handler.handleBack}>
+            <TouchableOpacity
+              onPress={handler.handleBack}
+              className="rounded-full bg-gray-50 p-2"
+            >
               <MaterialIcons name="arrow-back" size={24} />
-            </Pressable>
+            </TouchableOpacity>
             <Text className="text-lg font-bold">
               {modelDetails?.startDate} - {modelDetails?.endDate}
             </Text>
@@ -142,9 +186,12 @@ export default function PeriodHistory() {
     <SafeAreaViewCustom rootClassName="flex-1 bg-[#fafafa]">
       <SectionComponent rootClassName="h-14 bg-white justify-center">
         <View className="flex-row items-center justify-between px-5">
-          <Pressable onPress={handler.handleBack}>
+          <TouchableOpacity
+            onPress={handler.handleBack}
+            className="rounded-full bg-gray-50 p-2"
+          >
             <MaterialIcons name="arrow-back" size={24} />
-          </Pressable>
+          </TouchableOpacity>
           <Text className="text-lg font-bold">
             {modelDetails.startDate} - {modelDetails.endDate}
           </Text>

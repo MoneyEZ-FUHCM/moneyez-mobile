@@ -6,7 +6,13 @@ import {
 } from "@/components";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import CREATE_SPENDING_BUDGET from "./CreateSpendingBudget.constant";
 import TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP1 from "./CreateSpendingBudgetStep1.translate";
 import useCreateSpendingBudgetStep1 from "./hooks/useCreateSpendingBudgetStep1";
@@ -66,37 +72,17 @@ export default function CreateSpendingBudgetStep1() {
     );
   };
 
-  if (isLoading) {
-    return (
-      <SafeAreaViewCustom rootClassName="flex-1 bg-[#f9f9f9]">
-        <SectionComponent rootClassName="h-14 bg-white justify-center px-5">
-          <View className="flex-row items-center justify-between">
-            <Pressable onPress={handleBack}>
-              <MaterialIcons name="arrow-back" size={24} />
-            </Pressable>
-            <Text className="text-lg font-bold">
-              {TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP1.TITLE.MAIN_TITLE}
-            </Text>
-            <View style={{ width: 24 }} />
-          </View>
-        </SectionComponent>
-
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#609084" />
-          <Text className="mt-4 text-gray-500">Đang tải dữ liệu...</Text>
-        </View>
-      </SafeAreaViewCustom>
-    );
-  }
-
   return (
     <SafeAreaViewCustom rootClassName="relative bg-[#f9f9f9]">
       {/* Header */}
       <SectionComponent rootClassName="h-14 bg-white justify-center px-5">
         <View className="flex-row items-center justify-between">
-          <Pressable onPress={handleBack}>
+          <TouchableOpacity
+            onPress={handleBack}
+            className="rounded-full bg-gray-50 p-2"
+          >
             <MaterialIcons name="arrow-back" size={24} />
-          </Pressable>
+          </TouchableOpacity>
           <Text className="text-lg font-bold">
             {TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP1.TITLE.MAIN_TITLE}
           </Text>
@@ -138,7 +124,7 @@ export default function CreateSpendingBudgetStep1() {
         ))}
       </ScrollViewCustom>
       <SectionComponent rootClassName="absolute bottom-0 w-full bg-white pb-5">
-        <Pressable
+        <TouchableOpacity
           onPress={handleContinue}
           className={`${selectedCategoryId ? "bg-primary" : "bg-[#a0c0ba]"} mx-5 rounded-[10px] py-2.5`}
           disabled={!selectedCategoryId}
@@ -146,7 +132,7 @@ export default function CreateSpendingBudgetStep1() {
           <Text className="text-center text-lg font-medium text-white">
             {TEXT_TRANSLATE_CREATE_SPENDING_BUDGET_STEP1.BUTTON.CONTINUE}
           </Text>
-        </Pressable>
+        </TouchableOpacity>
       </SectionComponent>
     </SafeAreaViewCustom>
   );

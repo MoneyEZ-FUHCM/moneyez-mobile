@@ -114,15 +114,18 @@ export default function IndividualHome() {
       <SafeAreaViewCustom>
         <SectionComponent rootClassName="h-14 bg-white justify-center">
           <View className="flex-row items-center justify-between px-5">
-            <Pressable onPress={handler.handleGoBack}>
+            <TouchableOpacity
+              onPress={handler.handleGoBack}
+              className="rounded-full bg-gray-50 p-2"
+            >
               <MaterialIcons name="arrow-back" size={24} />
-            </Pressable>
+            </TouchableOpacity>
             <Text className="text-lg font-bold">
               {TEXT_TRANSLATE_INDIVIDUAL_HOME.TITLE.PERSONAL_EXPENSES}
             </Text>
-            <Pressable onPress={handler.openRulesModal}>
+            <TouchableOpacity onPress={handler.openRulesModal} className="p-2">
               <FontAwesome6 name="circle-question" size={24} />
-            </Pressable>
+            </TouchableOpacity>
           </View>
         </SectionComponent>
         <LoadingSectionWrapper
@@ -138,7 +141,6 @@ export default function IndividualHome() {
               />
             }
           >
-            {/* BALANCE CARD */}
             <SectionComponent rootClassName="mx-5 mt-8 rounded-[10px] bg-white p-4 shadow-sm">
               <View className="flex-row items-center justify-between">
                 <Text className="text-base font-bold text-black">
