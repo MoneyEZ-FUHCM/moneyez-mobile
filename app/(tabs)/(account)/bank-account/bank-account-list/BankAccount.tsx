@@ -476,7 +476,7 @@ const BankAccount = () => {
                 onPress={handler.handleConfirmLink}
               >
                 <Text className="text-center font-medium text-white">
-                  Tôi dồng ý
+                  Tôi đồng ý
                 </Text>
               </TouchableOpacity>
             </View>
