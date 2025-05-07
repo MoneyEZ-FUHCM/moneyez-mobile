@@ -4,22 +4,15 @@ import {
   SafeAreaViewCustom,
   SectionComponent,
 } from "@/components";
+import { Colors } from "@/helpers/constants/color";
 import { Feather, FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { Formik } from "formik";
 import React from "react";
-import {
-  Image,
-  Pressable,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import TEXT_TRANSLATE_FUNCTION_BANK_ACCOUNT from "./FunctionBankAccount.translate";
 import useFunctionBankAccount from "./hooks/useFunctionBankAccount";
-import { Colors } from "@/helpers/constants/color";
 
 const FunctionBankAccount = () => {
   const params = useLocalSearchParams();
@@ -141,9 +134,9 @@ const FunctionBankAccount = () => {
               ? "Chỉnh sửa tài khoản ngân hàng"
               : "Thêm tài khoản ngân hàng"}
           </Text>
-          <Pressable onPress={handler.openRulesModal}>
+          <TouchableOpacity onPress={handler.openRulesModal} className="p-2">
             <FontAwesome6 name="circle-question" size={24} />
-          </Pressable>
+          </TouchableOpacity>
         </SectionComponent>
         <SectionComponent rootClassName="flex-1 p-6">
           <Formik
@@ -271,7 +264,7 @@ const FunctionBankAccount = () => {
           />
         </ModalLizeComponent>
         <SectionComponent rootClassName=" px-5 rounded-lg absolute bottom-5 w-full flex-1">
-          <Pressable
+          <TouchableOpacity
             onPress={() => handler.handleSubmitRef.current()}
             className="h-12 items-center justify-center rounded-lg bg-primary"
           >
@@ -280,7 +273,7 @@ const FunctionBankAccount = () => {
                 ? TEXT_TRANSLATE_FUNCTION_BANK_ACCOUNT.BUTTON.UPDATE
                 : TEXT_TRANSLATE_FUNCTION_BANK_ACCOUNT.BUTTON.CONFIRM}
             </Text>
-          </Pressable>
+          </TouchableOpacity>
         </SectionComponent>
       </SafeAreaViewCustom>
       <ModalLizeComponent ref={state.modalizeRef}>
