@@ -137,7 +137,9 @@ const BankAccount = () => {
               <View className="mt-2 flex-row items-center">
                 <View className="rounded-md bg-gray-100 px-2 py-1">
                   <Text className="text-sm font-medium text-gray-700">
-                    {item?.accountNumber}
+                    {item?.accountNumber
+                      ? `${item.accountNumber.slice(0, 6)}...`
+                      : ""}
                   </Text>
                 </View>
                 <TouchableOpacity
@@ -474,7 +476,7 @@ const BankAccount = () => {
                 onPress={handler.handleConfirmLink}
               >
                 <Text className="text-center font-medium text-white">
-                  Tôi dồng ý
+                  Tôi đồng ý
                 </Text>
               </TouchableOpacity>
             </View>

@@ -1,14 +1,15 @@
 import { COMMON_CONSTANT } from "@/helpers/constants/common";
-import { setMainTabHidden } from "@/redux/slices/tabSlice";
-import {
-  useCreateBankAccountMutation,
-  useUpdateBankAccountMutation,
-} from "@/services/bankAccounts";
 import {
   BankAccountType,
   BankType,
   CreateBankAccountPayload,
 } from "@/helpers/types/bankAccount.types";
+import { setLoading } from "@/redux/slices/loadingSlice";
+import { setMainTabHidden } from "@/redux/slices/tabSlice";
+import {
+  useCreateBankAccountMutation,
+  useUpdateBankAccountMutation,
+} from "@/services/bankAccounts";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ScrollView, ToastAndroid } from "react-native";
@@ -106,8 +107,13 @@ const useFunctionBankAccount = (params: any) => {
 
   const handleCreateBankAccount = useCallback(
     async (payload: CreateBankAccountPayload) => {
+      dispatch(setLoading(true));
+      const updatePayload = {
+        ...payload,
+        accountHolderName: payload.accountHolderName.toUpperCase(),
+      };
       try {
-        const res = await createBankAccount(payload).unwrap();
+        const res = await createBankAccount(updatePayload).unwrap();
         if (res?.status === HTTP_STATUS.SUCCESS.CREATED) {
           ToastAndroid.show(
             MESSAGE_SUCCESS.ADD_BANK_ACCOUNT_SUCCESS,
@@ -132,6 +138,8 @@ const useFunctionBankAccount = (params: any) => {
           return;
         }
         ToastAndroid.show(SYSTEM_ERROR.SERVER_ERROR, ToastAndroid.SHORT);
+      } finally {
+        dispatch(setLoading(false));
       }
     },
     [],
