@@ -175,6 +175,7 @@ MoneyEasy is a smart, user-friendly solution designed to simplify personal and g
 - Back-end: https://github.com/MoneyEZ-FUHCM/moneyez-bank (Banking Demo System)
 - AI Service: https://github.com/MoneyEZ-FUHCM/moneyez-ai-service
 - Figma: [MoneyEasy UI](https://www.figma.com/design/DYCEzZZarDpHxpyDQs0EMu/EzMoney-Mobile?node-id=0-1&t=h84bZhhr8b6RdEe7-1)
+- Documents: [MoneyEasy Docs](https://drive.google.com/drive/folders/1uaXbvJhQUk3dVXyvYChcydWGYnakpkxd?usp=sharing)
 
 ##### Contact me via: tonbao0803@gmail.com
 
