@@ -2,12 +2,12 @@
 
 <div align="center">
    <img style="width: 180px; margin-bottom: 10px;" src="https://firebasestorage.googleapis.com/v0/b/exe201-9459a.appspot.com/o/EzMoney%2Flogo_app_splash.png?alt=media&token=bc76a24e-79a3-48f4-af40-d056f65ee88f" />
-    <p><a href="https://easymoney.anttravel.online/moneyez-web">MoneyEasy</a> – Simplify personal and group financial management with smart automation and insightful analytics.
+    <p><a href="https://moneyez-web.vercel.app/moneyez-web">MoneyEasy</a> – Simplify personal and group financial management with smart automation and insightful analytics.
 </div>
 
 ### Welcome to MoneyEasy
 
-### Demo: [MoneyEasy](https://easymoney.anttravel.online/moneyez-web)
+### Demo: [MoneyEasy](https://moneyez-web.vercel.app/moneyez-web)
 
 #### Introduction
 
@@ -161,7 +161,7 @@ MoneyEasy is a smart, user-friendly solution designed to simplify personal and g
 #### Deployment:
 
 - Mobile: https://drive.google.com/drive/folders/17IxEvarY0fXSZOz3JWJUKUUX-_XxTmfu
-- Front-end: https://easymoney.anttravel.online/moneyez-web
+- Front-end: https://easymoney.anttravel.online/moneyez-web | https://moneyez-web.vercel.app/moneyez-web
 - Front-end: https://easymoney.anttravel.online/moneyez-bank-web (Banking Demo System)
 - Back-end: https://easymoney.anttravel.online/swagger/index.html
 - Back-end: https://easymoney.anttravel.online/moneyez-bank/api (Banking Demo System)
