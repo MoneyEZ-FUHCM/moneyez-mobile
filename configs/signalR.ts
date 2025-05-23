@@ -4,7 +4,7 @@ import { setConnectionStatus } from "@/redux/slices/systemSlice";
 import { store } from "@/redux/store";
 import * as signalR from "@microsoft/signalr";
 
-const SIGNALR_URL = process.env.EXPO_PUBLIC_SIGNALR_URL as string;
+const SIGNALR_URL = "http://160.191.88.194:8080/chatHub";
 
 let connection: signalR.HubConnection | null = null;
 const { CHATBOT_CONNECTION_TRANSLATE } = COMMON_CONSTANT;

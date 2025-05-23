@@ -31,7 +31,7 @@ const axiosBaseQuery = async (
   let token = await AsyncStorage.getItem("accessToken");
 
   const baseQuery = fetchBaseQuery({
-    baseUrl: process.env.EXPO_PUBLIC_BASE_URL,
+    baseUrl: "http://160.191.88.194:8080/api/v1",
     prepareHeaders: (headers) => {
       headers.set("Content-Type", "application/json");
       if (token) {
